@@ -1,0 +1,56 @@
+<!--
+- @FileName: storefrontIntegrationMapper
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       6/25/2020         Created
+*************************************************************
+-->
+
+<!-- Storefront Integration Mapper -->
+<template>
+    <div class="slds-card slds-p-around_medium">
+        <h1 class="slds-text-heading_medium slds-m-bottom_small">Integration Mapping</h1>
+        <h2 class="slds-text-heading_medium slds-m-bottom_small">Checkout</h2>
+        <p class="slds-m-bottom_medium">Enter an apex class name, api version and service type to register and map the class to this store's checkout flow.</p>
+        <div class="slds-grid slds-gutters slds-m-bottom_medium">
+            <div class="slds-col">
+                <label class="slds-form-element__label">Apex Class</label>
+                <select datatype="number" class="slds-select" name="apexClassId" onchange={changeHandler}>
+                    <option value=""></option>
+                    <template for:each={apexClasses} for:item="apexClass">
+                        <option key={apexClass.Id} value={apexClass.Id}>{apexClass.Name}</option>
+                    </template>
+                </select>
+            </div>
+            <div class="slds-col">
+                <label class="slds-form-element__label">Api Version</label>
+                <select datatype="number" class="slds-select" name="apiVersion" onchange={changeHandler}>
+                    <option value=""></option>
+                    <option value="49.0">49.0</option>
+                </select>
+            </div>
+            <div class="slds-col">
+                <label class="slds-form-element__label">Service Type</label>
+                <select class="slds-select" name="serviceType" onchange={changeHandler}>
+                    <option value=""></option>
+                    <option value="Inventory">Inventory</option>
+                    <option value="Shipment">Shipment</option>
+                    <option value="Price">Price</option>
+                    <option value="Tax">Tax</option>
+                </select>
+            </div>
+        </div>
+        <div class="slds-m-bottom_medium">
+            <lightning-button variant="brand" class="slds-m-right_medium" label="Register Class" onclick={registerCheckoutApexClass}></lightning-button>
+        </div>
+        <template for:each={messages} for:item="message">
+            <p key={message}>{message}</p>
+        </template>
+        <template for:each={errorMessages} for:item="message">
+            <p key={message}>{message}</p>
+        </template>
+    </div>
+</template>
