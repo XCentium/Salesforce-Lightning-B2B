@@ -1,0 +1,21 @@
+<!--
+- @FileName: storefrontMenu
+- @Description: Menu component for lightning storefront
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       6/18/2020         Created
+*************************************************************  
+-->
+
+<!-- Storefront Menu -->
+<template>
+    <div data-id="nav-container">
+        <ul data-id="nav-menu">
+            <template for:each={menuItems} for:item="menuItem">
+                <c-storefront-menu-item key={menuItem.label} menu-name={menuName} menu-item={menuItem}></c-storefront-menu-item>
+            </template>
+        </ul>
+    </div>
+</template>

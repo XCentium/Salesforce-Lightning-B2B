@@ -1,0 +1,20 @@
+<!--
+- @FileName: quickOrder
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       6/8/2020         Created
+*************************************************************  
+-->
+
+<!-- Quick Order -->
+<template>
+    <lightning-card icon-name="custom:custom19" title="Quick Order">
+        <div class="slds-p-left_medium">
+            <input type="file" accept={acceptedFormats} data-id="csv-file">
+            <lightning-button variant="neutral" label="Add to Cart" onclick={processCSV}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

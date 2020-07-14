@@ -11,7 +11,7 @@
 public with sharing class XC_LWC_IntegrationMapperCtrl {
 
     @AuraEnabled
-    public static XC_LWC_CheckoutRegistrationWrapper registerCheckoutApexClass(String webstoreId, String apexClassId, String apiVersion, String serviceType) {
+    public static XC_LWC_CheckoutRegistrationWrapper registerExternalService(String webstoreId, String apexClassId, String apiVersion, String serviceType) {
         XC_LWC_CheckoutRegistrationWrapper wrapper = new XC_LWC_CheckoutRegistrationWrapper(webstoreId, apexClassId, apiVersion, serviceType);
 
         try {
@@ -25,7 +25,7 @@ public with sharing class XC_LWC_IntegrationMapperCtrl {
     }
 
     @AuraEnabled
-    public static XC_LWC_CheckoutRegistrationWrapper mapCheckoutService(String webstoreId, String registeredIntegrationId, String serviceType) {
+    public static XC_LWC_CheckoutRegistrationWrapper createStoreIntegratedService(String webstoreId, String registeredIntegrationId, String serviceType) {
         XC_LWC_CheckoutRegistrationWrapper wrapper = new XC_LWC_CheckoutRegistrationWrapper(webstoreId, registeredIntegrationId, serviceType);
 
         try {
@@ -36,5 +36,24 @@ public with sharing class XC_LWC_IntegrationMapperCtrl {
         }
 
         return wrapper;
+    }
+
+    @AuraEnabled
+    public static List<XC_LWC_IntegrationMapperCtrlHelper.StoreExternalService> getCheckoutExternalServices(String webstoreId) {
+        System.debug(webstoreId);
+        try {
+            return XC_LWC_IntegrationMapperCtrlHelper.getCheckoutExternalServices(webstoreId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void removeExternalService(Id storeIntegratedServiceId) {
+        try {
+            XC_LWC_IntegrationMapperCtrlHelper.removeExternalService(storeIntegratedServiceId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 }

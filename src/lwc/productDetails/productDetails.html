@@ -1,0 +1,32 @@
+<!--
+- @FileName: productDetails
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       7/10/2020         Created
+*************************************************************  
+-->
+
+<!-- Product Details -->
+<template>
+    <lightning-spinner
+            if:false={hasProduct}
+            class="slds-is-relative slds-align_absolute-center slds-m-around_large"
+            alternative-text="Loading product information..."
+            size="medium"
+            variant="brand">
+    </lightning-spinner>
+    <c-product-details-display
+            if:true={hasProduct}
+            category-path={displayableProduct.categoryPath}
+            description={displayableProduct.description}
+            image={displayableProduct.image}
+            in-stock={displayableProduct.inStock}
+            name={displayableProduct.name}
+            price={displayableProduct.price}
+            sku={displayableProduct.sku}
+            onaddtocart={addtoCart}>
+    </c-product-details-display>
+</template>
