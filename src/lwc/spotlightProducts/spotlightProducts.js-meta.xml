@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <description>Spotlight Products</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Spotlight Products</masterLabel>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="title" label="Title" type="String" default=""></property>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

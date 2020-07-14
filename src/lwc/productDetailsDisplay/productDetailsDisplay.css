@@ -1,0 +1,37 @@
+/**
+ * @FileName: productDetailsDisplay
+ * @Description:
+ * @Author: Graeme Ward
+ * @ModificationLog:
+ *-----------------------------------------------------------
+ * Author            Date            Modification
+ * Graeme Ward       7/10/2020         Created
+ *-----------------------------------------------------------  
+ */
+:host {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: repeat(3, min-content) 1fr min-content min-content;
+    column-gap: 1rem;
+}
+
+lightning-breadcrumbs {
+    grid-column: 1 / span 2;
+}
+
+figure {
+    align-items: center;
+    display: flex;
+    grid-row: 2 / span 6;
+    justify-content: center;
+    width: 400px;
+    height: 400px;
+}
+
+img {
+    object-fit: contain;
+}
+
+.price {
+    align-self: end;
+}

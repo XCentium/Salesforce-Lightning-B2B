@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <description>Quick Order Modal</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Quick Order Model</masterLabel>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+        <target>lightning__Tab</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="productId" type="String" label="Product ID" description="Product Id of the Product"></property>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,36 @@
+/**
+ * @FileName: storefrontMenuItem.css
+ * @Description:
+ * @Author: Graeme Ward
+ * @ModificationLog:
+ *-----------------------------------------------------------
+ * Author            Date            Modification
+ * Graeme Ward       7/1/2020         Created
+ *-----------------------------------------------------------  
+ */
+.mm-hide .mega-menu,
+.mm-hide .dropdown-menu {
+    display: none;
+}
+
+.mm-show .mega-menu,
+.mm-show .dropdown-menu {
+    background-color: white;
+    display: block;
+    position: absolute;
+    z-index: 9999999;
+}
+
+.mega-menu {
+    width: 1000px;
+}
+
+.nav-item {
+    color: black;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.footer-navigation .nav-item {
+    color: white;
+}

@@ -1,0 +1,13 @@
+/**
+ * @FileName: spotlightProducts
+ * @Description:
+ * @Author: Graeme Ward
+ * @ModificationLog:
+ *-----------------------------------------------------------
+ * Author            Date            Modification
+ * Graeme Ward       6/30/2020         Created
+ *-----------------------------------------------------------  
+ */
+.xc-spotlight-product {
+    flex: 1;
+}

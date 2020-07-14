@@ -9,15 +9,18 @@
  *-----------------------------------------------------------
  */
 
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getActiveApexClasses from '@salesforce/apex/XC_LWC_DataCtrl.getActiveApexClasses';
-import registerCheckoutApexClass from '@salesforce/apex/XC_LWC_IntegrationMapperCtrl.registerCheckoutApexClass';
-import mapCheckoutService from '@salesforce/apex/XC_LWC_IntegrationMapperCtrl.mapCheckoutService';
+import getCheckoutExternalServices from '@salesforce/apex/XC_LWC_IntegrationMapperCtrl.getCheckoutExternalServices';
+import removeExternalService from '@salesforce/apex/XC_LWC_IntegrationMapperCtrl.removeExternalService';
+import registerExternalService from '@salesforce/apex/XC_LWC_IntegrationMapperCtrl.registerExternalService';
+import createStoreIntegratedService from '@salesforce/apex/XC_LWC_IntegrationMapperCtrl.createStoreIntegratedService';
 
 export default class StorefrontIntegrationMapper extends LightningElement {
     @api recordId;
-    apexClasses;
+    hasCheckoutExternalServices
+    checkoutExternalServices;
     apexClassId;
     apiVersion;
     serviceType;
@@ -25,12 +28,34 @@ export default class StorefrontIntegrationMapper extends LightningElement {
     messages;
     errorMessages;
 
+    @wire(getActiveApexClasses, {})
+    apexClasses;
+
     connectedCallback() {
-        getActiveApexClasses()
+        this.messages = [];
+        this.errorMessages = [];
+        hasCheckoutExternalServices = false;
+
+        this.getCheckoutExternalServices();
+    }
+
+    changeHandler(event) {
+        this[event.target.name] = event.target.value;
+    }
+
+    getCheckoutExternalServices() {
+        let criteria = {
+            webstoreId : this.recordId
+        }
+
+        getCheckoutExternalServices(criteria)
         .then(result => {
-            this.apexClasses = result;
+            console.log(result);
+            this.hasCheckoutExternalServices = result.length > 0;
+            this.checkoutExternalServices = result;
         })
         .catch(error => {
+            console.log(error);
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error',
@@ -41,14 +66,28 @@ export default class StorefrontIntegrationMapper extends LightningElement {
         })
     }
 
-    changeHandler(event) {
-        this[event.target.name] = event.target.value;
+    removeExternalService(event) {
+        let criteria = {
+            storeIntegratedServiceId : event.target.value
+        }
+
+        removeExternalService(criteria)
+        .then(result => {
+            this.getCheckoutExternalServices();
+        })
+        .catch(error => {
+            console.log(error);
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: JSON.stringify(error),
+                    variant: 'error',
+                }),
+            );
+        })
     }
 
-    registerCheckoutApexClass() {
-        this.messages = [];
-        this.errorMessages = [];
-
+    registerExternalService() {
         let criteria = {
             webstoreId : this.recordId,
             apexClassId : this.apexClassId,
@@ -56,13 +95,13 @@ export default class StorefrontIntegrationMapper extends LightningElement {
             serviceType : this.serviceType
         }
 
-        registerCheckoutApexClass(criteria)
+        registerExternalService(criteria)
         .then(result => {
             this.messages = result.messages;
             this.errorMessages = result.errorMessages;
 
             if (this.errorMessages.length === 0) {
-                this.mapCheckoutService(result.registeredIntegrationId);
+                this.createStoreIntegratedService(result.registeredIntegrationId);
             }
         })
         .catch(error => {
@@ -77,17 +116,18 @@ export default class StorefrontIntegrationMapper extends LightningElement {
         })
     }
 
-    mapCheckoutService(registeredIntegrationId) {
+    createStoreIntegratedService(registeredIntegrationId) {
         let criteria = {
             webstoreId : this.recordId,
             registeredIntegrationId : registeredIntegrationId,
             serviceType : this.serviceType
         }
 
-        mapCheckoutService(criteria)
+        createStoreIntegratedService(criteria)
         .then(result => {
             this.messages.push(result.messages);
             this.errorMessages = result.errorMessages;
+            this.getCheckoutExternalServices();
         })
         .catch(error => {
             console.log(error);

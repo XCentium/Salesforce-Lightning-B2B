@@ -1,0 +1,59 @@
+<!--
+- @FileName: productDetailsDisplay
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       7/10/2020         Created
+*************************************************************  
+-->
+
+<!-- Product Details Display -->
+<template>
+    <lightning-breadcrumbs class="slds-p-bottom_medium">
+        <template for:each={_resolvedCategoryPath} for:item="level">
+            <lightning-breadcrumb
+                    key={level.name}
+                    label={level.name}
+                    href={level.url}>
+            </lightning-breadcrumb>
+        </template>
+    </lightning-breadcrumbs>
+    <figure class="slds-p-around_xx-small slds-border_top slds-border_right slds-border_bottom slds-border_left">
+        <img src={image.url} alt={image.alternativeText} />
+    </figure>
+    <h2 class="slds-text-heading_medium">{name}</h2>
+    <div class="slds-p-top_x-small slds-p-bottom_medium">SKU: {sku}</div>
+    <div if:true={inStock}>
+        <lightning-icon icon-name="utility:check" variant="success"></lightning-icon>
+        <span class="slds-p-horizontal_small">In stock</span>
+    </div>
+    <div if:false={inStock}>
+        <lightning-icon icon-name="utility:ban" variant="error"></lightning-icon>
+        <span class="slds-p-horizontal_small">Out of stock</span>
+    </div>
+    <div class="price">
+        <span if:false={hasPrice}>Price Unavailable</span>
+        <lightning-formatted-number
+                if:true={hasPrice}
+                currency-code={price.currency}
+                format-style="currency"
+                value={price.negotiated}
+        >
+        </lightning-formatted-number>
+    </div>
+    <div class="slds-p-vertical_small">
+        <lightning-button
+                label="Add to Cart"
+                variant="brand"
+                onclick={notifyAddToCart}
+        >
+        </lightning-button>
+    </div>
+    <lightning-accordion active-section-name="description" allow-multiple-sections-open>
+        <lightning-accordion-section name="description" label="Description">
+            <lightning-formatted-rich-text value={description}></lightning-formatted-rich-text>
+        </lightning-accordion-section>
+    </lightning-accordion>
+</template>

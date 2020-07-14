@@ -1,0 +1,53 @@
+<!--
+- @FileName: storefrontMenuItem
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       7/1/2020         Created
+*************************************************************  
+-->
+
+<!-- Storefront Menu Item -->
+<template>
+    <li key={menuItem.label} data-id="nav-item" class="textMenuItem slds-p-vertical_x-small slds-p-horizontal_small horizontalMenuItemContains mm-hide">
+        <lightning-button variant="base" label={menuItem.label} class="horizontalMenuItem nav-item" onclick={navigate} ></lightning-button>
+<!--        <a href={menuItem.url} class="horizontalMenuItem nav-item" onclick={navigate}>{menuItem.label}</a>-->
+
+        <template if:true={menuItem.hasChildItems}>
+            <template if:true={menuItem.megaMenu}>
+                <div class="slds-card slds-p-around_medium mega-menu" data-id="mega-menu">
+                    <div class="slds-grid slds-gutters">
+                        <template for:each={menuItem.megaMenuColumns} for:item="column">
+                            <div key={column.label} class="slds-col">
+                                <h1 class="slds-text-title">{column.label}</h1>
+                                <ul>
+                                    <template for:each={column.childItems} for:item="childItem">
+                                        <li key={childItem.label}>
+                                            <!--                            <lightning-button variant="base" label={childItem.label} onclick={navigate}></lightning-button>-->
+                                            <a class="nav-item slds-m-around_xx-small" href={childItem.url} label={childItem.label}>{childItem.label}</a>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <template if:false={menuItem.megaMenu}>
+                <div class="slds-card slds-p-around_medium dropdown-menu" data-id="mega-menu">
+                    <ul>
+                        <template for:each={menuItem.childItems} for:item="childItem">
+                            <li key={childItem.label}>
+                                <!--                            <lightning-button variant="base" label={childItem.label} onclick={navigate}></lightning-button>-->
+                                <a class="nav-item slds-m-around_xx-small" href={childItem.url} label={childItem.label}>{childItem.label}</a>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+        </template>
+    </li>
+</template>

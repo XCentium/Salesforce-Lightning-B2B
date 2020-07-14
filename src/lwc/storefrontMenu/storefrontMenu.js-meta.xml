@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <description>Menu component for lightning storefront</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Storefront Menu</masterLabel>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="menuName" label="Menu Name" type="String" default=""></property>
+            <property name="horizontalMenu" label="Horizontal Menu" type="Boolean" default="false"></property>
+            <property name="floatRight" label="Float Right" type="Boolean" default="false"></property>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

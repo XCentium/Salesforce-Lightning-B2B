@@ -1,0 +1,26 @@
+<!--
+- @FileName: spotlightProducts
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       6/30/2020         Created
+*************************************************************  
+-->
+
+<!-- Spotlight Products -->
+<template>
+    <h1 class="slds-text-heading_large slds-m-bottom_medium slds-text-align_center">{title}</h1>
+    <div class="slds-grid slds-gutters">
+        <template for:each={spotlightProducts.data} for:item="product">
+            <div key={product} class="slds-col xc-spotlight-product">
+                <c-spotlight-product-display
+                        key={product}
+                        product={product}
+                        onaddtocart={addItemToCart}>
+                </c-spotlight-product-display>
+            </div>
+        </template>
+    </div>
+</template>
