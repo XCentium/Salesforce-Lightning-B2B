@@ -1,0 +1,55 @@
+<!--
+- @FileName: orderPad
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       8/18/2020         Created
+*************************************************************  
+-->
+
+<!-- Order Pad -->
+<template>
+    <div class="slds-m-top_large order-pad-container">
+        <h2 class="slds-text-heading_large slds-text-title_bold slds-m-bottom_medium">Order Pad</h2>
+
+        <div if:true={options}>
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-combobox name="category"
+                                        label="Category"
+                                        placeholder="Select Category"
+                                        value={category}
+                                        options={options.categoryOptions}
+                                        onchange={changeHandler} >
+                    </lightning-combobox>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-combobox name="brand"
+                                        label="Brand"
+                                        placeholder="Select Brand"
+                                        value={brand}
+                                        options={options.brandOptions}
+                                        onchange={changeHandler} >
+                    </lightning-combobox>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+                    <lightning-combobox name="product"
+                                        label="Product"
+                                        placeholder="Select Product"
+                                        value={product}
+                                        options={options.productOptions}
+                                        onchange={changeHandler} >
+                    </lightning-combobox>
+                </div>
+
+                <div if:true={product} class="slds-col">
+                    <c-product-details-attributes product-id={product} effective-account-id={effectiveAccountId} order-pad=true></c-product-details-attributes>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

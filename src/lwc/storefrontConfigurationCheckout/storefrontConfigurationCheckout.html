@@ -1,0 +1,82 @@
+<!--
+- @FileName: storefrontConfigurationCheckout
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       8/16/2020         Created
+*************************************************************  
+-->
+
+<!-- Storefront Configuration Checkout -->
+<template>
+    <div class="slds-p-around_small">
+        <h2 class="slds-text-heading_small slds-m-bottom_small">Checkout Service Registration</h2>
+        <p class="slds-m-bottom_medium">Enter an apex class name, api version and service type to register and map the class to this store's checkout flow.</p>
+        <div class="slds-grid slds-gutters slds-m-bottom_medium">
+            <div class="slds-col">
+                <label class="slds-form-element__label">Apex Class</label>
+                <select datatype="number" class="slds-select" name="apexClassId" onchange={changeHandler}>
+                    <option value=""></option>
+                    <template for:each={apexClasses.data} for:item="apexClass">
+                        <option key={apexClass.Id} value={apexClass.Id}>{apexClass.Name}</option>
+                    </template>
+                </select>
+            </div>
+            <div class="slds-col">
+                <label class="slds-form-element__label">Api Version</label>
+                <select datatype="number" class="slds-select" name="apiVersion" onchange={changeHandler}>
+                    <option value=""></option>
+                    <option value="49.0">49.0</option>
+                </select>
+            </div>
+            <div class="slds-col">
+                <label class="slds-form-element__label">Service Type</label>
+                <select class="slds-select" name="serviceType" onchange={changeHandler}>
+                    <option value=""></option>
+                    <option value="Inventory">Inventory</option>
+                    <option value="Shipment">Shipment</option>
+                    <option value="Price">Price</option>
+                    <option value="Tax">Tax</option>
+                </select>
+            </div>
+        </div>
+        <div class="slds-m-bottom_medium">
+            <lightning-button variant="brand" class="slds-m-right_medium" label="Register Class" onclick={registerExternalService}></lightning-button>
+        </div>
+        <template for:each={messages} for:item="message">
+            <p key={message}>{message}</p>
+        </template>
+        <template for:each={errorMessages} for:item="message">
+            <p key={message}>{message}</p>
+        </template>
+    </div>
+
+    <div class="slds-p-around_medium">
+        <template if:true={hasCheckoutExternalServices}>
+            <h2 class="slds-text-heading_small slds-m-bottom_small">Checkout Services</h2>
+            <table class="slds-m-bottom_medium">
+                <thead>
+                <th>Service Type</th>
+                <th>Apex Class</th>
+                <th></th>
+                </thead>
+                <template for:each={checkoutExternalServices} for:item="externalService">
+                    <tr key={externalService.storeIntegratedServiceId} class="slds-p-around_x-small">
+                        <td>{externalService.serviceType}</td>
+                        <td>{externalService.apexClassName}</td>
+                        <td>
+                            <lightning-button variant="base"
+                                              class="slds-m-right_medium"
+                                              label="Remove"
+                                              value={externalService.storeIntegratedServiceId}
+                                              onclick={removeExternalService}>
+                            </lightning-button>
+                        </td>
+                    </tr>
+                </template>
+            </table>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,18 @@
+/**
+ * @FileName: sObjectLookup.css
+ * @Description:
+ * @Author: Graeme Ward
+ * @ModificationLog:
+ *-----------------------------------------------------------
+ * Author            Date            Modification
+ * Graeme Ward       9/17/2020         Created
+ *-----------------------------------------------------------  
+ */
+.search-results {
+    background-color: rgb(255,255,255);
+    border: 1px solid rgb(221,219,218);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    width: 100%;
+    z-index: 99999999;
+}

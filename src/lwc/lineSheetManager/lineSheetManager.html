@@ -1,0 +1,46 @@
+<!--
+- @FileName: lineSheetManager
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       9/26/2020         Created
+*************************************************************  
+-->
+
+<!-- Line Sheet Manager -->
+<template>
+    <div class="slds-card slds-p-around_large">
+        <template if:false={showForm}>
+            <div>
+                <div class="slds-clearfix slds-m-bottom_medium">
+                    <lightning-button variant="neutral"
+                                      label="New"
+                                      title="New"
+                                      class="slds-float_right"
+                                      onclick={create}>
+                    </lightning-button>
+                </div>
+            </div>
+
+            <div>
+                <lightning-datatable data={lineSheets}
+                                     columns={columns}
+                                     key-field="id"
+                                     hide-checkbox-column=true
+                                     onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </div>
+        </template>
+
+        <template if:true={showForm}>
+            <c-line-sheet-form is-update={isUpdate}
+                               is-clone={isClone}
+                               line-sheet-id={lineSheetId}
+                               template-options={templateOptions}
+                               onhide={hideForm}>
+            </c-line-sheet-form>
+        </template>
+    </div>
+</template>

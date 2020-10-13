@@ -1,0 +1,22 @@
+<!--
+- @FileName: productDetailsTab
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       7/21/2020         Created
+*************************************************************  
+-->
+
+<!-- Product Details Tab -->
+<template>
+    <template if:true={tab}>
+        <template if:true={text}>
+            <lightning-formatted-rich-text value={tab.Content__c}></lightning-formatted-rich-text>
+        </template>
+        <template if:true={video}>
+            <c-video-embed embed-url={tab.URL__c}></c-video-embed>
+        </template>
+    </template>
+</template>

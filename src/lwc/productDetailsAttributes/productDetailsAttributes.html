@@ -1,0 +1,61 @@
+<!--
+- @FileName: productDetailsAttributes
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       8/20/2020         Created
+*************************************************************  
+-->
+
+<!-- Product Details Attributes -->
+<template>
+    <div if:true={displayAttributes}>
+        <div if:true={orderPad}>
+            <div class="slds-grid slds-gutters">
+                <template for:each={displayAttributes} for:item="attribute">
+                    <div key={attribute.name} class="slds-col slds-size_1-of-2 slds-m-top_medium">
+                        <lightning-combobox name={attribute.name}
+                                            label={attribute.name}
+                                            options={attribute.values}
+                                            onchange={attributeChangeHandler} >
+                        </lightning-combobox>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <div if:false={orderPad}>
+            <template for:each={displayAttributes} for:item="attribute">
+                <div key={attribute.name} class="slds-m-top_medium">
+                    <lightning-combobox name={attribute.name}
+                                        label={attribute.name}
+                                        options={attribute.values}
+                                        onchange={attributeChangeHandler} >
+                    </lightning-combobox>
+                </div>
+            </template>
+        </div>
+
+        <div if:false={showSpinner} class="slds-grid slds-gutters slds-grid_align-end slds-m-top_medium">
+            <div class="slds-col">
+                <lightning-input type="number" label="QTY" name="quantity" variant="label-inline" onchange={changeHandler}></lightning-input>
+            </div>
+
+            <div class="slds-col">
+                <button class="slds-button slds-button_brand"
+                        onclick={addToCart}
+                        title="addToCart">Add to Cart</button>
+            </div>
+        </div>
+
+        <div class="slds-m-top_x-large">
+            <lightning-spinner if:true={showSpinner}
+                               class="slds-is-relative slds-align_absolute-center slds-m-around_large"
+                               alternative-text="Loading"
+                               size="medium"
+                               variant="brand">
+            </lightning-spinner>
+        </div>
+    </div>
+</template>

@@ -18,15 +18,25 @@
             size="medium"
             variant="brand">
     </lightning-spinner>
-    <c-product-details-display
-            if:true={hasProduct}
-            category-path={displayableProduct.categoryPath}
-            description={displayableProduct.description}
-            image={displayableProduct.image}
-            in-stock={displayableProduct.inStock}
-            name={displayableProduct.name}
-            price={displayableProduct.price}
-            sku={displayableProduct.sku}
-            onaddtocart={addtoCart}>
-    </c-product-details-display>
+
+    <lightning-spinner if:true={showSpinner}
+                       class="slds-is-relative slds-align_absolute-center slds-m-around_large"
+                       alternative-text="Loading..."
+                       size="medium"
+                       variant="brand">
+    </lightning-spinner>
+
+    <template if:false={showSpinner}>
+        <c-product-details-display
+                if:true={hasProduct}
+                product-id={recordId}
+                effective-account-id={effectiveAccountId}
+                displayable-product={displayableProduct}
+                show-product-attributes={showProductAttributes}
+                show-aggregate-grid={showAggregateGrid}
+                show-quick-order={showQuickOrder}
+                show-product-tabs={showProductTabs}
+                onaddtocart={addItemToCart}>
+        </c-product-details-display>
+    </template>
 </template>

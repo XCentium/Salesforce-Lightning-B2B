@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>49.0</apiVersion>
+    <description>Order Pad</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Order Pad</masterLabel>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="effectiveAccountId" type="String" label="Effective Account Id" description="The ID of the account under which the user is acting (BETA)" default="{!CurrentUser.effectiveAccountId}"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

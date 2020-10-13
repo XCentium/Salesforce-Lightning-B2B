@@ -11,6 +11,7 @@
 
 <!-- Product Details Display -->
 <template>
+    <!--breadcrumbs-->
     <lightning-breadcrumbs class="slds-p-bottom_medium">
         <template for:each={_resolvedCategoryPath} for:item="level">
             <lightning-breadcrumb
@@ -20,40 +21,79 @@
             </lightning-breadcrumb>
         </template>
     </lightning-breadcrumbs>
+
+    <!--product image-->
     <figure class="slds-p-around_xx-small slds-border_top slds-border_right slds-border_bottom slds-border_left">
-        <img src={image.url} alt={image.alternativeText} />
+        <img src={displayableProduct.image.url} alt={displayableProduct.image.alternativeText} />
     </figure>
-    <h2 class="slds-text-heading_medium">{name}</h2>
-    <div class="slds-p-top_x-small slds-p-bottom_medium">SKU: {sku}</div>
-    <div if:true={inStock}>
-        <lightning-icon icon-name="utility:check" variant="success"></lightning-icon>
-        <span class="slds-p-horizontal_small">In stock</span>
-    </div>
-    <div if:false={inStock}>
-        <lightning-icon icon-name="utility:ban" variant="error"></lightning-icon>
-        <span class="slds-p-horizontal_small">Out of stock</span>
-    </div>
+
+    <!--product details-->
+    <h2 class="slds-text-heading_small slds-text-title_bold">{displayableProduct.brand}</h2>
+    <h2 class="slds-text-heading_medium">{displayableProduct.name}</h2>
+    <div class="slds-p-top_x-small slds-p-bottom_medium">SKU: {displayableProduct.sku}</div>
+
     <div class="price">
         <span if:false={hasPrice}>Price Unavailable</span>
         <lightning-formatted-number
                 if:true={hasPrice}
-                currency-code={price.currency}
+                currency-code={displayableProduct.price.currency}
                 format-style="currency"
-                value={price.negotiated}
+                value={displayableProduct.price.negotiated}
         >
         </lightning-formatted-number>
     </div>
-    <div class="slds-p-vertical_small">
-        <lightning-button
-                label="Add to Cart"
-                variant="brand"
-                onclick={notifyAddToCart}
-        >
-        </lightning-button>
+
+    <!--product attributes-->
+    <div if:true={showProductAttributes} class="slds-m-top_large">
+        <c-product-details-attributes product-id={productId} effective-account-id={effectiveAccountId}></c-product-details-attributes>
     </div>
-    <lightning-accordion active-section-name="description" allow-multiple-sections-open>
-        <lightning-accordion-section name="description" label="Description">
-            <lightning-formatted-rich-text value={description}></lightning-formatted-rich-text>
-        </lightning-accordion-section>
-    </lightning-accordion>
+
+    <!--aggregate display-->
+    <div if:true={showAggregateGrid} class="slds-m-top_large">
+        <c-product-details-aggregate-display product-id={productId} effective-account-id={effectiveAccountId}></c-product-details-aggregate-display>
+    </div>
+
+    <template if:true={showQuickOrder}>
+        <div class="slds-m-top_large" style="max-width:100px;">
+            <c-product-details-quick-order product-id={productId} effective-account-id={effectiveAccountId}></c-product-details-quick-order>
+        </div>
+    </template>
+
+    <!--actions-->
+    <template if:true={showStandardActions}>
+        <div class="slds-p-vertical_small slds-grid slds-m-top_large">
+            <div class="slds-col slds-m-right_medium" style="max-width:150px;">
+                <lightning-input type="number" label="QTY" name="quantity" variant="label-inline" onchange={changeHandler}></lightning-input>
+            </div>
+            <div class="slds-col" style="max-width:100px;">
+                <lightning-button label="Add to Cart"
+                                  variant="brand"
+                                  class="slds-m-right_x-small"
+                                  onclick={notifyAddToCart}
+                >
+                </lightning-button>
+            </div>
+        </div>
+    </template>
+
+    <!--product description-->
+    <template if:true={showDescription}>
+        <div class="slds-m-top_large">
+            <h3 class="slds-text-heading_medium slds-text-title_bold">Description</h3>
+            <lightning-formatted-rich-text value={displayableProduct.description}></lightning-formatted-rich-text>
+        </div>
+    </template>
+
+    <!--product tabs-->
+    <template if:true={showProductTabs}>
+        <div class="slds-m-top_large">
+            <lightning-tabset>
+                <template for:each={displayableProduct.productTabs} for:item="tab">
+                    <lightning-tab key={tab.Id} label={tab.Name}>
+                        <c-product-details-tab tab={tab}></c-product-details-tab>
+                    </lightning-tab>
+                </template>
+            </lightning-tabset>
+        </div>
+    </template>
 </template>

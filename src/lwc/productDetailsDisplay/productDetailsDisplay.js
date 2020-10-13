@@ -21,109 +21,20 @@ const homePage = {
     }
 };
 
-/**
- * An organized display of product information.
- *
- * @fires ProductDetailsDisplay#addtocart
- */
 export default class ProductDetailsDisplay extends NavigationMixin(LightningElement) {
+    @api productId;
+    @api effectiveAccountId;
+    @api description;
+    @api displayableProduct;
+    @api showProductAttributes;
+    @api showAggregateGrid;
+    @api showQuickOrder;
+    @api showProductTabs;
 
-    /**
-     * An event fired when the user indicates the product should be added to their cart.
-     *
-     * Properties:
-     *   - Bubbles: false
-     *   - Composed: false
-     *
-     * @event ProductDetailsDisplay#addtocart
-     * @type {CustomEvent}
-     *
-     * @export
-     */
-
-
-    /**
-     * A product image.
-     * @typedef {object} Image
-     *
-     * @property {string} url
-     *  The URL of an image.
-     *
-     * @property {string} alternativeText
-     *  The alternative display text of the image.
-     */
-
-    /**
-     * A product category.
-     * @typedef {object} Category
-     *
-     * @property {string} id
-     *  The unique identifier of a category.
-     *
-     * @property {string} name
-     *  The localized display name of a category.
-     */
-
-    /**
-     * A product price.
-     * @typedef {object} Price
-     *
-     * @property {string} negotiated
-     *  The negotiated price of a product.
-     *
-     * @property {string} currency
-     *  The ISO 4217 currency code of the price.
-     */
-
-
-    /**
-     * Gets or sets the name of the product.
-     *
-     * @type {string}
-     */
-    @api
-    description;
-
-    /**
-     * Gets or sets the product image.
-     *
-     * @type {Image}
-     */
-    @api
-    image;
-
-    /**
-     * Gets or sets whether the product is "in stock."
-     *
-     * @type {boolean}
-     */
-    @api
-    inStock = false;
-
-    /**
-     * Gets or sets the name of the product.
-     *
-     * @type {string}
-     */
-    @api
-    name;
-
-    /**
-     * Gets or sets the price - if known - of the product.
-     * If this property is specified as undefined, the price is shown as being unavailable.
-     *
-     * @type {Price}
-     */
-    @api
-    price;
-
-    /**
-     * Gets or sets teh stock keeping unit (or SKU) of the product.
-     *
-     * @type {string}
-     */
-    @api
-    sku;
+    hasVideo;
+    showStandardActions = false;
+    showDescription = false;
+    quantity;
 
     _categoryPath;
     _resolvedCategoryPath = [];
@@ -136,7 +47,23 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
     });
 
     connectedCallback() {
+        this.hasVideo = this.videoUrl != undefined;
         this._resolveConnected();
+
+        if (!this.displayableProduct.productTabs || this.displayableProduct.productTabs.length === 0 || !this.showProductTabs) {
+            this.showDescription = true;
+        }
+
+        if (!this.displayableProduct.childProducts || this.displayableProduct.childProducts.length === 0) {
+            this.showProductAttributes = false;
+            this.showAggregateGrid = false;
+            this.showQuickOrder = false;
+            this.showStandardActions = true;
+        }
+
+        if (!this.showAggregateGrid && !this.showProductAttributes && !this.showQuickOrder) {
+            this.showStandardActions = true;
+        }
     }
 
     disconnectedCallback() {
@@ -161,7 +88,11 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
     }
 
     get hasPrice() {
-        return ((this.price || {}).negotiated || "").length > 0;
+        return ((this.displayableProduct.price || {}).negotiated || "").length > 0;
+    }
+
+    changeHandler(event) {
+        this[event.target.name] = event.target.value;
     }
 
     /**
@@ -171,7 +102,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
      * @private
      */
     notifyAddToCart() {
-        this.dispatchEvent(new CustomEvent("addtocart"));
+        this.dispatchEvent(new CustomEvent("addtocart", { detail : this.quantity }));
     }
 
     /**
@@ -204,6 +135,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
             return Promise.all(levelsResolved);
         }).then((levels) => {
             this._resolvedCategoryPath = levels;
+            console.log(this._resolvedCategoryPath);
         });
     }
 }

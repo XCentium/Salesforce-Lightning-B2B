@@ -197,6 +197,10 @@ public inherited sharing class XC_Util_Apex {
         return Schema.getGlobalDescribe().get(objName).getDescribe().getRecordTypeInfosById().get(id).getDeveloperName();
     }
 
+    public static String getSObjectTypeById(Id recordId) {
+        return recordId.getSobjectType().getDescribe().getName();
+    }
+
     /*
      * @Name        getFieldPicklistValues
      * @Description get the picklist values from an object field

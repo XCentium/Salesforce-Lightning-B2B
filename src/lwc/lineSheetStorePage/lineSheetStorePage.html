@@ -1,0 +1,29 @@
+<!--
+- @FileName: lineSheetStorePage
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       10/6/2020       Created
+*************************************************************
+-->
+
+<!-- Line Sheet Store Page -->
+<template>
+    <div class="slds-grid slds-grid_align-spread">
+        <div class="slds-col">
+            <h2 class="slds-text-heading_large slds-text-title_bold slds-m-bottom_x-large">Your Line Sheets</h2>
+        </div>
+    </div>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-5">
+            <template for:each={lineSheets} for:item="lineSheet">
+                <div key={lineSheet.id} class="xcls-line-sheet-btn slds-text-title_bold slds-p-around_small" data-id={lineSheet.id} onclick={selectLineSheet}>{lineSheet.name}</div>
+            </template>
+        </div>
+        <div class="slds-col slds-size_4-of-5">
+            <c-line-sheet-display store-front-display=true onsetlinesheet={setLineSheet}></c-line-sheet-display>
+        </div>
+    </div>
+</template>

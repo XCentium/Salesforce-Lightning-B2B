@@ -21,8 +21,6 @@ public inherited sharing class XC_Util_TestDataDefaults {
             'Contact' => new List<String>{'LastName', 'Email'},
             'Case' => new List<String>{'Subject'},
             'User' => new List<String>{'LastName'},
-            'OperatingHours' => new List<String>{'Name'},
-            'ServiceTerritory' => new List<String>{'Name'},
             'Product2' => new List<String>{'Name'}
     };
 
@@ -61,69 +59,6 @@ public inherited sharing class XC_Util_TestDataDefaults {
         }
     }
 
-    public class OpportunityDefaults implements FieldDefaults {
-        public Map<String, Object> getFieldDefaults() {
-            return new Map<String, Object>{
-                    'Name' => XC_Util_Apex.generateRandomString(),
-                    'CloseDate' => System.today().addDays(30),
-                    'Amount' => 0.0,
-                    'Type' => 'Retention',
-                    'LeadSource' => 'Call In'
-            };
-        }
-    }
-
-    public class OpportunityContactRoleDefaults implements FieldDefaults {
-        public Map<String, Object> getFieldDefaults() {
-            return new Map<String, Object>{};
-        }
-    }
-
-    public class OpportunityLineItemDefaults implements FieldDefaults {
-        public Map<String, Object> getFieldDefaults() {
-            return new Map<String, Object>{
-                    'UnitPrice' => 1.0,
-                    'Quantity' => 1
-            };
-        }
-    }
-
-    public class OrderDefaults implements FieldDefaults {
-        public Map<String, Object> getFieldDefaults() {
-            return new Map<String, Object> {
-                    'EffectiveDate' => Date.today(),
-                    'Pricebook2Id' => Test.getStandardPricebookId()
-            };
-        }
-    }
-
-    public class OrderItemDefaults implements FieldDefaults {
-        public Map<String, Object> getFieldDefaults() {
-            return new Map<String, Object> {
-                    'UnitPrice' => 1.0,
-                    'Quantity' => 1
-            };
-        }
-    }
-
-    public class PermissionSetAssignmentDefaults implements FieldDefaults {
-        public Map<String, Object> getFieldDefaults() {
-            return new Map<String, Object>{
-
-            };
-        }
-    }
-
-    public class PricebookEntryDefaults implements FieldDefaults {
-        public Map<String, Object> getFieldDefaults() {
-            return new Map<String, Object> {
-                    'Pricebook2Id' => Test.getStandardPricebookId(),
-                    'UnitPrice' => 1.0,
-                    'IsActive' => true
-            };
-        }
-    }
-
     public class Product2Defaults implements FieldDefaults {
         public Map<String, Object> getFieldDefaults() {
             return new Map<String, Object> {
@@ -133,34 +68,39 @@ public inherited sharing class XC_Util_TestDataDefaults {
         }
     }
 
-
-    public class UserDefaults implements FieldDefaults {
+    public class ProductCatalogDefaults implements FieldDefaults {
         public Map<String, Object> getFieldDefaults() {
             return new Map<String, Object> {
-                    'LastName' => XC_Util_Apex.generateRandomString(5),
-                    'Alias' => XC_Util_Apex.generateRandomString(4),
-                    'Email' => XC_Util_Apex.generateRandomEmail(),
-                    'UserName' => System.now().millisecond() + '@cj.com',
-                    'TimeZoneSidKey' => 'America/Los_Angeles',
-                    'LocaleSidKey' => 'en_US',
-                    'EmailEncodingKey' => 'ISO-8859-1',
-                    'LanguageLocaleKey' => 'en_US',
-                    'Employee_Number__c' => XC_Util_Apex.generateRandomString(25)
+                    'Name' => XC_Util_Apex.generateRandomString()
             };
         }
     }
 
-    public class WorkOrderDefaults implements FieldDefaults {
+    public class ProductCategoryDefaults implements FieldDefaults {
         public Map<String, Object> getFieldDefaults() {
             return new Map<String, Object> {
+                    'Name' => XC_Util_Apex.generateRandomString()
             };
         }
     }
 
-    public class WorkOrderLineItemDefaults implements FieldDefaults {
+    public class ProductCategoryProductDefaults implements FieldDefaults {
+        public Map<String, Object> getFieldDefaults() {
+            return new Map<String, Object> {};
+        }
+    }
+
+    public class WebStoreDefaults implements FieldDefaults {
         public Map<String, Object> getFieldDefaults() {
             return new Map<String, Object> {
+                    'Name' => XC_Util_Apex.generateRandomString()
             };
+        }
+    }
+
+    public class WebStoreCatalogDefaults implements FieldDefaults {
+        public Map<String, Object> getFieldDefaults() {
+            return new Map<String, Object> {};
         }
     }
 
@@ -169,7 +109,6 @@ public inherited sharing class XC_Util_TestDataDefaults {
      * CUSTOM OBJECT DEFAULT CLASSES
      * ===============================
      */
-
 
     /*
      * ===============================
