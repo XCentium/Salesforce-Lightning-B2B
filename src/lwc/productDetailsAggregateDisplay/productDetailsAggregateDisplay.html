@@ -1,0 +1,63 @@
+<!--
+- @FileName: productDetailsAggregateDisplay
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       8/19/2020         Created
+*************************************************************  
+-->
+
+<!-- Product Details Aggregate Display -->
+<template>
+    <lightning-spinner if:true={showSpinner}
+                       class="slds-is-relative slds-align_absolute-center slds-m-around_large"
+                       alternative-text="Loading"
+                       size="medium"
+                       variant="brand">
+    </lightning-spinner>
+
+    <template if:false={showSpinner}>
+        <div if:true={productAggregates} class="slds-grid slds-grid_vertical-align-center">
+            <div class="slds-col">
+                <table>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <template for:each={productAggregates.colValues} for:item="colVal">
+                            <th key={colVal.value}>{colVal.value}</th>
+                        </template>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template for:each={productAggregates.rowValues} for:item="rowVal">
+                        <tr key={rowVal.value}>
+                            <th>{rowVal.value}</th>
+                            <template for:each={rowVal.keyMap} for:item="map">
+                                <template if:true={map.value}>
+                                    <td class="slds-p-right_x-small" key={map.key}>
+                                        <div style="max-width:45px;">
+                                            <lightning-input type="number" name={map.key} value="" onchange={quantityChangeHandler}></lightning-input>
+                                        </div>
+                                    </td>
+                                </template>
+                                <template if:false={map.value}>
+                                    <td class="slds-p-right_x-small" key={map.key}>
+                                        <div style="max-width:45px;">
+                                            <p class="slds-align_absolute-center">N/A</p>
+                                        </div>
+                                    </td>
+                                </template>
+                            </template>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </div>
+            <div class="slds-col">
+                <button class="slds-button slds-button_brand slds-align_absolute-center" onclick={addToCart} title="addToCart">Add to Cart</button>
+            </div>
+        </div>
+    </template>
+</template>

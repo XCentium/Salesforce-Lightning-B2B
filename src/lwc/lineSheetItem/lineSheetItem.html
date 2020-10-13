@@ -1,0 +1,38 @@
+<!--
+- @FileName: lineSheetItem
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       9/17/2020         Created
+*************************************************************  
+-->
+
+<!-- Line Sheet Item -->
+<template>
+    <div class="slds-is-relative slds-p-around_small xcls-card-content">
+        <template if:true={hasItem}>
+            <div class="slds-align_absolute-center">
+                <img src={item.imgURL} alt={item.altText} class="xcls-product-image"/>
+            </div>
+
+            <p class="slds-m-top_medium slds-text-title_bold xcls-name">{item.productName}</p>
+            <p class="slds-m-top_xx-small">{item.sku}</p>
+            <p class="slds-m-top_xx-small xcls-details">Details</p>
+
+            <template if:false={storeFrontDisplay}>
+                <div class="slds-is-absolute xcls-product-remove">
+                    <lightning-button-icon key={item.productId} icon-name="utility:delete"
+                                           title="Delete"
+                                           alternative-text="Delete"
+                                           class="slds-m-left_xx-small"
+                                           size="x-small"
+                                           value={item.productId}
+                                           onclick={removeProduct}>
+                    </lightning-button-icon>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

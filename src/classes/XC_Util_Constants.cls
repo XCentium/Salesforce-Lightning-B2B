@@ -1,6 +1,6 @@
 /**
  * @FileName: XC_Util_Constants
- * @Description:
+ * @Description: Constants
  * @Author: Graeme Ward
  * @ModificationLog:
  *-----------------------------------------------------------
@@ -11,8 +11,10 @@
 public with sharing class XC_Util_Constants {
     public static final Map<String,String> CHECKOUT_EXTERNAL_SERVICE_TYPES = new Map<String,String>{
             'Inventory' => 'CHECK_INVENTORY',
-            'Shipping' => 'COMPUTE_SHIPPING',
+            'Shipment' => 'COMPUTE_SHIPPING',
             'Price' => 'COMPUTE_PRICE',
             'Tax' => 'COMPUTE_TAXES'
     };
+
+    public static final String PRODUCT_VARIANTS_CATEGORY = 'Product Variants';
 }

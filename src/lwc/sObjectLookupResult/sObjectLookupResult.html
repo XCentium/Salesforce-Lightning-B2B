@@ -1,0 +1,21 @@
+<!--
+- @FileName: sObjectLookupResult
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       9/17/2020         Created
+*************************************************************  
+-->
+
+<!-- Sobject Lookup Result -->
+<template>
+    <div role="presentation" onclick={select}>
+        <span class="slds-media" role="option">
+              <span class="slds-media__body">
+                  <button value={result.record} class="slds-p-around_xx-small button-subdued">{result.displayValue}</button>
+              </span>
+        </span>
+    </div>
+</template>

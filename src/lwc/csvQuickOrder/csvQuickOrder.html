@@ -1,0 +1,28 @@
+<!--
+- @FileName: csvQuickOrder
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       8/16/2020         Created
+*************************************************************  
+-->
+
+<!-- Csv Quick Order -->
+<template>
+    <lightning-spinner if:true={showSpinner}
+                       class="slds-is-relative slds-align_absolute-center slds-m-around_large"
+                       alternative-text="Loading"
+                       size="medium"
+                       variant="brand">
+    </lightning-spinner>
+
+    <div if:false={showSpinner} class="slds-m-top_large">
+        <h2 class="slds-text-heading_large slds-text-title_bold slds-m-bottom_medium slds-p-left_small">CSV Quick Order</h2>
+        <div class="slds-p-left_medium">
+            <input type="file" accept={acceptedFormats} data-id="csv-file">
+            <lightning-button variant="brand" label="Add to Cart" onclick={processCSV}></lightning-button>
+        </div>
+    </div>
+</template>

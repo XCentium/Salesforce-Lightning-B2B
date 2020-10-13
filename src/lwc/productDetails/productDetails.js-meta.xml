@@ -15,6 +15,10 @@
         <targetConfig targets="lightningCommunity__Default">
             <property name="recordId" type="String" label="Record Id" description="Automatically bind the page's record id to the component variable" default="{!recordId}"/>
             <property name="effectiveAccountId" type="String" label="Effective Account Id" description="The ID of the account under which the user is acting (BETA)" default="{!CurrentUser.effectiveAccountId}"/>
+            <property name="showProductAttributes" type="Boolean" label="Show Product Attributes" description="Dropdowns for selecting product attributes" default="false"/>
+            <property name="showAggregateGrid" type="Boolean" label="Show Aggregate Grid" description="Grid for quick ordering product variations" default="false"/>
+            <property name="showQuickOrder" type="Boolean" label="Show Quick Order Button" description="Modal for quick ordering product variations" default="false"/>
+            <property name="showProductTabs" type="Boolean" label="Show Product Tabs" description="Display product tabs" default="false"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

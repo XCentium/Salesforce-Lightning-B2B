@@ -1,0 +1,21 @@
+/**
+ * @FileName: sObjectLookupResult.css
+ * @Description:
+ * @Author: Graeme Ward
+ * @ModificationLog:
+ *-----------------------------------------------------------
+ * Author            Date            Modification
+ * Graeme Ward       9/17/2020         Created
+ *-----------------------------------------------------------  
+ */
+.button-subdued {
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    width: 100%;
+}
+
+.button-subdued:focus {
+    background-color: rgb(236, 235, 234);
+    outline: none !important;
+}

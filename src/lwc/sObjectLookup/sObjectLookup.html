@@ -1,0 +1,37 @@
+<!--
+- @FileName: sObjectLookup
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       9/17/2020         Created
+*************************************************************  
+-->
+
+<!-- Sobject Lookup -->
+<template>
+    <div class="slds-is-relative">
+        <lightning-input name={label}
+                         label={label}
+                         type="search"
+                         autocomplete="off"
+                         placeholder={placeholder}
+                         is-loading={isLoading}
+                         value={searchString}
+                         onchange={search}
+                         onfocus={focus}
+                         disabled={disabled}>
+        </lightning-input>
+
+        <template if:true={showResults}>
+            <div class="slds-is-absolute search-results">
+                <template for:each={searchResults} for:item="result">
+                    <c-s-object-lookup-result key={result.record.Id} result={result} onselect={select}></c-s-object-lookup-result>
+                </template>
+            </div>
+        </template>
+
+        <p if:true={message}>{message}</p>
+    </div>
+</template>

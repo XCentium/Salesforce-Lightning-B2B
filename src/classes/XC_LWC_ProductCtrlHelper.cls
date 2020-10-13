@@ -1,6 +1,6 @@
 /**
  * @FileName: XC_LWC_ProductCtrlHelper
- * @Description:
+ * @Description: Helper methods for product controller
  * @Author: Graeme Ward
  * @ModificationLog:
  *-----------------------------------------------------------
@@ -8,23 +8,46 @@
  * Graeme Ward       7/2/2020         Created
  *-----------------------------------------------------------  
  */
-public with sharing class XC_LWC_ProductCtrlHelper {
+public inherited sharing class XC_LWC_ProductCtrlHelper {
 
-    public static List<DisplayableProduct> getSpotlightProducts() {
+    public static XC_LWC_ProductWrappers.ProductDetails getProduct(String productId, String effectiveAccountId) {
+        return new XC_LWC_ProductWrappers.ProductDetails(productId, effectiveAccountId);
+    }
+
+    public static XC_LWC_ProductWrappers.ProductDetails getProductImage(String recordId, String effectiveAccountId) {
+        String objectType = XC_Util_Apex.getSObjectTypeById((Id) recordId);
+        String productId;
+
+        switch on objectType {
+            when 'Product' {
+                productId = recordId;
+            }
+            when 'OrderItem' {
+                productId = [SELECT Id, Product2Id FROM OrderItem WHERE Id = :recordId].Product2Id;
+            }
+            when else {
+                return null;
+            }
+        }
+
+        return new XC_LWC_ProductWrappers.ProductDetails(productId, effectiveAccountId);
+    }
+
+    public static List<XC_LWC_ProductWrappers.SpotlightProduct> getSpotlightProducts(String effectiveAccountId, String locationKey) {
         List<Product2> products = [
                 SELECT Id
                 FROM Product2
-                WHERE Spotlight_Product__c = TRUE
+                WHERE Spotlight_Location_Key__c = :locationKey
                 LIMIT 3
         ];
 
-        List<DisplayableProduct> displayableProducts = new List<DisplayableProduct>();
+        List<XC_LWC_ProductWrappers.SpotlightProduct> displayableProducts = new List<XC_LWC_ProductWrappers.SpotlightProduct>();
 
         for (Product2 p : products) {
             ConnectApi.ProductDetail productDetail = ConnectApi.CommerceCatalog.getProduct(
-                    XC_Util_Query.currentWebstoreId,
+                    XC_Util_Query.currentWebStoreId,
                     p.Id,
-                    '001B000001KUE39IAH',
+                    effectiveAccountId,
                     null,
                     false,
                     null,
@@ -34,37 +57,56 @@ public with sharing class XC_LWC_ProductCtrlHelper {
             );
 
             ConnectApi.ProductPrice productPrice = ConnectApi.CommerceStorePricing.getProductPrice(
-                    XC_Util_Query.currentWebstoreId,
+                    XC_Util_Query.currentWebStoreId,
                     p.Id,
-                    '001B000001KUE39IAH'
+                    effectiveAccountId
             );
 
-            displayableProducts.add(new DisplayableProduct(p.Id, productDetail, productPrice));
+            displayableProducts.add(new XC_LWC_ProductWrappers.SpotlightProduct(p.Id, productDetail, productPrice));
         }
 
         return displayableProducts;
     }
 
-    public class DisplayableProduct {
-        @AuraEnabled public String id;
-        @AuraEnabled public String name;
-        @AuraEnabled public String imageUrl;
-        @AuraEnabled public String imageAlternativeText;
-        @AuraEnabled public String currencyCode;
-        @AuraEnabled public String price;
-        @AuraEnabled public String description;
+    public static XC_LWC_ProductWrappers.ProductAttributes getProductAttributes(String productId){
+        List<Product2> products = [
+                SELECT Id,
+                        (SELECT Id, Attribute__r.Attribute__c, Attribute__r.Value__c
+                        FROM Product_Attributes__r)
+                FROM Product2
+                WHERE Parent_Product__c = :productId
+        ];
 
-        public DisplayableProduct(String pId, ConnectApi.ProductDetail productDetail, ConnectApi.ProductPrice productPrice) {
-            Map<String,Object> fields = productDetail.fields;
-            ConnectApi.ProductMedia defaultImage = (ConnectApi.ProductMedia) productDetail.defaultImage;
+        return new XC_LWC_ProductWrappers.ProductAttributes(products);
+    }
 
-            this.id = pId;
-            this.name = (String) fields.get('Name');
-            this.imageUrl = defaultImage.url;
-            this.imageAlternativeText = defaultImage.alternateText;
-            this.currencyCode = productPrice.currencyIsoCode;
-            this.price = productPrice.unitPrice;
-            this.description = (String) fields.get('Description');
+    public static XC_LWC_ProductWrappers.ProductAggregates getProductAggregates(String productId) {
+        Product2 parentProduct = [
+                SELECT Id, Aggregate_Column__c, Aggregate_Row__c, Aggregate_Column_Sequence__c, Aggregate_Row_Sequence__c,
+                    (SELECT Id FROM Child_Products__r)
+                FROM Product2
+                WHERE Id =:productId
+        ];
+
+        if (parentProduct.Child_Products__r.isEmpty()) return null;
+
+        Set<Id> childProductIds = new Set<Id>();
+
+        for (Product2 p : parentProduct.Child_Products__r) {
+            childProductIds.add(p.Id);
         }
+
+        List<Product_Attribute__c> attributes = [
+                SELECT Id, Product__c, Attribute__r.Attribute__c, Attribute__r.Value__c
+                FROM Product_Attribute__c
+                WHERE Product__c IN :childProductIds
+                AND (Attribute__r.Attribute__c = :parentProduct.Aggregate_Column__c
+                    OR Attribute__r.Attribute__c = :parentProduct.Aggregate_Row__c)
+                ORDER BY Attribute__r.Value__c ASC
+        ];
+
+        XC_LWC_ProductWrappers.ProductAggregates pv = new XC_LWC_ProductWrappers.ProductAggregates(parentProduct, attributes);
+
+        return pv;
     }
 }

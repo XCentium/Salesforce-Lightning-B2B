@@ -11,10 +11,12 @@
 
 <!-- Spotlight Product Display -->
 <template>
-    <figure class="slds-p-around_xx-small slds-border_top slds-border_right slds-border_bottom slds-border_left">
-        <img src={product.imageUrl} alt={product.alternativeText} />
-    </figure>
-    <h2 class="slds-text-heading_medium">{product.name}</h2>
+    <a href={productPath}>
+        <figure class="slds-p-around_xx-small slds-border_top slds-border_right slds-border_bottom slds-border_left">
+            <img src={product.imageUrl} alt={product.alternativeText} />
+        </figure>
+        <h3 class="slds-text-heading_medium slds-m-top_medium">{product.name}</h3>
+    </a>
     <div class="price">
         <span if:false={hasPrice}>Price Unavailable</span>
         <lightning-formatted-number
@@ -33,9 +35,4 @@
         >
         </lightning-button>
     </div>
-    <lightning-accordion active-section-name="" allow-multiple-sections-open>
-        <lightning-accordion-section name="description" label="Description">
-            <lightning-formatted-rich-text value={product.description}></lightning-formatted-rich-text>
-        </lightning-accordion-section>
-    </lightning-accordion>
 </template>

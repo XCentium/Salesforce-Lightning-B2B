@@ -11,3 +11,10 @@
 .xc-spotlight-product {
     flex: 1;
 }
+
+h2 {
+    font-weight: 300;
+    font-size: 2rem;
+    line-height: 1.25;
+    padding: 0;
+}

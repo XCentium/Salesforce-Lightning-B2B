@@ -1,0 +1,54 @@
+<!--
+- @FileName: checkoutShippingAddressModal
+- @Description: Model for creating new shipping address
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       9/14/2020       Created
+*************************************************************  
+-->
+
+<!-- Checkout Shipping Address Modal -->
+<template>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                    <lightning-icon icon-name="utility:close"
+                                    alternative-text="close"
+                                    variant="inverse"
+                                    size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Shipping Address</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <lightning-spinner if:true={showSpinner}
+                                   class="slds-is-relative slds-align_absolute-center slds-m-around_large"
+                                   alternative-text="Creating address..."
+                                   size="medium"
+                                   variant="brand">
+                </lightning-spinner>
+
+                <div if:false={showSpinner}>
+                    <lightning-input type="text" name="name" label="Name" onchange={handleChange} required></lightning-input>
+                    <lightning-input type="text" name="street" label="Street" onchange={handleChange}></lightning-input>
+                    <lightning-input type="text" name="city" label="City" onchange={handleChange}></lightning-input>
+                    <lightning-input type="text" name="state" label="State/Province" onchange={handleChange}></lightning-input>
+                    <lightning-input type="text" name="postalCode" label="Zip/Postal Code" onchange={handleChange}></lightning-input>
+                    <lightning-input type="text" name="country" label="Country" onchange={handleChange}></lightning-input>
+                </div>
+
+                <div if:true={error} class="slds-card slds-m-top_large slds-p-around_large">
+                    <p class="slds-text-color_error">{error}</p>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={createAddress} title="Save">Save</button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

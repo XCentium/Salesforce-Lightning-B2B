@@ -1,6 +1,6 @@
 /**
  * @FileName: XC_LWC_CheckoutRegistrationWrapper
- * @Description:
+ * @Description: Wrapper class for creating checkout registration services
  * @Author: Graeme Ward
  * @ModificationLog:
  *-----------------------------------------------------------
@@ -43,24 +43,8 @@ public with sharing class XC_LWC_CheckoutRegistrationWrapper {
     }
 
     private void setRegistrationParameters() {
-        switch on serviceType {
-            when 'Inventory' {
-                this.devName = 'CHECK_INVENTORY';
-                this.prefixedName = serviceType + '__' + devName;
-            }
-            when 'Price' {
-                this.devName = 'COMPUTE_SHIPPING';
-                this.prefixedName = serviceType + '__' + devName;
-            }
-            when 'Shipment' {
-                this.devName = 'COMPUTE_PRICE';
-                this.prefixedName = serviceType + '__' + devName;
-            }
-            when 'Tax' {
-                this.devName = 'COMPUTE_TAXES';
-                this.prefixedName = serviceType + '__' + devName;
-            }
-        }
+        this.devName = XC_Util_Constants.CHECKOUT_EXTERNAL_SERVICE_TYPES.get(this.serviceType);
+        this.prefixedName = this.serviceType + '__' + this.devName;
     }
 
     public void registerExternalService() {
@@ -72,13 +56,10 @@ public with sharing class XC_LWC_CheckoutRegistrationWrapper {
                     'AND ExternalServiceProviderType = :serviceType ' +
                     'LIMIT 1'
             );
-            this.registeredIntegrationId = registeredExternalService.Id;
 
-            System.debug('Registered External Service: FOUND ' + this.registeredIntegrationId);
+            this.registeredIntegrationId = registeredExternalService.Id;
             this.messages.add('Registered External Service: FOUND ' + this.registeredIntegrationId);
         } catch (QueryException q) {
-            System.debug('Registered External Service: MISSING ' + this.apexClassId);
-
             RegisteredExternalService registeredExternalService = new RegisteredExternalService(
                     DeveloperName = this.devName,
                     MasterLabel = this.devName,
@@ -89,8 +70,6 @@ public with sharing class XC_LWC_CheckoutRegistrationWrapper {
             insert registeredExternalService;
 
             this.registeredIntegrationId = registeredExternalService.Id;
-
-            System.debug('Registered External Service: INSERTED ' + this.registeredIntegrationId);
             this.messages.add('Registered External Service: INSERTED ' + this.registeredIntegrationId);
         }
     }
@@ -98,7 +77,7 @@ public with sharing class XC_LWC_CheckoutRegistrationWrapper {
     public void storeIntegratedService() {
         // locate and map in StoreIntegratedService
         try {
-            StoreIntegratedService registeredMappingObj = Database.query(
+            StoreIntegratedService storeIntegratedService = Database.query(
                     'SELECT Id FROM StoreIntegratedService ' +
                     'WHERE Integration = :prefixedName ' +
                     'AND ServiceProviderType = :serviceType ' +
@@ -106,26 +85,17 @@ public with sharing class XC_LWC_CheckoutRegistrationWrapper {
                     'LIMIT 1'
             );
 
-            this.storeIntegratedServiceId = registeredMappingObj.Id;
-
-            System.debug('Store Integrated Service: FOUND ' + this.storeIntegratedServiceId);
+            this.storeIntegratedServiceId = storeIntegratedService.Id;
             this.messages.add('Store Integrated Service: FOUND ' + this.storeIntegratedServiceId);
-
-            // delete registeredMappingObj; // optionally remove if needed
         } catch (QueryException q) {
-            System.debug('Store Integrated Service: MISSING ' + this.prefixedName);
-
             StoreIntegratedService storeIntegratedService = new StoreIntegratedService(
                     Integration = this.prefixedName,
                     ServiceProviderType = this.serviceType,
                     StoreId = this.webstoreId
             );
-
             insert storeIntegratedService;
 
             this.storeIntegratedServiceId = storeIntegratedService.Id;
-
-            System.debug('Store Integrated Service: INSERTED ' + this.storeIntegratedServiceId);
             this.messages.add('Store Integrated Service: INSERTED ' + this.storeIntegratedServiceId);
         }
     }

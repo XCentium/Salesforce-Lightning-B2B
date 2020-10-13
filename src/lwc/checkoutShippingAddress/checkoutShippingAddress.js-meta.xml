@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>49.0</apiVersion>
+    <description>Checkout Shipping Address</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Checkout Shipping Address</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="contactPointAddressId" type="String" label="Contact Point Address Id"/>
+            <property name="shippingInstructions" type="String" label="Shipping Instructions Value"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

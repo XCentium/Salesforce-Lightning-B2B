@@ -1,0 +1,26 @@
+/**
+ * @FileName: lineSheetStorePage.css
+ * @Description:
+ * @Author: Graeme Ward
+ * @ModificationLog:
+ *-----------------------------------------------------------
+ * Author            Date            Modification
+ * Graeme Ward       10/6/2020       Created
+ *-----------------------------------------------------------
+ */
+h2 {
+    font-weight: 300;
+    font-size: 1.25rem;
+    line-height: 1.25;
+    padding: 0;
+}
+
+.xcls-line-sheet-btn {
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.xcls-line-sheet-btn.active {
+    background-color: rgb(26,147,11);
+    color: white;
+}

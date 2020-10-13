@@ -1,0 +1,92 @@
+<!--
+- @FileName: lineSheetDisplay
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       9/17/2020         Created
+*************************************************************  
+-->
+
+<!-- Line Sheet Display -->
+<template>
+    <lightning-spinner if:true={showSpinner}
+                       class="slds-is-relative slds-align_absolute-center slds-m-around_large"
+                       alternative-text="Loading"
+                       size="medium"
+                       variant="brand">
+    </lightning-spinner>
+
+    <template if:false={showSpinner}>
+        <template if:true={showSelectText}>
+            <div>
+                <p class="slds-align_absolute-center">Please select a line sheet</p>
+            </div>
+        </template>
+
+        <template if:true={hasLineSheet}>
+            <div class="template-container">
+                <template if:true={hasHeaderImage}>
+                    <div class="slds-is-relative slds-m-bottom_x-large xcls-header-container" style={backgroundImageStyle} >
+                        <div class="slds-is-absolute slds-align_absolute-center xcls-header-title">
+                            <lightning-formatted-rich-text value={lineSheet.headerText}></lightning-formatted-rich-text>
+                        </div>
+                    </div>
+                </template>
+
+                <template if:false={hasHeaderImage}>
+                    <div class="xcls-header-title-no-image">
+                        <lightning-formatted-rich-text value={lineSheet.headerText}></lightning-formatted-rich-text>
+                    </div>
+                </template>
+
+
+                <div class="slds-p-around_x-large">
+                    <template if:true={hasLineSheetText}>
+                        <div class="slds-m-bottom_large">
+                            <lightning-formatted-rich-text value={lineSheet.lineSheetText}></lightning-formatted-rich-text>
+                        </div>
+                    </template>
+
+                    <template if:true={hasLineSheetItems}>
+                        <div class="slds-grid slds-wrap slds-gutters_direct-medium slds-grid_vertical-stretch slds-p-around_large">
+                            <template for:each={lineSheetItems} for:item="item" for:index="idx">
+                                <div key={item.productId}
+                                     data-product={item.productId}
+                                     data-index={idx}
+                                     draggable="true"
+                                     ondragstart={dragStart}
+                                     ondragover={allowDrop}
+                                     ondrop={onDrop}
+                                     ondragleave={dragLeave}
+                                     ondragend={dragEnd}
+                                     class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-medium-size_3-of-12 slds-m-bottom_x-large xcls-draggable">
+                                    <c-line-sheet-item data-product={item.productId}
+                                                          data-index={idx}
+                                                          item={item}
+                                                          store-front-display={storeFrontDisplay}
+                                                          onremoveproduct={removeProduct}>
+                                    </c-line-sheet-item>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <template if:true={hasFooterContent}>
+                    <div class="slds-grid slds-gutters_direct-medium slds-border_top slds-p-around_x-large">
+                        <div class="slds-col slds-size_2-of-3">
+                            <lightning-formatted-rich-text value={lineSheet.footerText}></lightning-formatted-rich-text>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3">
+                            <template if:true={lineSheet.footerImageUrl}>
+                                <img class="xcls-banner xcls-footer-img" src={lineSheet.footerImageUrl} />
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </template>
+</template>

@@ -1,0 +1,21 @@
+/**
+ * @FileName: orderPad
+ * @Description:
+ * @Author: Graeme Ward
+ * @ModificationLog:
+ *-----------------------------------------------------------
+ * Author            Date            Modification
+ * Graeme Ward       8/18/2020         Created
+ *-----------------------------------------------------------  
+ */
+
+.order-pad-container {
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+ h2 {
+     font-weight: 300;
+     font-size: 1.25rem;
+     line-height: 1.25;
+ }

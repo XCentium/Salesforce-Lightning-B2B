@@ -1,0 +1,60 @@
+<!--
+- @FileName: checkoutShippingAddress
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       9/8/2020        Created
+*************************************************************  
+-->
+
+<!-- Checkout Shipping Address -->
+<template>
+    <div class="slds-card" title="Ship To">
+        <div class="slds-m-bottom_small slds-clearfix">
+            <div class="slds-float_right">
+                <lightning-button variant="neutral"
+                                  label="New Address"
+                                  title="New Address"
+                                  onclick={openModal} >
+                </lightning-button>
+            </div>
+        </div>
+
+        <template if:true={contactPointAddresses}>
+            <div class="slds-m-bottom_small">
+                <lightning-radio-group name="contactPointAddressId"
+                                       label="Available Addresses"
+                                       options={contactPointAddresses}
+                                       value={value}
+                                       onchange={handleChange}
+                                       type="radio">
+                </lightning-radio-group>
+            </div>
+        </template>
+
+        <div class="slds-m-bottom_small">
+            <lightning-textarea name="shippingInstructions"
+                                label="Delivery Instructions"
+                                value={shippingInstructions}
+                                onchange={handleChange}>
+            </lightning-textarea>
+        </div>
+
+        <div class="slds-m-top_large slds-clearfix">
+            <div class="slds-float_right">
+                <lightning-button variant="brand" type="submit" name="next" label="Next" onclick={handleNext} disabled={addressValid}></lightning-button>
+            </div>
+        </div>
+
+        <!-- create address modal -->
+        <template if:true={modalOpen}>
+            <c-checkout-shipping-address-modal onmodalclose={closeModal} onmodalsave={addAddress}></c-checkout-shipping-address-modal>
+        </template>
+    </div>
+
+    <div if:true={error} class="slds-card slds-m-top_large slds-p-around_large">
+        <p class="slds-text-color_error">{error}</p>
+    </div>
+</template>

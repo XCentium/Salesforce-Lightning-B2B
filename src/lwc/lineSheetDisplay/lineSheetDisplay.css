@@ -1,0 +1,46 @@
+/**
+ * @FileName: lineSheetDisplay.css
+ * @Description:
+ * @Author: Graeme Ward
+ * @ModificationLog:
+ *-----------------------------------------------------------
+ * Author            Date            Modification
+ * Graeme Ward       9/20/2020         Created
+ *-----------------------------------------------------------  
+ */
+.xcls-header-title {
+    height: 100%;
+    width: 100%;
+}
+
+.xcls-header-title-no-image {
+    text-align: center;
+    width: 100%;
+}
+
+.xcls-header-container {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 340px;
+    z-index: 0;
+}
+
+.xcls-product {
+    width: 100%;
+}
+
+.xcls-item-container {
+    background-color: rgb(244,244,244);
+    border: 1px solid rgb(155,155,155);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    min-height: 320px;
+}
+
+.xcls-draggable {
+    cursor: pointer;
+}
+
+.xcls-dragover {
+	opacity: .5;
+}

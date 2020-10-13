@@ -1,0 +1,144 @@
+<!--
+- @FileName: lineSheetForm
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       9/26/2020         Created
+*************************************************************  
+-->
+
+<!-- Line Sheet Form -->
+<template>
+    <div class="slds-grid slds-grid_align-end">
+        <lightning-button variant="neutral"
+                          label="Cancel"
+                          title="Cancel"
+                          class="slds-col slds-m-right_small"
+                          onclick={hideForm}>
+        </lightning-button>
+        <lightning-button variant="brand"
+                          label="Save"
+                          title="Save"
+                          class="slds-col"
+                          onclick={handleSave}>
+        </lightning-button>
+    </div>
+
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-3">
+            <div class="slds-text-heading_medium slds-m-bottom_large">Settings</div>
+
+            <template if:false={hasTemplate}>
+                <div class="slds-m-bottom_medium">
+                    <lightning-combobox data-name="template"
+                                        label="Template"
+                                        value={lineSheet.template}
+                                        options={templateOptions}
+                                        onchange={handleFieldChange}>
+                    </lightning-combobox>
+                </div>
+            </template>
+
+            <div class="slds-m-bottom_medium">
+                <c-s-object-lookup data-id="contactLookup"
+                                  label="Contact"
+                                  search-string={cSearchString}
+                                  placeholder={cPlaceholder}
+                                  fields-by-object={cFieldsByObject}
+                                  query-filters={cQueryFilters}
+                                  comparison-field={cComparisonField}
+                                  display-fields={cDisplayFields}
+                                  search-soql={cSearchSoql}
+                                  onselect={selectContact}>
+                </c-s-object-lookup>
+            </div>
+
+            <lightning-accordion allow-multiple-sections-open active-section-name={activeSections}>
+                <lightning-accordion-section name="A" label="Header Image URL">
+                    <lightning-input type="text"
+                                     data-name="headerImageUrl"
+                                     label=""
+                                     value={lineSheet.headerImageUrl}
+                                     onchange={handleFieldChange} >
+                    </lightning-input>
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="B" label="Header Text">
+                    <lightning-input-rich-text data-name="headerText"
+                                               label=""
+                                               formats={richTextHeaderFormats}
+                                               value={lineSheet.headerText}
+                                               onchange={handleFieldChange} >
+                    </lightning-input-rich-text>
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="C" label="Line Sheet Title">
+                    <lightning-input-rich-text data-name="lineSheetText"
+                                               label=""
+                                               formats={richTextFormats}
+                                               value={lineSheet.lineSheetText}
+                                               onchange={handleFieldChange} >
+                    </lightning-input-rich-text>
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="D" label="Products">
+                    <div>
+                        <c-s-object-lookup data-id="productLookup"
+                                          label=""
+                                          placeholder={pPlaceholder}
+                                          fields-by-object={pFieldsByObject}
+                                          query-filters={pQueryFilters}
+                                          comparison-field={pComparisonField}
+                                          display-fields={pDisplayFields}
+                                          search-soql={pSearchSoql}
+                                          override-results={pOverrideResults}
+                                          onresults={setProductResults}
+                                          disabled={noContact}>
+                        </c-s-object-lookup>
+                    </div>
+
+                    <template if:true={hasProducts}>
+                        <div class="slds-m-top_medium">
+                            <template for:each={productResults} for:item="product">
+                                <button key={product.displayValue}
+                                        data-product={product.record.Id}
+                                        class="slds-button_neutral slds-button_stretch slds-m-bottom_small slds-p-around_small xcls-product"
+                                        onclick={addProduct}>
+                                    {product.displayValue}
+                                </button>
+                            </template>
+                        </div>
+                    </template>
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="E" label="Footer Image URL">
+                    <lightning-input type="text"
+                                     data-name="footerImageUrl"
+                                     label=""
+                                     value={lineSheet.footerImageUrl}
+                                     onchange={handleFieldChange} >
+                    </lightning-input>
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="F" label="Footer Text">
+                    <lightning-input-rich-text data-name="footerText"
+                                               label=""
+                                               formats={richTextFormats}
+                                               value={lineSheet.footerText}
+                                               onchange={handleFieldChange} >
+                    </lightning-input-rich-text>
+                </lightning-accordion-section>
+            </lightning-accordion>
+        </div>
+
+        <div class="slds-col slds-size_2-of-3">
+            <div class="slds-text-heading_medium slds-m-bottom_large">Preview</div>
+            <c-line-sheet-display line-sheet-id={lineSheetId}
+                                  is-clone={isClone}
+                                  onsetlinesheet={setLineSheet}>
+            </c-line-sheet-display>
+        </div>
+    </div>
+</template>

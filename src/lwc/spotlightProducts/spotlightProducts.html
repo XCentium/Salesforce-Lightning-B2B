@@ -11,10 +11,10 @@
 
 <!-- Spotlight Products -->
 <template>
-    <h1 class="slds-text-heading_large slds-m-bottom_medium slds-text-align_center">{title}</h1>
-    <div class="slds-grid slds-gutters">
-        <template for:each={spotlightProducts.data} for:item="product">
-            <div key={product} class="slds-col xc-spotlight-product">
+    <h2 class="slds-text-heading_large slds-m-bottom_medium slds-text-align_center">{title}</h2>
+    <div class="slds-grid slds-gutters slds-wrap">
+        <template for:each={spotlightProducts} for:item="product">
+            <div key={product} class="slds-col slds-size_1-of-3 xc-spotlight-product">
                 <c-spotlight-product-display
                         key={product}
                         product={product}

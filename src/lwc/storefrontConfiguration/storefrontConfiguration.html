@@ -1,0 +1,25 @@
+<!--
+- @FileName: storefrontConfiguration
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       8/16/2020         Created
+*************************************************************  
+-->
+
+<!-- Storefront Configuration -->
+<template>
+    <lightning-card>
+        <h1 class="slds-text-heading_small slds-text-title_bold slds-m-bottom_medium slds-p-left_small">Storefront Configuration</h1>
+        <lightning-tabset>
+            <lightning-tab label="Checkout Registration">
+                <c-storefront-configuration-checkout webstore-id={recordId}></c-storefront-configuration-checkout>
+            </lightning-tab>
+<!--            <lightning-tab label="Payment Gateway">-->
+<!--                <c-storefront-configuration-payment ></c-storefront-configuration-payment>-->
+<!--            </lightning-tab>-->
+        </lightning-tabset>
+    </lightning-card>
+</template>

@@ -1,0 +1,14 @@
+/**
+ * @FileName: productDetailsAttributes.css
+ * @Description:
+ * @Author: Graeme Ward
+ * @ModificationLog:
+ *-----------------------------------------------------------
+ * Author            Date            Modification
+ * Graeme Ward       8/20/2020         Created
+ *-----------------------------------------------------------  
+ */
+
+.slds-form-element_horizontal:not(.slds-is-editing) {
+    padding: 0;
+}

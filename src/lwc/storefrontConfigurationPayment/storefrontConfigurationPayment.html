@@ -1,0 +1,107 @@
+<!--
+- @FileName: storefrontConfigurationPayment
+- @Description:
+- @Author: Graeme Ward
+- @ModificationLog:
+*************************************************************
+- Author            Date            Modification
+- Graeme Ward       8/16/2020         Created
+*************************************************************  
+-->
+
+<!-- Storefront Configuration Payment -->
+<template>
+    <div class="slds-p-around_small">
+        <div class="slds-grid slds-gutters slds-m-bottom_medium">
+            <div class="slds-col">
+                <!--storefront-->
+                <lightning-input label="Storefront" value="Albatross Golf" disabled></lightning-input>
+
+                <!--merchant name-->
+                <lightning-input label="Merchant Name"></lightning-input>
+
+                <!--public key-->
+                <lightning-input label="Public Key"></lightning-input>
+
+                <!--merchant account id-->
+                <lightning-input label="Merchant Account Id"
+                                 field-level-help="Example: 'EUR:MERCHANACID'. You can use it to have multiple merchant
+                                 accounts within the same Braintree gateway. Currency is also determined by Merchant Account ID.
+                                 If no Merchant Account ID is specified, Braintree will use your default merchant account.">
+                </lightning-input>
+
+                <!--save transaction-->
+                <label class="slds-form-element__label">Save Transaction</label>
+                <select datatype="text" class="slds-select" name="">
+                    <option value="Authorization">Authorization</option>
+                    <option value="Sale">Sale</option>
+                </select>
+
+                <!--3d secure-->
+                <label class="slds-form-element__label">Payment Model</label>
+                <select datatype="text" class="slds-select" name="apexClassId">
+                    <option value="Authorization">Authorization</option>
+                    <option value="Sale">Sale</option>
+                </select>
+
+                <!--billing agreement description-->
+                <lightning-input label="Billing Agreement Description"></lightning-input>
+
+                <!--descriptor phone-->
+                <lightning-input label="Descriptor Phone"
+                                 field-level-help="Phone must contain exactly 10 digits"
+                                 max-length=10
+                                 min-length=10>
+                </lightning-input>
+            </div>
+
+            <div class="slds-col">
+                <!--environment-->
+                <lightning-input label="Environment" value="Sandbox" disabled></lightning-input>
+
+                <!--blank-->
+
+                <!--merchant id-->
+                <lightning-input label="Merchant ID"></lightning-input>
+
+                <!--private key-->
+                <lightning-input label="Private Key"></lightning-input>
+
+                <!--payment model-->
+                <label class="slds-form-element__label">Payment Model</label>
+                <select datatype="text" class="slds-select" name="paymentModel">
+                    <option value="Authorization">Authorization</option>
+                    <option value="Sale">Sale</option>
+                </select>
+
+                <!--paypal orders-->
+                <label class="slds-form-element__label">PayPal Orders</label>
+                <select datatype="text" class="slds-select" name="paypalOrders">
+                    <option value="Disabled">Disabled</option>
+                    <option value="Enabled">Enabled</option>
+                </select>
+
+                <!--data level-->
+                <label class="slds-form-element__label">Data Level</label>
+                <select datatype="text" class="slds-select" name="dataLevel">
+                    <option value="Level 1">Level 1</option>
+                    <option value="Level 2">Level 2</option>
+                    <option value="Level 3">Level 3</option>
+                </select>
+
+                <!--descriptor name-->
+                <lightning-input label="Descriptor Name"></lightning-input>
+
+                <!--descriptor url-->
+                <lightning-input label="Descriptor URL"
+                                 field-level-help="URL must be 13 characters or shorter, and can only contain letters, numbers and periods"
+                                 max-length=13>
+
+                </lightning-input>
+            </div>
+        </div>
+        <div class="slds-m-bottom_medium">
+<!--            <lightning-button variant="brand" class="slds-m-right_medium" label="Register Class" onclick={save}></lightning-button>-->
+        </div>
+    </div>
+</template>
