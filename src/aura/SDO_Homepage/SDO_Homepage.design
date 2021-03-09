@@ -1,0 +1,13 @@
+<design:component label="SDO Home Template">
+    <flexipage:template >
+            <flexipage:region name="Dashboard" defaultWidth="MEDIUM">
+            </flexipage:region>
+            <flexipage:region name="Section_1" defaultWidth="MEDIUM">
+            </flexipage:region>
+            <flexipage:region name="Section_2" defaultWidth="MEDIUM">
+            </flexipage:region>
+            <flexipage:region name="Content" defaultWidth="MEDIUM">
+            </flexipage:region>
+            <flexipage:region name="Sidebar" defaultWidth="SMALL" />
+       </flexipage:template>
+</design:component>

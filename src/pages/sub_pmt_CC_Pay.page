@@ -1,0 +1,157 @@
+<apex:page applyHtmlTag="false" id="sub_pmt_CC_Pay" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false" cache="false">
+    <script id="PaymentCC-Both" type="text/template">
+        <div class="ccPaymentOuterContainer">
+            <!-- <h2 class="title">{{pageLabelMap 'MyWallet_AddPymtMtd'}}</h2> -->
+            <div class="panel panel-default cc_panel">
+                <div class="panel-heading cc_heading">
+                    <h3 class="panel-title cc_title">New Credit Card</h3>
+                </div>
+                <div class="panel-body cc_body">
+                    <div class="alert alert-error ccPayment-messagingSection-Error" style="display: none"></div>
+                    <p>Enter your payment data below</p>
+                    <form id="newCCForm" action="" class="newCCForm form-horizontal" forceSSL="true">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Card Type:</label>
+                            <div class="col-sm-10">
+                                <select name="paymentType" class="form-control">
+                                    <option value="Visa">Visa</option>
+                                    <option value="Mastercard">Master Card</option>
+                                    <option value="Amex">American Express</option>
+                                    <option value="Discover">Discover Card</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Card Number:</label>
+                            <div class="col-sm-10">
+                                 <input type="text" name="accountNumber" class="form-control" />
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-sm-2 control-label">Expiration:</label>
+                            <div class="col-sm-10">
+                                 <p>M:
+                                    <select name="expirationMonth" class="form-control">
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    &nbsp;Y:
+                                    <select name="expirationYear" class="form-control">
+                                        <option value="2017">2017</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                    </select>
+                                </p>
+                            </div>
+                        </div>
+
+                        {{#ifDisplay 'WLT.Enabled'}}
+                        <div class="form-group actionButtons">
+                            <p class="col-sm-2 control-label poLabel SavePayment fieldLabel">{{pageLabelMap 'MyWallet_SavePayment'}}</p>
+                            <div class="col-sm-10">
+                                 <input type="checkbox" name="saveAsStoredPayment" id="saveAsStoredPayment" value="true"/>
+                            </div>
+                        </div>
+                        <div class="form-group displayName">
+                            <p class="col-sm-2 control-label poLabel Name fieldLabel">{{pageLabelMap 'MyWallet_NameOpt'}}</p>
+                            <div class="col-sm-10">
+                                 <input type="text" name="displayName" id="displayName" maxlength="50"  class="form-control"/>
+                            </div>
+                        </div>
+                        {{/ifDisplay}}
+                        <div class="two_buttons text-right">
+                                <input type="button" class="btn btn-default btn-sm makeCCPayment" id="btnMakeCCPayment" data-id="newCCForm" value="{{pageLabelMap 'Payment_MakePayment'}}" />
+                                <input type="hidden" name="accountType" value="cc" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
+    <script>
+    jQuery(function($) {
+        CCRZ.models.PaymentsCCModel = CCRZ.CloudCrazeModel.extend();
+        CCRZ.views.PaymentsCCView = CCRZ.CloudCrazeView.extend({
+            viewName: "PaymentsCCView",
+            managedSubView: true,
+            templateDesktop: CCRZ.util.template("PaymentCC-Both"),
+            templatePhone: CCRZ.util.template("PaymentCC-Both"),
+            init: function(options) {
+                this.selector = options.selector;
+                this.render();
+                CCRZ.pubSub.trigger('action:paymentViewInit', this);
+            },
+            events: {
+                "click .makeCCPayment": "makeCCPayment"
+            },
+            validateInfo: function(formName, fieldData) {
+                $("#" + formName).validate({
+                    invalidHandler: function(event, validator) {
+                        CCRZ.handleValidationErrors(event, validator, 'ccPayment-messagingSection-Error', false);
+                    },
+                    rules: {
+                        accountNumber: {
+                            required: true,
+                            minlength: 4
+                        }
+                    },
+                    messages: {
+                        accountNumber: {
+                            required: 'Card number is required',
+                            minlength: 'Card number is not valid'
+                        }
+                    },
+                    errorPlacement: function(error, element) {}
+                });
+                return $("#" + formName).valid();
+            },
+
+            parentPreRender: function() {
+                //Look for the instantiated iframe
+                //Detach it from the DOM
+                //Re-render the view but don't create the iframe
+                //Re-attach the iframe as appropriate in the rendered view
+            },
+            renderDesktop: function() {
+                this.setElement(this.selector);
+                this.data = {};
+                this.$el.html(this.templateDesktop(this.data));
+            },
+            renderPhone: function() {
+                this.setElement(this.selector);
+                this.data = {};
+                this.$el.html(this.templatePhone(this.data));
+            },
+            makeCCPayment: function(event) {
+                var formName = $(event.target).data("id");
+                var formData = form2js(formName, '.', false, function(node) {}, false);
+                if (this.validateInfo(formName, formData)) {
+                    formData.accountNumber = formData.accountNumber.substring(formData.accountNumber.length - 4);
+                    formData.amount = "5.00";
+                    CCRZ.pubSub.trigger('action:processPayment', formData);
+                }
+            }
+        });
+        CCRZ.pubSub.trigger('action:paymentViewReady', 'cc', function(options) {
+            CCRZ.payment = CCRZ.payment || {
+                views: {}
+            };
+            CCRZ.payment.views.cc = new CCRZ.views.PaymentsCCView({
+                model: new CCRZ.models.PaymentsCCModel(),
+                selector: options.selector
+            });
+        });
+    });
+    </script>
+</apex:page>

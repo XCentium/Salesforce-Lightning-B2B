@@ -1,0 +1,111 @@
+.THIS.journey,.THIS .journey{
+    width:100%;
+    border:1px solid #ddd;
+    background:#ffffff;
+    margin:10px 0;
+    border-radius:4px;
+}
+.THIS .third{
+    float:left;
+    width:calc(100% / 3);
+}
+.THIS .border{
+    border:1px solid #ddd;
+}
+.THIS.h1{
+    font-size: 16px;
+    font-weight: bold;
+}
+.THIS.journey h3{
+    font-size:12px;
+    font-weight:bold;
+    display:block;
+    margin:5px 0;
+}
+.THIS .boxpadding{
+    padding:20px;
+}
+.THIS .padding10{
+    padding:10px;
+}
+.THIS .padding20{
+    padding:20px;
+}
+.THIS .paddingtopbottom{
+    padding:10px 0;
+}
+.THIS .marginleft{
+    margin-left:10px;
+}
+.THIS strong{
+    font-weight:bold;
+}
+.THIS .header{
+    border-bottom:1px solid #ddd;
+    position:relative;
+}
+.THIS .topleft{
+    width:80%;
+    float:left;
+}
+.THIS .topright{
+    position:absolute;
+    right:10px;
+}
+.THIS .topright span{
+    margin:0 auto;
+}
+.THIS .slds-media_figure {
+    display:in
+}
+.THIS .slds-modal__container{
+    max-width: 70rem !important;
+    width:80% !important;
+}
+.THIS .padding{
+    padding:10px 0;
+}
+.THIS strong{font-weight:bold}
+.THIS .borderbottom{
+    border-bottom:1px solid #ddd;
+}
+.THIS .contactdetail{
+    display:block;
+    float:right;
+}
+.THIS .addbutton{
+    margin-right:10px;
+    background:#fff!important;
+    border:1px solid #ddd!important;
+}
+.THIS .addbutton svg{width:8px;height:8px;}
+.THIS .clear,.THIS.clear{clear:both;}
+.THIS .smalltext{
+    font-size:10px;
+    color:#333;
+}
+.THIS .metric{
+    font-size:40px;
+    color:blue;
+}
+.THIS .block{
+    display:block;
+}
+.THIS .center{
+    text-align:center;
+}
+.THIS .row{
+    border-bottom:1px solid #ddd;
+}
+.THIS .row:last-child{
+    border-bottom:none;
+}
+.THIS .leftalign{
+    float:left;
+    width:80%;
+}
+.THIS .rightalign{
+    float:right;
+    width:20%;
+    text-align:right;
+}

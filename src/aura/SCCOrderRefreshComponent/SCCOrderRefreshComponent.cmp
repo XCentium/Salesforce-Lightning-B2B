@@ -1,0 +1,52 @@
+<!--suppress ALL -->
+<aura:component controller="SCCOrderRefreshPageController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global">
+	<ltng:require styles="{!$Resource.cssFiles+'/font-awesome.min.css'}" scripts="{!$Resource.jQueryFiles3+'/jquery/jquery-3.3.1.min.js'}" afterScriptsLoaded="{!c.afterScriptsLoaded}"/>
+
+    <aura:attribute name="checkRecords" type="Boolean" default="false"/>
+    <aura:attribute name="orders" type="List"/>
+    <aura:attribute name="syncstatus" type="String"/>
+
+    <aura:if isTrue="{!v.checkRecords}">
+        <article class="slds-card">
+            <lightning:spinner class="slds-hide" alternativeText="Processing.." title="Processing.." aura:id="spnr" variant="brand" size="medium" />
+            <div class="slds-page-header">
+  				<div class="slds-media">
+    				<div class="slds-media__figure">
+      					<lightning:icon iconName="standard:orders" size="medium" alternativeText="Specified Orders"/>
+    				</div>
+   		 			<div class="slds-media__body">
+      					<h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Order Details">
+                            Order Details
+                        </h1>
+                        <p class="slds-text-body_small slds-line-height_reset">
+                            Commerce Cloud
+                        </p>
+    				</div>
+                    <div class="slds-media__body" style="text-align: right;">
+                        <p class="slds-text-body_small slds-line-height_reset" align="center">
+                        {!v.syncstatus}
+                        </p>
+                    </div>
+                    <div class="slds-media__body" style="text-align: right;">
+                        <lightning:button variant="neutral" label="Sync" iconName="utility:sync" iconPosition="right" onclick="{!c.handleClick}"/>
+                    </div>
+  				</div>
+			</div>
+         	<div class="slds-card__body slds-card__body_inner">
+            	<table class="slds-table slds-table_bordered slds-max-medium-table_stacked-vertical" style="border-top: 0px;">
+                	<aura:iteration items="{!v.orders}" var="obj">
+                    	<tr class="slds-text-title_caps">
+                        	<td scope="col">
+                            	<b>{!obj.name}</b>
+                        	</td>
+                        	<td scope="col">
+                            	{!obj.value}
+                        	</td>
+                    	</tr>
+                	</aura:iteration>
+            	</table>
+        	</div>
+    	</article>
+    </aura:if>
+
+</aura:component>

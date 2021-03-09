@@ -1,0 +1,43 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    <aura:attribute name="insight" type="Map"></aura:attribute>
+    <aura:attribute name="newsArticles" type="Map[]" default="[]"></aura:attribute>
+    <aura:handler name="deleteIndex" event="c:deleteIndex" action="{!c.handleDelete}"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <div class="action-body">
+        <div class="row flex-between">
+            <div class="column">
+                <div class="slds-text-heading_medium ">News Articles - {!v.insight.Title}</div>
+            </div>     
+            
+            <div class="column">
+                <lightning:button class="slds-m-left_small" 
+                                  variant="brand" 
+                                  label="Add Article"
+                                  disabled="{!v.newsArticles.length >= 3}"
+                                  onclick="{!c.addArticle}"></lightning:button>
+            </div>
+        </div>
+        
+        <aura:if isTrue="{!v.newsArticles != null &amp;&amp; v.newsArticles.length > 0}">
+            <aura:iteration items="{!v.newsArticles}" var="newsArticle" indexVar="idx">
+                <c:Insights_AccountInsightNewsArticle newsArticle="{!newsArticle}" newsArticleIndex="{!idx}"></c:Insights_AccountInsightNewsArticle>
+            </aura:iteration>
+            
+            <aura:set attribute="else">
+                <div class="row slds-align_absolute-center">Looks like there are no articles added yet</div>
+            </aura:set>
+        </aura:if>
+    </div>
+    
+    <div class="action-footer">
+        <div class="row">
+            <lightning:button label="Back" class="column" variant="neutral" onclick="{!c.goBack}"></lightning:button>
+            <lightning:button label="Save" class="column flex-right" variant="brand" 
+                              onclick="{!c.handleSave}"
+                              disabled="{!v.disableSave}" ></lightning:button>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,117 @@
+<aura:component controller="LeadPassController" implements="forceCommunity:availableForAllPageTypes">
+<ltng:require styles="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+    <aura:attribute name="title" type="String" default="Lead Inbox" />
+    <aura:attribute name="MyLeads" type="String"/>
+    <aura:attribute name="MyLeadsFilter" type="String"/>
+    <aura:attribute name="LeadFieldSetName" type="String"/>
+    <aura:attribute name="AcceptedLeads" type="String"/>
+    <aura:attribute name="AcceptedLeadsFilter" type="String"/>
+    <aura:attribute name="MyOpportunities" type="String"/>
+    <aura:attribute name="MyOpportunitiesFilter" type="String"/>
+    <aura:attribute name="OpportunitiesFieldSetName" type="String"/>
+    <aura:attribute name="FieldLabelsandNames" type="Map"/>
+    <aura:attribute name="page" type="integer"/>
+    <aura:attribute name="pages" type="integer"/>
+    <aura:attribute name="pageSize" type="integer"/>
+    <aura:attribute name="total" type="integer"/>
+    <aura:attribute name="currentFilter" type="String"/>
+    <aura:attribute name="currentObject" type="String"/>
+    <aura:attribute name="currentfieldsetName" type="String"/>
+    <aura:attribute name="userSelection" type="String"/>
+    <aura:attribute name="userSelectedOption" type="String"/>
+    <aura:attribute name="menuState" type="String" default="Collapsed"/><!--used with LDS Menu-->
+    <aura:attribute name="LeadInboxFilterOption" type="String" />
+    <aura:attribute name="convertLeadToOpportunity" type="Boolean" default="false" />
+    <aura:attribute name="fldLabels" type="List"/>
+    <aura:attribute name="fldNames" type="List"/>
+    <aura:attribute name="fldTypes" type="List"/>
+    <aura:attribute name="displayLoader" type="Boolean" />
+    
+    <!--  Author : Raj Rao, Principal Solution Engineer, Salesforce.com
+          Date Released : May 12, 2016-->  
+    <!-- Handle component initialization in a client-side controller -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="updateRecord" event="c:updateRecordItem" action="{!c.updateEvent}" />
+    <aura:handler event="c:LeadPassPageChange" action="{!c.pageChange}"/>
+
+    <!-- Dynamically load the list of Leads or Opportunities-->
+    <aura:attribute name="records" type="Object[]" />
+    <!-- form.cmp markup -->
+    <!--aura:handler event="aura:waiting" action="{!c.waiting}"/-->
+    <!--aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}"/-->
+    <!--aura:attribute name="wait" type="String"/-->
+    <div class="topHeaderRegion">
+        <div class="topLeftHeaderRegion">
+            <a aura:id="leadInboxMenu" class="triggerLink forceListViewPicker slds-dropdown-trigger slds-dropdown-trigger--click" onclick="{!c.showHideMenu}" title="Select" href="javascript:void(0);">
+                <div class="triggerLinkTextAndIconWrapper">
+                    <span class="triggerLinkText selectedListView uiOutputText selfServiceProfileMenu" style="font-size:18px !important;text-transform:uppercase;font-weight:bold;">{!v.userSelectedOption}</span>
+                    <!--slds-truncate selfServiceProfileMenu titleText-->
+                    <aura:renderIf isTrue="{! !empty(v.userSelectedOption)}">
+                        <span class="icon-fallback-text downIcon forceIcon" style="top:35%" aria-hidden="true" data-icon="" data-key="down">
+                            <span class="icon icon-key"></span>
+                        </span>
+                        <span class="newAssistiveText forceIcon"></span>
+                    </aura:renderIf>
+                </div>
+                
+                <!--populate dropdown list-->
+                <div aura:id="dropdownMenu" class="slds-dropdown slds-dropdown--left slds-dropdown--menu">
+                    <ul class="dropdown__list" role="menu">
+                        <li class="slds-dropdown__item">
+                            <a href="javascript:void(0);" data-objectName="Lead" data-fieldSetName="{!v.LeadFieldSetName}" id="leadInbox" data-objectFilter="{!v.MyLeadsFilter}" data-optionLabel="{!v.MyLeads}" class="slds-truncate" value ="{!v.MyLeads}" onclick="{!c.loadRecords}" role="menuitem">{!v.MyLeads}</a>
+                        </li>
+                        <aura:if isTrue="{!v.convertLeadToOpportunity==false}">
+                            <li class="slds-dropdown__item">
+                                <a href="javascript:void(0);" data-objectName="Lead" data-fieldSetName="{!v.LeadFieldSetName}" id="myAcceptedLeads" data-objectFilter="{!v.AcceptedLeadsFilter}" data-optionLabel="{!v.AcceptedLeads}" class="slds-truncate" value ="{!v.AcceptedLeads}" onclick="{!c.loadRecords}" role="menuitem">{!v.AcceptedLeads}</a>
+                            </li>
+                        </aura:if>
+                        <li class="slds-dropdown__item">
+                            <a href="javascript:void(0);" data-objectName="Opportunity" data-fieldSetName="{!v.OpportunitiesFieldSetName}" id="myOpptys" data-objectFilter="{!v.MyOpportunitiesFilter}" data-optionLabel="{!v.MyOpportunities}" class="slds-truncate" value ="{!v.MyOpportunities}" onclick="{!c.loadRecords}" role="menuitem">{!v.MyOpportunities}</a>
+                        </li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+    </div>
+	
+    <!--Pagination-->	
+    <c:ListPaginator page="{!v.page}" pages="{!v.pages}" total="{!v.total}" evtHandler="c:LeadPassPageChange"/>
+    
+    <!-- Iterate over the record list and display them -->
+    <div class="container slds-p-top--medium">
+       	<div id="list" class="row">
+       		<aura:if isTrue="{!v.userSelection=='leadInbox'}">
+                <c:RecordsList records="{!v.records}" usrSelection="{!v.userSelection}" fldLabels="{!v.fldLabels}" fldNames="{!v.fldNames}" fldTypes="{!v.fldTypes}"/>
+            </aura:if>
+            <aura:if isTrue="{!v.userSelection=='myAcceptedLeads'}">
+                <c:RecordsList records="{!v.records}" usrSelection="{!v.userSelection}" fldLabels="{!v.fldLabels}" fldNames="{!v.fldNames}" fldTypes="{!v.fldTypes}"/>
+            </aura:if>
+            <aura:if isTrue="{!v.userSelection=='myOpptys'}">
+                <!--c:MyOpportunitiesList opportunities="{!v.records}" usrSelection="{!v.userSelection}"/-->
+                <c:RecordsList records="{!v.records}" usrSelection="{!v.userSelection}" fldLabels="{!v.fldLabels}" fldNames="{!v.fldNames}" fldTypes="{!v.fldTypes}"/>
+            </aura:if>
+        </div>
+
+        <!-- if no records are found display message-->
+        <aura:if isTrue="{!v.userSelection == 'leadInbox' &amp;&amp; empty(v.records)}">
+            <div class="no-records">No records found!</div>
+        </aura:if>
+        <aura:if isTrue="{!v.userSelection == 'myAcceptedLeads' &amp;&amp; empty(v.records)}">
+            <div class="no-records">No records found!</div>
+        </aura:if>
+        <aura:if isTrue="{!v.userSelection == 'myOpptys' &amp;&amp; empty(v.records)}">
+            <div class="no-records">No records found!</div>
+        </aura:if>
+    </div>
+    
+    <!-- ANIMATED LOADER --> 
+    <center>
+        <aura:if isTrue="{!v.displayLoader}">
+            <div class="slds">
+                <div id="spinner" class="slds-spinner--medium">
+                    <img  style="padding-bottom:50px;" src="{!$SfdcSite.pathPrefix+'/resource/lds0120/assets/images/spinners/slds_spinner.gif'}" alt="Loading..." />
+                </div>
+            </div>
+        </aura:if>
+    </center>
+</aura:component>

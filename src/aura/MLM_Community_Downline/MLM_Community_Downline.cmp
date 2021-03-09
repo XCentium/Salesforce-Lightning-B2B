@@ -1,0 +1,19 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" controller="MLM_Community">
+	<aura:attribute name="ComponentTitle" type="String" default="My Consultant"/>
+    <aura:attribute name="SponsorName" type="String" default="Dawn Distributor"/>
+    <aura:attribute name="SponsorPhone" type="String" default="(415) 555-1212"/>
+    <aura:attribute name="SponsorEmail" type="String" default="ddistributor@example.com"/>
+    <div class="slds-card" role="banner">
+        <div class="header center">
+        	<img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/ContactImages/dawndistributor.png" class="profilepic" />
+        </div>
+    	<div class="padding center">
+            <h3>{!v.ComponentTitle}</h3>
+            <Strong>{!v.SponsorName}</Strong><br/>
+            <p>
+                Phone: {!v.SponsorPhone}<br/>
+                Email: {!v.SponsorEmail}<br/>
+            </p>
+        </div>
+    </div>
+</aura:component>

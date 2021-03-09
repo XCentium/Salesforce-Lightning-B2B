@@ -1,0 +1,5 @@
+<design:component label="Personas - Multi">
+    <design:attribute label="Component Title" name="Title" default="Personas" />
+	<design:attribute name="LoginUserIds" label="Login User Ids (CSV)" default="User.016, User.031, User.102, User.075, User.062, User.059"
+                      description="Please provide comma seperated values of the Users' ExternalIDs that you would like quick access to."></design:attribute>
+</design:component>

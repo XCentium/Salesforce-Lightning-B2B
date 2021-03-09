@@ -1,0 +1,26 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="contactSuggestion" type="object"></aura:attribute>
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    
+    <div class="row border-around">
+        <div class="column">
+            <lightning:icon iconName="utility:automate" size="x-small"/>
+        </div>
+        <div class="column">
+            <div>Contact Suggestion</div>
+            <div class="slds-text-body_small">
+                {!v.contactSuggestion.FirstName + ' ' + v.contactSuggestion.LastName} &bull; {!v.contactSuggestion.Email} &bull; {!v.contactSuggestion.Status}
+            </div>
+        </div>
+        <lightning:buttonMenu class="column flex-right"
+                              aura:id="menu" 
+                              onselect="{! c.handleSelect }" 
+                              menuAlignment="right"
+                              alternativeText="Show menu">
+            <lightning:menuItem value="activate" label="Activate" disabled="{!v.contactSuggestion.Status == 'New'}"/>
+            <lightning:menuItem value="edit" label="Edit" />
+            <lightning:menuItem value="assign" label="Assign" />
+            <lightning:menuItem value="delete" label="Delete" />
+        </lightning:buttonMenu>
+    </div>
+</aura:component>

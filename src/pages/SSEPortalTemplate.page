@@ -1,0 +1,135 @@
+<apex:page showheader="false" standardStylesheets="false">
+    <title>SSE Portal Template</title>
+    <head>
+        <title><apex:insert name="title"/></title>
+        <style type="text/css">
+            @import url("/apex/SSEPortalCSSMain");
+            @import url("/apex/SSEPortalCSSEdit");
+            body{
+                font-family:arial;
+                margin:0px;
+                padding:0px;
+            }
+            #formwrapper{
+                width:600px;
+                margin:auto;
+            }
+            .pbBody{
+                display: table;
+                width: 100%;
+            }
+            .bPageBlock .pbHeader{
+                padding:0px 20px;
+            }
+            body .bPageBlock .pbBody  .dataCol, body .bPageBlock .pbBody .labelCol{
+                margin:0px;
+                padding:5px 0px;
+                width:45%;
+                float:left;
+            }
+            #introduction{
+                width:100%;
+                float:left;
+                padding-top:10px;
+                padding-bottom:25px;
+                font-weight:bold;   
+            }
+            body .bPageBlock .pbBody  .dataCol{
+                width:55%
+            }
+            body .bPageBlock .pbBody  .dataCol input, body .bPageBlock .pbBody  .dataCol textarea, body .bPageBlock .pbBody  .dataCol select{
+                width:98%;
+            }
+            .submitCol{
+                width:100%;
+                padding:0px;
+                padding-top:25px;
+                padding-bottom:10px;
+                margin:0px;
+                text-align:center;
+                float:left;
+            }
+            .btn:hover{
+                cursor:pointer;
+            }
+            <apex:insert name="style"/>
+        </style>
+        <script src="/resource/SSEPortalResources/scripts/jquery.js"></script>
+        <script src="/resource/SSEPortalResources/scripts/jquery.slide.js"></script>
+        <script src="/resource/SSEPortalResources/scripts/header.js"></script>
+        <script type="text/javascript">
+            <apex:insert name="script"/>
+        </script>
+    </head>
+    <body>
+        <div id="portalwrapper">
+            <div id="portalheader">
+                <div id="portalheaderpadding"></div>
+                <div id="portalheadertop">
+                    <div class="portalheadercenter">
+                        <div id="navsection">
+                            Navigation
+                            <div id="userarrow">
+                            </div>
+                            <div id="userborder">
+                            </div>
+                        </div>
+                        <div id="usersection">
+                            <div id="userarrow">
+                            </div>
+                        </div>
+                        <iframe id="portalheaderiframe" src="/apex/SSEPortalUserInfo"></iframe>
+                        <div id="usermenu">
+                            <div class="userlink" id="link1">Profile</div>
+                            <div class="userlink" id="link2">Facebook</div>
+                            <div class="userlink" id="link3">Twitter</div>
+                            <div class="userlink" id="link4">Google+</div>
+                            <div class="userlink" id="link5">Logout</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="portalheadermid">
+                    <div class="portalheadercenter" id="SSEPortalLogo">
+                    </div>
+                </div>
+                <div id="portalheaderbot">
+                    <div class="slides_container">
+                        <div id="SSEPortalSlide1">
+                        </div>
+                        <div id="SSEPortalSlide2">                  
+                        </div>
+                        <div id="SSEPortalSlide3">                  
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div id="portalbody">
+                <apex:insert name="body"/>
+            </div>
+            <div id="portalfooter"></div>
+        </div>
+    </body>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-36269828-3']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    
+    </script>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

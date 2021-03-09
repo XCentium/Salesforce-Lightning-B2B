@@ -1,0 +1,23 @@
+.THIS {
+    height:auto;
+    border-radius:4px;
+    border:1px solid #d8dde6;
+    
+    margin-bottom:10px;
+    background:white;
+    width:100%;
+    background-color:white;
+    transition:backgroundColor 1.0s ease-in-out,opacity 0.4s,top 0.4s;
+    opacity:1;
+}
+
+.THIS .content-button {
+    height: 48px;
+    width: 100%;
+    background: #0070d2;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    line-height: 48px;
+    cursor: pointer;
+}

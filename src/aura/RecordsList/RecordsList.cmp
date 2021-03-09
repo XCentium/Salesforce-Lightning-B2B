@@ -1,0 +1,41 @@
+<aura:component >
+    <!--  Author : Raj Rao, Principal Solution Engineer, Salesforce.com
+          Date Released : May 12, 2016--> 
+    <aura:attribute name="usrSelection" type="String" />
+    <aura:attribute name="fldLabels" type="List"/>
+    <aura:attribute name="fldNames" type="List"/>
+    <aura:attribute name="fldTypes" type="List"/>
+    <aura:attribute name="records" type="Object[]" />
+    
+    <div class="slds-card">
+        <div class="slds-card__body">
+    		<table style="border-color:black" class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal slds-no-row-hover">
+                <thead>
+                    <tr>
+    					<!--table column headers-->
+                        <aura:if isTrue="{!v.usrSelection == 'leadInbox'}">
+                            <aura:iteration var="fld" items="{!v.fldLabels}">
+        						<th class="{!'slds-text-heading--label slds-size--1-of-'+(v.fldLabels.length+1)}" scope="col">{!fld=='RatingColor' ? 'Priority' : fld}</th>
+    						</aura:iteration>
+                            <th class="{!'slds-text-heading--label slds-size--1-of-'+(v.fldLabels.length+1)}" scope="col">Accept ?</th>
+                        <aura:set attribute="else">
+                            <aura:iteration var="fld" items="{!v.fldLabels}">
+                                <th class="{!'slds-text-heading--label slds-size--1-of-'+v.fldLabels.length}" scope="col">{!fld=='RatingColor' ? 'Priority' : fld}</th>
+    						</aura:iteration>
+                        </aura:set>
+                        </aura:if>
+					</tr>
+                </thead>
+                <!--record field values-->
+                <aura:iteration var="record" items="{!v.records}">
+                    	<tr class="slds-hint-parent">
+                            <aura:iteration items="{!v.fldNames}" var="fieldName" indexVar="i">
+                        		<!--table data-->
+                                <c:RecordListItem record="{!record}" index="{!i}" fieldLabels="{!v.fldLabels}" fieldName="{!fieldName}" fieldTypes="{!v.fldTypes}" usrSelection="{!v.usrSelection}"/>
+                    		</aura:iteration>
+                    	</tr>
+            	</aura:iteration>
+            </table>
+        </div>
+    </div>
+</aura:component>

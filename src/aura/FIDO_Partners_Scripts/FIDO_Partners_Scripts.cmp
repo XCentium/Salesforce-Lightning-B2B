@@ -1,0 +1,60 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="PartnerId" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="setScriptId" type="String" default='' />
+    <aura:attribute name="DemoScripts" type="String[]"/>
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="activeSections" type="List" default="[]" />
+    <aura:attribute name="recid" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:if isTrue="{!not(empty(v.DemoScripts))}"> 
+        <div class="footer">
+            <div class="paddingleftright paddingtop"> 
+                <lightning:accordion aura:id="accordion" allowMultipleSectionsOpen="true" activeSectionName="{! v.activeSections }" >
+                    <aura:iteration items="{!v.DemoScripts}" var="script">
+                        <aura:if isTrue="{!script.demo_industry__c == v.Industry}">
+                        	<lightning:accordionSection name="{!script.name}" label="{!'Script: ' +script.name}">
+                            <div class="paddingleftright">
+                                <div class="">
+                                    <ui:outputRichText class="greytext" value="{!script.description__c}"/>
+                                    <button class="slds-button" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.seeMore}">
+                                        <span class="bluelink">Learn More</span>
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        </lightning:accordionSection>
+                        </aura:if>
+                    </aura:iteration>
+                </lightning:accordion>
+                
+            </div>
+        </div>
+    </aura:if>
+    <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+    <section role="dialog" aura:id="ShareModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Share Content</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="padding">
+                    <div class="padding center">
+                        <h3 class="borderbottom">Share these instructions</h3>
+                        <div class="paddingtopbottom">
+                            To access this IDO Information, paste the below URL into a browser and replace the YOURDOMAIN in the URL with your Org's Domain.<br/><br/>
+                            <a href="{!v.ShareableURL}" target="_blank">https://<strong>YOURDOMAIN</strong>.lightning.force.com{!v.ShareableURL}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}">Close</button>
+            </footer>
+        </div>
+    </section>
+</aura:component>

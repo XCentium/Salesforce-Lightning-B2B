@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION">
+    <aura:attribute name="productId" type="String"/>
+    <aura:attribute name="sectionIndex" type="Integer" default="0"/>
+</aura:event>

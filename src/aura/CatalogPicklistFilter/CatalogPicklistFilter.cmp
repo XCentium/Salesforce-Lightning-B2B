@@ -1,0 +1,24 @@
+<aura:component controller="LightningCatalogController">
+
+    <aura:attribute name="fieldName" type="String" default="Family"/>
+    <aura:attribute name="objectName" type="String" default="Product2"/>
+	<aura:attribute name="picklistLabel" type="String" default="Product Family"/>
+    
+    <aura:attribute name="uniqueFilterName" type="String" default="Product Family"/>
+
+    <aura:attribute name="options" type="List"/>    
+    <aura:attribute name="value" type="List"/>
+
+ 	<aura:registerEvent name="sendFilter" type="c:CatalogSendFilterEvent"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    <div>
+    <lightning:checkboxGroup name="{! v.uniqueFilterName }"
+                             label="{! v.picklistLabel }"
+                             options="{! v.options }"
+                             value="{! v.value }"
+                             onchange="{! c.handleChange }"
+                             class="preventBoldLabel"/>
+    </div>
+    
+</aura:component>

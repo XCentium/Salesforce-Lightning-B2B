@@ -1,0 +1,23 @@
+<aura:component >
+    <aura:attribute name="title" type="String" default="Product Catalog"/>
+    <aura:attribute name="subtitle" type="String"/>
+    <!--<aura:attribute name="logoUrl" type="String"/>-->
+    <aura:attribute name="logoTitlePosition" type="String"/>
+
+
+    <div class="slds-page-header" role="banner">
+        <div class="slds-grid">
+            <div class="{!v.logoTitlePosition + ' slds-col slds-page-header__title slds-truncate'}">
+                <!--<aura:if isTrue="{!v.logoUrl !=''}">-->
+                    <ui:outputText class="slds-text-heading--label slds-line-height--reset slds-show" value="{!v.subtitle}"/>
+                    <h1 class="slds-text-heading--large">
+                        <ui:outputText value="{!v.title}"/>
+                    </h1>
+                    <!--<aura:set attribute="else">
+                    <img class="{!v.logoTitlePosition +' logoImg'}" src="{!v.logoUrl}"/>
+                    </aura:set>
+                </aura:if>-->
+            </div>
+        </div>
+    </div>
+</aura:component>

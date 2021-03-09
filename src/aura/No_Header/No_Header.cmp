@@ -1,0 +1,7 @@
+<aura:component implements="forceCommunity:themeLayout" access="global" description="Custom Community Theme Layout with no header">
+    <div>
+        <div class="mainContentArea">
+            {!v.body}
+        </div>
+    </div>
+</aura:component>

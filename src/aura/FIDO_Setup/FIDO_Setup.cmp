@@ -1,0 +1,73 @@
+<aura:component >
+	<aura:attribute name="Industry" type="String" />
+    <div class="slds-card minicard">
+        	<div class="slds-media">
+            	<div class="slds-media__body"> 
+                	<div class="center">
+                    	<h2 class="slds-page-header__title slds-truncate slds-align-middle padding h2borderbottom ">
+                        	You made it! Now lets setup your org
+                        </h2>
+                    </div>    
+                </div>
+            </div> 
+        <div class="padding">
+            <div class="owner">
+                <h3 class="borderbottom">
+                	<div class="padding">
+                    	<lightning:icon iconName="standard:timesheet_entry" size="medium" alternativeText=""/> 
+                        <span class="marginleft">
+                            Step 1 - Setup Domain and Enable Sites in Qhome
+                        </span>
+                    </div>
+                </h3>
+                <div class="padding">
+                    <p>If you havent follow the setup steps in QHome to create your Domain and enable sites, please do so now below.</p><br/> 
+                    <button class="slds-button slds-button_neutral bigbutton"  onclick="{!c.GoToQHome}">
+                        Q Home  
+                </button>
+                </div>
+            </div>
+                
+            <div class="owner">
+                <h3 class="borderbottom">
+                	<div class="padding">
+                    	<lightning:icon iconName="standard:work_order_item" size="medium" alternativeText=""/> 
+                        <span class="marginleft">
+                            Step 2 - Run the Demo Configurator Setup Items
+                        </span>
+                    </div>
+                </h3>
+                <div class="padding">
+                    <p>This tool automates as much post trialforce setup that is possible through the Salesforce APIs.</p>
+            		<c:DemoConfiguratorDemoSetup /> 
+                </div>
+            </div>
+            <div class="owner">
+                <h3 class="borderbottom">
+                	<div class="padding">
+                    	<lightning:icon iconName="standard:timesheet_entry" size="medium" alternativeText=""/> 
+                        <span class="marginleft">
+                            Step 3 - Finish QHome Setup Steps
+                        </span>
+                    </div>
+                </h3>
+                <div class="padding">
+                    <p><strong>Some post-trialforce setup cannot be automated. Those exceptions include:</strong></p><br/>
+                    <div class="question">
+                        <ul>
+                            <li>Fixing Live Chat Snap-In issues and rebuilding communities</li>
+                            <li>Enabled and Activating Einstein Bots</li>
+                            <li>Enabled and Activating IoT</li>
+                            <li>Pairing IDO with LiveMessage and Pardot demo orgs</li>
+                            <li>Resolving ISV MapAnything button </li>
+                        </ul> 
+                    </div>
+                    <br/> 
+                    <button class="slds-button slds-button_neutral bigbutton"  onclick="{!c.GoToQHome}">
+                        Back to Q Home  
+                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

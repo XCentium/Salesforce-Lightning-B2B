@@ -1,0 +1,127 @@
+<aura:component controller="ClientellingController">
+	<aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="PageName" type="String" />
+    <aura:attribute name="ContactID" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="SelectedContact" type="String" default=""/> 
+    <aura:attribute name="Discussions" type="FeedItem[]" />
+    <aura:attribute name="SelectedDiscussion" type="FeedItem[]" />
+    <aura:attribute name="Comments" type="FeedComment[]" />
+    <aura:attribute name="SelectedDiscussionId" type="String" default=""/>
+    <aura:attribute name="overlayClass" type="String" default=""/> 
+	<aura:attribute name="NewCommentValue" type="String" default=""/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+        <aura:iteration var="discussion" items="{!v.Discussions}" indexVar="index">
+            <aura:if isTrue="{!and(discussion.Status == 'Published', discussion.Body != null)}">
+                <div class="slds-card">
+                    <div class="slds-media padding">
+                            <div class="profilepicture">
+                                <lightning:icon iconName="standard:post" size="small" alternativeText="Indicates approval"/> 
+                            </div>
+                            <div class="slds-media__body">
+                                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="{!discussion.Title}">{!discussion.Title}</h1>
+                            </div>
+                            <div class="slds-no-flex">
+                                <button class="slds-button slds-button_neutral" id='{!discussion.Id}' onclick="{!c.OpenDialog}">View</button>
+                            </div>
+                    </div>
+                    <div class="padding">
+                        <aura:unescapedHtml value="{!discussion.Body}" />
+                        <div class="block alignRight paddingtopbottom">
+                        	<span class="slds-badge">{!discussion.LikeCount} Likes</span>
+                        	<span class="slds-badge">{!discussion.CommentCount} Comments</span>
+                        </div>
+                    </div>
+                </div>
+            </aura:if>
+        </aura:iteration>   
+    </aura:iteration>
+    <!--Discussion Modal -->
+        <section role="dialog" aura:id="DiscussionModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+            <div class="slds-modal__container">
+            	<aura:iteration var="disc" items="{!v.SelectedDiscussion}" indexVar="index"> 
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!disc.Title}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="slds-feed">
+                      <ul class="slds-feed__list">
+                        <li class="slds-feed__item">
+                          <article class="slds-post">
+                              <header class="slds-post__header slds-media">
+                                  <div class="slds-media__body">
+                                    <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                                      <p>{!disc.CreatedBy.FirstName + ' ' + disc.CreatedBy.LastName}</p>
+                                    </div>
+                                    <p class="slds-text-body_small"><a href="javascript:void(0);" title="Click for single-item view of this post" class="slds-text-link_reset">5 days Ago</a></p>
+                                  </div>
+                                </header>
+                              <div class="slds-post__content slds-text-longform">
+                                  <p><aura:unescapedHtml value="{!disc.Body}" /></p>
+                                </div>
+                			   <footer class="slds-post__footer">
+                                  <ul class="slds-post__footer-meta-list slds-list_horizontal slds-has-dividers_right slds-text-title">
+                                    <li class="slds-item">{!disc.LikeCount} likes</li>
+                                  </ul>
+                                </footer>
+                              </article>  
+                              <aura:iteration items="{!disc.FeedComments}" var="comment" indexVar="index"> 
+                              <div class="slds-feed__item-comments">
+                                    <ul>
+                                      <li>
+                                        <article class="slds-comment slds-media slds-hint-parent">
+                                          <div class="slds-media__body">
+                                            <header class="slds-media slds-media_center">
+                                              <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                                                <p class="slds-truncate" title="Jenna Davis"><a href="javascript:void(0);">{!comment.CreatedBy.FirstName + ' ' + comment.CreatedBy.LastName}</a></p>
+                                              </div>
+                                              <div class="slds-p-horizontal_medium slds-p-vertical_x-small slds-grid">
+                                                  <span class="slds-text-body_small slds-col_bump-left">{!index + 1} of {!disc.CommentCount}</span>
+                                              </div>
+                                            </header>
+                                            <div class="slds-comment__content slds-text-longform">
+                                            	<aura:unescapedHtml value="{!comment.CommentBody}" />   
+                                            </div>
+                                            <footer>
+                                              <ul class="slds-list_horizontal slds-has-dividers_right slds-text-body_small">
+                                                <li class="slds-item">
+                                                  <button class="slds-button_reset slds-text-color_weak" title="Like this item" aria-pressed="false">Like</button>
+                                                </li>
+                                                <li class="slds-item">
+                                                    <ui:outputDateTime value="{!comment.SystemModstamp}" format="MMM dd, yyyy hh:mm a z" />
+                                                </li>
+                                              </ul>
+                                            </footer>
+                                          </div>
+                                        </article>
+                                      </li> 
+                                    </ul>
+                                  </div>
+                                  </aura:iteration>
+    							</li>
+                          </ul>
+                        </div>
+                    <div class="slds-form-element">
+                      <label class="slds-form-element__label" for="textarea-id-01">Add a Comment</label>
+                      <div class="slds-form-element__control">
+                        <ui:inputTextArea aura:id="NewCommentValue" 
+                            class="slds-textarea"
+                            label="" 
+                            keyup="{!c.updateValue}" 
+                            updateOn="keyup" />
+                        
+                      </div>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick="{!c.AddComment}">Save</button>
+                    <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}">Close</button>
+                </footer>
+                </aura:iteration>
+            </div>
+        </section>
+        <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+</aura:component>

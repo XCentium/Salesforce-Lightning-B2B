@@ -1,0 +1,23 @@
+.THIS .show{
+    display:block;
+}
+.THIS .hide{
+    display:none;
+}
+.THIS .addprod{
+    font-size:10px;
+    margin:5px 0;
+    display:block;
+}
+.THIS .center{
+    text-align:center;
+}
+.THIS .slds-button__icon{
+    margin-top:10px;
+}
+.THIS .border{
+    border:1px solid #ddd;
+}
+.THIS .padding{
+    padding:10px;
+}

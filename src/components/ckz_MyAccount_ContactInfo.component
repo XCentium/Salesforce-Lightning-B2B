@@ -1,0 +1,265 @@
+<!--
+ - Created by brandon.rogers on 1/24/19.
+ -->
+
+<apex:component id="ckz_MyAccount_ContactInfo">
+
+    <script id="CKZ-MyAccount-ContactInformation" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_profile m-t-1">
+            <div class="panel-body MyAccount_ContactInfo_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_ContactInformation'}}</h2>
+                    </div>
+
+                    <div class="col-sm-4 text-right">
+                        {{#if hideEditProfile}}
+                        {{else}}
+                        <input type="button" class="btn btn-default btn-sm gotoSectionContactInfoEdit cc_edit_profile" value="{{pageLabelMap 'MyAccount_EditProfile'}}"/>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+
+            {{#ifEquals this.commerceType "B2B"}}
+            <div class="panel-body MyAccount_ContactInfo_AccountInfo">
+                <h3 class="cc_title m-t-0">{{pageLabelMap 'MyAccount_Profile_Account_Information'}}</h3>
+
+                <div class="myAccProfileNote cc_profile_note small">
+                    {{pageLabelMap 'MyAccount_Profile_Note'}}
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <!-- Company -->
+                        {{#ifDisplay 'reg.addlInf'}}
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Company'}}</dt>
+                            <dd>{{accountBean.name}}</dd>
+                        </dl>
+                        {{/ifDisplay}}
+
+                        <!-- Account Group -->
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Account_Group'}}</dt>
+                            <dd>{{accountBean.dataObject.E_AccountGroup__r.Name}}</dd>
+                        </dl>
+
+                        <!-- Phone -->
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Phone'}}</dt>
+                            <dd>{{accountBean.phone}}</dd>
+                        </dl>
+
+                        <!-- CREDIT LIMIT EXTENSION -->
+                        {{#ifDisplay 'ma.credlim'}}
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_CreditLimit'}}&#58;</dt>
+                            <dd>{{price accountBean.ckzB2BCreditLimit 'CCRZ.userIsoCode'}}</dd>
+                        </dl>
+                        {{/ifDisplay}}
+
+                        <!-- Total Order Amount -->
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_TotalOrderAmount'}}&#58;</dt>
+                            <dd>{{price accountBean.b2BTotalOrderAmount 'CCRZ.userIsoCode'}}</dd>
+                        </dl>
+
+                    </div>
+
+                    <!-- Billing Address -->
+                    <div class="col-sm-4">
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Account_Billing_Address'}}</dt>
+                            <dd>{{> addressDisplay this.accountBean.billingAddress}}</dd>
+                        </dl>
+                    </div>
+
+                    <!-- Shipping Address -->
+                    <div class="col-sm-4">
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Account_Shipping_Address'}}</dt>
+                            <dd>{{> addressDisplay this.accountBean.shippingAddress}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="panel-body MyAccount_ContactInfo hide">
+                <h3 class="cc_title m-t-0">{{pageLabelMap 'MyAccount_Profile_Contact_Information'}}</h3>
+
+                <p class="myAccProfileName cc_profile_name">
+                    <span class="cc_profile_name_label">{{pageLabelMap 'MyAccount_Profile_Name'}}&#58;</span>
+                    {{#if contactBean.firstName}}
+                    <span class="cc_profile_name_value">{{contactBean.firstName}} {{contactBean.lastName}}</span>
+                    {{else}}
+                    <span class="cc_profile_name_label">No name stored.</span>
+                    {{/if}}
+                </p>
+
+                <p class="myAccProfilePhone cc_profile_phone">
+                    <span class="cc_profile_phone_label">{{pageLabelMap 'MyAccount_Profile_Phone'}}&#58;</span>
+                    {{#if contactBean.phone}}
+                    <span class="cc_profile_phone_value">{{contactBean.phone}}</span>
+                    {{else}}
+                    <span class="cc_profile_phone_value">No phone number stored.</span>
+                    {{/if}}
+                </p>
+
+                <div class="row">
+                    <div class="col-md-6 myAccMailingAddr cc_mailing_address">
+                        <div class="cc_profile_mailing_label"><b>{{pageLabelMap 'MyAccount_Profile_Contact_Mailing_Address'}}</b></div>
+                        <span class="cc_profile_mailing_value">{{> addressDisplay this.contactBean.mailingAddress}}</span>
+                    </div>
+                    <div class="col-md-6  myAccOtherAddr cc_other_address">
+                        <div class="cc_profile_other_label"><b>{{pageLabelMap 'MyAccount_Profile_Contact_Other_Address'}}</b></div>
+                        <span class="cc_profile_other_value">{{> addressDisplay this.contactBean.otherAddress}}</span>
+                        <div>WHERE DOES THIS DATA EXIST?</div>
+                    </div>
+                </div>
+            </div>-->
+            {{/ifEquals}}
+
+            <div class="panel-body MyAccount_ContactInfo_UserInfo">
+                <h3 class="cc_title m-t-0">{{pageLabelMap 'MyAccount_Profile_User_Information'}}</h3>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <!-- Name -->
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Name'}}</dt>
+                            <dd>{{userFirstName}} {{userLastName}}</dd>
+                        </dl>
+
+                        <!-- Phone -->
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Phone'}}</dt>
+                            <dd>{{userPhone}}</dd>
+                        </dl>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <!-- Username -->
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Username'}}</dt>
+                            <dd>{{username}}</dd>
+                        </dl>
+
+                        <!-- Email -->
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Email'}}</dt>
+                            <dd>{{emailAddress}}</dd>
+                        </dl>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <!-- Language -->
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Language'}}</dt>
+                            <dd>{{language}}</dd>
+                        </dl>
+
+                        <!-- Currency -->
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_Currency'}}</dt>
+                            <dd>{{currencyName}}</dd>
+                        </dl>
+
+                        <!-- Time Zone -->
+                        {{#ifDisplay 'reg.tmZn'}}
+                        <dl class="m-t-2">
+                            <dt>{{pageLabelMap 'MyAccount_Profile_TimeZone'}}</dt>
+                            <dd>{{timeZone}}</dd>
+                        </dl>
+                        {{/ifDisplay}}
+                    </div>
+                </div>
+
+                <!--{{#if hideEditProfile}}
+                {{else}}
+                <button type="button" class="btn btn-default btn-sm pull-right gotoSectionContactInfoEdit cc_edit_profile">
+                    {{pageLabelMap 'MyAccount_EditProfile'}}
+                </button>
+                {{/if}}-->
+            </div>
+
+            <!-- USER ROLES/BUDGET LIMIT EXTENSION -->
+            {{#ifDisplay 'ma.budlim'}}
+                <div class="panel-body MyAccount_ContactInfo_UserRoles">
+                    <h3 class="cc_title m-t-0">{{pageLabelMap 'MyAccount_ContactInfo_UserRoles'}}</h3>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <dl class="m-t-2">
+                                <dt>{{pageLabelMap 'MyAccount_ContactInfo_UserRoles_BudgetLimit'}}</dt>
+                                {{#ifEquals contactBean.ckzBudgetLimit 0}}
+                                    <dd>{{pageLabelMap 'MyAccount_ContactInfo_UserRoles_BudgetUnlimited'}}</dd>
+                                {{else}}
+                                    <dd>{{price contactBean.ckzBudgetLimit 'CCRZ.userIsoCode'}}</dd>
+                                {{/ifEquals}}
+                            </dl>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <dl class="m-t-2">
+                                <dt>{{pageLabelMap 'MyAccount_ContactInfo_UserRoles_RequiresApproval'}}</dt>
+                                <dd>{{contactBean.ckzBudgetRequiresApproval}}</dd>
+                            </dl>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <dl class="m-t-2">
+                                <dt>{{pageLabelMap 'MyAccount_ContactInfo_UserRoles_CanOrder'}}</dt>
+                                <dd>{{contactBean.ckzBudgetCanOrder}}</dd>
+                            </dl>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <dl class="m-t-2">
+                                <dt>{{pageLabelMap 'MyAccount_ContactInfo_UserRoles_BudgetAdmin'}}</dt>
+                                <dd>{{contactBean.ckzBudgetAdministrator}}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            {{/ifDisplay}}
+
+
+            <!-- REWARD POINTS -->
+            {{#ifDisplay 'c.rewardpts'}}
+                <div class="panel-body MyAccount_ContactInfo_RewardPoints">
+                    <h3 class="cc_title m-t-0">{{pageLabelMap 'MyAccount_ContactInfo_RewardPoints'}}</h3>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="myAccProfilePhone cc_profile_phone">
+                                <span class="cc_profile_phone_label">{{pageLabelMap 'RewardPointsAvailablePoints'}}&#58;</span>
+                                <span class="cc_profile_phone_value">{{accountBean.ckzB2BRewardPointsBalance}}</span>
+                            </p>
+
+                            <p class="myAccProfilePhone cc_profile_phone">
+                                <span class="cc_profile_phone_label">{{pageLabelMap 'RewardPointsEnabled'}}&#58;</span>
+                                <span class="cc_profile_phone_value">{{accountBean.ckzB2BRewardPointsEnabled}}</span>
+                            </p>
+
+                            <p class="myAccProfilePhone cc_profile_phone">
+                                <span class="cc_profile_phone_label">{{pageLabelMap 'RewardPointsCostMultiplier'}}&#58;</span>
+                                <span class="cc_profile_phone_value">{{accountBean.ckzB2BRewardPointsCostMultiplier}}</span>
+                            </p>
+
+                            <p class="myAccProfilePhone cc_profile_phone">
+                                <span class="cc_profile_phone_label">{{pageLabelMap 'RewardPointsEarnedMultiplier'}}&#58;</span>
+                                <span class="cc_profile_phone_value">{{accountBean.ckzB2BRewardPointsEarnedMultiplier}}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {{/ifDisplay}}
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.contactInfoView.desktop.tmpl = 'CKZ-MyAccount-ContactInformation';
+        });
+    </script>
+</apex:component>

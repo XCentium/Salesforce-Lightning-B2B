@@ -1,0 +1,186 @@
+<!--
+ - Created by brandon.rogers on 1/16/19.
+ -->
+
+<apex:component id="ckz_PDP_ADC">
+
+    <script id="CKZ-ProductDetail-ProductAttributes-Desktop" type="text/template">
+        <div class="gp_attr cc_prod_attr">
+
+            <!--<div class="row">
+                <div class="col-md-12 cc_prod_attr_price">
+                    &lt;!&ndash;<span class="cc_attr_price cc_price_label">{{pageLabelMap 'ProductAttributes_Price'}}</span>&ndash;&gt;
+                    <h3 class="gp_attribute_price m-t-0"></h3>
+                </div>
+            </div>-->
+
+            <div class="row cc_attr_row">
+                {{#each attr}}
+                {{log this}}
+                {{log ../this}}
+                {{#each .}}
+                <div class="col-sm-3 cc_attr">
+                    <div class="form-group">
+                        <label for="cc_attr_{{@key}}" class="cc_attr_name">{{{@key}}}</label>
+                        <select id="cc_attr_{{@key}}" class="form-control cc_attr_{{@key}} gp_attr_select" data-switcher="{{useImageSwitcher}}" {{#ifEquals @key 'Color'}}onchange="imageSwitch(this.value){{/ifEquals}}">
+                        {{#each this}}
+                        <option class="cc_attr_value" value="{{displayName}}" data-id="{{sfid}}" data-attr="{{parentAttribute}}-{{attributeID}}">{{{displayName}}}</option>
+                        {{/each}}
+                        </select>
+                    </div>
+                </div>
+                {{/each}}
+                {{/each}}
+
+                <div class="col-sm-3 cc_prod_attr_qty">
+                    <div class="form-group">
+                        <label for="gp_attr_qty" class="cc_attr_qty cc_qty">{{pageLabelMap 'ProductAttributes_Quantity'}}</label>
+                        <div class="input-group">
+                            <input type="text" id="gp_attr_qty" class="form-control entry gp_attr_qty" value="1"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary gp_addToBatch cc_add_to_batch">
+                                    <i class="far fa-plus"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="CKZ-ProductDetail-ProductAttributesBatchHeader-Desktop" type="text/template">
+        <div class="gp_attr_batch cc_attr_batch">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-condensed cc_batch_table">
+                            <thead>
+                            <tr class="cc_batch_header_row">
+                                {{#each attr}}
+                                {{#each .}}
+                                <th class="cc_batch_header">
+                                    {{{@key}}}
+                                </th>
+                                {{/each}}
+                                {{/each}}
+                                <th class="cc_batch_header">{{pageLabelMap 'ProductAttributes_Quantity'}}</th>
+                                <th class="cc_batch_header">{{pageLabelMap 'ProductAttributes_Price'}}</th>
+                                <th class="cc_batch_header">
+                                    <!--{{pageLabelMap 'ProductAttributes_Remove'}}-->
+                                </th>
+                            </tr>
+                            </thead>
+
+                            <tbody class="cc_product_attributes_batch">
+                            <tr class="cc_product_attributes_batch_item"></tr>
+                            </tbody>
+
+                            <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <a href="javascript:void(0);" class="btn btn-link btn-sm gp_clearAll cc_clear_all">
+                                        <i class="far fa-times"></i>
+                                        {{pageLabelMap 'ProductAttributes_RemoveAll'}}
+                                    </a>
+
+                                    <button type="button" class="btn btn-primary btn-sm btn-block gp_addToCart cc_add_to_cart m-t-1">
+                                        <i class="far fa-cart-plus"></i>
+                                        {{pageLabelMap 'ProductAttributes_AddBatchToCart'}}
+                                    </button>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-right">
+                    <!--<button type="button" class="btn btn-primary btn-sm gp_addToCart cc_add_to_cart">
+                        <i class="far fa-cart-plus"></i>
+                        {{pageLabelMap 'ProductAttributes_AddBatchToCart'}}
+                    </button>-->
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="CKZ-ProductDetail-ProductAttributesBatchItem-Desktop" type="text/template">
+        {{#each this}}
+        {{#each this.attrs}}
+        <td class="cc_attr_batch_item_name">
+            {{{this.displayName}}}
+        </td>
+        {{/each}}
+        <td class="cc_attr_batch_item_qty">{{this.qty}}</td>
+        <td class="cc_attr_batch_item_total ckz-text-primary">{{price this.total}}</td>
+        {{/each}}
+
+        <td class="cc_attr_batch_item_remove">
+            <button class="gp_removeFromBatch btn btn-link btn-sm cc_remove_from_batch" type="submit">
+                <i class="far fa-times"></i>
+                {{pageLabelMap 'ProductAttributes_Remove'}}
+            </button>
+        </td>
+    </script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.productAttributesView.tmpl = 'CKZ-ProductDetail-ProductAttributes-Desktop';
+            CCRZ.uiProperties.productAttributesBatchHeaderView.tmpl = 'CKZ-ProductDetail-ProductAttributesBatchHeader-Desktop';
+            CCRZ.uiProperties.productAttributesBatchItemView.tmpl = 'CKZ-ProductDetail-ProductAttributesBatchItem-Desktop';
+        });
+
+        function imageSwitch(attr) {
+            console.log(`imageSwitch( ${attr} )`);
+
+            let dispDefaultImg = true;
+            $('[data-attr="defaultMain"]').removeClass("hide");
+
+            let dispAltImg = true;
+            $('[data-attr="defaultAlt"]').removeClass("hide");
+
+            if (attr) {
+                $("#photoContainer img.mainProdImage.imgSwitcher").each(function () {
+                    const colorAttrMain = $(this).attr("data-attr");
+                    // console.log(`colorAttrMain: ${colorAttrMain}`);
+
+                    if (colorAttrMain === attr) {
+                        dispDefaultImg = false;
+                        $(this).removeClass("hide");
+                    } else {
+                        $(this).addClass("hide");
+                    }
+
+                    if (!dispDefaultImg) {
+                        $('[data-attr="defaultMain"]').addClass("hide");
+                    }
+                });
+
+                $("#photoContainer img.cc_alternate.imgSwitcher").each(function () {
+                    const colorAttrAlt = $(this).attr("data-attr");
+                    // console.log(`colorAttrAlt: ${colorAttrAlt}`);
+
+                    if (colorAttrAlt === attr) {
+                        dispAltImg = false;
+                        $(this).removeClass("hide");
+                    } else {
+                        $(this).addClass("hide");
+                    }
+
+                    if (!dispAltImg) {
+                        $('[data-attr="defaultAlt"]').addClass("hide");
+                    }
+                });
+            }
+        }
+    </script>
+
+</apex:component>

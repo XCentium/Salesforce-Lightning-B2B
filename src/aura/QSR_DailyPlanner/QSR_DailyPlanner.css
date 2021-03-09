@@ -1,0 +1,55 @@
+.THIS h1 {
+    font-size:24px;
+    font-weight: bold;
+}
+
+.THIS h3 {
+    margin-left:20px;
+    margin-top:20px;
+    color:black;
+    font-weight:bold;
+}
+
+.THIS .borderBlack {
+    border: solid 1px black;
+}
+
+.THIS .tableBorder th {
+    text-align: center;
+    border: solid 1px black;
+}
+
+.THIS .tableBorder td {
+    border: solid 1px black;
+    text-align: center;
+    height: 30px;
+}
+
+.THIS .tableBorder .slds-form-element__control {
+    padding: 15px;
+}
+
+.THIS .slds-checkbox {
+    margin-top:20px;
+    margin-left: 30px;
+
+}
+
+.THIS .black {
+    background-color: black;
+    color:white;
+}
+
+.THIS .black span {
+    font-size: 26px;
+}
+
+.THIS .taskTable th {
+    text-decoration: underline;
+    text-align: center; 
+    
+}
+
+.THIS .taskTable td {
+    padding:10px;
+}

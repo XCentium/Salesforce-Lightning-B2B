@@ -1,0 +1,77 @@
+<aura:component >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    <aura:attribute name="index" type="Integer"></aura:attribute>
+    <aura:attribute name="leadValues" type="Object"></aura:attribute>
+    
+    <aura:attribute name="modelFactor" type="Object"></aura:attribute>
+    <aura:attribute name="isMarketing" type="Boolean"></aura:attribute>
+    <aura:attribute name="insight" type="Object"></aura:attribute>
+    
+    <!--Consolidate into one state object-->
+    <aura:attribute name="factor1Options" type="Object[]"></aura:attribute>
+    <aura:attribute name="modelFactorValues" type="Object[]"></aura:attribute>
+    <aura:attribute name="factor2Options" type="Object[]"></aura:attribute>
+    
+    <aura:attribute name="factor1Map" type="map"></aura:attribute>
+    <aura:attribute name="factorMap" type="map"></aura:attribute>
+    
+    <aura:registerEvent name="deleteIndex" type="c:deleteIndex"/>
+    
+    <div class="reason-container slds-box slds-form slds-form_compound">
+        <lightning:buttonIcon class="close" variant="bare" iconName="utility:close" size="small" onclick="{!c.deleteIndex}"></lightning:buttonIcon>
+        
+        <fieldset class="slds-form-element">
+            <div class="slds-form-element__group">
+                
+                <div class="slds-form-element__row">
+                    <lightning:select class="slds-size_1-of-1" value="{!v.modelFactor.Factor1}" onchange="{!c.modelFactorChangeHandler}" label="Insight Type">
+                        <aura:iteration items="{!v.factor1Options}" var="valueOption">
+                            <option value="{!valueOption.value}">{!valueOption.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                
+                <aura:if isTrue="{!!v.isMarketing}">
+                    <div class="slds-form-element__row">
+                        <lightning:select value="{!v.insight.IntensityLevel}" class="slds-size_2-of-2" aura:id="confidence" label="Intensity" onblur="{!c.confidenceChangeHandler}">
+                            <option value="HIGH_POS">Positive</option>
+                            <option value="HIGH_NEG">Negative</option>
+                        </lightning:select>
+                    </div>
+                </aura:if>
+                
+                <div class="slds-form-element__row">
+                    
+                    <aura:if isTrue="{!!v.isMarketing}">
+                        <lightning:select class="slds-size_1-of-3" value="{!v.modelFactor.Value}" label="Top/Bottom">
+                            <aura:iteration items="{!v.modelFactorValues}" var="valueOption">
+                                <option value="{!valueOption.value}">{!valueOption.label}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                        <aura:set attribute="else">
+                            <lightning:input class="slds-size_1-of-3" value="{!v.modelFactor.Value}" label="Marketing Asset Name" placeholder="Big Marketing Campaign"></lightning:input>
+                        </aura:set>
+                    </aura:if>
+                    
+                    <lightning:input class="slds-size_1-of-3" value="{!v.insight.Value}" label="{!v.isMarketing ? 'Count of Activities' :'Percentage'}" type="number" min="1" max="100"/>
+                    
+                    <lightning:select class="slds-size_1-of-3" value="{!v.modelFactor.Factor2}" label="Time Ago">
+                        <aura:iteration items="{!v.factor2Options}" var="valueOption">
+                            <option value="{!valueOption.value}">{!valueOption.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+            </div>
+            <!--<div>
+                <aura:if isTrue="{!!v.isMarketing}">
+                    <div>
+                        Prospect's {!v.modelFactor.Factor1} is in the {!v.modelFactor.Value}&nbsp;{!v.insight.Value} percent of all prospects in the past {!v.modelFactor.Factor2}
+                    </div>
+                    <aura:set attribute="else">
+                        Prospect has {!v.modelFactor.Factor1}&nbsp;{!v.modelFactor.Value}&nbsp;{!v.insight.Value} time(s) in the past {!v.modelFactor.Factor2}
+                    </aura:set>
+                </aura:if>
+            </div>-->
+        </fieldset>
+    </div>
+</aura:component>

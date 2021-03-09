@@ -1,0 +1,21 @@
+<aura:component >
+    <aura:attribute name="page" type="integer"/>
+    <aura:attribute name="pages" type="integer"/>
+    <aura:attribute name="total" type="integer"/>
+    <aura:attribute name="evtHandler" type="String"/>
+
+    <div class="container">
+        <div class="left">
+            <aura:renderIf isTrue="{!v.page > 1}">
+                <button class="button" onclick="{!c.previousPage}"><img style="height:18;width:18px !important" src="{!$SfdcSite.pathPrefix+'/resource/lds0120/assets/icons/utility/chevronleft_60.png'}"/>Prev</button>
+            </aura:renderIf>
+        </div>
+        <div class="center">{!v.total &gt; 0 ? v.total+' records • page '+v.page+' / '+v.pages : v.total+' records'}</div>
+        <!--div class="center">{!v.total} records • page {!v.page} / {!v.pages}</div-->
+        <div class="right">
+            <aura:renderIf isTrue="{!v.page &lt; v.pages}">
+                <button class="button" onclick="{!c.nextPage}">Next<img style="height:18;width:18px !important" src="{!$SfdcSite.pathPrefix+'/resource/lds0120/assets/icons/utility/chevronright_60.png'}"/></button>
+            </aura:renderIf>
+        </div>
+	</div>
+</aura:component>

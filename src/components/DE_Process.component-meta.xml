@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>32.0</apiVersion>
+    <description>Credit to Remi de Jouvencel for building out the original code for this component.</description>
+    <label>DE_Process</label>
+</ApexComponent>

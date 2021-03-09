@@ -1,0 +1,23 @@
+.THIS {
+}
+.THIS .comptitle{
+    background:#F1F0F0;
+    margin-bottom:10px;
+}
+.THIS .padding{
+    padding:10px;
+}
+.THIS .centertext{
+    text-align:center;
+    width:100%;
+}
+.THIS .slds-m-vertical_medium{
+    border-top:1px solid #E9E7E7;
+    padding-top:10px;
+}
+.THIS .prodimg{
+    margin:0 auto;
+    display:block;
+    text-align:center;
+    max-height:300px;
+}

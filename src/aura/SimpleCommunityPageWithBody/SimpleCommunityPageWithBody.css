@@ -1,0 +1,21 @@
+.THIS {
+    min-height:100vh;
+    background-image: url(/sfsites/c/file-asset/concierge?v=1);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.THIS .navigationMenu {
+    position: fixed;
+    z-index: 2;
+    width:100%;
+}
+
+.THIS .bodyContentArea div {
+    background-color: white;
+}
+
+.THIS .navigationMenuWrapper {
+	margin-bottom: 12vh;
+}

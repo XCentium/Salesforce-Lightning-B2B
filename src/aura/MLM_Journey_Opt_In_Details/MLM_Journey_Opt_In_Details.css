@@ -1,0 +1,49 @@
+.THIS .half{
+    width:47%;
+    float:left;
+}
+.THIS .icon{
+    width:6%;
+    float:left;
+}
+.THIS .clear{
+    clear:both;
+}
+.THIS .padding{
+    padding:5px 20px;
+    position:relative;
+}
+.THIS h3{
+    font-size:20px;
+    font-weight:bold;
+}
+.THIS i,.THIS em{
+    font-style:italic;
+    font-size:11px;
+}
+.THIS.section{
+    /*border-bottom:1px solid #ddd;*/
+}
+.THIS.section:last-child{
+    border-bottom:none;
+}
+.THIS .icon .padding{
+    padding:5px 0;
+    text-align:center;
+}
+.THIS .line{
+    position:absolute;
+    left:50%;
+    width:2px;
+    height:50px;
+    background-color:#00C6B7;
+    margin-left:-1px;    
+}
+.THIS .icon:last-child.line{
+    background-color:#fff!important;
+}
+.THIS .iconimg{
+    width:20px;
+    height:20px;
+    margin:0 auto;
+}

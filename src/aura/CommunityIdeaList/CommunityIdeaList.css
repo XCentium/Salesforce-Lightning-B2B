@@ -1,0 +1,115 @@
+.THIS{
+    font-family: 'SalesforceSans-Regular',Arial,sans-serif;
+}
+.THIS .list-group {
+    display: flex;
+    flex-wrap: wrap;
+	padding: 0;
+    margin: 25px 0 0 -5px;
+}
+.THIS .zoneCont{
+    padding: 10px 0 20px 0;
+}
+.THIS .list-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;    
+}
+
+.THIS .list-group-item {
+    margin: 10px;
+    font-size: 12px;
+    list-style: none;
+    width: calc(100% - 20px);
+    margin-bottom: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.THIS .list-group-item-photo {
+    height: 150px;
+    text-align: center;
+    padding: 20px;
+}
+
+.THIS .prodname {
+    font-size: 14px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.THIS .voteForIdea{
+    float: right;
+    padding: 0 5px;
+}
+.THIS .promoteDemoteIdea{
+    cursor: pointer;
+}
+.THIS .bold{
+    font-weight: bold;
+}
+.THIS .proddescription {
+    
+}
+.THIS .ideastatus{
+	padding: 5px 0;
+}
+.THIS .creatorPublisher{
+    font-size: 11px;
+    padding: 20px 0px 0px 0px;
+}
+.THIS .ideascore {
+    padding: 5px 0;
+}
+.THIS .ideanumcomments {
+    float: right;
+    padding: 5px 0;
+}
+.THIS img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.THIS .ideacategories {
+    padding: 5px 0;
+}
+.THIS .PaginationStyle {
+    padding: 5px;
+}
+.THIS .paginationButtons{
+    text-align: right;
+    padding: 10px 0;
+}
+.THIS .uiButton {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 4px 15px;
+    margin: 0 2px;
+    border-radius: 3px;
+}
+.THIS .pageTitle{
+    padding: 5px 5px 20px 5px;
+}
+.THIS .postIdeaButton{
+    float: right;
+}
+.THIS .postIdeaButton a{
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 7px 20px;
+    margin: 0 2px;
+    border-radius: 3px;
+    font-size: 12px;
+    
+}
+.THIS .filterStyle {
+    float: right;
+}
+.THIS .selectedPage{
+    color: #006BD2;
+    padding: 0 5px;
+}
+.THIS .unselectedPage{
+    color: #677790;
+    padding: 0 5px;
+}

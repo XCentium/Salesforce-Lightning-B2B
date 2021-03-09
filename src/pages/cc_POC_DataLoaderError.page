@@ -1,0 +1,32 @@
+<apex:page id="cc_POC_DataLoaderError" controller="cc_POC_Dataloader" title="Data Loader Error" sideBar="false"  >
+
+    <apex:pageBlock >
+
+        <apex:dataTable value="{!errorMap}" var="key" id="theTable"
+                        rowClasses="odd,even" styleClass="tableClass">
+
+            <apex:facet name="header">Import Errors</apex:facet>
+
+            <apex:column >
+                <apex:facet name="header">Row #</apex:facet>
+                <apex:outputText value="{!key}"/>
+            </apex:column>
+
+            <apex:column >
+                <apex:facet name="header">Error</apex:facet>
+
+                <apex:dataList value="{!errorMap[key]}" var="keyvalue">
+                    <apex:outputText value="{!keyvalue}"/>
+                </apex:dataList>
+
+            </apex:column>
+
+        </apex:dataTable>
+
+        <apex:form >
+            <apex:commandButton action="{!backToStartPage}" value="Back" id="theButton"/>
+        </apex:form>
+
+    </apex:pageBlock>
+
+</apex:page>

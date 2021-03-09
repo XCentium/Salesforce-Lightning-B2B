@@ -1,0 +1,24 @@
+.THIS .kpi-positive {
+    font-size: xx-large;
+    color: #028048;
+  
+}
+.THIS .kpi-negative {
+    font-size: xx-large;
+  color: #c23934;
+}
+
+.THIS .card {
+    border: 1px solid rgb(216, 221, 230);
+    border-radius: 4px;
+}
+
+.THIS .icon {
+    margin-top: 3px
+   
+    
+}
+
+.THIS .text-bold{
+    font-weight: bold;
+}

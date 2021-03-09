@@ -1,0 +1,39 @@
+<aura:component controller="SCCCancelledOrderComponentController" implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global">
+	<ltng:require styles="{!$Resource.cssFiles+'/font-awesome.min.css'}" scripts="{!$Resource.jQueryFiles3+'/jquery/jquery-3.3.1.min.js'}" afterScriptsLoaded="{!c.afterScriptsLoaded}"/>
+
+    <aura:attribute name="checkRecords" type="Boolean" default="false"/>
+    <aura:attribute name="popupMessage" type="String"/>
+    <aura:attribute name="orderNumber" type="String" access="public"/>
+
+    <!--<aura:if isTrue="{!v.checkRecords}">-->
+        <article>
+            <lightning:spinner class="slds-hide" alternativeText="Processing.." title="Processing.." aura:id="spnr" variant="brand" size="medium" />
+        	<!--<lightning:button variant="neutral" label="Cancel Order" iconName="action:lead_convert" iconPosition="right" onclick="{!c.openCancelOrder}"/>-->
+        	<lightning:button variant="destructive" label="Cancel Order" name="cancelOrder" onclick="{!c.openCancelOrder}"/>
+        	<div class="slds">
+                <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide" aura:id="modaldialog">
+                   <div class="slds-modal__container">
+                        <div class="slds-modal__header slds-theme_shade">
+                           <!-- <div style="text-align: right;">
+                                <lightning:button variant="neutral" label="Close" iconName="utility:close" iconPosition="right" onclick="{!c.hidePopup}" />
+                            </div>-->
+                            <div style="text-align: left;">
+                                <h1 class="slds-page-header__title slds-align-middle">Cancelled Order</h1>
+                            </div>
+                        </div>
+                        <div class="slds-modal__content slds-p-around--medium">
+                            <div>
+                                <p>
+                                    {!v.popupMessage}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-backdrop slds-backdrop--hide" aura:id="backdrop">
+                </div>
+            </div>
+        </article>
+  <!--  </aura:if>-->
+
+</aura:component>

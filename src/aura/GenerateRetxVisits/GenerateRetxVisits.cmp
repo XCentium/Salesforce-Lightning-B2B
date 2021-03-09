@@ -1,0 +1,109 @@
+<aura:component access="global" controller="CG_Cloud_Automation" implements="force:appHostable,flexipage:availableForAllPageTypes,lightning:isUrlAddressable">
+    <aura:attribute name="TotalVisits" type="Integer" default="1"/>
+    <aura:attribute name="Visits" type="String[]"/>
+    <aura:attribute name="ActionPlans" type="String[]"/>
+    <aura:attribute name="AssignedAP" type="String" default=''/>
+    <aura:attribute name="Step" type="Integer" default="1" />
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="AssignedId" type="String" default=""/>
+    <aura:attribute name="RetailStoreId" type="String" default=""/>
+    
+    <aura:handler name="change" value="{!v.AssignedId}" action="{!c.Goto2}"/>
+    <aura:handler name="change" value="{!v.RetailStoreId}" action="{!c.Goto3}"/>
+    <aura:handler name="change" value="{!v.AssignedAP}" action="{!c.Goto4}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <lightning:card >
+        <h2 class="header-title-container">
+            <div class="paddingbottomleftright">
+                <lightning:icon iconName="utility:automate" size="small" alternativeText=""/> 
+                <span class="slds-text-heading--small slds-truncate marginleft">Generate CG Cloud Store Visits</span>
+            </div>
+        </h2>
+        <div class="padding">
+            <p>This tool will generate Visit records based off how many you input below. The tool will create all store visits for the Retail Store "NTO Store - Presidio" and associate the Action Plan "* Primary Visit Template" with all. The dates of the Visits created will be for today and spaced out by one hour.</p>
+            <hr/>
+            <aura:if isTrue="{!(empty(v.Visits))}">
+                <div class="center">
+                    <aura:if isTrue="{!v.Step == 1}">
+                        <div class="userSelect">
+                            <h3>Who is performing this visit?</h3>
+                            <div class="textleft">
+                                <c:ContactSearch ContactId="{!v.AssignedId}" objectAPIName="User" />
+                            </div>
+                        </div>     
+                    </aura:if>
+                    <aura:if isTrue="{!v.Step == 2}">
+                          <div class="userSelect">
+                            <h3>Assign a Retail Store</h3>
+                            <div class="textleft">
+                                <c:ContactSearch ContactId="{!v.RetailStoreId}" objectAPIName="RetailStore" />
+                            </div>
+                        </div>   
+                    </aura:if>
+                    <aura:if isTrue="{!v.Step == 3}">
+                        <div class="userSelect">
+                            <h3>Select an Action Plan</h3>
+                            <lightning:select aura:id="PicklistId" label="" name="percent" value="{!v.AssignedAP}" >
+                                <option value="" text="- SELECT ONE -" />
+                                <aura:iteration items="{!v.ActionPlans}" var="ap">
+                                    <option value="{!ap.ActionPlanTemplateVersionId}" text="{!ap.Name}" /> 
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>    
+                    </aura:if>
+                    <aura:if isTrue="{!v.Step == 4}">
+                        <div class="userSelect">
+                            <h3>How Many Visits to Create</h3>
+                            <lightning:input type="number" name="number" class="inputvalue" label="" value="{!v.TotalVisits}" min="1" max="10" />
+                            <lightning:button label="Submit" onclick="{!c.handleClick}"/>
+                        </div>
+                    </aura:if>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!not(empty(v.Visits))}">
+                <div class="clear"></div>
+                <br/>
+                <div class="center">
+                    <h3>Created Visits</h3>
+                </div>   
+                <div class="flex-container">
+                    <aura:iteration items="{!v.Visits}" var="visit">
+                        <div class="half">
+                            <div class="padding10">
+                                <div class="visit ">
+                                    <div class="padding">
+                                        <h3>
+                                            <lightning:icon iconName="action:record" size="x-small" alternativeText=""/> 
+                                            <span class="slds-text-heading--small slds-truncate marginleft">
+                                                <a href="{! '/lightning/r/Visit/' + visit.Id + '/view'}" target="_blank">{!visit.Name}</a>
+                                            </span>
+                                        </h3>
+                                         
+                                        <strong>Status: </strong>{!visit.Status}<br/>
+                                        <strong>Planned Start Time: </strong>
+                                        <lightning:formattedDateTime value="{!visit.PlannedVisitStartTime}" year="2-digit" month="short" day="2-digit" weekday="narrow"/><br/>
+                                        <strong>Planned End Time: </strong>
+                                        <lightning:formattedDateTime value="{!visit.PlannedVisitEndTime}" year="2-digit" month="short" day="2-digit" weekday="narrow"/><br/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                	<div class="clear"></div>
+                <div class="center">
+                	<lightning:button label="Create More" onclick="{!c.Refresh }"/>
+                </div>
+            </aura:if>
+        </div>
+    </lightning:card>
+</aura:component>

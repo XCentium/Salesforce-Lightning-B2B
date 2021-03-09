@@ -1,0 +1,53 @@
+<aura:component >
+    
+    <aura:attribute name="product" type="Product2" required="true"/>
+    <aura:attribute name="quantity" type="Integer" required="true" default="1"/>
+    <div>
+        <figure class="slds-image slds-image--card" >
+            <a onclick="{!c.showModalLightning}" class="slds-image__crop slds-image__crop--1-by-1">
+                <img class="product-image" src="{! $sfdcSite.Prefix + v.product.VF_Image__c}" />
+            </a>
+            <figcaption class="slds-image__title slds-image__title--card">
+                <span class="slds-image__text slds-truncate" title="Image Title">
+                    <center>
+                        <h3 class="slds-truncate">
+                            <a><ui:outputText value="{!v.product.Name}"/></a>
+                        </h3>
+                        <p class="slds-truncate">
+                            <ui:outputCurrency value="{!v.product.Default_Price__c}"/>
+                        </p>
+                    </center>
+                </span>
+            </figcaption>
+        </figure>
+        
+        <div role="dialog" tabindex="-1" aura:id="modal" class="slds-modal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header" style="border: none;">
+                    <center>
+                        <img class="product-image" src="{! $sfdcSite.Prefix + v.product.VF_Image__c}" />
+                        <h1 class="slds-truncate">
+                            <ui:outputText value="{!v.product.Name}"/>
+                        </h1>
+                        <h3 class="slds-truncate">
+                            <ui:outputCurrency value="{!v.product.Default_Price__c}"/>
+                        </h3>
+                    </center>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <p>
+                        <ui:outputText value="{!v.product.Description}"/>
+                    </p>
+                    <span class="slds-truncate" title="Quantity">Quantity:</span>
+                    <ui:inputNumber value="{!v.quantity}"/>
+                    
+                </div>
+                <div class="slds-modal__footer" style="border: none; text-align:center;">
+                    <ui:button label="Cancel" press="{!c.hideModalLightning}"/>
+                    <ui:button label="Add to Cart" press="{!c.addToCartLightning}"/>
+                </div>
+            </div>
+        </div>
+        <div aura:id="backdrop" class="slds-backdrop"></div>
+    </div>
+</aura:component>

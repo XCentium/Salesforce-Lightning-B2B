@@ -1,0 +1,21 @@
+.THIS .bold {
+    font-weight: bold;
+}
+
+.THIS .item {
+    display:flex;
+    justify-content: space-between;
+    padding: .25rem;
+}
+
+.THIS .item-label, .THIS .item-amount {
+    
+}
+
+.THIS .underline {
+    border-bottom: 1px solid #555;
+}
+
+.THIS .grand-total {
+    margin-top: .5rem;
+}

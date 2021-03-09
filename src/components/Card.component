@@ -1,0 +1,8 @@
+<apex:component layout="none" >
+    <apex:attribute name="title" type="String" description="Title of the card"/>   
+    <apex:stylesheet value="{!URLFOR($Resource.Card, 'card.css')}"/>
+    <div class="card">
+        <div class="time">{!title}</div>
+        <apex:componentBody />
+    </div>    
+</apex:component>

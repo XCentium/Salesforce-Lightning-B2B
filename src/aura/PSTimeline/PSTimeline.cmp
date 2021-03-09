@@ -1,0 +1,147 @@
+<aura:component controller="PSTimelineController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <ltng:require styles="{!$Resource.VisJS_v4_21_0 + '/vis-4.21.0/dist/vis.min.css'}" scripts="{!$Resource.MomentWithLocales281 + ',' + $Resource.VisJS_v4_21_0 + '/vis-4.21.0/dist/vis.min.js'}" afterScriptsLoaded="{!c.jsLoaded}"/>
+    
+    <!-- ************************ -->
+    <!-- configuration attributes -->
+    <!-- ************************ -->
+    <aura:attribute name="title" type="String" default=""/>
+    <aura:attribute name="itemType" type="String" default="box"/>
+    <aura:attribute name="sldsIconResource" type="String" default="/resource/SLDS261"/>
+    <aura:attribute name="minHeight" type="String" default="200px"/>
+    <aura:attribute name="maxHeight" type="String"/>
+    <aura:attribute name="daysBefore" type="Integer"/>
+    <aura:attribute name="daysAfter" type="Integer"/>
+    <aura:attribute name="truncSize" type="Integer" default="50"/>
+    <aura:attribute name="locale" type="String" default="en"/>
+    <aura:attribute name="defaultBGColor" type="String" default="#d5ddf5"/>
+
+    <aura:attribute name="navToNewWindow" type="Boolean" default="false"/>
+    <aura:attribute name="tooltips" type="Boolean" default="false"/>
+    <aura:attribute name="groupItems" type="Boolean" default="false"/>
+    
+    <aura:attribute name="activityFlag" type="Boolean" default="true"/>
+    <aura:attribute name="taskIcon" type="String" default="standard:task"/>
+    <aura:attribute name="eventIcon" type="String" default="standard:event"/>
+    <aura:attribute name="emailIcon" type="String" default="standard:email"/>
+    <aura:attribute name="callIcon" type="String" default="standard:log_a_call"/>
+    
+    <aura:attribute name="chatterFlag" type="Boolean" default="true"/>
+    <aura:attribute name="chatterIcon" type="String" default="standard:post"/>
+    
+    <aura:attribute name="contentFlag" type="Boolean" default="true"/>
+    <aura:attribute name="contentIcon" type="String" default="standard:file"/>
+    
+    <aura:attribute name="caseCommentFlag" type="Boolean" default="false"/>
+    <aura:attribute name="caseCommentIcon" type="String" default="custom:custom19"/>
+
+    <aura:attribute name="caseMilestoneFlag" type="Boolean" default="false"/>
+    <aura:attribute name="caseMilestoneIcon" type="String" default="standard:case_milestone"/>
+
+    <aura:attribute name="kaFlag" type="Boolean" default="false"/>
+    <aura:attribute name="kaIcon" type="String" default="standard:knowledge"/>
+    
+    <aura:attribute name="child1Flag" type="Boolean" default="false"/>
+    <aura:attribute name="child1Icon" type="String" default="standard:default"/>
+    <aura:attribute name="child1Object" type="String"/>
+    <aura:attribute name="child1ParentField" type="String"/>
+    <aura:attribute name="child1LabelField" type="String"/>
+    <aura:attribute name="child1DescField" type="String"/>
+    <aura:attribute name="child1DateField" type="String"/>
+    <aura:attribute name="child1EndDateField" type="String"/>
+    <aura:attribute name="child1ColorField" type="String"/>
+    <aura:attribute name="child1DefaultColor" type="String"/>
+    
+    <aura:attribute name="child2Flag" type="Boolean" default="false"/>
+    <aura:attribute name="child2Icon" type="String" default="standard:default"/>
+    <aura:attribute name="child2Object" type="String"/>
+    <aura:attribute name="child2ParentField" type="String"/>
+    <aura:attribute name="child2LabelField" type="String"/>
+    <aura:attribute name="child2DescField" type="String"/>
+    <aura:attribute name="child2DateField" type="String"/>
+    <aura:attribute name="child2EndDateField" type="String"/>
+    <aura:attribute name="child2ColorField" type="String"/>
+    <aura:attribute name="child2DefaultColor" type="String"/>
+    
+    <aura:attribute name="child3Flag" type="Boolean" default="false"/>
+    <aura:attribute name="child3Icon" type="String" default="standard:default"/>
+    <aura:attribute name="child3Object" type="String"/>
+    <aura:attribute name="child3ParentField" type="String"/>
+    <aura:attribute name="child3LabelField" type="String"/>
+    <aura:attribute name="child3DescField" type="String"/>
+    <aura:attribute name="child3DateField" type="String"/>    
+    <aura:attribute name="child3EndDateField" type="String"/>
+    <aura:attribute name="child3ColorField" type="String"/>
+    <aura:attribute name="child3DefaultColor" type="String"/>
+    
+    <aura:attribute name="child4Flag" type="Boolean" default="false"/>
+    <aura:attribute name="child4Icon" type="String" default="standard:default"/>
+    <aura:attribute name="child4Object" type="String"/>
+    <aura:attribute name="child4ParentField" type="String"/>
+    <aura:attribute name="child4LabelField" type="String"/>
+    <aura:attribute name="child4DescField" type="String"/>
+    <aura:attribute name="child4DateField" type="String"/>
+    <aura:attribute name="child4EndDateField" type="String"/>
+    <aura:attribute name="child4ColorField" type="String"/>
+    <aura:attribute name="child4DefaultColor" type="String"/>
+    
+    <aura:attribute name="child5Flag" type="Boolean" default="false"/>
+    <aura:attribute name="child5Icon" type="String" default="standard:default"/>
+    <aura:attribute name="child5Object" type="String"/>
+    <aura:attribute name="child5ParentField" type="String"/>
+    <aura:attribute name="child5LabelField" type="String"/>
+    <aura:attribute name="child5DescField" type="String"/>
+    <aura:attribute name="child5DateField" type="String"/>
+    <aura:attribute name="child5EndDateField" type="String"/>
+    <aura:attribute name="child5ColorField" type="String"/>
+    <aura:attribute name="child5DefaultColor" type="String"/>
+    
+    <!-- ******************* -->
+    <!-- internal attributes --> 
+    <!-- ******************* -->
+    <aura:attribute name="timeline" type="Object" />
+    <aura:attribute name="IsSpinner" type="Boolean" default="false"/>
+    <aura:attribute name="context" type="Object" />
+    <aura:attribute name="dateSel" type="Date" />
+    <aura:attribute name="groups" type="Object" />
+    <aura:attribute name="totalCount" type="Integer" default="0"/>
+    <aura:attribute name="visibleCount" type="Integer" default="0"/>
+    
+    <aura:handler name="change" value="{!v.dateSel}" action="{!c.onDateSel}"/>
+    
+    <!-- <div class="container" style="background-color: #ffffff; border-radius: 7px;"> -->
+
+    <div class="slds-card" style="border: none;border-radius: 7px;">
+        <aura:if isTrue="{!v.IsSpinner}">
+            <lightning:spinner variant="brand"  size="large" />
+        </aura:if>
+        <aura:renderIf isTrue="{!v.title.length > 0}">
+            <legend class="slds-text-heading--medium slds-p-left_xx-small"><span style="font-weight:bold">{!v.title}</span></legend>
+        </aura:renderIf>
+        <div aura:id="timelineContainer" id="timelineContainer">
+        <div id="{!globalId + '_timeline'}"></div>
+        <div aura:id="controlDiv" id="controlDiv" class="hide">
+            <div class="imageDiv">
+                <img src="{!$Resource.PSTimelineCenter}" height="20" width="20" onclick="{!c.centerTimeline}" />
+            </div>
+            <div class="slds-p-top_xx-small imageDiv">
+                <img src="{!$Resource.PSTimelineCalendar}" height="18" width="18" onclick="{!c.toggleDateSel}" />
+            </div>
+            <div class="slds-p-top_xx-small imageDiv">
+                <img src="{!$Resource.PSTimelineFit}" height="20" width="20" onclick="{!c.fitTimeline}" />
+            </div>
+            <div class="slds-p-top_xx-small imageDiv">
+                <img src="{!$Resource.PSTimelineGroup}" height="20" width="20" onclick="{!c.toggleGroup}" />
+            </div>
+            <div class="slds-p-top_xx-small imageDiv">
+                <img src="{!$Resource.PSTimelineRefresh}" height="20" width="20" onclick="{!c.resetTimeline}" />
+            </div>
+        </div>
+        <div aura:id="dateSelDiv" id="dateSelDiv" class="hide slds-p-bottom_x-small slds-p-right_x-small slds-p-left_x-small">
+            <lightning:input type="date" label="Move to day:" name="date" value="{!v.dateSel}" /> 
+        </div>
+        <div aura:id="infoDiv" id="infoDiv" class="slds-p-bottom_x-small slds-p-right_x-small slds-p-left_x-small">
+            {!v.visibleCount} / {!v.totalCount}
+        </div>
+        </div>
+    </div>
+</aura:component>

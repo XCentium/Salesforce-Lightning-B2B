@@ -1,0 +1,34 @@
+.THIS {
+    position: relative;
+    z-index: 1;
+}
+
+.THIS .surveyRuntimeSurvey.surveyScreen {
+    min-width: 0;
+    margin: -13px;
+    width: calc(100% + 25px) !important;
+    padding-bottom: 50px !important;
+}
+
+.THIS .slds-icon.slds-icon_large{
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+}
+
+.THIS legend.slds-m-bottom--medium {
+    margin-bottom: 0;
+}
+
+.THIS .question span {
+    font-size: 1rem !important;
+}
+
+@media only screen and (max-width: 768px) {
+    .THIS .surveyAnswerRating .ratingLabels.ratingLabelsLeft, .THIS .surveyAnswerRating .ratingLabels.ratingLabelsRight {
+        padding: .5rem 0 !important;
+    }
+}
+
+.THIS .answers.slds-m-bottom--x-large {
+    margin: 0;
+}

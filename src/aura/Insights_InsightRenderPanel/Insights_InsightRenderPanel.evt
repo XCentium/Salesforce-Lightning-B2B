@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="Event fired to trigger panel rendering/transitioning.">
+    <aura:attribute name="type" type="String" required="true"/>
+	<aura:attribute name="toast" type="Object" description="A toast to display on rendering. JS object consists of type (normal, success, warning, error) and a message"/>
+	<aura:attribute name="attributes" type="Object" description="A map of attributes to send to the component."/>
+</aura:event>

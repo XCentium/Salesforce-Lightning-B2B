@@ -1,0 +1,22 @@
+<apex:component id="ckzCreditOverrideIncIncludedItems" layout="none">
+    <script id="CraneInc-IncludedItems" type="text/template">
+        <div id="included_items{{this.itemID}}" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">{{this.mockProduct.name}}: {{pageLabelMap 'CheckOut_IncludedItems'}}</h3>
+            </div>
+            <div class="modal-body">
+                <div class="cart_figures">
+                    <div class="section1"><strong>{{pageLabelMap 'Name'}}:</strong></div>
+                    <div class="section2"><strong>{{pageLabelMap 'SKU'}}:</strong></div>
+                    <div class="section3"><strong>{{pageLabelMap 'Qty'}}:</strong></div>
+                    {{#each this.minorLines}}
+                    <div class="section1">{{this.mockProduct.name}}</div>
+                    <div class="section2">{{this.mockProduct.sku}}</div>
+                    <div class="section3">{{this.quantity}}</div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </script>
+</apex:component>

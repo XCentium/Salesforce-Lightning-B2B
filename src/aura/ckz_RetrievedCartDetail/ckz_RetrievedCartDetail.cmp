@@ -1,0 +1,217 @@
+<aura:component description="ckz_RetrievedCartDetail">
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <!-- 2019-09-20  msobczak: added -->
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <aura:attribute name="childCart" type="Map" required="false"/>
+
+    <aura:attribute name="cartId" type="String"/>
+    <aura:attribute name="cartEncryptedId" type="String"/>
+
+    <aura:attribute name="currentCartId" type="String" default="{!v.childCart.sfid}"/>
+    <aura:attribute name="currentCartName" type="String" default="{!v.childCart.sfdcName}"/>
+    <aura:attribute name="currentCartEncryptedId" type="String" default="{!v.childCart.encryptedId}"/>
+
+    <aura:attribute name="isSelected" type="Boolean" default="{!v.childCart.isSelected}"/>
+
+    <!-- 2019-09-05  msobczak: added -->
+    <aura:attribute name="isValid" type="Boolean" default="true"/>
+
+    <aura:registerEvent name="startingObjectSelected" type="c:ckz_StartingObjectSelectedEvent"/>
+
+    <aura:registerEvent name="gotoDataEntry" type="c:ckz_OrderForm_GotoDataEntryEvent"/>
+
+
+    <!-- TABLE LAYOUT -->
+    <aura:if isTrue="{! $Browser.formFactor == 'DESKTOP' &amp;&amp; (v.useCardLayout == false) }">
+
+        <tr>
+            <th scope="row">
+
+                <div class="slds-truncate" title="{!v.childCart.sfdcName}">{!v.childCart.sfdcName}</div>
+
+            </th>
+
+            <td>
+                <div class="slds-truncate" title="{!v.childCart.lastModifiedDateStr}">{!v.childCart.lastModifiedDateStr}</div>
+            </td>
+
+            <td class="activeCol" style="width: 75px;">
+                <div class="slds-truncate">
+                    <aura:if isTrue="{!v.childCart.activeCart}">
+                        <lightning:input type="checkbox" label=""
+                                checked="{!v.childCart.activeCart}"
+                                name="activeCart"
+                                disabled="true"
+                        />
+                    </aura:if>
+                </div>
+            </td>
+
+            <!-- Cart Products -->
+            <td>
+                <div class="slds-truncate" title="">
+                    <ul>
+                        <aura:iteration items="{!v.childCart.cartItemsList}" var="cartItem">
+                            <aura:if isTrue="{! cartItem.cartItemType == 'Major'}">
+                                <li class="{! cartItem.productType != 'Product' ? 'invalidProduct' : ''}">
+                                    <img src="{!cartItem.thumbnailImage.URI}" width="65" height="65" class="slds-m-around--xx-small" />
+                                    {!cartItem.productName}
+                                </li>
+                            </aura:if>
+
+                        </aura:iteration>
+                    </ul>
+                </div>
+            </td>
+
+            <td>
+                <div class="slds-truncate" title="">
+                    <lightning:formattedNumber value="{!v.childCart.subtotalAmount}" style="currency"/>
+                </div>
+            </td>
+
+            <td>
+                <div class="slds-truncate" title="">{!v.childCart.cartStatus}</div>
+            </td>
+
+            <td class="slds-cell-wrap">
+
+                <aura:if isTrue="{!v.isValid}">
+                    <lightning:button aura:id="selectCart"
+                            label="{! v.isSelected ? 'Selected' : 'Select' }"
+                            variant="brand"
+                            onclick="{!c.selectCart}"
+                            disabled="{!v.isSelected}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!v.isSelected}">
+                    <lightning:button aura:id="gotoNext"
+                            label="Next"
+                            variant="brand"
+                            onclick="{!c.handleGotoDataEntry}"
+                    />
+                </aura:if>
+
+                <aura:if isTrue="{! not(v.isValid)}">
+                    Cart contains non-standard products.
+                </aura:if>
+            </td>
+
+        </tr>
+
+    </aura:if>
+
+    <!-- CARD LAYOUT -->
+    <aura:if isTrue="{! $Browser.formFactor != 'DESKTOP' || (v.useCardLayout == true) }">
+
+        <article class="{! v.isSelected ? 'slds-card slds-card_boundary slds-m-bottom_small selectedProduct' : 'slds-card slds-card_boundary slds-m-bottom_small' }">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+
+                        <!-- put icon here -->
+                        <lightning:icon iconName="utility:cart" alternativeText="Cart"/>
+
+                        <span class="slds-icon_container slds-icon-standard-orders" title="orders">
+
+                            <span class="slds-assistive-text">Card ID {!v.childCart.sfdcName}</span>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <span>{!v.childCart.sfdcName}</span>
+                            <span class="slds-badge slds-float_right">{!v.childCart.cartStatus}</span>
+                        </h2>
+                    </div>
+
+                </header>
+
+            </div>
+
+            <div class="slds-card__body">
+
+
+                <!-- Last Modified -->
+                <div class="slds-p-vertical_xx-small slds-p-horizontal_large slds-clearfix">
+                    <div class="slds-float_left">Last Modified:</div>
+                    <div class="slds-float_right">{!v.childCart.lastModifiedDateStr}</div>
+                </div>
+
+                <!-- Is Active -->
+                <aura:if isTrue="{!v.childCart.activeCart}">
+                    <div class="slds-p-vertical_xx-small slds-p-horizontal_large slds-clearfix">
+                        <div class="slds-float_left">Active:</div>
+                        <div class="slds-float_right">True</div>
+                    </div>
+                </aura:if>
+
+                <!--Amount -->
+                <div class="slds-p-vertical_xx-small slds-p-horizontal_large slds-clearfix">
+                    <div class="slds-float_left">SubAmount:</div>
+                    <div class="slds-float_right">
+                        <lightning:formattedNumber value="{!v.childCart.subtotalAmount}" style="currency"/>
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <div class="slds-p-vertical_xx-small slds-p-horizontal_large">
+
+                    <ul class="">
+                        <aura:iteration items="{!v.childCart.cartItemsList}" var="cartItem">
+                            <aura:if isTrue="{! cartItem.cartItemType == 'Major'}">
+                                <li class="{! cartItem.productType != 'Product' ? 'slds-text-color_error' : ''}">
+
+                                    <span class="product">
+                                        <img src="{!cartItem.thumbnailImage.URI}" width="65" height="65" class="slds-m-around--xx-small" />
+                                        {!cartItem.productName}
+
+                                        <aura:if isTrue="{! cartItem.productType != 'Product'}">
+                                            <lightning:icon iconName="utility:warning" alternativeText="warning" class="slds-float_right" size="xx-small" variant="error"/>
+                                        </aura:if>
+                                    </span>
+
+                                </li>
+                            </aura:if>
+                        </aura:iteration>
+                    </ul>
+                </div>
+            </div>
+
+            <footer class="slds-card__footer">
+                <div class="">
+                    <aura:if isTrue="{!v.isValid}">
+                        <lightning:button aura:id="selectCart"
+                                label="{! v.isSelected ? 'Selected' : 'Select' }"
+                                class=""
+                                variant="brand"
+                                onclick="{!c.selectCart}"
+                                disabled="{!v.isSelected}"/>
+                    </aura:if>
+
+                    <aura:if isTrue="{!v.isSelected}">
+                        <lightning:button aura:id="gotoNext"
+                                label="Next"
+                                class=""
+                                variant="brand"
+                                onclick="{!c.handleGotoDataEntry}"
+                        />
+                    </aura:if>
+
+                    <aura:if isTrue="{! not(v.isValid)}">
+                        <div class="slds-inline_icon_text slds-grid slds-inline_icon_text--warning">
+                            <lightning:icon iconName="utility:warning" alternativeText="warning" variant="error"/>
+                            <div class="slds-col slds-align-middle slds-text-color_error">
+                                <p>Order contains non-standard products.</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                </div>
+            </footer>
+        </article>
+
+    </aura:if>
+
+</aura:component>

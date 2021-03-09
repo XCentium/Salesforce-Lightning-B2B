@@ -1,0 +1,51 @@
+<aura:component controller="MOCK_ScoringCtrl" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"></aura:handler>
+    
+    <aura:attribute name="recordId" type="String"></aura:attribute>
+    <aura:attribute name="parentObjectType" type="String"></aura:attribute>
+    <aura:attribute name="score" type="MOCK_Score__c"></aura:attribute>
+    <aura:attribute name="reasons" type="MOCK_Score_Reason__c[]"></aura:attribute>
+    
+    <div class="container">
+        <div class="main slds-scope">
+            <div class="slds-text-title_caps slds-m-bottom_x-small">
+            	Score Header
+            </div>
+            <div class="slds-form slds-m-bottom_small">
+                <div class="slds-form-element">
+                    <lightning:input type="number" required="true" label="Score" min="0" max="100" value="{!v.score.Score__c}" />
+                </div>
+                
+                <div class="slds-form-element">
+                    <lightning:input type="checkbox" label="Make Default" checked="{!v.score.Default__c}"></lightning:input>
+                </div>
+            </div>
+            
+            <div class="slds-text-title_caps slds-m-bottom_x-small">
+                Reasons <aura:if isTrue="{!v.reasons.length &lt; 5}"><a href="javascript:void(0)" onclick="{!c.addReason}">add</a></aura:if>
+            </div>
+            <aura:iteration items="{!v.reasons}" var="reason" indexVar="index">
+                <div class="reason-container slds-box slds-form slds-form_compound">
+                    <lightning:buttonIcon class="close" variant="bare" iconName="utility:close" size="small" value="{!index}" onclick="{!c.deleteReason}"></lightning:buttonIcon>
+                    <fieldset class="slds-form-element">
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <lightning:input type="number" label="Confidence" required="true" max="3" min="-3" name="confidence" value="{!reason.Confidence__c}"/>
+                                </div>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <lightning:input type="text" label="Reason" required="true" name="reason" value="{!reason.Reason__c}" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </aura:iteration>
+        </div>
+        
+        <div class="button-container slds-clearfix slds-p-top_x-small">
+            <lightning:button class="slds-button slds-button_neutral slds-float_left" onclick="{!c.cancel}">Cancel</lightning:button>
+            <lightning:button class="slds-button slds-button_brand slds-float_right" onclick="{!c.save}">Save</lightning:button>
+        </div>
+    </div>
+</aura:component>

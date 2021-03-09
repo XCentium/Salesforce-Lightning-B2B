@@ -1,0 +1,136 @@
+<!--
+ - Created by brandon.rogers on 2019-08-05.
+ -->
+
+<apex:component id="ckz_CartUpload" allowDML="true" controller="ckz_ctrl_CartUpload">
+    <style type="text/css">
+        .cc_CartUpload .form-group {
+            margin-bottom: 0;
+        }
+
+        .cc_input_file,
+        .cc_input_checkbox {
+            margin-top: 5px;
+        }
+    </style>
+
+    <div class="CC-CartUpload"></div>
+
+    <script id="CC-CartUpload-View" type="text/template">
+        <div class="row">
+            <div class="col-sm-12">
+                <h4 class="cartUpload-Title text-center m-t-0 m-b-2">
+                    <i class="far fa-file-csv"></i>
+                    {{pageLabelMap 'CartUploadTitle'}}
+                </h4>
+                <!--<p class="cartUpload-Caption text-center">
+                    {{pageLabelMap 'CartUpload_Caption'}}
+                </p>-->
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row ckz_CartUpload" id="ckzCartUpload">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="messagingSection-CsvUpload-Error" style="display: none"></div>
+                                <div class="messagingSection-CsvUpload-Info" style="display: none"></div>
+
+                                <div class="row">
+                                    <div class="col-sm-4 text-center">
+                                        <div class="form-group">
+                                            <div class="cc_input_file">
+                                                <input type="file" id="attachmentFile" class="form-button"/>
+                                                <!--<p class="help-block">{{pageLabelMap 'CartUploadHelpText'}}</p>-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 text-center">
+                                        <div class="form-group">
+                                            <div class="checkbox cc_input_checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="addToExisting" name="addToExisting"/> {{pageLabelMap 'CartUploadCurrentCart'}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 text-center">
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-default btn-sm form-button" onclick="uploadCSV(document.getElementById('attachmentFile'));">
+                                                {{pageLabelMap 'CartUploadButton'}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.util.createView({
+                desktop: {target: 'CC-CartUpload', template: 'CC-CartUpload-View'}
+                // phone :   {target:'footerPhone', template:'CCDemo_SiteFooter-View'}
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        var globalData;
+        var isFileLoad = false;
+
+        function uploadCSV(event) {
+            $('.infoMsg').hide();
+            $('.errorMsg').hide();
+            var useNewCart = !(document.getElementById('addToExisting').checked);
+            var file = event.files[0];
+            isFileLoad = true;
+            if (file) {
+                reader = new FileReader();
+                reader.onloadend = function (event) {
+                    globalData = event.target.result;
+                    remoteInvoke(file);
+                };
+                reader.readAsText(file);
+
+                function remoteInvoke(dataFile) {
+                    var filename = dataFile.name;
+                    console.log('global data -->' + globalData);
+                    var remoteCall = _.extend(CCRZ.RemoteInvocation, {className: 'ckz_ctrl_CartUpload'});
+                    remoteCall.invokeCtx(
+                        'parseCSV', globalData, useNewCart,
+                        function (resp) {
+                            console.log('File Uploaded');
+                            console.log('resp.success--->' + resp.success);
+                            console.log('resp.data--->' + JSON.stringify(resp.data));
+                            if (resp.success) {
+                                var cartId = resp.data['cartId'];
+                                CCRZ.pagevars.currentCartID = cartId;
+                                CCRZ.pubSub.trigger('cartChange', cartId);
+                            } else {
+
+                            }
+
+                            if (resp.messages) {
+                                CCRZ.pubSub.trigger('pageMessage', resp);
+                            }
+
+                        }, {buffer: false, escape: false, nmsp: false}
+                    );
+                }
+            } else {
+                $('.errorMsg').html('Please select a file to upload.').show();
+            }
+        }
+    </script>
+</apex:component>

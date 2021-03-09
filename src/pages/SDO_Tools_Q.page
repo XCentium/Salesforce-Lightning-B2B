@@ -1,0 +1,231 @@
+<apex:page controller="SDO_Tools" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" showHeader="false">
+    
+    <title>SDO Home</title>
+    <apex:composition template="SDO_ToolsLayout">
+        <apex:define name="_content">
+            
+            
+            <div class="page-content" style="min-height:100% !important;" data-tab="home">
+                <div class="main welcomeWrapper">
+                    <div class=""> <!-- container -->
+                        <!-- BEGIN SIDEBAR & CONTENT -->
+                        <div class="row margin-bottom-40">
+                            <!-- BEGIN CONTENT -->
+                            <div class="col-md-12 col-sm-12">
+                                
+                                <div class="content-page">
+                                    
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 blog-posts">
+                                            <div class="row fixedwidthwrapper">
+                                                <!--<div class="col-md-4 col-sm-4 welcomeImgWrapper">
+<apex:image styleClass="img-responsive welcomeImg" value="{!$Resource.SDOlogo}"/>
+</div>-->
+                                                <div class="col-md-8 col-sm-8">
+                                                    <div class="bigText">
+                                                        WELCOME TO THE SIMPLE DEMO ORG
+                                                    </div>
+                                                    
+                                                    <!-- Q-Home announcement: BEGIN -->
+                                                  <!--  <style type="text/css">
+                                                        @font-face {
+                                                            font-family: 'trailhead_bold2regular';
+                                                            src: url('{! URLFOR($Resource.Q_Home_annoucement_fonts, 'trailhead_bold-webfont.woff2') }') format('woff2'),
+                                                                 url('{! URLFOR($Resource.Q_Home_annoucement_fonts, 'trailhead_bold-webfont.woff') }') format('woff');
+                                                            font-weight: normal;
+                                                            font-style: normal;
+                                                        }
+                                                        @font-face {
+                                                            font-family: 'SalesforceSans_regular';
+                                                            src: url('{! URLFOR($Resource.Q_Home_annoucement_fonts, 'SalesforceSans-Regular.woff2') }') format('woff2'),
+                                                                 url('{! URLFOR($Resource.Q_Home_annoucement_fonts, 'SalesforceSans-Regular.woff') }') format('woff');
+                                                            font-weight: normal;
+                                                            font-style: normal;
+                                                        }
+                                                        @font-face {
+                                                            font-family: 'SalesforceSans_bold';
+                                                            src: url('{! URLFOR($Resource.Q_Home_annoucement_fonts, 'SalesforceSans-Bold.woff2') }') format('woff2'),
+                                                                 url('{! URLFOR($Resource.Q_Home_annoucement_fonts, 'SalesforceSans-Bold.woff') }') format('woff');
+                                                            font-weight: normal;
+                                                            font-style: normal;
+                                                        }
+                                                        #q-home_announcement{
+                                                            position: relative;
+                                                            background-color: #8BC0D5;
+                                                            width: 100%;
+                                                            padding: 36px 26px;
+                                                            color: #2A426C;
+                                                            margin-top: 28px;
+                                                            margin-bottom: 48px;
+                                                            -webkit-border-radius: 4px !important;
+                                                            -moz-border-radius: 4px !important;
+                                                            border-radius: 4px !important;
+                                                            font-family: 'SalesforceSans_bold', 'Open Sans', sans-serif;
+                                                            overflow: hidden;
+                                                            line-height: 1.6em;
+                                                            text-align: center;
+                                                        }
+                                                        #q-home_annoucement-astro {
+                                                            position: absolute;
+                                                            bottom: 0;
+                                                            left: 0;
+                                                            width: 60%;
+                                                        }
+                                                        #q-home_annoucement-title {
+                                                            font-family: 'trailhead_bold2regular', 'Open Sans', sans-serif;
+                                                            font-size: 28px;
+                                                            line-height: 1.2em;
+                                                            margin-bottom: 12px;
+                                                        }
+                                                        #q-home_announcement-content {
+                                                            font-size: 16px;
+                                                            margin-bottom: 18px;
+                                                        }
+                                                        #q-home_annoucement-screenshot {
+                                                            width: 100%;
+                                                        }
+                                                        #q-home_announcement a {
+                                                            color: #0070D2;
+                                                        }
+                                                        
+                                                    </style>
+                                                    <div id="q-home_announcement">
+                                                        <div id="q-home_annoucement-title">Psst! Check out the new Q Branch app.</div>
+                                                        <p id="q-home_announcement-content">It will make your life so much easier.</p>
+                                                        <p id="q-home_announcement-content">Make sure you're in Lightning and that My Domain is enabled!</p>                                                        <img id="q-home_annoucement-screenshot" src="{! URLFOR($Resource.Q_Home_annoucement_screenshot) }" />
+
+                                                        <img id="q-home_annoucement-astro" src="{! URLFOR($Resource.Q_Home_annoucement_background) }" />
+                                                    </div>
+                                                    
+                                                    <!-- Q-Home announcement: END -->
+                                                    
+                                                    <div onclick="welcomeButton('walkthrough');toggleActive('startHereNav');" class="welcomeBtn btn btn-primary blue">YOU MUST CLICK HERE</div>
+                                                    
+                                                                                                      
+                                                    <div class="welcomeText">
+                                                        <div>
+                                                            The Simple Demo Org (SDO) is a fully-functional, production-class Salesforce instance designed for rapidly creating demos.  It has:
+                                                        </div>
+                                                        <div>
+                                                            <ul>
+                                                                <li>
+                                                                    All current features and licenses enabled.
+                                                                </li>
+                                                                <li>
+                                                                    A working data set, including Accounts, Contacts, Leads, Opportunities, Cases, Campaigns and Activities.
+                                                                </li>
+                                                                <li>
+                                                                    Innovative tools to automate common tasks and quickly customize your demos.     
+                                                                </li>
+                                                                <li>
+                                                                    Pre-built templates, configurations and workflows to demonstrate common usage scenarios.  
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                    
+                                                    
+                                                    <!--<div onclick="welcomeButton('tools');" class="welcomeBtn btn ">Demo Tools</div>
+<div onclick="welcomeButton('news');" class="welcomeBtn btn ">What's new</div>
+-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <i id="lastTool" class="fa fa-arrow-circle-left" onclick="showTool();"></i>
+                <div id="startHere" class="myWalkthrough">
+                    <ul class="nav nav-wizard">
+                        <apex:repeat value="{!toolsWizard.wizard_steps__r}" var="ws">
+                            <li id="{!ws.id}-cloudLi" class="cloudLi">
+                                <a href="#{!ws.id}-tab" data-toggle="tab" >{!ws.name}</a>
+                                <!--<a href="#{!ws.id}-tab" data-toggle="tab" >{!ws.Step_Order__c} - {!ws.name}</a>-->
+                            </li>
+                        </apex:repeat>
+                        <!--
+<li class="cloudLi">
+<a href="#demoStories-tab" data-toggle="tab" >Demo Stories</a>
+</li>
+-->
+                    </ul>
+                    <div class="tab-content">
+                        <apex:repeat value="{!toolsWizard.wizard_steps__r}" var="ws">
+                            <div class="tab-pane fade" id="{!ws.id}-tab">
+                                <div class="note note-bordered note-info">
+                                    <p style="font-size:16px;">
+                                        <apex:outputText value="{!ws.Description__c}" escape="false"/>
+                                    </p>
+                                </div>
+                                
+                                <!-- Accordion Information --> 
+                                <div class="panel-group accordion" id="accordion{!ws.Step_Order__c}">
+                                    <apex:repeat value="{!wizardStepId_ToolsList_Map[ws.id]}" var="tool">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a onclick="trackClick('Wizard {!ws.Step_Order__c} - {!tool.tool_order__c}');" aria-expanded="false" class="accordion-toggle {!tool.tool_order__c}accordionHeader" data-toggle="collapse" data-parent="#accordion{!ws.Step_Order__c}" href="#collapse_{!ws.Step_Order__c}_{!tool.tool_order__c}" >
+                                                        {!tool.tool_order__c}. {!tool.name} </a>
+                                                </h4>
+                                            </div>
+                                            <div aria-expanded="false" id="collapse_{!ws.Step_Order__c}_{!tool.tool_order__c}" class="panel-collapse collapse {!tool.tool_order__c}accordionBody">
+                                                <div class="panel-body">
+                                                    <apex:outputPanel rendered="{!tool.sdo_tool__c != null}">
+                                                        <p>
+                                                            {!tool.sdo_tool__r.description__c} 
+                                                        </p>
+                                                        <p> 
+                                                            <apex:outputText Value="{!tool.sdo_tool__r.instructions__c}" escape="false"/>
+                                                        </p>
+                                                        <div class="btn blue wizardButton" data-name="{!tool.sdo_tool__r.name}"  onclick="showToolById('{!tool.sdo_tool__c}');">
+                                                            {!tool.sdo_tool__r.name}
+                                                        </div>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!tool.sdo_tool__c == null}">
+                                                        <p>
+                                                            <apex:outputText value="{!tool.instructions__c}" escape="false"/>
+                                                        </p>
+                                                        <p> 
+                                                            <apex:outputText Value="{!tool.sdo_tool__r.instructions__c}" escape="false"/>
+                                                        </p>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!tool.Advanced_Information__c != null && tool.sdo_tool__r.Advanced_Information__c == null}">
+                                                        <p>
+                                                            <a href="#" data-toggle="modal" data-target="#learnMoreModal" class="learnMore" onclick="showModal('{!tool.name} Information','{!JSENCODE(tool.Advanced_information__c)}')">Advanced Information</a>
+                                                        </p>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!tool.sdo_tool__r.Advanced_Information__c != null}">
+                                                        <p>
+                                                            <a href="#" data-toggle="modal" data-target="#learnMoreModal" class="learnMore" onclick="showModal('{!tool.name} Information','{!JSENCODE(tool.sdo_tool__r.Advanced_information__c)}')">Advanced Information</a>
+                                                        </p>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </apex:repeat>
+                                </div>
+                            </div>
+                            <apex:outputPanel rendered="{!ws.Step_Order__c} == 1}">
+                                <iframe class="news-iframe" width="100%" height="100%" src="https://showcase.secure.force.com/apex/SDO_ToolsHomepageNews"/>
+                            </apex:outputPanel>
+                        </apex:repeat>
+                        
+                    </div><!-- end tab Content -->
+                </div>
+            </div><!--/.page-content-->
+            
+            
+            <script type="text/javascript">
+            // Page scripts go here
+            
+            
+            
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

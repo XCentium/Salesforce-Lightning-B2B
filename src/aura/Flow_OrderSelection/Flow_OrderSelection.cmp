@@ -1,0 +1,26 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global" controller="Flow_getProductstoRegister">
+    <aura:attribute name="selectedCard" type="String" default="Please click a product"/>
+	<aura:attribute name="PreviousCard" type="String" default=""/>
+    <aura:attribute name="ReturnedProduct" type="Product2[]"/>
+    <aura:attribute name="ContactId" type="String"/>
+    <aura:attribute name="OrderItemId" type="String"/>
+    <aura:attribute name="OrderId" type="String"/>
+    
+  	<lightning:flow aura:id="Product_Registration_Wrapper"/>
+    <aura:handler name="init" value="{!this}" action="{!c.GetProducts}"/>
+    <div class="card_wrapper">
+        <div aura:id="registeringProduct">Selected: {!v.selectedCard}</div><br />
+        <lightning:layout horizontalAlign="space" multipleRows="true">
+            <aura:iteration var="product" items="{!v.ReturnedProduct}" indexVar="index"> 
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    <div id="{!product.Id}" class="product_Image_Wrapper" onclick="{!c.onSelect}" data-value="{!product.Product2.Name}">
+                        <strong>Order Number: </strong> {!product.Order.OrderNumber}<br/>
+                        <img aura:id="{!product.Id}" src="{!product.Product2.purl__c}" class="prodimg"/>
+                        <br/><strong>{!product.Product2.Name}</strong>
+                        <br/><ui:outputCurrency aura:id="curr" value="{!product.Product2.MSRP__c}" format="¤#,##0.00;(¤#,##0.00)"/>
+                    </div>
+                </lightning:layoutItem>
+            </aura:iteration>
+        </lightning:layout>
+    </div>
+</aura:component>

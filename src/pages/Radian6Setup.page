@@ -1,0 +1,33 @@
+<apex:page sidebar="false">
+<title>Radian 6 Setup</title>
+    <div class="wrapper">
+
+
+<h1> Basic Steps to Configure Radian6 for Salesforce (within a new SDO) </h1><br/><br/><br/>
+<a href="https://docs.google.com/a/salesforce.com/document/d/1R-FPZWc8seQzTbHYcvcFlEJ4hReEg2w8u9ztBVhrmOQ" target="_blank"> See the google doc which outlines the most recent setup guide (saleforce login required)</a>
+
+</div>
+<style type="text/css">
+h1{
+color: #1071B8;
+    font-size: 18px;
+}
+.wrapper{
+border: 2px solid #1071B8;
+    border-radius: 15px 15px 15px 15px;
+    padding: 30px;
+}
+
+</style>
+    
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

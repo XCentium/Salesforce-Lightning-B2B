@@ -1,0 +1,57 @@
+.THIS.scrollerSizePrimary {
+    height: calc(100vh - 145px);
+    /* 12rem  173px*/
+    overflow:hidden;
+    z-index: 2;
+}
+
+.THIS.scrollerSizeSecondary {
+    height: calc(100vh - 185px);
+    /* 12rem  173px*/
+    overflow:hidden;
+    z-index: 2;
+}
+.THIS .hiddenDiv {
+    display:none;
+}
+.THIS svg.slds-button__icon--stateful {
+    margin-right:0rem !important;
+}
+.THIS svg.slds-button__icon_left {
+    margin-right:0rem !important;
+}
+.THIS .buttonSize {
+    /*height: 100%;
+    padding-top:    calc(50vh - 6.7rem);
+    padding-bottom: calc(50vh - 3rem);
+    display:block;*/
+    height: 70px;
+}
+
+.THIS .leftButtonContainerSideBarOn {
+    z-index: 10;
+    position: absolute; 
+    Left: -0.8em; top: 
+	calc(35vh);
+}
+
+.THIS .leftButtonContainerSideBarOff {
+    z-index: 10;
+    position: absolute; 
+    Left: -0.2em; top: 
+	calc(35vh);
+}
+
+.THIS .rightButtonContainerSideBarOn {
+    z-index: 10;
+    position: absolute; 
+    right: -0.8em; 
+    top: calc(35vh);
+}
+
+.THIS .rightButtonContainerSideBarOff {
+    z-index: 10;
+    position: absolute; 
+    right: -0.2em; 
+    top: calc(35vh);
+}

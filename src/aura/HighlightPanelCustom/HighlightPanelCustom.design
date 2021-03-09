@@ -1,0 +1,24 @@
+<design:component label="Highlights Panel - Direct Selling" >
+    <design:attribute name="LivesLabel" label="Label for Lives Field " description="If you'd like to change the label from Lives Field to something, do so here." default="Lives" />
+    <design:attribute name="SpeaksLabel" label="Label for Speaks Field " description="If you'd like to change the label from Speaks Field to something, do so here." default="Speaks" />
+    <design:attribute name="Languages" label="Languages Spoken" description="List languages contact speaks" default="English" />
+    <design:attribute name="TierLabel" label="Label for Tier Field " description="If you'd like to change the label from Tier Field to something, do so here." default="Tier" />
+    
+    <design:attribute name="QualVolumn" label="Label for Qualifying Volumn Field " description="If you'd like to change the label from Qualifying Volume Field to something, do so here." default="Qualifying Volume" />
+    <design:attribute name="DirectRecruits" label="Label for Direct Recruits Field " description="If you'd like to change the label from Direct Recruits Field to something, do so here." default="Direct Recruits" />
+    <design:attribute name="ItemsSold" label="Label for Tier Field " description="If you'd like to change the label from Items Sold to something, do so here." default="Items Sold" />
+    
+    <design:attribute name="Goal1Label" label="Label for First Goal " description="If you'd like to change the label from Goal to something, do so here." default="Goal" />
+    <design:attribute name="Goal1" label="Goal 1" description="Text value for the contact's first goal" default="Improve Health" />
+    <design:attribute name="Goal2Label" label="Label for Second Goal " description="If you'd like to change the label from Goal to something, do so here." default="Goal" />
+    <design:attribute name="Goal2" label="Goal 2" description="Text value for the contact' second goal" default="Extra Income" />
+    <design:attribute name="Goal3Label" label="Label for Third Goal " description="If you'd like to change the label from Goal to something, do so here." default="Goal" />
+    <design:attribute name="Goal3" label="Goal 3" description="Text value for the contact' third goal" default="Purchase Products" />
+    <design:attribute name="DashboardLabel" label="Dashboard Label" description="Label to be shown above the dashboard image" default="Qualifying Volume" />
+    <design:attribute name="DashboardImage" label="Dashboard Image URL" description="URL To the Dashboard Screenshot you'd like to show" default="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/CG/Direct+Selling/mlm-dashboard.png" />
+    
+    <design:attribute name="Icon1" label="Icon 1" default="standard:individual" description="Icons Here: https://www.lightningdesignsystem.com/icons/   Include the type and icon name. Example: standard:approval"  /> 
+    <design:attribute name="Icon2" label="Icon 2" default="standard:lead" description="Icons Here: https://www.lightningdesignsystem.com/icons/   Include the type and icon name. Example: standard:approval"  />
+    <design:attribute name="Icon3" label="Icon 3" default="standard:opportunity" description="Icons Here: https://www.lightningdesignsystem.com/icons/   Include the type and icon name. Example: standard:approval"  />
+
+</design:component>

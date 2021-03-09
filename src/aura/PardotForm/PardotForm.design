@@ -1,0 +1,25 @@
+<design:component label="Pardot Form">
+	<design:attribute 
+    	name="URL" 
+        default="https://www2.lenoxsoft.com/l/588353/2018-08-27/r3wvl" 
+        label="Full IFrame URL" 
+        description="What url would you like to display in the Iframe? Please input the full url included http" 
+    />
+    <design:attribute 
+        name="width" 
+    	default="100%" 
+        label="Width of the Iframe" 
+        description="What width would you like to display the iframe? Default is 100%" 
+    />
+    <design:attribute 
+        name="height" 
+    	default="500px" 
+        label="Height of the Iframe" 
+        description="What height would you like to display the iframe? Default is 500px" 
+    />
+    <design:attribute 
+        name="PageTitle" 
+    	default="Get Started" 
+        label="Form Label" 
+    />
+</design:component>

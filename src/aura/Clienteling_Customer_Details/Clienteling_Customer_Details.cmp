@@ -1,0 +1,44 @@
+<aura:component controller="ClientellingController">
+	<aura:attribute name="ContactID" type="String"/>
+    <aura:attribute name="Contact" type="Contact[]"/>
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:iteration var="contact" items="{!v.Contact}" indexVar="index"> 
+        <div class="slds-page-header">
+            <div class="slds-media">
+                <!--<aura:if isTrue="{!v.Profile_Image_URL__c != ''}">
+                    <div class="profilepicture">
+                        <img src="{!contact.Profile_Image_URL__c}" class="contactpicture"/> 
+                    </div>
+                </aura:if>-->
+                <div class="slds-media__body">
+                    <div class="padding">
+                        <h1 class="slds-page-header__title slds-truncate slds-align-middle border-bottom">Customer</h1>
+                        <p class="slds-text-body_small slds-line-height_reset"><strong>Name:</strong> {!contact.Name}</p>
+                        <p class="slds-text-body_small slds-line-height_reset"><strong>Phone:</strong> {!contact.Phone}</p>
+                        <p class="slds-text-body_small slds-line-height_reset"><strong>Email:</strong> {!contact.Email}</p>
+                	</div>
+                </div>
+                <div class="slds-media__body">
+                    <div class="padding">
+                        <h1 class="slds-page-header__title slds-truncate slds-align-middle border-bottom">Shopping Profile</h1>
+                        <p class="slds-text-body_small slds-line-height_reset"><strong>myNTO Balance:</strong> {!contact.myNTO_Balance__c}</p>
+                        <p class="slds-text-body_small slds-line-height_reset"><strong>myNTO Status:</strong> {!contact.myNTO_Status__c}</p>
+                    </div>
+                </div>
+                <div class="slds-media__body">
+                    <div class="padding">
+                        <h1 class="slds-page-header__title slds-truncate slds-align-middle border-bottom">Details</h1>
+                        <p class="slds-text-body_small slds-line-height_reset"><strong>Income Range:</strong> {!contact.Income_Range__c}</p>
+                        <p class="slds-text-body_small slds-line-height_reset"><strong>Birthdate:</strong> {!contact.Birthdate}</p>
+                        <p class="slds-text-body_small slds-line-height_reset"><strong>Occupation:</strong> {!contact.Occupation__c}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+ 		<c:Clienteling_Customer_Tabs 
+            Contact="{!v.Contact}" 
+        	appSettings="{!v.appSettings}"                                                    
+        />
+    </aura:iteration>
+</aura:component>

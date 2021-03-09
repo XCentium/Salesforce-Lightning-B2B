@@ -1,0 +1,29 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride" controller="SCCAddressController" access="global" >
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <div aura:id="newAddressDialog" role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+            	<h2 class="slds-text-heading--medium">New Record</h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium slds-grid slds-wrap ">
+                <lightning:input aura:id="addressId" name="addressId" label="Address Name" required="true" class="slds-size--1-of-2 slds-p-horizontal_x-small"/>
+                <lightning:input aura:id="title" name="title" label="Title" class="slds-size--1-of-2 slds-p-horizontal_x-small"/>
+                <lightning:input aura:id="firstName" name="firstName" label="First Name" required="true" class="slds-size--1-of-2 slds-p-horizontal_x-small"/>
+                <lightning:input aura:id="lastName" name="lastName" label="Last Name" required="true" class="slds-size--1-of-2 slds-p-horizontal_x-small"/>
+                <lightning:input aura:id="address1" name="address1" label="Address Line 1" required="true" class="slds-size--1-of-2 slds-p-horizontal_x-small"/>
+                <lightning:input aura:id="address2" name="address2" label="Address Line 2" class="slds-size--1-of-2 slds-p-horizontal_x-small"/>
+                <lightning:input aura:id="city" name="city" label="City" required="true" class="slds-size--1-of-2 slds-p-horizontal_x-small"/>  
+                <lightning:input aura:id="state" name="state" label="State" class="slds-size--1-of-2 slds-p-horizontal_x-small"/> 
+                <lightning:input aura:id="postCode" name="postCode" label="Post Code" required="true" class="slds-size--1-of-2 slds-p-horizontal_x-small"/>  
+                <lightning:input aura:id="phone" name="phone" label="Phone Number" class="slds-size--1-of-2 slds-p-horizontal_x-small"/>      
+                <lightning:select aura:id="countryCode" name="countryCode" label="Country" required="true" class="slds-size--1-of-2 slds-p-horizontal_x-small">
+                    <option value="GB">United Kingdom</option>
+                </lightning:select>
+            </div>
+            <div class="slds-modal__footer">  
+                <lightning:button variant="neutral" label="Cancel" />
+                <lightning:button variant="brand" label="Submit" />
+            </div>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,14 @@
+<!--
+
+ Copyright (c) 2018, salesforce.com, inc.
+ All rights reserved.
+
+ Licensed under the BSD 3-Clause license.
+ For full license text, see https://opensource.org/licenses/BSD-3-Clause
+
+ With inspiration and base code from Unnoficial SF: https://unofficialsf.com/load-web-page/
+-->
+<design:component label="Load URL From Flow (Community)">
+    <design:attribute name="url" label="URL" description="URL to redirect to when the flow action is invoked." placeholder="https://" />
+    <design:attribute name="mode" label="Mode" description="Mode of redirect: replace or newWindow" default="" placeholder="replace" datasource="replace,newWindow" />
+</design:component>

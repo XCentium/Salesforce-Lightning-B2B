@@ -1,0 +1,17 @@
+<design:component label="Image Banner">
+	<design:attribute name="ImageURL"  label="Image URL" default="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Restaurant/images/scotts-homepage.jpg" />
+    <design:attribute name="ImageHeight"  label="Image: Height(px)" default="200" />
+    <design:attribute name="ImagePosition"   label="Caption: Position" default="Overlay" datasource="Overlay,Top,Middle,Bottom, Card" />
+    <design:attribute name="CaptionHeight"  label="Caption: Height(Not applicable for overlay position. In px)" default="150" />
+    <design:attribute name="CaptionBackgroundColor"  label="Caption: Background Color" default="rgba(0,0,0,0.4)" />
+    <design:attribute name="CaptionAlignment"  datasource="Left, Center, Right" label="Caption: Alignment" default="Left" />
+    <design:attribute name="CaptionTitle"  label="Caption: Title" default="Good Morning!" />
+    <design:attribute name="CaptionTitleColor"  label="Caption: Title Text Color" default="#fff" />
+    <design:attribute name="CaptionTitleTextSize"  label="Caption Title Text Size (px)" default="28" />
+    <design:attribute name="CaptionBodyText"  label="Caption: Body" default="Are you up on the latest promotions?" />
+    <design:attribute name="CaptionBodyColor"  label="Caption: Body Text Color" default="#fff" />
+    <design:attribute name="CaptionBodyTextSize"  label="Caption: Body Text Size (px)" default="13" />
+    <design:attribute name="CaptionActionLabel"  label="Caption: Action Label" default="Learn More" />
+    <design:attribute name="CaptionActionURL"  label="Caption: Action URL" default="https://trailhead.salesforce.com/en/home" />
+    <design:attribute name="CaptionActionVariant"   label="Caption: Action Varian" default="Brand" datasource="Brand, Base, Neutral"/>
+</design:component>

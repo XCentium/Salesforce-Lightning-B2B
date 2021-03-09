@@ -1,0 +1,20 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global">
+    <aura:attribute name="recordId" type="String"></aura:attribute>
+    <aura:attribute name="sobjectType" type="String"></aura:attribute>
+    <aura:attribute name="insights" type="Object[]"></aura:attribute>
+    <aura:attribute name="showSpinner" type="Boolean" default="true"></aura:attribute>
+    
+    <aura:registerEvent name="renderPanel" type="c:Insights_InsightRenderPanel" />
+    <aura:handler name="renderPanel" action="{!c.renderPanel}" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <div class="root">
+        <aura:if isTrue="{!v.showSpinner}">
+            <div class="slds-spinner_container">
+                <lightning:spinner alternativeText="Loading" size="medium" />
+            </div>
+        </aura:if>
+        {!v.body}
+    </div>
+</aura:component>

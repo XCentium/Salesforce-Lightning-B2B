@@ -1,0 +1,84 @@
+<aura:component >
+
+  <aura:attribute type="String" name="appVersion" />
+  <aura:attribute type="String" name="packageVersion" />
+  <aura:attribute type="String" name="prefix" default="" />  
+
+  <div aura:id="about" role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+    <div class="slds-modal__container">
+      <div class="slds-modal__header">
+
+        <lightning:buttonicon iconName="utility:close" size="large" alternativeText="icon" class="slds-modal__close" variant="bare-inverse" onclick="{!c.closeModal}"/>
+        <h2 id="header43" class="slds-text-heading--medium">Help</h2>
+      </div>
+      <div class="slds-modal__content slds-p-around--medium">
+     
+        <lightning:tabset selectedTabId="one">
+       
+       
+        <lightning:tab label="Help" id="one" >
+          <div class="slds-p-horizontal_small">
+            <div  class="videoContainer" style="margin-bottom:15px">
+                <div class="titleMarginBottom" style="margin-bottom:8px"><u class="slds-text-title_caps">User demo video</u></div>
+           		<a href="https://www.youtube.com/embed/_sVTtdlfNJo" target="_blank"> click here</a>
+            </div>
+            
+            <div   style="margin-bottom:15px">                
+                <div class="titleMarginBottom"><u class="slds-text-title_caps">Shortcuts</u></div>
+                <p>Some keyboard shortcuts can be used in the component to be even more productive!</p>    
+                <ul class="slds-list_dotted">
+                      <li>
+                        Press <b>"Enter"</b> key in any section field will redirect you to product search
+                      </li>
+                      <li>
+                        Press <b>"Ctrl-n"</b> in a product search field to create a new section
+                      </li>
+                 </ul>
+     		</div>
+            <div   style="margin-bottom:15px">                
+                <div class="titleMarginBottom" style="margin-bottom:8px"><u class="slds-text-title_caps">More help ? </u></div>
+              	<a href="" onclick="{!c.goToFullHelp}"> click here to access help page</a>
+     		</div> 
+           </div>   
+            
+            
+        </lightning:tab>
+        <lightning:tab label="About this tool" id="Two" >
+            <div >
+                 <img src="{!$Resource.LPRICERPDE}" style="float:left;height: 180px; margin:0 20px; margin-bottom: 20px;" />
+                 <p class="slds-p-bottom--x-small">Hi,</p>
+                 <p class="slds-p-bottom--x-small">This component was a side project from a Salesforce Solution Engineer in France ;-)</p>
+                 <p class="slds-p-bottom--x-small">However, I left the company on Sept 25th 2019 </p>  
+                 <p class="slds-p-bottom--x-small">Not sure I can help anymore but you can try to contact me!</p>
+                <p>Pierre Delattre&nbsp;|&nbsp;<a href="mailto:pl.delattre@gmail.com">pl.delattre@gmail.com</a>&nbsp;|&nbsp;<a href="https://www.linkedin.com/in/pldelattre/">Linkedin/pldelattre</a></p>
+             </div>
+             <div style="clear: left;margin-left:20px;margin-top:20px">
+             <p></p>
+             <p>
+             <span>    
+                 <span style="margin-right:10px"><b>Tool last update:</b></span>
+                 <span style="margin-right:20px">{!v.appVersion}</span>
+             </span>    
+             <span class="{!v.packageVersion=='unknown'?'slds-hide':''}">
+                 <span style="margin-right:10px"><b>Package version:</b></span>
+                 <span>{!v.packageVersion}</span>
+             </span>
+             </p>    
+             </div> 
+            
+        </lightning:tab>    
+        </lightning:tabset>  
+
+        
+
+      </div>
+      <div class="slds-modal__footer">
+        <button class="slds-button slds-button--brand" onclick="{!c.closeModal}">Close</button>
+      </div>
+    </div>
+  </div>
+  <div aura:id="greyzone" class="slds-backdrop slds-backdrop--open"></div>
+
+
+
+</aura:component>

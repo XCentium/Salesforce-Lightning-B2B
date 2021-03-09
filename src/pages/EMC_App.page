@@ -1,0 +1,336 @@
+<apex:page title="Einstein Mind Control Center" controller="EMC_Controller" extensions="EMC_InsightController,MixpanelCtrl" docType="html-5.0" showHeader="false" sidebar="false">
+    
+    <!-- This application hosts all Einstein Data Manipulation Tools -->
+    
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"/>
+    <apex:slds ></apex:slds>
+    <!-- IMPORTED CONTROLLERS START -->
+    
+    <apex:includeScript value="/apex/EMC_SFDCCtrl"/>
+    <apex:includeScript value="/apex/EMC_InsightDefinitions"/>
+    <apex:includeScript value="/apex/EMC_ObjectDefinitions"/>
+    
+    <apex:includeScript value="/apex/EMC_HomeCtrl"/>
+    <apex:includeScript value="/apex/EMC_ForecastingCtrl"/>
+    <apex:includeScript value="/apex/EMC_ScoreCtrl"/>
+    <apex:includeScript value="/apex/EMC_MixpanelCtrl"/>
+    
+
+    <!-- IMPORTED CONTROLLERS END -->
+    
+    <style>
+        html {background-color: #fdfdfd;}
+        hr.break {margin: .5rem 0;}
+        .slds-notify_container {left: 50% !important; transform:translateX(-50%)}
+        [class*="slds-"].has-hover {border: 1px solid #999; border-radius: 3px; transition: background .15s ease-in-out}
+        [class*="slds-"].has-hover:hover {background-color: rgb(247, 249, 251); cursor:pointer;}
+    
+        .sidebar {position:fixed; width: 275px; height: 100vh; border-right: 1px solid #ccc; background-color: #f0f0f0;overflow-y: auto;}
+        .sidebar * {background-color: #f0f0f0;}
+        .main-view {position: fixed; left: 275px; width: calc(100vw - 275px); height:100vh; overflow-y:auto;}
+        
+        .slds-form-element {padding-top: .25rem; padding-bottom: .25rem;}
+        .slds-notify_container {width: 500px !important;}
+    </style>
+    
+    <script>
+    //Add base for routing
+    angular.element(document.getElementsByTagName('head'))
+    .append(angular.element('<base href="' + window.location.pathname + '" />'));
+    
+    const remote = EMC_Controller;
+    const session = '{!$Api.Session_ID}';
+    const currentUserId = '{!$User.Id}';
+    
+    //options for testing purposes
+    const testing = false;
+    const verbose = false;
+    
+    const bestCaseMultiplier = .5;
+    const pipelineMultiplier = .2;
+    
+    const TrendScoreMap = {
+        'Positive': 1.0,
+        'Negative': -1.0
+    }
+    
+    
+	    
+    const AppCtrl = function($rootScope, $scope, $timeout, $route, $routeParams, $location){
+        
+        //Add testing=true to url parameter to enable testing components
+        $scope.testing = testing;
+        
+        /*Global components testing methods*/
+        $scope.testToast = function(){
+            $scope.$broadcast('create-toast', ['test', 'success']);
+        }
+        
+        $scope.testLoading = function(){
+            $scope.$broadcast('show-loading', {show: true})
+            $timeout(function(){
+                $scope.$broadcast('show-loading', {show: false})
+            },3000)
+        }
+        
+        
+        //Active route highlighting
+        $scope.getActiveRoute = function(path) {
+            return ($location.path().substr(0, path.length) === path) ? 'slds-is-active' : '';
+        }
+        
+        /* INHERITED METHODS START */
+        
+        //Global object deletion method
+        $scope.delete = function(collection, index){
+            $scope[collection].splice(index,1);
+        }
+
+        $scope.deleteRecord = function(sobject, collection, index, recordId){
+            
+        }
+
+        $scope.createToast = function(toastMessage, toastType){
+            $scope.$broadcast('create-toast', [toastMessage, toastType]);
+        }
+        
+        $scope.showLoading = function(show, text){
+            $scope.$broadcast('show-loading', {show: show, text: text});
+        }
+        
+        $scope.setLoadingMessage = function(text){
+        	$scope.$broadcast('set-loading-message', {text: text});
+        }
+        
+        /* INHERITED METHODS END*/
+    }
+    
+    
+    
+    const app = angular.module('EinsteinMindControlApp', ['ngSanitize','ngRoute'])
+    .config(function($routeProvider, $locationProvider){
+        
+        //All available routes
+        $routeProvider
+        .when('/home', {
+            templateUrl: '/apex/EMC_Home',
+            controller: 'HomeCtrl'
+        })
+        .when('/forecasting',{
+            templateUrl: '/apex/EMC_PredictiveForecasting',
+            controller:'ForecastingCtrl'
+        })
+        .when('/forecasting/:userId',{
+            templateUrl: '/apex/EMC_PredictiveForecasting',
+            controller:'ForecastingCtrl'
+        })
+        .when('/scoring', {
+            templateUrl: '/apex/EMC_ScoreTemplate',
+            controller:  'ScoreController'
+        })
+        //Default route (Add home)
+        .otherwise({redirectTo:'/home'})
+    })
+    .service('SFDC', SFDCCtrl)
+    .service('Mixpanel', MixpanelController)
+    .controller('AppCtrl', AppCtrl)
+    .controller('HomeCtrl', HomeCtrl)
+    .controller('ForecastingCtrl', ForecastingCtrl)
+    .controller('ScoreController', ScoreController)
+    .controller('PeriodController', function(){ pc = this; pc.collapsed = true;})
+    
+    .directive('periodComponent',function($rootScope){
+        return {
+            restrict: 'E',
+            scope: {
+                period: '='
+            },
+            templateUrl: '/apex/EMC_PeriodTemplate',
+            link: function($scope, element, attr){
+                $scope.delete = function(){
+                    element.remove();
+                    $scope.$destroy();
+                }
+            }
+        }
+    })
+    
+    
+    .controller('PredictionsController', function($scope){
+        
+    })
+    
+    .component('loading', {
+        templateUrl: '/apex/EMC_LoadingTemplate',
+        controller: 'LoadingCtrl'
+    })
+    .controller('LoadingCtrl', function($scope, $timeout){
+        $scope.shown = false;
+        $scope.text = 'Loading';
+        $scope.$on('show-loading', function(evt, arg){
+            if(verbose) console.log('show-loading', arg);
+            
+            $timeout(function() {
+                $scope.shown = arg.show;
+                $scope.text = arg.text ? arg.text : 'Loading';
+                $scope.$apply();
+            }, 0, false)
+        });
+        
+        $scope.$on('set-loading-message', function(evt, arg){
+            $scope.text = arg.text;
+            $scope.$apply();
+        })
+    })
+    .directive('toastComponent', function(){
+        return {
+            restrict: 'E',
+            templateUrl: '/apex/EMC_ToastsTemplate',
+            controller: 'ToastsCtrl'
+        }
+    })
+    .controller('ToastsCtrl', function($scope, $sce){
+        $scope.Toast =  function Toast(message, type){
+            var self = this;
+            
+            this.INTERVAL_RATE = 1000;
+            this.DURATION = 6000;
+            this.message = message;
+            this.type = type;
+            this.expiry = (new Date).getTime() + self.DURATION;
+            this.shown = true;
+            this.currentTime = (new Date).getTime();
+            
+            this.countdown = function(){
+                
+                self.currentTime += self.INTERVAL_RATE;
+                
+                if(self.expiry <= self.currentTime){
+                    self.dismiss();
+                }
+                $scope.$apply();
+            }
+            
+            this.dismiss = function(){
+                self.shown = false;
+                clearInterval(self.interval);
+            }
+            
+            this.interval = setInterval(this.countdown, self.INTERVAL_RATE);
+        }
+        
+        $scope.toasts = [];
+        
+        $scope.$on('create-toast', function(evt, args){
+            console.log('Toast Event Heard',evt, args)
+            $scope.toasts.push( new $scope.Toast(...args) );
+        })
+        
+        $scope.trustHtml = function(htmlString){
+            return $sce.trustAsHtml(htmlString);
+        }
+        
+        $scope.dismiss = function(idx){
+            $scope.toasts[idx].dismiss();
+        }
+    })
+    .service('ngCopy', ['$window', function ($window) {
+        var body = angular.element($window.document.body);
+        var textarea = angular.element('<textarea/>');
+        textarea.css({
+            position: 'fixed',
+            opacity: '0'
+        });
+        
+        return function (toCopy) {
+            textarea.val(toCopy);
+            body.append(textarea);
+            textarea[0].select();
+            
+            try {
+                var successful = document.execCommand('copy');
+                if (!successful) throw successful;
+            } catch (err) {
+                window.prompt("Copy to clipboard: Ctrl+C, Enter", toCopy);
+            }
+            
+            textarea.remove();
+        }
+    }])
+    .directive('ngClickCopy', ['ngCopy', function (ngCopy) {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                element.bind('click', function (e) {
+                    ngCopy(attrs.ngClickCopy);
+                });
+            }
+        }
+    }])
+    
+    </script>
+    
+    
+    <body ng-app="EinsteinMindControlApp" ng-controller="AppCtrl" class="slds" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        
+        <!-- TOAST START -->
+        
+        <div class="view-container">
+            
+            <div class="sidebar slds-p-top_medium">
+                
+                <!-- LINKS TO APP START -->
+                <nav class="slds-nav-vertical slds-nav-vertical_shade" aria-label="Sub page">
+                    <div class="slds-nav-vertical__section">
+                        <h2 id="entity-header" class="slds-nav-vertical__title slds-text-title_caps">Einstein Mind Control Center</h2>
+                        <hr class="break"/>
+                        <ul>
+                            <li class="slds-nav-vertical__item" ng-class="getActiveRoute('/home')"><a href="#!/home" class="slds-nav-vertical__action">Home</a></li>
+                            <li class="slds-nav-vertical__item" ng-class="getActiveRoute('/forecasting')"><a href="#!/forecasting" class="slds-nav-vertical__action">Einstein Forecasting</a></li>
+                            <li class="slds-nav-vertical__item" ng-class="getActiveRoute('/scoring')"><a href="#!/scoring" class="slds-nav-vertical__action">Einstein Scoring</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- EVENT TESTS START -->
+                    <div class="slds-nav-vertical__section slds-p-horizontal_small" ng-show="testing">
+                        <div>
+                            <button class="slds-button slds-button_brand" ng-click="testLoading()">
+                                Test Loading
+                            </button>
+                        </div>
+                    </div>
+                    <!-- EVENT TESTS END -->
+                    
+                    
+                </nav>
+                <!-- LINKS TO APP END -->
+                
+            </div>
+            
+            <!-- MAIN VIEW START -->
+            <div class="main-view">
+                <toast-component></toast-component>
+                <loading></loading>
+                <ng-view></ng-view>
+            </div>
+            <!-- MAIN VIEW END -->
+            
+            
+        </div>
+        
+    </body>
+    
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-46606102-1', 'auto');
+    ga('send', 'pageview');
+    
+    </script>
+</apex:page>

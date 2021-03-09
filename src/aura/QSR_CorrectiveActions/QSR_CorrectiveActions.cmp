@@ -1,0 +1,34 @@
+<aura:component implements="lightning:availableForFlowScreens,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="tasksList" type="List" default="[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="showDialog" type="Boolean" default="false"/>
+    <aura:attribute name="subject" type="String"/>
+    <aura:attribute name="description" type="String"/>
+    <aura:attribute name="taskListString" type="String"/>
+    <div class="slds-text-heading_medium" style="font-weight:bold;margin-top:10px;color:black;">Corrective actions:</div>
+    <div style="text-align:right;width:100%;margin-top:10px;">
+        <button class="slds-button slds-button_success" onclick="{!c.onClickAdd}">Add</button>
+    </div>    
+    <ul class="slds-list_dotted">
+        <aura:iteration items="{!v.tasksList}" var="task">
+            <li>{!task.Name}</li>
+        </aura:iteration>
+    </ul>
+    <aura:if isTrue="{!v.showDialog}">
+        <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header slds-modal__header_empty">
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:input name="input1" value="{!v.subject}" label="Enter Subject" />
+                    <lightning:textarea name="input1" value="{!v.description}" label="Enter Description" />
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.onclickCancel}">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick="{!c.onclickSave}">Save</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

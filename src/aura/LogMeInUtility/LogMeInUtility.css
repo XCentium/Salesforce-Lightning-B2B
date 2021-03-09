@@ -1,0 +1,42 @@
+.THIS.slds-card {
+    background-color: rgb(253,253,253);
+}
+.THIS .slds-button {
+    margin-right: .25rem;
+}
+.THIS .slds-button+.slds-button {
+    margin-left: 0;
+}
+.THIS.slds-card .slds-card__footer {
+    display: none;
+}
+.THIS .padding{
+    padding:10px;
+}
+.THIS .center{
+    text-align:center;
+}
+.THIS .topright{
+    position:absolute;
+    top:13px;
+    right:20px;
+}
+.THIS .padding{padding:10px 0;}
+.THIS .slds-card__header{
+    border-bottom:1px solid #ddd;
+    margin-bottom:10px;
+    padding:20px;
+    position:relative;
+}
+.THIS .slds-section{
+    border:1px solid #ddd;
+    border-top-left-radius:5px;
+    border-bottom-right-radius:5px;
+}
+.THIS .slds-section p{
+    font-size:12px;
+}
+.THIS .slds-section__title-action{
+    background:#fff;
+    font-size:12px;
+}

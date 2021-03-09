@@ -1,0 +1,54 @@
+.THIS {
+}
+.THIS.half{
+    width:50%;
+    float:left;
+}
+.THIS.third{
+ 	width:30%;
+    float:left;
+}
+.THIS.twothird{
+    width:65%;
+    float:right;
+}
+@media (max-width: 960px) {
+    .THIS.half,.THIS.third,.THIS.twothird{
+        width:100%;
+        margin-bottom:10px;
+    }
+}
+.THIS.clear{
+    clear:both;
+}
+.THIS .padding{
+    padding:10px;
+}
+.THIS .row{
+    border-bottom:1px solid #ddd;
+    margin-bottom:10px;
+    position:relative;
+}
+.THIS .row:last-child{
+    border-bottom:none;
+}
+.THIS .title{
+    font-size:11px;
+    margin-bottom:5px;
+}
+.THIS .value{
+    position:absolute;
+    right:0;
+    bottom:0;
+}
+.THIS .chart{
+    width:80%;
+    height:auto;
+    margin:0 auto;
+}
+.THIS.h2{
+    background:#eeeeee;
+    border-bottom:1px solid #ddd;
+    padding:10px;
+    display:block;
+}

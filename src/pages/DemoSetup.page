@@ -1,0 +1,1 @@
+<apex:page controller="DemoConfigurator" action="{!CreateRemoteSiteVF}"></apex:page>

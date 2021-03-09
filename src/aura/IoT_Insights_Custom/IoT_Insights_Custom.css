@@ -1,0 +1,79 @@
+.THIS .padding{
+    padding:10px;
+}
+.THIS.slds-card {
+    margin-top:-20px;
+}
+.THIS .slds-media__body{
+    background-color:#F3F2F2;
+    padding:10px;
+}
+.THIS .circle{
+    height:40px;
+    width:40px;
+    margin:0 auto;
+    text-align:center;
+    border-radius:50%;
+    color:#fff;
+    font-weight:bold;
+    font-size:14px;
+}
+.THIS .green{
+    background:#6bc9b2;
+}
+.THIS .yellow{
+    background:#f1c40f;
+}
+.THIS .red{
+    background:#e74c3c;
+}
+.THIS .sectionOuter{
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.THIS .sectionwrapper{
+    text-align:center;
+	color:#31486d;
+	flex: 1;
+    width:calc((100% / 6) - 2px);
+	min-width: 300px;
+  	max-width: 100%;
+  	flex-basis: auto; /* default value */
+  	flex-grow: 1;
+	
+}
+.THIS .section{
+    margin:10px;
+	border:1px solid #ddd;
+    border-radius:3px;
+    overflow:scroll;
+    padding:10px 0;
+    display:block;
+}
+.THIS .header{
+    color:#31486d;
+    font-size:16px;
+    margin-bottom:10px;
+}
+.THIS .section h3{
+    font-size:14px;
+}
+.THIS .marginleft{
+    margin-left:10px;
+}
+.THIS .highlight{
+    font-size:22px;
+}
+.THIS .highlightbold{
+    font-weight:bold;
+}
+.THIS .data{
+    padding:20px 0;
+    display:block;
+    height:110px;
+}
+.THIS .clear{
+    clear:both;
+}

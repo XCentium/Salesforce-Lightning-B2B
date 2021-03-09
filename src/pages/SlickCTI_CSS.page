@@ -1,0 +1,267 @@
+<apex:page showHeader="false" standardStylesheets="false" sidebar="false" contentType="text/css" cache="false">
+
+    <style type="text/css">
+    
+        body {       
+            font-family: Arial, sans-serif;        
+        }
+        
+        .dialPadNumber {
+            display: block;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: -2px        
+        }
+        
+        .dialPadLetter {
+            font-size: 10px;
+            font-weight: bold;
+            margin: 0px;
+        }        
+                        
+        h1 {
+            display: block;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 0px;
+            height: 18px;                    
+        }
+
+        /*Number-button spacing for Firefox only*/
+        @-moz-document url-prefix() {
+        h1 {
+            display: block;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 0px;
+            height: 15px;  
+        }
+        }
+        
+        h2 {
+            font-size: 8px;
+            font-weight: bold;
+            margin: 0px;
+            padding: 0px;
+        }
+        
+        h3 {
+            font-size: 34px;
+            font-weight: bold;
+            margin: -2px;        
+        }
+        
+        .button {
+           color: #505050 ;
+           display: inline-block;
+           white-space: nowrap;
+           width: 39px;
+           height: 25px;
+           margin: 3px 0px 0px 0px;
+           text-align: center;
+           border: 1px solid #e5e5e5;
+           #padding-left: 0px;
+           padding-right:0px;
+           padding-bottom: 5px;
+           padding-top: 0px;           
+           background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#CCCCCC));
+           background: -webkit-linear-gradient(top, #FFFFFF, #CCCCCC);
+           background: -moz-linear-gradient(top, #FFFFFF, #CCCCCC);
+           background: -ms-linear-gradient(top, #FFFFFF, #CCCCCC);
+           background: -o-linear-gradient(top, #FFFFFF, #CCCCCC);
+           -webkit-border-radius: 1px;
+           -moz-border-radius: 1px;
+           border-radius: 1px;
+        }
+        
+        .button:hover {
+           border-top-color: #e4e4e4;
+           background: #e4e4e4;
+           color: #505050 ;
+        }
+        
+        .button:active {
+           border-top-color: #d4d4d4;
+           background: #d3d3d3;
+        }
+        
+        .callButtons {
+            font-size: 8px;
+            font-weight: bold;
+            display: block;
+            width: 144;
+            height: 20px;
+            padding-top: 3px;
+            border-bottom: 1px;
+            margin-bottom: 4px;
+            margin-top: 8px;
+            margin-left: 0px;
+        }
+             
+
+        select {
+           float:left;
+           width: 93%;
+           height: 30px;
+           margin-top: 6px;
+           text-align: center;
+           background: #FFFFFF;
+           padding: 2px 2px;
+           color: #000000;
+           border: 1px solid #d3d3d3;
+        }
+        
+        .dialbox {
+           height: 70px;
+           #width: 138px;
+           font-size: 11px;
+           text-align: left;
+           #margin: 0px 0px 6px 6px;           
+           padding: 3px 5px 0px 5px;
+           border: 1px solid #D4D4D4;
+           background-color: #F0F0F0;
+           color: #555;
+           -moz-border-radius: 1px;
+           border-radius: 1px;
+           vertical-align:text-bottom;           
+        } 
+        
+       .dialbox p {
+           width: 85%;
+       }
+    
+       #wrapper {
+            background: #FFFFFF;
+            width: 150px;
+            margin: 3px;    
+        }
+        
+        ul {
+            list-style-type: none;
+            display: inline;            
+        }
+                
+        #dialPad ul {
+            padding-left:0px;
+            margin-left: 1px;
+            width: 95%;
+            margin: auto;            
+        }
+
+        #dialPad {
+          margin-left: 4px;
+        }
+        
+        #callNotes ul {
+            padding-left:0px;        
+        }
+     
+        #callNotes .button {
+            width: 59px;
+        }
+        
+        #callNotes .button p {
+            font-size: 93%; 
+        }        
+    
+        img {
+            margin: 3px;
+        }    
+                 
+        .callNoteBlock {
+            font-size: 11px;
+            height: 97px;
+            width: 145px;
+            margin-top: 5px;
+            margin-bottom: 6px;
+            padding: 3px;
+            -moz-border-radius: 8px;
+            border-radius: 1px;
+            border: 1px solid #D4D4D4;
+        }
+        
+        .notesSection {
+            margin-top: 4px;
+            padding-left: 3px;    
+        }  
+        
+        .notesSection textarea {
+            margin-left: 0px;   
+        }  
+        
+        select {
+            text-align: left;
+        }  
+        
+        .styled-select {
+           width: 146;
+           overflow: hidden;
+           background: url({!$Resource.SlickCTI_DownArrow}) no-repeat right #ececec;
+           -moz-border-radius: 8px;
+           border-radius: 1px;           
+           border: 1px solid #e5e5e5;   
+    
+         }   
+           
+        .styled-select select {
+           font-size: 10px;
+           margin-left: 5px;
+           margin-top: 1px;
+           background: transparent;
+           width: 110%;
+           line-height: 1;
+           border: 0;
+           border-radius: 0;
+           height: 20px;
+           -webkit-appearance: none;
+        } 
+        
+        #dialPad .styled-select {
+            margin-top: 5px;
+        }
+        
+        textarea {
+            padding: 2px;            
+        }               
+        
+        .emptyNotes {
+            color: #A6A6A6;
+        }
+        
+        .volume {
+            position: absolute;
+            left:126px;
+            top:64px;
+            height: 60px;
+            width: 32px;
+        }
+        
+        #wrapper {
+            border: 3px solid #e5e5e5;   
+           -webkit-border-radius: 8px;
+           -moz-border-radius: 8px;
+           border-radius: 1px;  
+           padding: 5px;               
+        } 
+        
+        #hangUpBtn img {
+            #margin-bottom: 90px;
+        }  
+
+        #transferBtn img {
+            margin-top: -1px;
+            height: 22px;
+        }          
+        
+        .hangupSpacer {
+            height: 75px;
+        }     
+                      
+        .timer {
+        color: #b2b2b2;
+        position: absolute;
+        left: 65px;
+        top: 115px;
+        }            
+    </style>
+</apex:page>

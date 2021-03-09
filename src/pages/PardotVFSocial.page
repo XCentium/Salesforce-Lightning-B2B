@@ -1,0 +1,6 @@
+<apex:page standardcontroller="Lead" showHeader="false" sidebar="false" standardStylesheets="false">
+  <style>
+     Body { Background: transparent; }
+  </style>
+<apex:iframe src="https://training.pardot.com/demoOrg/social.html" height="600" scrolling="true" id="theIframe"/>
+</apex:page>

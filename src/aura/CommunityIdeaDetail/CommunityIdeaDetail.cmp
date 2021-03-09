@@ -1,0 +1,111 @@
+<aura:component controller="CommunityIdeaController" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="ideaId" type="String"/>
+    <aura:attribute name="isGuestUser" type="boolean" />
+    <aura:attribute name="thisIdea" type="Idea"/>
+    <aura:attribute name="comments" type="IdeaComment[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <div class="ideaContainer">
+        <div class="detail-header">
+            <div class="detail-votes">
+                <div class="header-left">
+                    <aura:if isTrue="{!v.thisIdea.Votes[0].Type != null}">
+                        <aura:if isTrue="{!v.thisIdea.Votes[0].Type == 'Up'}">
+                            <img class="btn-image" width="30" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/promoted.png'}" /> 
+                            <aura:set attribute="else">
+                                <img class="btn-image" width="30" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/demoted.png'}" />
+                            </aura:set>
+                        </aura:if>
+                        <aura:set attribute="else">
+                            <img width="30" class="promoteDemote" data-idValue="{!v.thisIdea.Id}" onclick="{!c.promoteAnIdea}" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/promote.png'}" /> &nbsp;
+                            <img width="30" class="promoteDemote" data-idValue="{!v.thisIdea.Id}" onclick="{!c.demoteAnIdea}" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/demote.png'}" />
+                        </aura:set>
+                    </aura:if>
+                </div>
+                <div class="header-right">
+                    <aura:if isTrue="{!v.thisIdea.Votes[0].Type == 'Up'}">
+                        <span class="like-msg">
+                            Promoted
+                        </span>
+                        <aura:set attribute="else">
+                            <span class="like-msg">
+                                Demoted
+                            </span>
+                        </aura:set>
+                    </aura:if>
+                    <div class="points">
+                        <b>{!v.thisIdea.VoteTotal}</b> Points
+                    </div>
+                </div>
+                
+            </div>
+            <div class="detail-title">
+                <ui:outputText value="{!v.thisIdea.Title}" />
+                <div class="sub-detail">
+                    <span class="comment-count">{!v.thisIdea.NumComments} 
+                        <aura:if isTrue="{!v.thisIdea.NumComments == 1}">
+                            Comment
+                        	<aura:set attribute="else">
+                            	Comments
+                            </aura:set>
+                        </aura:if>
+                    </span>
+                    | Posted by 
+                    <span class="creator-name">
+                        {!v.thisIdea.CreatorName}
+                    </span>
+                    on 
+                    <span class="create-date">
+                        <ui:outputDateTime format="dd/MM/yyyy hh:mm a" value="{!v.thisIdea.CreatedDate}"></ui:outputDateTime>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="ideaBody">
+            <!-- ui:outputRichText value="{!v.thisIdea.Body}"/ -->
+            <aura:unescapedHtml value="{!v.thisIdea.Body}" />
+        </div>
+        <div class="commentsSection">
+            <h3 class="commentsLabel">Comments</h3>
+            <aura:iteration items="{!v.comments}" var="cmt">
+                <div class="IdeaComment">
+                    <div class="commentBody">
+                        <a href="javascript:void(0)" data-idValue="{!cmt.Id}" onclick="{!c.deleteComment}" class="deleteComment">Delete</a>
+                        <aura:unescapedHtml value="{!cmt.CommentBody}"/>
+                    </div>
+                    <div class="commentedDate">
+                        Posted by <span class="creator-name">{!cmt.CreatedBy.Name}</span> on 
+                        <ui:outputDateTime format="dd/MM/yyyy hh:mm a" value="{!cmt.CreatedDate}"></ui:outputDateTime>
+                    </div>
+                    <div class="commentLikes">
+                        <aura:if isTrue="{!cmt.Votes[0].Type == 'Up'}">
+                            <span class="like-msg">
+                                <a href="javascript:void(0)" data-idValue="{!cmt.Votes[0].Id}" onclick="{!c.unlikeComment}">Unlike</a>
+                            </span>
+                            <aura:set attribute="else">
+                                <span class="like-msg">
+                                    <a href="javascript:void(0)" data-idValue="{!cmt.Id}" onclick="{!c.likeComment}">Like</a>
+                                </span>
+                            </aura:set>
+                        </aura:if>
+                        <aura:if isTrue="{!cmt.UpVotes != 0}">
+                            | 
+                            {!cmt.UpVotes} 
+                            <aura:if isTrue="{!cmt.UpVotes == 1}">
+                                Like
+                                <aura:set attribute="else">
+                                    Likes
+                                </aura:set>
+                            </aura:if>
+                        </aura:if>
+                    </div>
+                </div>
+            </aura:iteration>
+            <h3 class="commentsLabel">Add Your Comment</h3>
+            <div class="IdeaComment">
+                <ui:inputRichText aura:id="IdeaComment" cols="50" rows="5"/>
+                <ui:button aura:id="saveIdeaComment"
+                           label="Comment" press="{!c.saveComment}" class="btn"/>
+            </div>
+        </div>
+    </div>
+</aura:component>

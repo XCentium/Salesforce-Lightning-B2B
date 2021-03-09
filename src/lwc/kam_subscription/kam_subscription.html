@@ -1,0 +1,53 @@
+<template>
+
+    <lightning-card  title="Subscriptions">
+        <div style="padding:12px; overflow:auto;">
+            <div class="fleft block">
+                <h2>How long you would like to recieve notifications?</h2><br/>
+                <fieldset class="slds-form-element">
+                    <legend class="slds-form-element__legend slds-form-element__label"></legend>
+                    <div class="slds-form-element__control">
+                      <div class="slds-radio_button-group">
+                        <span class="slds-button slds-radio_button">
+                          <input type="radio" checked name="example-unique-name-99" id="example-unique-id-101" value="monday" />
+                          <label class="slds-radio_button__label" for="example-unique-id-101">
+                            <span class="slds-radio_faux">Weekly</span>
+                          </label>
+                        </span>
+                        <span class="slds-button slds-radio_button">
+                          <input type="radio" name="example-unique-name-99" id="example-unique-id-102" value="tuesday" />
+                          <label class="slds-radio_button__label" for="example-unique-id-102">
+                            <span class="slds-radio_faux">Monthly</span>
+                          </label>
+                        </span>
+                        <span class="slds-button slds-radio_button">
+                          <input type="radio" name="example-unique-name-99" id="example-unique-id-103" value="wednesday" />
+                          <label class="slds-radio_button__label" for="example-unique-id-103">
+                            <span class="slds-radio_faux">Quaterly</span>
+                          </label>
+                        </span>
+                      </div>
+                    </div>
+                  </fieldset>
+            </div>
+            
+            <div class="fleft block">
+                <h2>Choose your subscription type(s)</h2> <br/>
+                <div style="margin-left:30%;">
+                    <lightning-input class="fleft" type="checkbox" label="Promotion" checked value="Promotion">
+                    </lightning-input>
+                    <lightning-input class="fleft" type="checkbox" label="Order" value="Order">
+                    </lightning-input>
+                    <lightning-input class="fleft" type="checkbox" label="Plain" value="Plain">
+                    </lightning-input>
+                    <lightning-input class="fleft" type="checkbox" label="Approval" value="Approval">
+                    </lightning-input>
+                </div>  
+                         
+                
+            </div>
+        </div>
+       
+    </lightning-card>
+    
+</template>

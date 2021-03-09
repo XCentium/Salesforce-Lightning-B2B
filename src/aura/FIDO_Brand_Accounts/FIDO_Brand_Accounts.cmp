@@ -1,0 +1,27 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="Industry" type="String" />
+    <aura:attribute name="Accounts" type="String[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="cardWrapper">
+        <aura:iteration items="{!v.Accounts}" var="account">
+            <div class="card">
+                <div class="textleft">
+                    <div class="paddingsmall ">
+                        <div class="owner brandrecord">
+                            <h3 class="borderbottom smallh3">
+                                <div class="padding">
+                                    <lightning:icon iconName="standard:account" size="medium" alternativeText=""/>   
+                                    <span class="marginleft10">{!account.name}</span>
+                                </div>
+                            </h3>
+                            <div class="padding BrandDescSetHeight">
+                                {!account.name} is a key account used within our demo scripts. This account has data staged to help support your demo.
+                            </div>
+                            <c:FIDO_Brand_AccountContact_Buttons accountname="{!account.name}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aura:iteration>
+    </div>
+</aura:component>

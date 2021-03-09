@@ -1,0 +1,8 @@
+<aura:component controller="Customer360Controller" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="order" type="Map"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="c.init"></aura:handler>
+    
+	<div class="slds-panel slds-p-around_small slds-text-align_center">
+        This order from {!v.order.Account.Name} was last updated at <ui:outputDateTime format="dd/MM/YYYY, HH:mm:ss a z" value="{!v.order.LastModifiedDate}"/>	
+    </div>
+</aura:component>

@@ -1,0 +1,86 @@
+<aura:component controller="PlatformEventsChartController"   extensible="true" access="global" >
+   
+    <aura:attribute name="cometd" type="Map"/>
+    <aura:attribute name="sessionId" type="String"/>
+    <aura:attribute name="cometdSubscriptions" type="List"/> 
+    
+    <aura:attribute name="payload" type="Map"/>
+    
+     <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="deviceId" type="String" />
+    <aura:attribute name="eventName" type="String"/>
+     <aura:attribute name="cometdSubscribed" type="Boolean" default="false"/>
+      
+    <aura:attribute name="eventDataList" type="List"/>
+    <aura:attribute name="showHistorical" type="Boolean" default="false"/>
+    
+     <aura:attribute name="title" type="String" default="Platform Event Chart"/>
+    
+      <aura:attribute name="chartId" type="String" default="01"/>
+    
+    
+       <aura:attribute name="selectedEvent" type="String"/>
+    <aura:attribute name="selectedEventLabel" type="String"/>
+    
+    <aura:attribute name="selectedFields" type="String[]"/>
+    <aura:attribute name="selectedField" type="String"/>
+    <aura:attribute name="selectedFieldLabel" type="String"/>
+    <aura:attribute name="selectedFieldValue" type="String" default="0"/>
+    <aura:attribute name="optionsLabel" type="String" default="Show Options"/>
+
+    <aura:attribute name="fieldNamesToLabelsMap" type="Map"/>
+    
+    <aura:attribute name="height" type="String" default="40vh"/>
+     <aura:attribute name="showConfig" type="String" default="true"/>
+    
+<!--<ltng:require scripts="{!$Resource.cometd}" afterScriptsLoaded="{!c.onCometdLoaded}"/> -->
+     
+   
+      <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+
+    <c:EventHub aura:id='SampleEventListenerHub' showHistorical="{!v.showHistorical}"/>
+    
+        <div class="slds-scope">
+     
+   <!-- <lightning:button variant="brand" label="{!v.selectedFieldValue}" onclick="{! c.test }" class="hidden"/> -->
+       
+       
+      <!--  <div class="spinner" aura:id="spinner">
+            <lightning:spinner variant="brand" size="large"/>
+        </div> -->
+        <div>
+            <div  class="options-outer row" >
+                <div  class="logo-container" >
+                    <img src="{!$Resource.EmergingTechLogo }"></img>
+                </div>
+                <div class="slds-text-heading_small title">{!v.title} </div>
+                  
+
+                <div  aura:id="options-container" class="hidden row options-container" >  
+                     
+                    <lightning:select aura:id="event-selector" variant="label-hidden" name="{! v.chartId + 'selectField'}" label="Select a field on that event" value="{!v.selectedField}" onchange="{!c.updateLabel}">
+                        <aura:iteration items="{!v.selectedFields}" var="f" >
+                            <option selected="{! v.selectedField ==  f.fieldName }" value="{!f.fieldName}">{!f.fieldLabel}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                
+                <div  class="button" >
+                    <aura:if isTrue="{!v.showConfig}">
+                    <lightning:buttonIcon iconName="utility:settings" title="{!v.optionsLabel}"  iconClass="dark" variant="border-filled" onclick="{! c.toggleOptions }" alternativeText="Toggle Options." />
+               </aura:if>  
+                    </div>
+                     
+            </div>
+                 
+            <div  class="divider" ></div>
+        </div>
+              <div class="chart-container" style="{!'position: relative; width:auto;height:' + v.height}">
+        {!v.body}
+            </div>
+    </div>
+    
+   
+
+
+</aura:component>

@@ -1,0 +1,19 @@
+<aura:component implements="flexipage:availableForallPageTypes,forceCommunity:availableForAllPageTypes,force:appHostable,lightning:availableForFlowScreens" access="global">
+    <aura:attribute name="GmapAddress" type="String"/>
+    <aura:attribute name="GmapCity" type="String" />
+    <aura:attribute name="GmapState" type="String" />
+    <aura:attribute name="GmapPostalCode" type="String" />
+    <aura:attribute name="GmapCountry" type="String" />
+    
+    <aura:attribute name="mapMarkers" type="Object"/>
+    <aura:attribute name="zoomLevel" type="Integer" />
+	
+    <!-- handlers-->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }"/>
+
+    <!-- the map component -->
+    <lightning:map 
+        mapMarkers="{! v.mapMarkers }" 
+        zoomLevel="{!v.zoomLevel}" />
+    
+</aura:component>

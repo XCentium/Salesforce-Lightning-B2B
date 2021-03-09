@@ -1,0 +1,91 @@
+<aura:component controller="HVS_EngagementAlertController" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+    
+    <aura:attribute name="ChannelVehicleId" type="String"></aura:attribute>
+    <aura:attribute name="recordId" type="String" />
+    
+    <aura:attribute name="MarketingLookup" type="Map" default="{'searchTerm':'',
+                                                               'lookupObject':'EmailMessage',
+                                                               'lookupField':'Subject',
+                                                               'filters':''}"></aura:attribute>
+    <aura:attribute name="TargetObjectType" type="Map"></aura:attribute>
+    
+    <aura:attribute name="TemplateId" type="String"></aura:attribute>
+    <aura:attribute name="ChannelType" type="String" default="Call"></aura:attribute>
+    <aura:attribute name="ChannelAction" type="String" default="CallBackLater"></aura:attribute>
+    <aura:attribute name="EngagementDateTime" type="DateTime"></aura:attribute>
+    <aura:attribute name="LinkUrl" type="String"></aura:attribute>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"></aura:handler>
+    
+    <div class="action">
+        <div class="action-body">
+            <div class="row">
+                <lightning:select name="MarketingObjectType" label="Marketing Object Type" value="{!v.MarketingLookup.lookupObject}" required="true">
+                    <option value="EmailMessage">Email Message</option>
+                    <option value="Task">Task</option>
+                    <option value="ListEmail">List Email</option>
+                </lightning:select>
+            </div>
+            
+            <div class="row">
+                <c:Utility_Lookup aura:id="lookup" 
+                                  searchTerm="{!v.MarketingLookup.searchTerm}"
+                                  lookupObject="{!v.MarketingLookup.lookupObject}" 
+                                  lookupField="{!v.MarketingLookup.lookupField}" 
+                                  filters="{!v.MarketingLookup.filters}"
+                                  placeholder="Marketing Object Lookup"
+                                  required="true"
+                                  boundValue="{!v.ChannelVehicleId}"></c:Utility_Lookup>
+            </div>
+            
+            <aura:if isTrue="{!v.MarketingLookup.lookupObject == 'EmailMessage'}">
+                <div class="row">
+                    <c:Utility_Lookup aura:id="lookup" 
+                                      searchTerm=""
+                                      lookupObject="EmailTemplate" 
+                                      lookupField="Name" 
+                                      filters="IsActive = true"
+                                      placeholder="Email Template Lookup"
+                                      required="false"
+                                      boundValue="{!v.TemplateId}"></c:Utility_Lookup>
+                </div>
+            </aura:if>
+            
+            <div class="row">
+                <lightning:select label="Channel Type" value="{!v.ChannelType}" required="true">
+                    <option value="Call">Call</option>
+                    <option value="Email">Email</option>
+                </lightning:select>
+            </div>
+            
+            <div class="row">
+                <lightning:select label="Channel Action" value="{!v.ChannelAction}" required="true">
+                    <option value="CallBackLater">Call Back Later</option>
+                    <option value="LeftVoicemail">Left Voicemail</option>
+                    <option value="MeaningfulConnect">Meaningful Connect</option>
+                    <option value="NoCategory">No Category</option>
+                    <option value="NotInterested">Not Interested</option>
+                    <option value="Unqualified">Unqualified</option>
+                    <option value="HardBounce">Hard Bounce</option>
+                    <option value="LinkClick">Link Click</option>
+                    <option value="Open">Open</option>
+                    <option value="OutOfOffice">Out of Office</option>
+                    <option value="Reply">Reply</option>
+                    <option value="Send">Send</option>
+                    <option value="SoftBounce">Soft Bounce</option>
+                </lightning:select>
+            </div>
+            
+            <div class="row">
+                <lightning:input type="datetime" name="EngagementDateTime" label="Enagement Date/Time" value="{!v.EngagementDateTime}"/>
+            </div>
+        </div>
+        
+        <div class="action-footer">
+            <div class="row">
+                <lightning:button label="Cancel" onclick="{!c.cancel}" class="slds-m-top_medium column" />
+                <lightning:button label="Save" onclick="{!c.save}" variant="brand" class="slds-m-top_medium column flex-right"/>
+            </div>
+        </div>
+    </div>
+</aura:component>

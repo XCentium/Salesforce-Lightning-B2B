@@ -1,0 +1,3 @@
+<design:component label="Product Registration Community Flow">
+	<design:attribute name="Flow_Name" label="Flow Name" />
+</design:component>

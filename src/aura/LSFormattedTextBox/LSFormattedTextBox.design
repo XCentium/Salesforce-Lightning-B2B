@@ -1,0 +1,4 @@
+<design:component>
+    <design:attribute name="Header" label="Header" required="true" default="Large Text"/>
+    <design:attribute name="SubHeader" label="SubHeader" required="true" default="Smaller Text"/>
+</design:component>

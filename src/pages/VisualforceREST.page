@@ -1,0 +1,15 @@
+<apex:page >
+    <script>
+    const session = '{!$Api.Session_ID}';
+    
+    window.onload = postSession()
+    document.addEventListener('message', function(event){
+        if(window.location.origin != event.origin){
+            
+        }
+    })
+    function postSession(){
+        parent.postMessage( {"type":"sessionId", "session":session}, '*');
+    }
+    </script>
+</apex:page>

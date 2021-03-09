@@ -1,0 +1,35 @@
+<apex:component controller="SearchController">
+<apex:form onsubmit="return false;">
+<select name="search" value="{!sen}">
+<option>Search All</option>
+<option>Cases</option>
+<option>Assets</option>
+<option>Tasks</option>
+<option>Notes</option>
+<option>Google Docs</option>
+<option>Ideas</option>
+<option>Reports</option>
+<option>Beta Program Sign-Up</option>
+<option>Ideas in Action</option>
+<option>KB Solutions</option>
+<option>KB Solution Links</option>
+<option>Last Documents Accessed</option>
+<option>Statements</option>
+<option>Training Registration</option>
+</select>
+<div class="searchform">
+<table>
+<tr>
+<td>
+<apex:inputtext size="25" maxlength="100" value="{!sbstrSearch}" />
+</td>
+<td>
+<div class="go_button">
+<apex:commandLink styleClass="goButton" value="Go" action="{!GoSearch}" />
+</div>
+</td>
+</tr>
+</table>
+</div>
+</apex:form> 
+</apex:component>

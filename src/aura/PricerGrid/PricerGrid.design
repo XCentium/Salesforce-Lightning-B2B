@@ -1,0 +1,14 @@
+<design:component label="Lightning Pricer">
+
+    <design:attribute name="headerPosition" label="Header position ?" datasource="top,bottom" description="Choose if you prefer the header pannels before or after your line items" />
+    <design:attribute name="hideDiscounts" label="Hide discounts ?" description="This will hide the discount panel but also the discount colum in the product table" />
+    <design:attribute name="hideSections" label="Hide sections ?" description="This will hide the section summary panel and the new section button" />
+    <design:attribute name="hideMargins" label="Hide margins ?" description="If checked, all margins will be hidden in the pricer. PS : Margins are calculated based on product cost field on product object" />
+    <design:attribute name="greenMarginAbove" label="Margin is green above ?" description="Choose a number between 0 and 100 representing minimum margin in percent for a green color" />
+	<design:attribute name="orangeMarginAbove" label="Margin is orange above ?" description="Choose a number between 0 and 100 representing minimum margin in percent for an orange color. Margin will be red below." />
+    <design:attribute name="catalogCustomFilterFields" label="Custom filters for product catalog" description="Catalog will provide filters by default (product name, code and price). You can specify additional filters by indicating the field api names on which the filters should be based. They must be separated by comas. Example:Family,Category__c" />
+    <design:attribute name="catalogSearchResultImageField" label="Image field for product catalog" description="You can specify a Product2 field with the link to the image that you want to display in the product catalog" />
+    <design:attribute name="autoScroll" label="Auto scroll" description="Will attempt to automatically scroll page if a product lookup is in focus but not fully visible. Uncheck if you have unwanted scroll jumps" />
+     
+    
+</design:component>

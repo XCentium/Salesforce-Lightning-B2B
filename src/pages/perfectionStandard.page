@@ -1,0 +1,52 @@
+<apex:page controller="perfectionStandard" showHeader="false">
+    <title>Perfection Standard</title>
+<apex:form >
+<apex:pageBlock title="Perfect Date Wizard" Id="theBlock">
+Click on the button below to make the dates perfect for Opportunities, Assets, Contracts, Campaigns, Tasks, Events, Cases, and Quotes.
+       <Br/>
+       <Br/>
+       <apex:commandButton action="{!all}" value="Make ALL Dates Perfect!" id="all" reRender="theBlock" status="TheStatus" style="width:100%;height:30px;"/>   
+       <Br/>
+       <Br/>
+       <HR/>
+       Click the buttons below to make dates on the individual objects perfect.<Br/><Br/>
+       <table >
+       	<tr>
+       		<td><apex:commandButton action="{!doOpps}" value="Opportunities" id="o" reRender="theBlock" status="TheStatus" style="width:160px;"/>  {!Os} </td>
+       		<td><apex:commandButton action="{!doAssets}" value="Assets" id="a" reRender="theBlock" status="TheStatus" style="width:160px;"/> {!Ass}</td>
+       		<td><apex:commandButton action="{!doContracts}" value="Contracts" id="ct" reRender="theBlock" status="TheStatus" style="width:160px;"/>  {!Cts}</td>
+       		<td><apex:commandButton action="{!doCampaigns}" value="Campaigns" id="cp" reRender="theBlock" status="TheStatus" style="width:160px;"/>{!Cps}</td>
+       	</tr>
+       	<tr>
+       		<td><apex:commandButton action="{!doTasks}" value="Tasks" id="t" reRender="theBlock" status="TheStatus" style="width:160px;"/>{!Ts}</td>
+       		<td><apex:commandButton action="{!doEvents}" value="Events" id="e"/ reRender="theBlock" status="TheStatus" style="width:160px;"> {!Es}</td>
+       		<td><apex:commandButton action="{!doCases}" value="Cases" id="cs"/ reRender="theBlock" status="TheStatus" style="width:160px;"> {!Cs}</td>
+       		<td><apex:commandButton action="{!doQuotes}" value="Quotes" id="Qts"/ reRender="theBlock" status="TheStatus" style="width:160px;"> {!Qts}</td>
+       	</tr>
+       	
+       </table>
+       <br/>
+       <br/>
+
+       <h5><apex:actionStatus startText="In Progress..." id="TheStatus" /></h5>
+</apex:pageBlock>
+</apex:form>
+<style>
+body button, body .x-btn, body .btn, body .x-date-mp-ok, body .x-date-mp-cancel, body .btnDisabled, body .btnCancel, body .menuButton .menuButtonButton {
+
+}
+
+.wide{
+width:160px;
+}
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

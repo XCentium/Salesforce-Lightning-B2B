@@ -1,0 +1,273 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global"  >
+    <aura:attribute name="title" type="String" access="global"></aura:attribute>
+    <aura:attribute name="kpiTitle1" type="String" access="global"></aura:attribute>
+    <aura:attribute name="kpiValue1" type="String" access="global"></aura:attribute>
+    <aura:attribute name="kpiSign1" type="Boolean" access="global"></aura:attribute>
+    <aura:attribute name="kpiTitle2" type="String" access="global"></aura:attribute>
+    <aura:attribute name="kpiValue2" type="String" access="global"></aura:attribute>
+    <aura:attribute name="kpiSign2" type="Boolean" access="global"></aura:attribute>
+    <aura:attribute name="activityIcon1" type="String" access="global"></aura:attribute>
+    <aura:attribute name="activitiesCompleted1" type="Integer" access="global"></aura:attribute>
+    <aura:attribute name="activitiesDescription1" type="String" access="global"></aura:attribute>
+    <aura:attribute name="personalBest1" type="Integer" access="global"></aura:attribute>
+    <aura:attribute name="progressBarColor1" type="String" access="global"></aura:attribute>
+    <aura:attribute name="activityIcon2" type="String" access="global"></aura:attribute>
+    <aura:attribute name="activitiesCompleted2" type="Integer" access="global"></aura:attribute>
+    <aura:attribute name="activitiesDescription2" type="String" access="global"></aura:attribute>
+    <aura:attribute name="personalBest2" type="Integer" access="global"></aura:attribute>
+    <aura:attribute name="progressBarColor2" type="String" access="global"></aura:attribute>
+    <aura:attribute name="activityIcon3" type="String" access="global"></aura:attribute>
+    <aura:attribute name="activitiesCompleted3" type="Integer" access="global"></aura:attribute>
+    <aura:attribute name="activitiesDescription3" type="String" access="global"></aura:attribute>
+    <aura:attribute name="personalBest3" type="Integer" access="global"></aura:attribute>
+    <aura:attribute name="progressBarColor3" type="String" access="global"></aura:attribute>
+    <aura:attribute name="activityIcon4" type="String" access="global"></aura:attribute>
+    <aura:attribute name="activitiesCompleted4" type="Integer" access="global"></aura:attribute>
+    <aura:attribute name="activitiesDescription4" type="String" access="global"></aura:attribute>
+    <aura:attribute name="personalBest4" type="Integer" access="global"></aura:attribute>
+    <aura:attribute name="progressBarColor4" type="String" access="global"></aura:attribute>
+    
+    
+    <div class="card slds-card slds-p-around_medium">
+        
+        <div class="title">  
+          <c:dynamicIcon iconType="ellie"/>
+         <span class ="slds-text-heading_small title slds-m-left_small ">{!v.title}</span>
+        </div>
+        
+        <div class="slds-grid slds-m-top_medium slds-m-bottom_medium">
+            
+            <div class="slds-col">
+                <div class="card slds-p-around_small slds-m-right_x-small">
+                    <div class="slds-text-heading_small slds-text-align_center">
+                        {!v.kpiTitle1}
+                    </div>            
+                    <aura:if isTrue="{!v.kpiSign1}">
+                        <div class="kpi-positive slds-text-align_center">
+                            {!v.kpiValue1}
+                        </div>
+                    <aura:set attribute="else">
+                        <div class="kpi-negative slds-text-align_center">
+                            {!v.kpiValue1}
+                        </div>
+                    </aura:set>
+                    </aura:if>
+                </div>
+            </div>
+            
+            
+            <div class="slds-col">
+                <div class="card slds-p-around_small slds-m-left_x-small">
+                    <div class="slds-text-heading_small slds-text-align_center">
+                        {!v.kpiTitle2}
+                    </div>            
+                    <aura:if isTrue="{!v.kpiSign2}">
+                        <div class="kpi-positive slds-text-align_center">
+                            {!v.kpiValue2}
+                        </div>
+                    <aura:set attribute="else">
+                        <div class="kpi-negative slds-text-align_center">
+                            {!v.kpiValue2}
+                        </div>
+                    </aura:set>
+                    </aura:if>
+                </div>
+            </div>
+            
+        </div>
+            
+        <div class="slds-media activity-row slds-m-top_medium slds-m-bottom_small">
+            
+            <div class="slds-media__figure ">
+                <lightning:icon iconName="{!v.activityIcon1}" size="medium" class="icon"/>
+            </div>
+            
+            <div class="slds-media__body slds-m-left_x-small">
+                <div class="slds-text-body_regular slds-m-bottom_xx-small">
+                    {!v.activitiesCompleted1} &nbsp; {!v.activitiesDescription1}
+                </div>
+                
+                <aura:if isTrue="{!lessthanorequal(v.activitiesCompleted1,v.personalBest1)}">
+                    <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100"  role="progressbar">
+                      
+                          <span class="slds-progress-bar__value" style="{! 'width: ' + ((v.activitiesCompleted1/v.personalBest1)*100) + '%' + ';background:'+ v.progressBarColor1 + ';' }">
+                            
+                          </span>
+                        
+                    </div>
+                    
+                    <div class="slds-text-body_regular slds-text-color_weak slds-text-align_right slds-m-top_xx-small">
+                        Personal Best: {!v.personalBest1} 
+                    </div>
+                
+                <aura:set attribute="else">
+                    
+                    <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100"  role="progressbar">
+                  
+                      <span class="slds-progress-bar__value" style="{! 'width: 100% ;background:'+ v.progressBarColor1 + ';' }">
+                        <span class="slds-assistive-text">Progress: 100%</span>
+                      </span>
+                    
+                    </div>
+                
+                    <div class="slds-text-body_regular slds-text-align_right slds-m-top_xx-small text-bold">
+                        New Personal Best: {!v.activitiesCompleted1} 
+                    </div>
+                    
+                      
+                </aura:set>
+                </aura:if>
+            </div>
+            
+            
+        </div>
+        
+        <div class="slds-media activity-row slds-m-top_small slds-m-bottom_small">
+            
+            <div class="slds-media__figure ">
+                <lightning:icon iconName="{!v.activityIcon2}" size="medium" class="icon"/>
+            </div>
+            
+            <div class="slds-media__body slds-m-left_x-small">
+                <div class="slds-text-body_regular slds-m-bottom_xx-small">
+                    {!v.activitiesCompleted2} &nbsp; {!v.activitiesDescription2}
+                </div>
+                
+                <aura:if isTrue="{!lessthanorequal(v.activitiesCompleted2,v.personalBest2)}">
+                    <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100"  role="progressbar">
+                      
+                          <span class="slds-progress-bar__value" style="{! 'width: ' + ((v.activitiesCompleted2/v.personalBest2)*100) + '%' + ';background:'+ v.progressBarColor2 + ';' }">
+                            
+                          </span>
+                        
+                    </div>
+                    
+                    <div class="slds-text-body_regular slds-text-color_weak slds-text-align_right slds-m-top_xx-small">
+                        Personal Best: {!v.personalBest2} 
+                    </div>
+                
+                <aura:set attribute="else">
+                    
+                    <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100"  role="progressbar">
+                  
+                      <span class="slds-progress-bar__value" style="{! 'width: 100% ;background:'+ v.progressBarColor2 + ';' }">
+                        <span class="slds-assistive-text">Progress: 100%</span>
+                      </span>
+                    
+                    </div>
+                
+                    <div class="slds-text-body_regular slds-text-align_right slds-m-top_xx-small text-bold">
+                        New Personal Best: {!v.activitiesCompleted2} 
+                    </div>
+                    
+                      
+                </aura:set>
+                </aura:if>
+            </div>
+            
+            
+        </div>
+            
+            
+        
+        
+        <div class="slds-media activity-row slds-m-top_small slds-m-bottom_small">
+            
+            <div class="slds-media__figure ">
+                <lightning:icon iconName="{!v.activityIcon3}" size="medium" class="icon"/>
+            </div>
+            
+            <div class="slds-media__body slds-m-left_x-small">
+                <div class="slds-text-body_regular slds-m-bottom_xx-small">
+                    {!v.activitiesCompleted3} &nbsp; {!v.activitiesDescription3}
+                </div>
+                
+                <aura:if isTrue="{!lessthanorequal(v.activitiesCompleted3,v.personalBest3)}">
+                    <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100"  role="progressbar">
+                      
+                          <span class="slds-progress-bar__value" style="{! 'width: ' + ((v.activitiesCompleted3/v.personalBest3)*100) + '%' + ';background:'+ v.progressBarColor3 + ';' }">
+                            
+                          </span>
+                        
+                    </div>
+                    
+                    <div class="slds-text-body_regular slds-text-color_weak slds-text-align_right slds-m-top_xx-small">
+                        Personal Best: {!v.personalBest3} 
+                    </div>
+                
+                <aura:set attribute="else">
+                    
+                    <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100"  role="progressbar">
+                  
+                      <span class="slds-progress-bar__value" style="{! 'width: 100% ;background:'+ v.progressBarColor3 + ';' }">
+                        <span class="slds-assistive-text">Progress: 100%</span>
+                      </span>
+                    
+                    </div>
+                
+                    <div class="slds-text-body_regular slds-text-align_right slds-m-top_xx-small text-bold">
+                        New Personal Best: {!v.activitiesCompleted3} 
+                    </div>
+                    
+                      
+                </aura:set>
+                </aura:if>
+            </div>
+            
+            
+        </div>
+        
+        <div class="slds-media activity-row slds-m-top_small ">
+            
+            <div class="slds-media__figure ">
+                <lightning:icon iconName="{!v.activityIcon4}" size="medium" class="icon"/>
+            </div>
+            
+            <div class="slds-media__body slds-m-left_x-small ">
+                <div class="slds-text-body_regular slds-m-bottom_xx-small">
+                    {!v.activitiesCompleted4} &nbsp; {!v.activitiesDescription4}
+                </div>
+                
+                <aura:if isTrue="{!lessthanorequal(v.activitiesCompleted4,v.personalBest4)}">
+                    <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100"  role="progressbar">
+                      
+                          <span class="slds-progress-bar__value" style="{! 'width: ' + ((v.activitiesCompleted4/v.personalBest4)*100) + '%' + ';background:'+ v.progressBarColor4 + ';' }">
+                            
+                          </span>
+                        
+                    </div>
+                    
+                    <div class="slds-text-body_regular slds-text-color_weak slds-text-align_right slds-m-top_xx-small">
+                        Personal Best: {!v.personalBest4} 
+                    </div>
+                
+                <aura:set attribute="else">
+                    
+                    <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100"  role="progressbar">
+                  
+                      <span class="slds-progress-bar__value" style="{! 'width: 100% ;background:'+ v.progressBarColor4 + ';' }">
+                        <span class="slds-assistive-text">Progress: 100%</span>
+                      </span>
+                    
+                    </div>
+                
+                    <div class="slds-text-body_regular slds-text-align_right slds-m-top_xx-small text-bold">
+                        New Personal Best: {!v.activitiesCompleted4} 
+                    </div>
+                    
+                      
+                </aura:set>
+                </aura:if>
+            </div>
+            
+            
+        </div>
+        
+        
+        
+        
+    </div>
+    
+    
+    
+</aura:component>

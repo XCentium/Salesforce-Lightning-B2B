@@ -1,0 +1,42 @@
+<aura:component >
+    <aura:attribute name="icon" type="String" default="custom:custom1" access="global" />
+    <aura:attribute name="title" type="String" default="Confirmed Improvement" access="global" />
+    <aura:attribute name="message" type="String" default="Patient is now back on track." access="global" />
+    <aura:attribute name="numDaysAgo" type="Integer" default="5" access="global" />
+    <aura:attribute name="time" type="String" default="8:36 AM" access="global" />
+    <aura:attribute name="id" type="String" access="global"/>
+    <aura:attribute name="color" type="String" access="global"/>
+    
+    <li class="slds-m-horizontal_medium">
+        <div class="slds-media">
+            <div class="slds-media_body slds-p-top_small" style="width:100%;">
+                <div class="slds-media slds-media--timeline">
+                    <div class="slds-media__figure slds-timeline__icon icon">
+                        <lightning:icon iconName="{!v.icon}" size="small" aura:id="icon" style="{! 'background-color:' + v.color + ';' }" class="item-icon"/>                           
+                    </div>
+                    <div class="slds-media__body slds-p-top_xx-small">                        
+                        <a class="no-decoration" onclick="{!c.navToActivity}">
+                            <h3 class="" >
+                                <strong>{!v.title}</strong>
+                            </h3>
+                        </a>
+                        <p class="">{!v.message}</p>
+                        <div class="slds-text-color_weak dueDate">
+                            {!v.time} | <c:daysAgoDate numDays="{!v.numDaysAgo}" />                                    
+                        </div>
+                    </div>
+                            
+                            
+                </div>
+                        
+           </div>
+           <div class="slds-col slds-col_bump-right slds-p-top_small">                            
+                <lightning:buttonMenu iconName="utility:down" alternativeText="More" variant="border" iconSize="x-small" menuAlignment="right" onselect="{! c.editActivity }">
+                    <lightning:menuItem label="Edit Activity" value="Edit" />                    
+                </lightning:buttonMenu>
+           </div>
+       </div>
+            
+        
+    </li>	
+</aura:component>

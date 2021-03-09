@@ -1,0 +1,26 @@
+<aura:component access="global"
+                controller="SessionController">
+    
+    <!-- Include cometd and the eventHub singleton code -->
+    <ltng:require scripts="{!join(',',
+                           $Resource.cometdjs,
+                           $Resource.eventHub
+                           )}"
+                  afterScriptsLoaded="{!c.onJSLoaded}"/>
+    
+    <!-- Local attribute to maintain the sessionId -->
+    <aura:attribute name="sessionId" type="String" />
+    <aura:attribute name="showHistorical" type="Boolean" default="false"/>
+    
+    
+    <!-- Local attribute to hold subscription queue until static resource is loaded -->
+    <aura:attribute name="subscriptions" type="Object[]" />
+    
+    <!-- Method to register platform event handlers -->
+    <aura:method name="subscribe" action="{!c.doSubscribe}" description="Subscribe to CometD events">
+        <aura:attribute name="component" type="Object"/>
+        <aura:attribute name="eventName" type="String"/>
+        <aura:attribute name="callback" type="Object"/>
+    </aura:method>
+    
+</aura:component>

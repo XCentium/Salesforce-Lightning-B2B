@@ -1,0 +1,27 @@
+.THIS .transparentBorder {
+    border-color: transparent !important;
+    display:none;
+}
+
+.THIS .displayEditOnHover:hover .transparentBorder {
+    display:inline;
+}
+
+.THIS .max50px {
+    max-width:50px;
+}
+
+.THIS .removePadding {
+    padding-left:0px !important;
+    padding-right:0px !important;
+}
+
+.THIS .upsellModalContainer{
+    width: 70%; max-width: 70rem;
+}
+
+.THIS .transform{
+     -ms-transform: translate3d(0,0,0);
+     -webkit-transform: translate3d(0,0,0);
+ 	 transform: translate3d(0,0,0);
+}

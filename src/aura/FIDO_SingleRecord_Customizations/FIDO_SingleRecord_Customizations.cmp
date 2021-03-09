@@ -1,0 +1,185 @@
+<aura:component controller="FIDO" extends="c:Mixpanel" implements="c:MixpanelInterface">
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Data" type="String[]" />
+    <aura:attribute name="RelatedRecords" type="String[]" />
+    <aura:attribute name="RelatedVideos" type="String[]" />
+    <aura:attribute name="RelatedScripts" type="String[]" />
+    <aura:attribute name="featuredetailjunctionid" type="String"/>
+    <aura:attribute name="featureId" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="IndustryName" type="String" /> 
+    <aura:attribute name="RecordName" type="String" />
+    <aura:attribute name="UserEmail" type="String"/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:if  isTrue="{!and(v.recid != '', v.recid != null)}" >
+        <button class="slds-button backButton" onclick="{!c.back}">
+            <lightning:icon iconName="utility:back" size="xx-small"/> 
+        </button> 
+    </aura:if> 
+    <aura:if isTrue="{!not(empty(v.Data))}">
+        <aura:iteration items="{!v.Data}" var="feature">
+            <div class="owner">
+                <div class="padding">
+                    <aura:if isTrue="{!and(feature.image__c != NULL, feature.image__c != '')}">
+                        <div class="third">
+                            <a href="{!feature.image__c}" target="_blank">
+                                <img src="{!feature.image__c}" class="fullimage" />
+                            </a>
+                        </div>
+                        <div class="twothird">
+                            <div class="paddingleftright">
+                                <div class="tile-header slds-p-vertical_xx-small  slds-m-bottom_xx-small">
+                                    <h3 class="slds-text-heading_small">
+                                        {!feature.name}
+                                    </h3>
+                                </div>
+                                <aura:if isTrue="{!feature.type__c != ''}">
+                                    <span class="slds-text-title_caps slds-list_horizontal slds-has-dividers_right">Type - {!feature.type__c}</span>
+                                </aura:if>
+                                
+                                <div class="slds-text-longform article-body slds-m-top_x-small slds-m-bottom_small">
+                                    <ui:outputRichText value="{!feature.description__c}"/>
+                                </div>
+                                <aura:if isTrue="{!feature.contains_custom_code__c }">
+                                    <hr/>
+                                    <span class="slds-text-title_caps slds-list_horizontal slds-has-dividers_right">
+                                        <lightning:icon iconName="utility:check" size="xx-small" class="marginright" /> 
+                                        Contains Custom Code
+                                    </span>
+                                    <aura:if isTrue="{!feature.custom_code_description__c  }">
+                                        <div class="slds-text-longform article-body slds-m-top_x-small slds-m-bottom_small">
+                                            <ui:outputRichText value="{!feature.custom_code_description__c}"/>
+                                        </div>
+                                    </aura:if>
+                                </aura:if>
+                                <aura:if isTrue="{! or(feature.script_url__c != null,feature.video_url__c != null)}">
+                                    <hr/>
+                                    <div class="paddingtopbottom center">
+                                        <aura:if isTrue="{!feature.script_url__c != null}">
+                                            <button class="slds-button slds-button_neutral" aura:id="{!feature.script_url__c}" id="{!feature.script_url__c}" onclick="{!c.toURL}">Demo Script</button>
+                                        </aura:if>
+                                        <aura:if isTrue="{!feature.video_url__c != null}">
+                                            <button class="slds-button slds-button_destructive" aura:id="{!feature.video_url__c}" id="{!feature.video_url__c}" onclick="{!c.toURL}">Video</button>
+                                        </aura:if>
+                                    </div>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <aura:set attribute="else">
+                            <div class="tile-header slds-p-vertical_xx-small  slds-m-bottom_xx-small">
+                                <h3 class="slds-text-heading_small">
+                                    {!feature.name}
+                                </h3>
+                            </div>
+                            <aura:if isTrue="{!feature.type__c != ''}">
+                                <span class="slds-text-title_caps slds-list_horizontal slds-has-dividers_right">Type - {!feature.type__c}</span>
+                            </aura:if>
+                            
+                            <div class="slds-text-longform article-body slds-m-top_x-small slds-m-bottom_small">
+                                <ui:outputRichText value="{!feature.description__c}"/>
+                            </div>
+                            <aura:if isTrue="{! or(feature.script_url__c != null,feature.video_url__c != null)}">
+                                <hr/>
+                                <div class="paddingtopbottom center">
+                                    <aura:if isTrue="{!feature.script_url__c != null}">
+                                        <button class="slds-button slds-button_neutral" aura:id="{!feature.script_url__c}" id="{!feature.script_url__c}" onclick="{!c.toURL}">Demo Script</button>
+                                    </aura:if>
+                                    <aura:if isTrue="{!feature.video_url__c != null}">
+                                        <button class="slds-button slds-button_destructive" aura:id="{!feature.video_url__c}" id="{!feature.video_url__c}" onclick="{!c.toURL}">Video</button>
+                                    </aura:if>
+                                </div>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </div>
+            <div class="owner">
+                <lightning:tabset>
+                    <aura:if isTrue="{!and(feature.setup_instructions__c  != null,feature.setup_instructions__c  != '')}">
+                        <lightning:tab label="Setup Instructions" id="2">  
+                            <div class="padding">
+                                <h3 class="slds-text-heading_small">
+                                    Setup Instructions
+                                </h3>
+                                <div class="paddingtopbottom">
+                                    <ui:outputRichText value="{!feature.setup_instructions__c}"/>
+                                </div>
+                            </div>
+                            <aura:if isTrue="{!feature.setup_document__c != null}">
+                                <div class="footer">
+                                    <div class="paddingtopbottom center">
+                                        <button class="slds-button slds-button_neutral" aura:id="{!feature.setup_document__c}" id="{!feature.setup_document__c}" onclick="{!c.toURL}">Setup Document</button>
+                                    </div>
+                                </div>
+                            </aura:if>
+                        </lightning:tab>
+                    </aura:if>
+                    <aura:if isTrue="{!not(empty(v.RelatedVideos))}">
+                        <lightning:tab label="Videos" id="3">
+                            <div class="paddingleftright">
+                                <div class="cardWrapper">
+                                    <aura:iteration items="{!v.RelatedVideos}" var="video">
+                                        <div class="videoCard">
+                                            <div class="paddingsmall"> 
+                                                <button class="slds-button slds-button_neutral cardButton" aura:id="{!video.video_url__c}" id="{!video.video_url__c}" onclick="{!c.toURL}">
+                                                    <div class=""> 
+                                                        <aura:if isTrue="{!and(video.thumbnail_url__c != '',video.thumbnail_url__c != null)}">
+                                                            <div class="videoTitle" style="{!'background-image:url(' + video.thumbnail_url__c + ');'}">
+                                                                <div class="videoBadge">
+                                                                </div>
+                                                            </div>
+                                                            <aura:set attribute="else">
+                                                                <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);'}">
+                                                                    <div class="videoBadge">
+                                                                    </div>
+                                                                </div>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                        <div class="videoDescription">
+                                                            <div class="padding">
+                                                                <h3>
+                                                                    <div class="headingleft">
+                                                                        {!video.name}
+                                                                    </div>
+                                                                </h3>
+                                                                <div class=" desc">
+                                                                    <ui:outputRichText value="{!video.video_description__c }"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                        </lightning:tab>
+                    </aura:if>
+                    <aura:if isTrue="{!not(empty(v.RelatedScripts))}">
+                        <lightning:tab label="Demo Scripts" id="4" class="padding0">
+                                <aura:iteration items="{!v.RelatedScripts}" var="script">
+                                    <div>
+                                        <button class="slds-button ScriptCard relative FullScriptCard" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.GoToScript}">
+                                            <div class="padding textleft">
+                                                <h3>{!script.name}</h3>
+                                                <p><ui:outputRichText value="{!script.excerpt__c}"/> </p>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </aura:iteration>
+                        </lightning:tab>
+                    </aura:if>
+                </lightning:tabset>
+            </div>
+        </aura:iteration>
+        <aura:set attribute="else">
+            No Record to show.
+        </aura:set>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,198 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="SearchType" type="String" /> 
+    <aura:attribute name="SearchPhrase" type="String" /> 
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="Filter" type="String"/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="ComponentTitle" type="String" />
+    <aura:attribute name="Personas" type="String[]"/>
+    <aura:attribute name="MenuOpenClose" type="String" />
+    <aura:attribute name="OrgId" type="String" />
+    <aura:handler name="change" value="{!v.Filter}" action="{!c.init}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.SearchPhrase}" action="{!c.init}"/>
+    <aura:if  isTrue="{!or(v.recid == '', v.recid == null)}" >
+        <aura:if isTrue="{!not(empty(v.Personas))}">
+            <div class="textleft">
+                <aura:if isTrue="{!and(v.SearchPhrase != '')}">
+                    <div class="paddingleftright">
+                        <h3 class="searchHeader">Search Results for: {!v.SearchPhrase}</h3>
+                    </div>
+                </aura:if>
+                <div class="cardWrapper">
+                    <aura:iteration items="{!v.Personas}" var="persona">
+                        <aura:if isTrue="{!and(v.SearchPhrase != '')}">   
+                            <c:FIDO_IfContains items="{!persona.name}"  items2="{!persona.description__c}" element="{!v.SearchPhrase}">
+                                <div class="cardhalf">
+                                    <div class="owner marginbottom marginleftright">
+                                        <h2 class="borderbottom relative personaTitle" >
+                                            <div class="padding">
+                                                <img src="{!persona.user_image_url__c}" class="personaimg" /> {!persona.name} 
+                                                <aura:if isTrue="{!persona.title__c != ''}">
+                                                    | <span class="personaUserTitle" >{!persona.title__c}</span>
+                                                </aura:if>
+                                            </div>
+                                        </h2>
+                                        <div class="padding personaContent">
+                                            <div class="textleft">
+                                                <ui:outputRichText value="{!persona.description__c}"/>
+                                                <div class="paddingtopbottom">
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Analytics"> 
+                                                        <span class="slds-badge">Analytics Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Commerce"> 
+                                                        <span class="slds-badge">Commerce Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Community"> 
+                                                        <span class="slds-badge">Community Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Integration"> 
+                                                        <span class="slds-badge">Integration Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Marketing"> 
+                                                        <span class="slds-badge">Marketing Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Sales"> 
+                                                        <span class="slds-badge">Sales Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Service"> 
+                                                        <span class="slds-badge">Service Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Consumer Goods"> 
+                                                        <span class="slds-badge">Consumer Goods Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Financial"> 
+                                                        <span class="slds-badge">Financial Services Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Manufacturing"> 
+                                                        <span class="slds-badge">Manufacturing Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Health"> 
+                                                        <span class="slds-badge">Health Cloud</span>
+                                                    </c:FIDO_IfContains>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="footer">
+                                            <div class="padding">
+                                                <c:FIDO_Persona_Buttons Industry="{!v.Industry}" Settings="{!v.Settings}" recid="{!persona.id}" ScreenChoice="{!v.ScreenChoice}" recType="{!persona.type__c}" PersonaName="{!persona.name}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:FIDO_IfContains>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!v.Filter != ''}">  
+                                    <aura:if isTrue="{!persona.clouds__c != null}">
+                                        <c:FIDO_IfContains items="{!persona.clouds__c}"   element="{!v.Filter}"> 
+                                            <div class="cardhalf">
+                                                <div class="owner marginbottom marginleftright">
+                                                    <h2 class="borderbottom relative personaTitle" >
+                                                        <div class="padding">
+                                                            <img src="{!persona.user_image_url__c}" class="personaimg" /> {!persona.name} 
+                                                            <aura:if isTrue="{!persona.title__c != ''}">
+                                                                | <span class="personaUserTitle" >{!persona.title__c}</span>
+                                                            </aura:if>
+                                                        </div>
+                                                    </h2>
+                                                    <div class="padding personaContent">
+                                                        <div class="textleft">
+                                                            <ui:outputRichText value="{!persona.description__c}"/>
+                                                            <div class="relative paddingtopbottom center">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="footer">
+                                                        <div class="padding">
+                                                            <c:FIDO_Persona_Buttons Industry="{!v.Industry}" Settings="{!v.Settings}" recid="{!persona.id}" ScreenChoice="{!v.ScreenChoice}" recType="{!persona.type__c}" PersonaName="{!persona.name}" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:FIDO_IfContains>	
+                                    </aura:if>
+                                    <aura:set attribute="else">
+                                        <div class="cardhalf">
+                                            <div class="owner marginbottom marginleftright">
+                                                <h2 class="borderbottom relative personaTitle" >
+                                                    <div class="padding">
+                                                        <img src="{!persona.user_image_url__c}" class="personaimg" /> {!persona.name} 
+                                                        <aura:if isTrue="{!persona.title__c != ''}">
+                                                            | <span class="personaUserTitle" >{!persona.title__c}</span>
+                                                        </aura:if>
+                                                    </div>
+                                                </h2>
+                                                <div class="padding personaContent">
+                                                    <div class="textleft">
+                                                        <ui:outputRichText value="{!persona.description__c}"/>
+                                                        <aura:if isTrue="{!persona.clouds__c != null}">
+                                                            <div class="paddingtopbottom">
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Analytics"> 
+                                                                    <span class="slds-badge">Analytics Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Commerce"> 
+                                                                    <span class="slds-badge">Commerce Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Community"> 
+                                                                    <span class="slds-badge">Community Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Integration"> 
+                                                                    <span class="slds-badge">Integration Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Marketing"> 
+                                                                    <span class="slds-badge">Marketing Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Sales"> 
+                                                                    <span class="slds-badge">Sales Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Service"> 
+                                                                    <span class="slds-badge">Service Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Consumer Goods"> 
+                                                                    <span class="slds-badge">Consumer Goods Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Financial"> 
+                                                                    <span class="slds-badge">Financial Services Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Manufacturing"> 
+                                                                    <span class="slds-badge">Manufacturing Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                                <c:FIDO_IfContains items="{!persona.clouds__c}" element="Health"> 
+                                                                    <span class="slds-badge">Health Cloud</span>
+                                                                </c:FIDO_IfContains>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                                <div class="bordertop">
+                                                    <div class="padding"> 
+                                                        <c:FIDO_Persona_Buttons Industry="{!v.Industry}" Settings="{!v.Settings}" recid="{!persona.id}" ScreenChoice="{!v.ScreenChoice}" recType="{!persona.type__c}" PersonaName="{!persona.name}" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </aura:set>
+                                </aura:if>  
+                            </aura:set>
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <aura:set attribute="else">
+                <div class="center">
+                    <div class="paddinglarge">
+                        <lightning:icon iconName="standard:waits" size="large" alternativeText=""/>  <br/><br/> 
+                        <em>Nothing to report!</em>
+                    </div>
+                </div>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="else">
+            <c:FIDO_SingleRecord Industry="{!v.Industry}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}"/>
+        </aura:set>
+    </aura:if>
+</aura:component>

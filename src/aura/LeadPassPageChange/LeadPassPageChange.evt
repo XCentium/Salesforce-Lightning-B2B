@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Event template">
+    <!--used with Lead Pass Lightning component-->
+    <aura:attribute name="direction" type="String"/>
+</aura:event>

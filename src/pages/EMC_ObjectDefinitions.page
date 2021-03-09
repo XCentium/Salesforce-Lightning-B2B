@@ -1,0 +1,18 @@
+<apex:page contentType="application/javascript">
+
+    function ForecastingPrediction(userId, forecastingTypeId, startDate){
+        this.ForecastOwnerId = userId;
+        this.ForecastingTypeId = forecastingTypeId;
+        this.Amount = 0;
+        this.AmountHigherBound = 0;
+        this.AmountLowerBound = 0;
+        this.StartDate = startDate;
+    }
+    
+    function ForecastingPredictionReason(predictionId){
+        this.ForecastingPredictionId = predictionId;
+        this.PredictionReasonKey = '';
+        this.Score = 1.0;
+        this.TrendType = 'Positive';
+    }
+</apex:page>

@@ -1,0 +1,12 @@
+<design:component label="Einstein Next Best Action - Mock">
+    <design:attribute name="ObjectChoice" datasource="Case,Contact" label="Which Object are you adding this to?"/>
+	<design:attribute name="DefaultTitle1"  label="Default Title 1" description="Default Text for Recommendation Title 1" />
+    <design:attribute name="DefaultDescription1"  label="Default Description 1" description="Default Description for Recommendation Title 1" />
+    <design:attribute name="ButtonLink1"  label="Button Link 1" description="Where would you like to link to for the first button?" />
+    <design:attribute name="ButtonText1" default="View Offer"/>
+    <design:attribute name="DefaultTitle2"  label="Default Title 2" description="Default Text for Recommendation Title2" />
+    <design:attribute name="DefaultDescription2"  label="Default Description 2" description="Default Description for Recommendation Title 2" />
+    <design:attribute name="ButtonLink2"  label="Button Link 2" description="Where would you like to link to for the second button?" />
+    <design:attribute name="ButtonText2" default="View Offer"/>
+    <design:attribute name="recId" />
+</design:component>

@@ -1,0 +1,12 @@
+<aura:component controller="ReferralSubmit" implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+
+    <aura:attribute name="refer" type="Referral__c" default="{'sobjectType':'Referral__c'}" access="global" required="false"/>
+
+    <lightning:input class="slds-m-vertical--small" value="{!v.refer.First_Name__c}" type="text" label="First Name"/>
+    <lightning:input class="slds-m-vertical--small" value="{!v.refer.Last_Name__c}" type="text" label="Last Name"/>
+	<lightning:input class="slds-m-vertical--small" value="{!v.refer.Phone__c}" type="tel" label="Phone" name="tel"/>
+    <lightning:input class="slds-m-vertical--small" value="{!v.refer.Email__c}" type="text" label="Email"/>
+
+    <lightning:button variant="brand" label="Save" onclick="{! c.saveIt }" />
+
+</aura:component>

@@ -1,0 +1,180 @@
+<!--suppress ALL -->
+
+<apex:page standardController="Order" extensions="SCCOrderDetailPageController" lightningStylesheets="true" applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    <head>
+        <title></title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.js" ></script>
+    </head>
+    <apex:slds />
+    <div class="slds-scope">
+        <div class="demo-only" style="height: 0;">
+            <div role="status" id="spinnerDivId">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+        <apex:outputPanel id="messagePanel">
+            <apex:outputPanel rendered="{!IF(errorMessage != '', true, false)}">
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                    <h2> <b>{!errorMessage}</b></h2>
+                    <button class="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" title="Close">
+                        <svg class="slds-button__icon" aria-hidden="true">
+                            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close" xmlns:xlink="http://www.w3.org/1999/xlink" />
+                        </svg>
+                    </button>
+                </div>
+            </apex:outputPanel>
+        </apex:outputPanel>
+        <apex:outputPanel id="orderPanel">
+            <apex:outputPanel rendered="{!IF(orders.size > 0, true, false)}">
+                <apex:form >
+                    <article class="slds-card" style="width: fit-content">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-vertical">
+                                <apex:variable var="count" value="{!0}"/>
+                                <apex:repeat rows="{!CEILING(orders.size/2)}" value="{!orders}" var="ord">
+                                    <tr class="slds-text-title_caps">
+                                        <td scope="col">
+                                            <apex:outputPanel rendered="{!IF(count < orders.size, true, false)}">
+                                                <b>{!orders[count].name}: </b>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td scope="col">
+                                            <apex:outputPanel rendered="{!IF(count < orders.size, true, false)}">
+                                                {!orders[count].value}
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td scope="col">
+                                            <apex:outputPanel rendered="{!IF(count+1 < orders.size, true, false)}">
+                                                <b>{!orders[count+1].name}: </b>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td scope="col">
+                                            <apex:outputPanel rendered="{!IF(count+1 < orders.size, true, false)}">
+                                                {!orders[count+1].value}
+                                            </apex:outputPanel>
+                                        </td>
+                                    </tr>
+                                    <apex:variable value="{!count+2}" var="count"/>
+                                </apex:repeat>
+                            </table>
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-vertical">
+                                <apex:repeat value="{!shippingList}" var="shipment">
+                                    <tr class="slds-text-title_caps">
+                                        <td scope="col" colspan="{!shipment.products.size}">
+                                            Shipment {!shipment.shippingNo}
+                                        </td>
+                                    </tr>
+                                    <apex:repeat value="{!shipment.products}" var="product">
+                                        <tr class="slds-text-title_caps">
+                                            <td scope="col">
+                                                <b>QTY</b>
+                                            </td>
+                                            <td scope="col">
+                                                <b>Product ID</b>
+                                            </td>
+                                            <td scope="col">
+                                                <b>Name</b>
+                                            </td>
+                                            <td scope="col">
+                                                <b>Tax Rate</b>
+                                            </td>
+                                            <td scope="col">
+                                                <b>Unit Sales Price</b>
+                                            </td>
+                                            <td scope="col">
+                                                <b>Tax Basis</b>
+                                            </td>
+                                            <td scope="col">
+                                                <b>Item Total</b>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-text-title_caps">
+                                            <td scope="col">
+                                                {!product.quantity}
+                                            </td>
+                                            <td scope="col">
+                                                {!product.productId}
+                                            </td>
+                                            <td scope="col">
+                                                {!product.productName}
+                                            </td>
+                                            <td scope="col">
+                                                {!product.taxRate}%
+                                            </td>
+                                            <td scope="col">
+                                                ${!product.unitSalesPrice}
+                                            </td>
+                                            <td scope="col">
+                                                ${!product.taxBasis}
+                                            </td>
+                                            <td scope="col">
+                                                ${!product.itemTotal}
+                                            </td>
+                                        </tr>
+                                    </apex:repeat>
+                                    <tr class="slds-text-title_caps">
+                                        <td scope="col" colspan="6" style="text-align: right;">
+                                            <b>Shipment Shipping Cost</b>
+                                        </td>
+                                        <td scope="col" colspan="1">
+                                            ${!shipment.shippingCost}
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-text-title_caps">
+                                        <td scope="col" colspan="6" style="text-align: right;">
+                                            <b>Total Shipping Cost</b>
+                                        </td>
+                                        <td scope="col" colspan="1">
+                                            ${!shipment.shippingCostTotal}
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-text-title_caps">
+                                        <td scope="col" colspan="6" style="text-align: right;">
+                                            <b>Shipping Total</b>
+                                        </td>
+                                        <td scope="col" colspan="1">
+                                            ${!shipment.shippingTotal}
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-text-title_caps">
+                                        <td scope="col" colspan="6" style="text-align: right;">
+                                            <b>Tax Total</b>
+                                        </td>
+                                        <td scope="col" colspan="1">
+                                            ${!shipment.taxTotal}
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-text-title_caps">
+                                        <td scope="col" colspan="6" style="text-align: right;">
+                                            <b>Total</b>
+                                        </td>
+                                        <td scope="col" colspan="1">
+                                            ${!shipment.total}
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                            </table>
+                        </div>
+                    </article>
+                    <script>
+                        function refreshPrimary(orderId) {
+                            window.top.location.href = '/' + orderId;
+                        }
+                        function openLoading() {
+                            $('#spinnerDivId').attr('class', 'slds-spinner slds-spinner_brand slds-spinner_large');
+                        }
+                        function closaLoading() {
+                            $('#spinnerDivId').removeAttr('class');
+                        }
+                    </script>
+                </apex:form>
+            </apex:outputPanel>
+        </apex:outputPanel>
+    </div>
+</apex:page>

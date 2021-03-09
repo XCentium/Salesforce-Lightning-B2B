@@ -1,0 +1,117 @@
+<apex:page controller="SDOSiteController" showHeader="false" cache="false">
+ <title>Site Contact Us</title>
+    
+ <apex:composition template="{!$Site.Template}"> 
+         <apex:define name="body">
+    
+                <apex:pageBlock rendered="{!showAll}">
+                
+                    <table>
+                        <tr>
+                            <td>
+                            
+                                <h2>Welcome to {!$Organization.Name}</h2><br/><br/>
+                                
+                                {!$Organization.Street}<br/>
+                                {!$Organization.City}, {!$Organization.State} {!$Organization.PostalCode}<br/>
+                                {!$Organization.Country}<br/>
+                                {!$Organization.Phone}
+                            </td>
+                        </tr>
+                    </table>
+                    <br/><br/>
+                    <div STYLE="margin-left:auto; margin-right:auto;">
+                    
+                  
+                        <img src="http://maps.google.com/maps/api/staticmap?center=&{!$Organization.Street},{!$Organization.City},{!$Organization.State}{!$Organization.PostalCode}&zoom=13&size=760x300&markers=color:blue|{!$Organization.Street},{!$Organization.City},{!$Organization.State}%20{!$Organization.PostalCode}&sensor=false&format=png32&key={!$Label.GApiKey}"
+                          style="Margin-left: 39px;"/>
+
+                    </div>
+                     <div style="float:right;height:400px;width:350px;padding-top:40px;">
+                        <img src="{!URLFOR($Resource.Site_contactUsTeam)}"style="margin-left:50px;"/>
+                            <br/><br/>
+                            <h2> Want to learn more about {!$Organization.Name}? </h2>
+                            <p>
+                                Fill out this form and one of our sales representatives will contact you 
+                            </p>
+                       
+                            <a href = "Site_ContactUs?cuA=w2l" target="thumbframe" style="margin-left:120px;">
+                                  <apex:image url="{!URLFOR($Resource.Site_ContactUsButton)}"/>
+                            </a>
+                       
+                    </div>
+                    <div style="float:right;height:400px;width:350px; padding-top:40px;">
+                        <img src="{!URLFOR($Resource.Site_contactUsAgent)}"style="margin-left:50px;"/>
+                        <br/><br/>
+                    
+                        
+                            <h2> Do you need help? </h2>
+                            <p>
+                                Our customer service agents are ready to help you.  Please fill out this form and we will contact you 
+                            </p>
+                            <a href = "Site_ContactUs?cuA=w2c" target="thumbframe" style="margin-left:120px;">
+                                   <apex:image url="{!URLFOR($Resource.Site_ContactUsButton)}"/> 
+                            </a>
+                      
+                    </div>
+                    
+                
+                </apex:pageBlock>
+               <apex:pageBlock rendered="{!showw2l}">
+                
+                    
+                            <iframe frameborder="1"
+                                border="4"
+                                width="760"
+                                height="1200"
+                                src="Web2Lead"
+                                name="thumbframie"
+                                id="tf1"
+                                scrolling="auto"
+                                MARGINWIDTH="5"
+                                MARGINHEIGHT="5"
+                                align="middle";
+                                background-color="transparent"
+                                allowtransparency="true"
+                                style="filter:chroma (color=CCCCCC)">
+                            </iframe>
+                    
+                </apex:pageBlock>
+     
+    
+              <apex:pageBlock rendered="{!showw2c}">
+            
+                
+                        <iframe frameborder="1"
+                            border="4"
+                            width="760"
+                            height="1200"
+                            src="Web2Case" 
+                            name="thumbframie"
+                            id="tf1"
+                            scrolling="auto" 
+                            MARGINWIDTH="5"
+                            MARGINHEIGHT="5"
+                            align="middle";
+                            background-color="transparent"
+                            allowtransparency="true"
+                            style="filter:chroma (color=CCCCCC)">
+                        </iframe>
+                
+              
+            </apex:pageBlock>
+                </apex:define>
+    
+    </apex:composition>
+ </style>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

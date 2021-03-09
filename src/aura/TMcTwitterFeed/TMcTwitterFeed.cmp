@@ -1,0 +1,18 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,forceCommunity:availableForAllPageTypes" access="global">
+
+    <!-- Set the Twitter Username / Handle for the timeline feed -->
+    <aura:attribute name="title" type="String" default="Tweets" access="public" />
+    <aura:attribute name="username" type="String" default="salesforce" access="public" />  
+    
+    <div>
+        <div class="timeline-wrapper">
+            <div class="timeline-title"> 
+            	<h3>{!v.title} </h3>
+            </div>
+            <div class="iframe-wrap">
+                <iframe class="theframe" src="{!$SfdcSite.pathPrefix + '/apex/TMcTwitterFeedVF?username=' + v.username + '&amp;widgetId=' + $Label.c.Twitter_Widget_Id}" />
+            </div>
+        </div>
+    </div>
+
+</aura:component>

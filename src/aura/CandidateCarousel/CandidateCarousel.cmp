@@ -1,0 +1,32 @@
+<aura:component controller="CandidateController" implements="force:appHostable,flexipage:availableForAllPageTypes">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<aura:attribute name="applicants" type="HR_Applicant__c[]" />
+    <aura:attribute name="title" type="String" default="Candidates" />
+    <aura:attribute name="applicant_displayed" type="Integer" Default="0" />
+    <aura:attribute name="totalApplicants" type="Integer" Default="0" />
+     
+    <div class="slds">
+        <h3 class="slds-text-heading--large slds-text-align--center">{!v.title}</h3>
+        <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-center">
+            <div class="slds-size--1-of-12" style="text-align:right">
+            	<a href="javascript:void(0);" onclick="{!c.previousCandidate}">
+                   <lightning:icon iconName="utility:chevronleft" size="medium"/>
+               </a>
+            </div>
+            <div class="slds-size--10-of-12">             
+                    <aura:iteration items="{!v.applicants}" indexVar="index" var="applicant">
+                      <div class="{!v.applicant_displayed==index ? '' : 'hidden'}">
+                        	<c:CandidatePage applicant="{!applicant}"/>
+                	  </div>
+                    </aura:iteration>
+            </div>
+            <div class="slds-size--1-of-12" style="text-align:left">
+            	<a href="javascript:void(0);" onclick="{!c.nextCandidate}">
+                   <lightning:icon iconName="utility:chevronright" size="medium"/>
+               </a>
+            </div>
+    	</div>
+    </div>
+    
+</aura:component>

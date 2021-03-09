@@ -1,0 +1,6 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global" controller="FindObjectType">
+    <aura:attribute name="objectType" type="String" />
+  	<aura:attribute name="myId" type="String" access="global"/>
+    <aura:attribute name="ProductId" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+</aura:component>

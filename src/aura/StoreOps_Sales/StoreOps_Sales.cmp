@@ -1,0 +1,33 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+	<div class="box">
+    	<div class="padding">
+        	<h2>My Sales (This Month)</h2>
+            
+            <div class="stat">
+                <div class="week centerVert">Week 1</div>
+                <div class="bar"><div class="eightywide bluebox"></div></div>
+                <div class="total">$4,567</div>
+                <div class="clear"></div>
+            </div>
+            <div class="stat">
+                <div class="week centerVert">Week 2</div>
+                <div class="bar"><div class="sixtywide bluebox"></div></div>
+                <div class="total">$3,182</div>
+                <div class="clear"></div>
+            </div>
+            <div class="stat">
+                <div class="week centerVert">Week 3</div>
+                <div class="bar"><div class="fiftywide bluebox"></div></div>
+                <div class="total">$2,355</div>
+                <div class="clear"></div>
+            </div>
+            <div class="stat">
+                <div class="week centerVert">Week 4</div>
+                <div class="bar"><div class="seventywide bluebox"></div></div>
+                <div class="total">$4,199</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+      
+</aura:component>

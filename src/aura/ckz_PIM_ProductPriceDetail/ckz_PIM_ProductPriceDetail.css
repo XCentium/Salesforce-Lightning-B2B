@@ -1,0 +1,9 @@
+.THIS .slds-button_gray {
+    background-color: #C9C7C5;
+    border-color: #C9C7C5;
+}
+
+.THIS .slds-button_gray:hover {
+   background-color: rgba(27, 82, 151, 1);
+    border-color: rgba(27, 82, 151, 1);
+}

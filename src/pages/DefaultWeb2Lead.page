@@ -1,0 +1,89 @@
+<apex:page showHeader="false" sidebar="false" standardController="lead" extensions="Wto_Ext" standardStylesheets="true">
+                  <meta HTTP-EQUIV='Content-type' CONTENT='text/html; charset=UTF-8' />
+                  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css' />
+                  <style>
+                  body{ background-image: url('https://www.simplus.com/wp-content/uploads/2015/02/background-sf-01.png');  background-position: center center;
+                      background-repeat: no-repeat; background-attachment: fixed; background-size: cover;
+                      background-color: #ffffff; }
+                  .detailList { width: 90%; background: #ffffff !important; }
+                  label, input, select, textarea{ margin-bottom:10px; }
+                  .messageTable {margin: 0 auto !important; text-align: center !important;}
+                  .btn-primary{ color: white; margin:15px; display:block; background: #34495e; border-color: #34495e; width: 15% !important; padding: 1% !important; }
+                  .btn-primary:hover{ background: #34495e; border-color: #34495e;}
+                  .thanksText{ display:block; text-align:center; padding:10px; color: #000000;}
+                  .theForm, #logoDiv{ max-width:900px; margin:0px auto; padding:10px; background:transparent; }
+                  .theForm{ background: #ffffff; margin-top:20px; border-radius:5px; }
+                  #headerDiv{ display:block; padding-top:10px; padding-bottom:10px; bordex§r-bottom: 1px solid #34495e;
+                       background:#ffffff; }
+                  .form-group{ overflow-y:auto; }
+                  #allInputs{ padding-top:20px; }
+                  .dateOnlyInput{ display: none; }
+                  #logoDiv img{ max-height:80px; }
+                  .lookupInput { position: relative; }
+                  input.btn.btn-primary {color: white !important;}
+                  .lookupInput a { position: absolute; top: -37px; right: -555px; }
+                  .recordTypeID {display: none;}
+                    body .bPageBlock, body #bodyCell .bResource .secondaryPalette, body .secondaryPalette.bPageBlock, body .individualPalette .secondaryPalette.bPageBlock, body .bodyDiv .genericTable, body .genericPageBlockTable, body .bodyDiv .bSubBlock, body .bComponentBlock .bPageBlock, body .bMyDashboard .bPageBlock, body.rlHoverFrame .bPageBlock, body.subjectSelectionPopup div.choicesBox, body.lookupTab .secondaryPalette.bPageBlock, body.popupTab .secondaryPalette.bPageBlock, body.UserTagStatsPage .secondaryPalette.bPageBlock {
+                      border: none !important;
+                  }
+                  .form-control { width: 80% !important; }
+                  .apexp .bPageBlock.apexDefaultPageBlock .pbBody { margin: 0; }
+                  .bPageBlock .pbBody {
+                      margin-right: 0 !important;
+                      padding: 0 !important;
+                      background-color: white !important;
+                  }
+                  .lookupInput a {
+                      position: absolute;
+                      top: -44px;
+                      right: -555px;
+                      border: none;
+                      background: transparent;
+                  }
+                  .dateOnlyInput {display: block;}
+                  td.dataCol { border: none  !important; }
+                  .btn { background: #34495e !important; border: 1px solid: #34495e !important; }
+                  td {border: none !important;}
+                  th {border: none !important;}
+                  .dateOnlyInput input {width: 10em;}
+                  label{ color: #000000; }
+                  .bPageBlock .requiredInput .requiredBlock {top: 3px; bottom: 13px; height: 28px;}
+                  .message { background: rgba(255, 255, 255, 0); }
+              </style>
+              <div id='container'>
+                  <div id='headerDiv'>
+                      <div id='logoDiv'>
+                          <img id='logoImg' src='/servlet/servlet.ImageServer?id=0155Y000005Ce2rAAC&oid=00D5Y000001bSfgEAU' />
+                      </div>
+                  </div>
+                  <apex:form styleClass="theForm">
+                  <apex:pageBlock >
+                  <apex:pageBlockSection columns="1">
+                  <div id='allInputs'>
+                  <apex:inputField value="{!lead.FirstName}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.LastName}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.Title}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.Company}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.Street}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.City}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.State}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.PostalCode}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.Phone}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.Email}" styleClass="form-control" />
+                  <apex:inputField value="{!lead.Product_Interest__c}" styleClass="form-control" />
+                  <apex:commandButton value="Save" action="{!save}" styleClass="btn-primary" />
+                    </div>
+                    </apex:pageBlockSection>
+                    </apex:pageBlock>
+                    <apex:pageMessages />
+                    </apex:form>
+                    <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+                    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+                    <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js'></script><script>
+                    $(function () {
+                      $('iframe').parent().css('margin', '0 auto'); 
+                  })
+                  function showSuccessMsg() { document.getElementsByClassName('theForm')[0].innerHTML = '<h1 class="thanksText">Thank you for your submission.</h1>'; }
+                    </script>
+                  </div>
+                </apex:page>

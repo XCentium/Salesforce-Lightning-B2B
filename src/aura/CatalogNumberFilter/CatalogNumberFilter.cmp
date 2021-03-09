@@ -1,0 +1,34 @@
+<aura:component >
+   <aura:attribute name="label" type="String" default="Search"/>
+   <aura:attribute name="displayMode" type="String" default="fields"/> <!-- fields or sliders --> 
+   <aura:attribute name="min" type="Decimal"/>
+   <aura:attribute name="max" type="Decimal"/> 
+   <aura:attribute name="fieldName" type="String" default=""/>
+   <aura:attribute name="uniqueFilterName" type="String" default="ToBeDefined"/>
+    
+    
+   <aura:registerEvent name="sendFilter" type="c:CatalogSendFilterEvent"/>
+   
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    
+   <aura:if isTrue="{!v.displayMode=='fields'}">
+       <span class="slds-form-element__label slds-m-bottom_none">{!v.label}</span>
+       <lightning:layout multipleRows="true">
+           <lightning:layoutItem padding="horizontal-small" size="6">
+               <lightning:input type="number" name="input1" label="Min" value="{!v.min}" onchange="{!c.onFieldChange}" step="any"/>
+           </lightning:layoutItem>
+           <lightning:layoutItem padding="horizontal-small" size="6">
+               <lightning:input type="number" name="input2" label="Max" value="{!v.max}" onchange="{!c.onFieldChange}" step="any"/>
+           </lightning:layoutItem>        
+       </lightning:layout>    
+       
+         
+
+	</aura:if> 
+    
+   <aura:if isTrue="{!v.displayMode=='sliders'}">
+     
+   </aura:if>  
+      
+
+</aura:component>

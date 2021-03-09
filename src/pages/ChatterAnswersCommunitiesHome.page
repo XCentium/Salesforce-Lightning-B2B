@@ -1,0 +1,71 @@
+<apex:page sidebar="false" showheader="false" standardstylesheets="false" contenttype="text/html" cache="false">
+    <title>Chatter Answers Communities Home </title> 
+<style type="text/css">
+ .communitylist {
+   list-style: none;
+ }
+
+ a { color: #000;  text-decoration: none;  }
+ a:visited  { color: #000;  text-decoration: none;  }
+  
+ .communitytitle {
+   font-size: 20px;
+   color: #222;
+   margin-left: 40px;
+ }
+ table {
+  max-width: 400px;
+ }
+ p {
+   font-size: 10px;
+ }
+    #marginimage{
+    margin-left: 50px;
+    }
+</style>
+
+<title>Cirrus Computers - Communities Home</title>
+
+<apex:composition template="ChatterAnswersCommunityTemplate">
+
+<apex:Define name="cirrus_sub_menu">
+  <div class="menu">
+      <span><A> Video Conferencing </A></span>
+      <span><A> Headphones </A></span>
+      <span><A> Hotspot &#38; Instalation Services </A></span>
+  </div>
+</apex:Define>
+
+<apex:Define name="CirrusHome"> 
+<center>
+  
+  <table border="0">
+  <tr><td colspan="2"><span class="communitytitle">Chatter Answers communities</span></td></tr>
+      <tr><td><div id="marginimage"><a href="/SocialSupport/Video_Conferencing_main"><apex:image url="{!$Resource.cirrus_videoconferencing_icon}" height="60" /></a></div></td>
+      <td><a href="/SocialSupport/Video_Conferencing_main"><b>Video conferencing</b></a>
+          <p>This community is about all our Conference Room products</p></td>
+  </tr>  
+  <tr><td><a href="/SocialSupport/headphones"><apex:image url="/servlet/servlet.ImageServer?id=0155Y000004ltq5&oid=00D5Y000001bSfg" height="90" /></a></td>
+      <td><a href="/SocialSupport/headphones"><b>Headphones</b></a>
+      <p>This community is all about our Headphone product line</p></td> 
+  </tr>
+  <tr><td><a href="/SocialSupport/hotspot"><apex:image url="/servlet/servlet.ImageServer?id=0155Y000004ltq6&oid=00D5Y000001bSfg" height="90" /></a></td>
+      <td><a href="/SocialSupport/hotspot"><b>Hotspot &#38; Installation Services</b></a>
+      <p>This community is about our LTE Hotspot and Installation Services </p></td>
+  </tr>
+  </table>
+</center>
+ </apex:Define>
+  
+</apex:composition>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

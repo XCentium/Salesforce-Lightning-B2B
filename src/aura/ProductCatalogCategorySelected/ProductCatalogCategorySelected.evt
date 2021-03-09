@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="a product catalog category is selecte">
+    <aura:attribute name="Category" type="string"/>
+    <aura:attribute name="FamilyList" type="Product2[]"/> <!-- this is our product2 list -->
+    <aura:attribute name="ItemSelected" type="Product2"/>
+</aura:event>

@@ -1,0 +1,9 @@
+<design:component label="Personas - Utility">
+    <design:attribute name="Title" label="Title of this component. Default is Personas" default="Personas"/>
+    <design:attribute name="LoginUserIds" label="Login User Ids (CSV)" default=""
+                      description="Please provide comma seperated values of the Users' ExternalIDs that you would like quick access to."></design:attribute>
+    <design:attribute name="LoginUserSubIds" label="Community Login User Ids (CSV)" default=""
+                      description="Please provide comma seperated values of the Community Users' ExternalIDs that you would like quick access to."></design:attribute>
+    <design:attribute name="showContent" label="Would you like to show the link to Get To Know the IDO?" default="True"/>
+    
+</design:component>

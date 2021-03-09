@@ -1,0 +1,1 @@
+global class PSIllegalArgumentException extends Exception {}

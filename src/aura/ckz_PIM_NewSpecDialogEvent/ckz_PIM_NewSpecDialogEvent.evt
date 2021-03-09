@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="ckz_PIM_NewSpecDialogEvent">
+    <aura:attribute name="specId" type="String" required="true" />
+    <aura:attribute name="specName" type="String" required="true" />
+</aura:event>

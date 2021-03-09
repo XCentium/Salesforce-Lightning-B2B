@@ -1,0 +1,115 @@
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                controller="ProductCatalogController">
+    <aura:handler event="c:ProductCatalogAddToCart" action="{!c.addToCart}"/>
+    <aura:attribute name="itemsInCart" type="Object[]"/>
+    <aura:attribute name="total" type="Double" default="0"/>
+    <aura:attribute name="accounts" type="Account[]"/>
+    <aura:attribute name="selectedAccount" type="String"/>
+    <aura:attribute name="orderNumber" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div class="slds">
+        <div class="slds-card">
+            <div class="slds-page-header">
+                <h1 class="slds-page-header__title slds-truncate">Shopping Cart</h1>
+            </div>
+            <div class="slds-page-header" style="border: none;">
+                <aura:if isTrue="{!v.itemsInCart.length == 0}">
+                    <p>Your cart is currently empty.</p>
+                </aura:if>
+                
+                <aura:iteration items="{!v.itemsInCart}" var="item">
+                    <div class="slds-card">
+                        <div class="slds-grid">
+                            <div class=" slds-size--1-of-4">
+                                <div class="item-media"
+                                     style="{! 'background-image: url(\'' + $sfdcSite.Prefix + item.product.VF_Image__c + '\');'}">
+                                </div>
+                            </div>
+                            <div class="item slds-size--1-of-2">
+                                <a><ui:outputText value="{!item.product.Name}"/></a>
+                                <p>x<ui:outputText value="{!item.quantity}"/></p>
+                            </div>
+                            <div class="item slds-size--1-of-4" style="align-items: center;">
+                                <ui:button class="{!item.product.Id + ' removeButton'}" press="{!c.removeItem}">
+                                    <c:svgIcon svgPath="{!$sfdcSite.Prefix + $Resource.SLDS203 + '/assets/icons/utility-sprite/svg/symbols.svg#delete'}" class="icon"
+                                           size="medium" />
+                                </ui:button>
+                            </div>
+                        </div>
+                    </div>
+                </aura:iteration>
+                <div>
+                    Total: <span style="font-size: 30px;"><ui:outputCurrency value="{!v.total}"/></span> 
+                </div>
+                <ui:button class="{!v.itemsInCart.length > 0 ? 'slds-show':'slds-hide'}" label="Check out" press="{!c.showModal}"/>
+            </div>
+        </div>
+    </div>
+    
+    <div role="dialog" tabindex="-1" id="modal" aura:id="modal" class="slds-modal">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header" style="border: none;">
+                <center>
+                    <ui:outputText class="slds-page-header__title slds-truncate" value="{!v.itemsInCart.length > 0 ? 'Check out':'Thank you!'}"/>
+                </center>
+            </div>
+            <div class="{!v.itemsInCart.length > 0 ? 'slds-show slds-modal__content slds-p-around--medium':'slds-hide'}">
+                <ui:inputSelect aura:id="account" label="Account" change="{!c.onAccountChange}">
+                    <ui:inputSelectOption text="" label="--none--"/>
+                    <aura:iteration items="{!v.accounts}" var="account">
+                        <ui:inputSelectOption text="{!account.Id}" label="{!account.Name}"/>
+                    </aura:iteration>
+                </ui:inputSelect>
+                <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                    <thead>
+                        <tr class="slds-text-title--caps">
+                            <th scope="col">
+                                <div class="slds-truncate" title="Product">Product</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Unit Price">Unit Price</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Quantity">Quantity</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.itemsInCart}" var="item">
+                            <tr>
+                                <td scope="row" data-label="Product">
+                                    <div class="slds-truncate" title="Product">
+                                        <ui:outputText value="{!item.product.Name}"/>
+                                    </div>
+                                </td>
+                                <td scope="row" data-label="Unit Price">
+                                    <div class="slds-truncate" title="Unit Price">
+                                        <ui:outputCurrency value="{!item.product.Default_Price__c}"/>
+                                    </div>
+                                </td>
+                                <td scope="row" data-label="Quantity">
+                                    <div class="slds-truncate" title="Quantity">
+                                        <ui:outputText value="{!item.quantity}"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+                    
+                <div>
+                    Total: <span style="font-size: 20px;"><ui:outputCurrency value="{!v.total}"/></span> 
+                </div>
+            </div>
+            <div class="{!v.itemsInCart.length == 0 ? 'slds-show slds-modal__content slds-p-around--medium':'slds-hide'}">
+                <ui:outputText value="{! 'Your order, '+v.orderNumber + ', has been submitted with your account. We thank you for shopping with us!' }"/>
+            </div>
+            <div class="slds-modal__footer" style="border: none; text-align:center;">
+                <ui:button label="{!v.itemsInCart.length > 0 ? 'Cancel':'Close'}" press="{!c.hideModal}"/>
+                <ui:button class="{!v.itemsInCart.length > 0 ? 'slds-button--brand':'slds-hide'}" label="Confirm" press="{!c.createOrder}"/>
+            </div>
+        </div>
+    </div>
+    <div aura:id="backdrop" id="backdrop" class="slds-backdrop"></div>
+</aura:component>

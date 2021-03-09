@@ -1,0 +1,205 @@
+<apex:page >
+<div id='body'>
+<br/><br/>
+    <apex:form id="TheForm">
+        <!-- Here goes the markup for the drag zone -->
+        <div id="drop-zone">
+            <div id='droptext'>Drop files here to upload them to "My Personal Documents"...</div>
+            <div id='resultdiv'></div>
+            <div id="clickHere">
+            ...or click here.
+                <input type="file" name="file" id="file" />
+            </div>
+        </div>        
+    </apex:form>
+</div>    
+    <!-- Tryng the javascript api -->
+    <script type="text/javascript">
+        var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <script src="/soap/ajax/35.0/connection.js" type="text/javascript"></script>    
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script>        
+    $(function () {
+    var dropZoneId = "drop-zone";
+    var buttonId = "clickHere";
+    var mouseOverClass = "mouse-over";
+
+    var dropZone = $("#" + dropZoneId);
+    var ooleft = dropZone.offset().left;
+    var ooright = dropZone.outerWidth() + ooleft;
+    var ootop = dropZone.offset().top;
+    var oobottom = dropZone.outerHeight() + ootop;
+    var inputFile = dropZone.find("input");
+    document.getElementById(dropZoneId).addEventListener("dragover", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.addClass(mouseOverClass);
+        var x = e.pageX;
+        var y = e.pageY;
+
+        if (!(x < ooleft || x > ooright || y < ootop || y > oobottom)) {
+            inputFile.offset({ top: y - 0, left: x - 0 });
+        } else {
+            inputFile.offset({ top: -400, left: -400 });
+        }
+
+    }, true);
+
+    if (buttonId != "") {
+        var clickZone = $("#" + buttonId);
+
+        var oleft = clickZone.offset().left;
+        var oright = clickZone.outerWidth() + oleft;
+        var otop = clickZone.offset().top;
+        var obottom = clickZone.outerHeight() + otop;
+
+        $("#" + buttonId).mousemove(function (e) {
+            var x = e.pageX;
+            var y = e.pageY;
+            if (!(x < oleft || x > oright || y < otop || y > obottom)) {
+                inputFile.offset({ top: y - 15, left: x - 160 });
+            } else {
+                inputFile.offset({ top: -400, left: -400 });
+            }
+        });
+    }    
+
+            document.getElementById(dropZoneId).addEventListener("drop", function (e) {
+        if (e.preventDefault) { e.preventDefault(); } // stops the browser from redirecting off to the image.
+        //console.log(e);
+        $("#" + dropZoneId).removeClass(mouseOverClass);
+
+        window.uploadTheFile;
+        var dt    = e.dataTransfer;
+        var filesToUpload = dt.files;
+        console.log(filesToUpload);
+        for(var i = 0, f; f = filesToUpload[i]; i++)
+            {
+                var reader = new FileReader();
+                
+                // Keep a reference to the File in the FileReader so it can be accessed in callbacks
+                reader.file = f;
+                reader.onload = function(e)
+                {
+                    var doc = new sforce.SObject("Document");
+                    doc.Name = this.file.name;
+                    doc.ContentType = this.file.type;
+                    doc.IsPublic = 'TRUE';
+                    doc.FolderId =  '{!$User.Id}';//'00l5Y000002QpOO';
+                    console.log('{!$User.Id}');
+                    doc.Description = 'Uploaded with Quick Upload';
+                    
+                    var binary = "";
+                    var bytes = new Uint8Array(e.target.result);
+                    var length = bytes.byteLength;
+
+                    for (var i = 0; i < length; i++)
+                    {
+                        binary += String.fromCharCode(bytes[i]);
+                    }
+
+                    doc.Body = (new sforce.Base64Binary(binary)).toString();
+
+                    sforce.connection.create([doc],
+                    {
+                        onSuccess : function(result, source)
+                        {
+                            if (result[0].getBoolean("success"))
+                            {
+                                console.log("new attachment created with id " + result[0].id);
+                                $('#resultdiv').text('Document created: '+result[0].id);
+                            }
+                            else
+                            {
+                                console.log("failed to create attachment " + result[0]);
+                            }
+                        },
+                        onFailure : function(error, source)
+                        {
+                            console.log("an error has occurred " + error);
+                        }
+                    });
+                };
+                reader.readAsArrayBuffer(f);
+            }
+
+                
+    }, true);}) 
+</script>
+
+<style>
+#drop-zone {
+    /*Sort of important*/
+    width: 80%;
+    /*Sort of important*/
+    height: 50px;
+    position:absolute;
+    left:5%;
+    top:10%;
+    /*margin-left:-150px;*/
+    border: 2px dashed rgba(0,0,0,.3);
+    border-radius: 20px;
+    font-family: Arial;
+    text-align: center;
+    position: relative;
+    font-size: 80px;
+    /*line-height: 180px;*/
+    font-size: 20px;
+    color: rgba(0,0,0,.3);
+    padding-top: 30%;
+}
+    #drop-zone input {
+        /*Important*/
+        position: absolute;
+        /*Important*/
+        cursor: pointer;
+        left: 0px;
+        top: 0px;
+    /*Important This is only comment out for demonstration purpeses. */
+        opacity:0;
+    }
+
+    /*Important*/
+    #drop-zone.mouse-over {
+        border: 2px dashed rgba(0,0,0,.5);
+        color: rgba(0,0,0,.5);
+    }
+
+
+/*If you dont want the button*/
+#clickHere {
+    position: absolute;
+    cursor: pointer;
+    left: 50%;
+    top: 50%;
+    margin-left: -100px;
+    margin-top: 0px;
+    line-height: 26px;
+    color: white;
+    font-size: 16px;
+    width: 150px;
+    height: 26px;
+    border-radius: 4px;
+    background-color: #3b85c3;
+
+}
+
+    #clickHere:hover {
+        background-color: #4499DD;
+
+    }
+    
+    #droptext {
+    margin-top: -20%;
+    }
+
+div#resultdiv {
+    line-height: normal!important;
+    font-size: 12px;
+    padding-top: 100px;
+    /*font-weight: bold;*/
+}
+    
+</style>    
+</apex:page>

@@ -1,0 +1,86 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" 
+                controller="SearchMembersAndTopicsController" 
+                access="GLOBAL">
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.search}" />
+    
+    <aura:attribute name="lstusers" type="SearchMembersAndTopicsController.UserWrapper[]"/>
+    <aura:attribute name="lsttopics" type="Topic[]"/>
+    
+    <aura:attribute name="PeopleTabText" type="String" />
+    <aura:attribute name="TopicsTabText" type="String" />
+    
+    <aura:attribute name="topicsReturned" type="boolean" default="false"/>
+    <aura:attribute name="peopleReturned" type="boolean" default="false"/>
+    
+    <aura:attribute name="SearchString" type="String" />
+    
+    <div id="container" class="block slsd slds-scope">
+        <div class="homeTab uiTabset forceCommunityHomeTabs">
+            <div role="application tablist" class="uiTabBar">
+                
+                <!--
+ <ul class="tabs__nav" role="presentation">
+                <li class="featuredTab tabs__item  uiTabItem active" role="presentation" aura:id="people" onclick="{!c.peopleClick}">
+                <a class="tabHeader" aria-selected="true"  tabindex="0" role="tab" title="People">
+                    <span class="title">{!v.PeopleTabText}</span>
+                </a>                
+                </li>
+                <li class="tabs__item  uiTabItem" role="presentation" onclick="{!c.topicsClick}" aura:id="topics">
+                <a class="tabHeader" aria-selected="false" tabindex="-1" role="tab" title="Topics">
+                <span class="title">{!v.TopicsTabText}</span>
+                </a>
+                </li>
+            </ul>
+-->
+                <h1 class="slds-text-title--caps slds-text-color--weak slds-p-vertical_medium">{!v.PeopleTabText}</h1>
+            </div>
+            <section class="featuredTab tabs__content uiTab active uiTab" aria-expanded="true" role="tabpanel" aura:id="peoplesearch">
+                <ul class="sumo-people-search-listing">
+                    <aura:iteration items="{!v.lstusers}" var="usr">
+                        <li>
+                            <div class="people-header">
+                                <a class="people-link" style="display:block;" href="{!$SfdcSite.pathPrefix + '/s/profile/' + usr.usr.Id}">
+                                    <img class="people-image" src="{!usr.imageurl}"/>
+                                    <span class="people-info">
+                                        <h2>{!usr.usr.Name}<span class="people-level">({!usr.level}, {!usr.points})</span></h2>
+                                        <div class="member-since">Member Since: <ui:outputDateTime value="{!usr.membersince}" format="MM/dd/yy"/></div>
+                                    </span>
+                                </a>
+                            </div>
+                            <aura:if isTrue="{!usr.lstfeedItem.length > 0 }">
+                                <div class="people-feed">
+                                    <h2>Latest Feeds</h2>
+                                    <ul>
+                                        <aura:iteration items="{!usr.lstfeedItem}" var="feed">
+                                            <li><a class="feed-link" href="{!$SfdcSite.pathPrefix + '/s/feed/' + feed.Id}">{!feed.Title}</a></li>
+                                        </aura:iteration>
+                                    </ul>
+                                </div>
+                            </aura:if>
+                        </li>
+                    </aura:iteration>
+                </ul>
+                <aura:renderIf isTrue="{!!v.peopleReturned}">
+                    <br/><br/>
+                    <div>No Members Found</div>
+                </aura:renderIf>
+            </section>
+            <!--
+            <section class="tabs__content toggle" aria-expanded="false" role="tabpanel" aura:id="topicssearch">
+                <br/>
+                <ul class="sumo-topics-search-listing">
+                    <aura:iteration items="{!v.lsttopics}" var="tpc">
+                        <li><a href="{!$SfdcSite.pathPrefix + '/s/topic/' + tpc.Id + '/' + tpc.Name}">{!tpc.Label}</a></li>
+                    </aura:iteration>
+                </ul>
+                <aura:renderIf isTrue="{!!v.topicsReturned}">
+                        <br/><br/>
+                        <div>No Topics Found</div>
+                     </aura:renderIf>
+            </section>
+-->
+        </div>
+    </div>
+</aura:component>

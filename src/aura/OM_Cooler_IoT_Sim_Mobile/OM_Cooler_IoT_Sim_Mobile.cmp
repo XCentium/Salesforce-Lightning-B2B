@@ -1,0 +1,70 @@
+<aura:component controller="OM_Cooler_IoT_Controller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="vibrationValue" type="Decimal" default="20.0"/>
+    <aura:attribute name="internalTempValue" type="Decimal" default="35.0"/>
+    <aura:attribute name="externalTempValue" type="Decimal" default="70.0" />
+    <aura:attribute name="voltageValue" type="Decimal" default="50.0" />
+    <aura:attribute name="doorOpen" type="Boolean" default="false" />
+    <aura:attribute name="coolers" type="Asset[]"/>
+    <aura:attribute name="selectedCooler" type="String" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <div class="outer-wrapper slds-p-horizontal_medium slds-p-vertical_large">
+        
+        <aura:if isTrue="{!v.selectedCooler == null}">
+            <lightning:select name="select" label="Select a Cooler for the Simulation" required="true" messageWhenValueMissing="Please select a cooler" aura:id="coolerSelect" >
+                    <option value="" text="-- None --"></option>
+                <aura:iteration items="{!v.coolers}" var="cooler">
+                    <option value="{!cooler.Id}" text="{!cooler.Name}"></option>
+                </aura:iteration>
+            </lightning:select>
+            <button class="slds-button slds-button_brand slds-m-top_large" onclick="{!c.selectCooler}">
+                Select
+            </button>
+            <aura:set attribute="else">                
+                <div class="cooler-img-wrapper slds-align_absolute-center">
+                    <img src="{!v.doorOpen ? $SfdcSite.pathPrefix + '/resource/cooler_open' : $SfdcSite.pathPrefix + '/resource/cooler_closed'}" class="img cooler-img" />
+                </div>
+                
+                <div class="vibration-slider slds-p-vertical_x-small">
+                    <lightning:slider step="5" value="{!v.vibrationValue}" min="0" max="100" label="Select a vibration value" />
+                    <aura:if isTrue="{!v.vibrationValue > 50}">
+                        <div class="threshold-text error">Error State - Trigger Case</div>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.vibrationValue > 25}">
+                                <div class="threshold-text warning">Warning State</div>
+                                <aura:set attribute="else">
+                                    <div class="threshold-text okay">Normal State</div>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                </div>
+                
+                <div class="int-temp-slider slds-p-vertical_x-small">
+                    <lightning:slider step="5" value="{!v.internalTempValue}" min="0" max="100" label="Select an internal temperature value" />
+                </div>
+                
+                <div class="ext-temp-slider slds-p-vertical_x-small">
+                    <lightning:slider step="5" value="{!v.externalTempValue}" min="0" max="100" label="Select an external temperature value" />
+                </div>
+                
+                <div class="volatege-slider slds-p-vertical_x-small">
+                    <lightning:slider step="5" value="{!v.voltageValue}" min="0" max="100" label="Select a voltage" />
+                </div>
+                
+                <div class="door-open-checkbox slds-p-vertical_x-small">
+                    <lightning:input type="checkbox" value="{!v.doorOpen}" label="Is the door open?" onchange="{!c.openDoor}"/>
+                </div>
+                
+                <div class="button-container slds-p-vertical_x-small slds-align_absolute-center">
+                    <button class="slds-button slds-button_brand" onclick="{!c.submitPlatformEvent}" >
+                        Submit Event
+                    </button>
+                </div>
+            </aura:set>
+        </aura:if>
+        
+    </div>
+</aura:component>

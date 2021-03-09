@@ -1,0 +1,19 @@
+.THIS.CatalogContainer {
+    border: 1px solid #d8dde6;
+    margin: 10px 0 20px 0;
+}
+
+.THIS .page-section {
+    border: solid 1px #ccc;
+    padding: 1rem;
+    background: #f0efef;
+    margin-bottom:10px;
+}
+
+.THIS .page-main {
+    background: #f8f8f8;
+}
+.THIS .page-left,
+.THIS .page-right {
+    
+}

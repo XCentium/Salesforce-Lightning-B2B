@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>17.0</apiVersion>
+    <description>This is the W2C sidebar component for the SDO Site.</description>
+    <label>Site_W2C</label>
+</ApexComponent>

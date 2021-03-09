@@ -1,0 +1,19 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="assignment" type="Map"></aura:attribute>
+    <aura:attribute name="session" type="String"></aura:attribute>
+    
+    <div class="row">
+        <div class="column">
+            <div>{!v.assignment.OwnerName}</div>
+            <div>{!v.assignment.RecommendationStatus}</div>
+        </div>
+        <lightning:buttonMenu class="column flex-right"
+                              aura:id="menu" 
+                              onselect="{! c.handleSelect }" 
+                              menuAlignment="right"
+                              alternativeText="Show menu">
+            <lightning:menuItem value="activate" label="Activate" disabled="{! v.assignment.RecommendationStatus == 'New' }"/>
+            <lightning:menuItem value="delete" label="Delete" disabled="true" />
+        </lightning:buttonMenu>
+    </div>
+</aura:component>

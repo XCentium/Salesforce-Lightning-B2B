@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Event to send a filter group to ProductCatalogSearchResults" >
+<aura:attribute name="JSONFilterData" type="String"/>
+<aura:attribute name="filterSection" type="String" default="rootObjectFilters"/>    
+</aura:event>

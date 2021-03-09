@@ -1,0 +1,48 @@
+<apex:page sidebar="false" showHeader="false" standardController="RG_Cart__c" recordSetVar="carts">
+    <apex:includeScript value="../../soap/ajax/40.0/connection.js"/>
+    <script>
+    sforce.connection.sessionId='{!GETSESSIONID()}';
+    getPbEntries = sforce.connection.query("SELECT Product2.Id FROM PricebookEntry WHERE PriceBook2.IsStandard = true ORDER BY Product2.Name");
+    entries = getPbEntries.getArray("records");
+    
+    var productIds = [];
+    for (var i=0; i< entries.length; i++) {
+        productIds.push(entries[i].Product2.Id);
+    }
+    console.log(productIds);
+    getProducts = sforce.connection.query("SELECT Id, Product_Catalog_Image__c, Image__c FROM Product2");
+    products = getProducts.getArray("records");
+    var productsToUpdate = products.filter(function(prod){
+        return productIds.includes(prod.Id);
+    });
+    for (var i=0; i< productsToUpdate.length; i++) {
+        productsToUpdate[i].Product_Catalog_Image__c = productsToUpdate[i].Image__c;
+    }
+    var updateProducts = sforce.connection.update(productsToUpdate);
+    
+    for (var i=0; i<updateProducts.length; i++) {
+        if (updateProducts[i].getBoolean("success")) {
+            console.log("Updated Product", updateProducts[i].id);
+            
+        } else {
+            console.log("Failed to Update Product", updateProducts[i]);
+        }
+    }
+    function isLightningExperienceOrSalesforce1() {
+        return((typeof sforce != 'undefined') && sforce && (!!sforce.one));
+    }
+    
+    var cart = sforce.connection.describeSObject("RG_Cart__c");
+    var cartUrl = cart.urlNew;
+    
+    if( isLightningExperienceOrSalesforce1() ) {
+        cartUrl = cartUrl.slice(0,-5);
+        window.location =  cartUrl + "/one/one.app?source=aloha#/sObject/RG_Cart__c/home";
+    }
+    else {
+        cartUrl = cartUrl.slice(0, -1);
+        window.location = cartUrl + 'o';
+    }
+    
+    </script>
+</apex:page>

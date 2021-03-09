@@ -1,0 +1,430 @@
+<!--
+ - Created by brandon.rogers on 2019-06-05.
+ -->
+
+<apex:component id="ckz_RecentOrders" controller="ckz_ctrl_RecentOrders">
+    <!-- HANDLEBARS TEMPLATE -->
+    <script id="CKZRecentOrdersTemplate" type="text/template">
+        {{#ifDisplay 'hp.rcord'}}
+            {{#if this.orderList}}
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ckz_heading_embellished">
+                            <h3 data-toggle="collapse" data-target="#ckzRecentOrders" style="cursor: pointer;" onclick="collapseRotate(this);">
+                                <span data-toggle="tooltip" data-placement="right" title="{{pageLabelMap 'CollapseLabel'}}">
+                                    {{pageLabelMap 'Component_RecentOrders_Title'}}
+                                    <i class="fal fa-angle-down"></i>
+                                </span>
+                            </h3>
+                        </div>
+
+                        <div class="row ckz_RecentOrders collapse in" id="ckzRecentOrders">
+                            <!-- TABLE VIEW -->
+                            <!-- {{#ifDisplay 'hp.rcorddsptype' 'table'}} -->
+                                <div class="ckz_RecentOrdersTableContainer hide">
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th><h4>{{pageLabelMap 'HomePageReorder_OrderName'}}</h4></th>
+                                                    <th><h4>{{pageLabelMap 'HomePageReorder_OrderDate'}}</h4></th>
+                                                    {{#ifDisplay 'hp.rcordshowprod'}}
+                                                        <th class="hidden-xs"><h4>{{pageLabelMap 'HomePageReorder_OrderProducts'}}</h4></th>
+                                                    {{/ifDisplay}}
+                                                    <th class="text-right"><h4>{{pageLabelMap 'HomePageReorder_OrderAmount'}}</h4></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#each this.orderList}}
+                                                    <tr>
+                                                        <!-- ORDER NAME -->
+                                                        <td class="HomePageReorder_OrderName">
+                                                            <a href="#" data-id="{{encryptedId}}" class="gotoOrderDetails cc_goto_order_detailss">{{sfdcName}}</a>
+                                                        </td>
+                                                        
+                                                        <!-- ORDER DATE -->
+                                                        <td class="HomePageReorder_OrderDate">{{orderDateStr}}</td>
+                                                        
+                                                        <!-- ORDER PRODUCTS -->
+                                                        {{#ifDisplay 'hp.rcordshowprod'}}
+                                                            <td class="HomePageReorder_OrderProducts hidden-xs">
+                                                                <table class="table table-condensed">
+                                                                    <tbody>
+                                                                        {{#each this.displayLineItems}}
+                                                                            {{#ifCondConfigOpt @index '<' 'hp.rcordnumprod' }}
+                                                                            <tr>
+                                                                                <td class="prodName b-t-0 p-y-0">
+                                                                                    <a href="ccrz__ProductDetails?viewState=DetailView&sku={{this.productR.SKU}}">
+                                                                                        <span class="text-primary">{{{quantity}}}x</span> {{{this.productR.productName}}}
+                                                                                    </a>
+                                                                                </td>
+
+                                                                                <td class="prodTotalPrice b-t-0 p-y-0 text-right">
+                                                                                    {{{price itemTotal}}}
+                                                                                </td>
+                                                                            </tr>
+                                                                            {{/ifCondConfigOpt}}
+                                                                        {{/each}}
+                                                                        <tr>
+                                                                            <td class="totalProds b-t-0 p-y-0 small">
+                                                                                {{this.displayLineItems.length}} {{pageLabelMap 'HomePageReorder_TotalProds'}}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        {{/ifDisplay}}
+                                                        
+                                                        <!-- ORDER AMOUNT -->
+                                                        <td class="HomePageReorder_OrderAmount ckz-text-primary text-right">{{price totalAmount currencyIsoCode}}</td>
+                                                        
+                                                        <!-- REORDER -->
+                                                        <td class="HomePageReorder_ReorderButton text-right">
+                                                            <button type="button" class="btn btn-primary btn-sm reorder cc_col_reorder" data-id="{{sfid}}" data-sfdcname="{{sfdcName}}">
+                                                                {{pageLabelMap 'Component_RecentOrders_ButtonReorder'}}
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            <!-- {{/ifDisplay}} -->
+
+                            <!-- CARD VIEW -->
+                            <!-- {{#ifDisplay 'hp.rcorddsptype' 'card'}} -->
+                                <div class="ckz_RecentOrdersCardContainer hide">
+                                    {{#each this.orderList}}
+                                        <div class="col-sm-6">
+                                            <div class="panel panel-default ckzRecentOrderItem">
+                                                <div class="panel-heading">
+                                                    <a href="#" class="gotoOrderDetails cc_goto_order_details" data-id="{{encryptedId}}">
+                                                        <span class="RecentOrders_OrderNumber_Label">{{pageLabelMap 'Component_RecentOrders_OrderNumber'}}</span>
+                                                        <span class="RecentOrders_OrderNumber_Value">{{sfdcName}}</span>
+                                                    </a>
+                                                </div>
+                                                <div class="panel-body RecentOrders_Details hidden-xs">
+                                                    {{#ifDisplay 'hp.rcordshowprod'}}
+                                                        {{#each this.displayLineItems}}
+                                                            {{#ifCondConfigOpt @index '<' 'hp.rcordnumprod' }}
+                                                                <div class="row">
+                                                                    <div class="col-xs-2">
+                                                                        {{#each this.productR.EProductMediasS}}
+                                                                            {{#ifEquals mediaType 'Product Image Thumbnail'}}
+                                                                                <img src="{{URI}}" class="img img-thumbnail img-responsive" alt=""/>
+                                                                            {{/ifEquals}}
+                                                                        {{/each}}
+                                                                    </div>
+
+                                                                    <div class="col-xs-10">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-8">
+                                                                                <div class="prodName">
+                                                                                    <a href="ccrz__ProductDetails?viewState=DetailView&sku={{this.productR.SKU}}">
+                                                                                        {{{this.productR.productName}}}
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-sm-4">
+                                                                                <div class="prodQty">{{pageLabelMap 'Qty'}} {{{quantity}}}</div>
+                                                                                <div class="prodTotalPrice">{{{price itemTotal}}}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <hr/>
+                                                            {{/ifCondConfigOpt}}
+                                                        {{/each}}
+                                                    {{/ifDisplay}}
+                                                </div>
+
+                                                <div class="panel-body RecentOrders_Actions p-a-0">
+                                                    <div class="col-sm-12 p-y-1">
+                                                        <span class="RecentOrders_Items_Value">{{this.displayLineItems.length}} {{pageLabelMap 'Component_RecentOrders_OrderItemCount_Items'}}</span>
+                                                    </div>
+
+                                                    <div class="col-sm-6 p-y-1 m-b-1">
+                                                        <span class="RecentOrders_Amount_Label">{{pageLabelMap 'Component_RecentOrders_OrderAmount'}}</span>
+                                                        <span class="RecentOrders_Amount_Value">{{price totalAmount currencyIsoCode}}</span>
+                                                    </div>
+
+                                                    <div class="col-sm-6 m-b-1">
+                                                        <button type="button" class="btn btn-primary btn-block reorder cc_col_reorder" data-id="{{sfid}}" data-sfdcname="{{sfdcName}}">
+                                                            {{pageLabelMap 'Component_RecentOrders_ButtonReorder'}}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            <!-- {{/ifDisplay}} -->
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+        {{/ifDisplay}}
+    </script>
+
+    <!-- JS CODE -->
+    <script type="text/javascript">
+
+        jQuery(function ($) {
+            Handlebars.registerHelper('ifCondConfigOpt', function (v1, operator, configOpt, options) {
+                var v2 = parseInt(CCRZ.pagevars.pageConfig[configOpt], 10);
+                switch (operator) {
+                    case '==':
+                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    case '===':
+                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                    case '!=':
+                        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+                    case '!==':
+                        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+                    case '<':
+                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                    case '<=':
+                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                    case '>':
+                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                    case '>=':
+                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                    case '&&':
+                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                    case '||':
+                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    default:
+                        return options.inverse(this);
+                }
+            });
+
+            if (CCRZ.pagevars.pageConfig["hp.rcord"]) {
+                if (CCRZ.pagevars.pageConfig["hp.rcord"] == "FALSE") {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
+            // console.log("ckz_RecentOrders - number of orders to display = " + CCRZ.pagevars.pageConfig["hp.rcordnumord"]);
+            // console.log("ckz_RecentOrders - number of products to display = " + CCRZ.pagevars.pageConfig['hp.rcordnumprod']);
+
+            CCRZ.models = CCRZ.models || {};
+
+            CCRZ.models.RecentOrdersModel = CCRZ.CloudCrazeModel.extend({});
+
+            CCRZ.collections.RecentOrdersModelList = CCRZ.CloudCrazeCollection.extend({
+                model: CCRZ.models.RecentOrdersModel,
+                className: 'ckz_ctrl_RecentOrders',
+                fetch: function (maxOrders, callback) {
+                    var coll = this;
+                    this.invokeCtx('getOrders', maxOrders, function (response, event) {
+                        // console.log("ckz_ctrl_RecentOrders: " + JSON.stringify(response.data));
+                        coll.reset(response.data);
+                        callback(response);
+
+                    }, {
+                            nmsp: false,
+                            buffer: false
+                        });
+                }
+                , reorder: function (orderId, sfdcName, callback) {
+                    this.invokeCtx('reorder', orderId, sfdcName, function (resp, evt) {
+                        if (evt.status) {
+                            if (resp && resp.success) {
+                                // console.log('evt.status = ' + evt.status);
+                                var cartId = resp.data;
+                                // console.log('cartId = ' + cartId);
+                                CCRZ.pagevars.currentCartID = cartId;
+                                //cart change will update cookie
+                                CCRZ.pubSub.trigger('cartChange', cartId);
+                                callback(resp);
+                            } else {
+                                console.log('error detected');
+                            }
+                        }
+                    }, {
+                            nmsp: false,
+                            buffer: false
+                        });
+
+                }
+
+                , displayMessages: function (response) {
+                    if (response.messages) {
+
+                        CCRZ.pubSub.trigger('pageMessage', response);
+
+                    }
+                }
+
+            });
+
+            //register a custom Backbone View
+            CCRZ.views.CKZRecentOrdersView = CCRZ.CloudCrazeView.extend({
+                templateName: CCRZ.util.template('CKZRecentOrdersTemplate'),
+                viewName: "CKZRecentOrdersView",
+                className: 'ckz_ctrl_RecentOrders',
+                templatePhone: CCRZ.util.template('CKZRecentOrdersTemplate'),
+                templateDesktop: CCRZ.util.template('CKZRecentOrdersTemplate'),
+                renderSelector: "#ckz_RecentOrders",
+
+                init: function (options) {
+                    var thisView = this;
+                    thisView.dataSet = {};
+                    thisView.RecentOrdersCollection = new CCRZ.collections.RecentOrdersModelList();
+
+                    var rcordnumord = parseInt(CCRZ.pagevars.pageConfig["hp.rcordnumord"], 10).toString();
+
+                    thisView.RecentOrdersCollection.fetch(rcordnumord, function (response) {
+
+                        if (response && response.data) {
+                            var data = response.data;
+
+                            var orderItemGroupTot = {};
+
+                            for (var i = 0; i < data.orderList.length; i++) {
+                                var order = data.orderList[i];
+                                var displayLineItems = [];
+                                for (var j = 0; j < order.EOrderItemsS.length; j++) {
+
+                                    var orderItem = order.EOrderItemsS[j];
+
+                                    if (orderItem.orderLineType) {
+                                        if (orderItem.orderLineType === "Major") {
+                                            displayLineItems.push(orderItem);
+                                        }
+                                        else if (orderItem.orderLineType === "Minor") {
+                                            if (orderItem.orderItemGroup in orderItemGroupTot) {
+                                                orderItemGroupTot[orderItem.orderItemGroup] += orderItem.subAmount;
+                                            }
+                                            else {
+                                                orderItemGroupTot[orderItem.orderItemGroup] = orderItem.subAmount;
+                                            }
+                                        }
+                                    }
+
+                                }
+                                order.displayLineItems = displayLineItems;
+                            }
+
+                            // update the orderItemGroup subAmount for the major items
+                            for (var i = 0; i < data.orderList.length; i++) {
+                                var order = data.orderList[i];
+                                var displayLineItems = [];
+                                for (var j = 0; j < order.EOrderItemsS.length; j++) {
+
+                                    var orderItem = order.EOrderItemsS[j];
+
+                                    if (orderItem.orderLineType) {
+                                        if (orderItem.orderLineType === "Major" && orderItem.itemTotal == 0) {
+                                            if (orderItem.orderItemGroup in orderItemGroupTot) {
+                                                orderItem.itemTotal = orderItemGroupTot[orderItem.orderItemGroup];
+                                            }
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                            thisView.dataSet = data;
+                        }
+
+                        thisView.render();
+
+                        if (response && response.messages) {
+                            thisView.RecentOrdersCollection.displayMessages(response);
+                        }
+
+                    });
+                },
+                renderDesktop: function () {
+                    this.renderView(this.templateName, this.renderSelector);
+                },
+                renderPhone: function () {
+                    this.renderView(this.templateName, this.renderSelector);
+                },
+                renderView: function (templateName, renderSelector) {
+                    var v = this;
+                    v.setElement(renderSelector);
+                    v.$el.html(templateName(this.dataSet));
+                },
+                events: {
+                    "click .reorder": "processReorder",
+                    "click .gotoOrderDetails": "gotoOrderDetails"
+                },
+                processReorder: function (event) {
+                    // console.log('Inside reorder function');
+
+                    var orderId = $(event.target).data("id");
+                    // console.log('orderId = ' + orderId);
+
+                    var sfdcName = $(event.target).data("sfdcname");
+
+                    var thisView = this;
+                    thisView.RecentOrdersCollection = new CCRZ.collections.RecentOrdersModelList();
+
+                    thisView.RecentOrdersCollection.reorder(orderId, sfdcName, this.RecentOrdersCollection.displayMessages);
+                },
+                gotoOrderDetails: function (event) {
+                    // console.log("gotoOrderDetails");
+
+                    // var objLink = $(event.target);
+                    var objLink = $(event.currentTarget);
+                    var id = objLink.data("id");
+                    this.orderDetails(id);
+                },
+                orderDetails: function (orderId) {
+                    // document.location = "/" + CCRZ.pagevars.storefrontName.toLowerCase() + "/ccrz__OrderView?o=" + orderId + getCSRQueryString();
+                    document.location = "/" + CCRZ.pagevars.storefrontName + "/ccrz__OrderView?o=" + orderId + getCSRQueryString();
+                }
+            });
+
+            // Initialize the Custom View
+            CCRZ.views.Demo = new CCRZ.views.CKZRecentOrdersView({});
+
+            CCRZ.pubSub.on('view:CKZRecentOrdersView:refresh', function () {
+                console.log('CKZRecentOrdersView:refresh');
+
+                const configSettings = Object.entries(CCRZ.pagevars.pageConfig);
+
+                for (const [config, setting] of configSettings) {
+                    // console.log('config', config);
+                    // console.log('setting', setting);
+
+                    if (config == 'hp.rcorddsptype') {
+                        if (setting.toLowerCase() == 'table') {
+                            $('.ckz_RecentOrdersTableContainer').removeClass('hide');
+                        }
+                        if (setting.toLowerCase() == 'card') {
+                            $('.ckz_RecentOrdersCardContainer').removeClass('hide');
+                            $('.ckz_RecentOrdersCardContainer').slick({
+                                infinite: true,
+                                slidesToShow: 2,
+                                slidesToScroll: 1,
+                                prevArrow: '<button type="button" class="slick-prev"><i class="fal fa-angle-left fa-lg"></i></button>',
+                                nextArrow: '<button type="button" class="slick-next"><i class="fal fa-angle-right fa-lg"></i></button>',
+                                dots: true,
+                                responsive: [
+                                    {
+                                        breakpoint: 992,
+                                        settings: {
+                                            slidesToShow: 1,
+                                            slidesToScroll: 1,
+                                            arrows: false
+                                        }
+                                    }
+                                ]
+                            });
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</apex:component>

@@ -1,0 +1,59 @@
+.THIS {
+}
+
+.THIS .detailPopup {
+  display:none;
+  position:absolute;
+  top:30px;
+}
+
+.THIS .moreSection:hover .detailPopup{
+  display:block;  
+}
+
+.THIS .price {
+    font-size: 18px;
+    color: #1470b7;
+    font-weight: 700;
+}
+
+.THIS .image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.THIS.box{
+	border: 1px solid #d8d8d8;
+    background: white;
+  
+ }   
+
+.THIS .firstField {
+    height:60px;
+    overflow-y: hidden;
+}
+
+.THIS img { 
+ 	width: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.THIS .selectArea {
+    display:none;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.THIS .mainContainer{
+ 	position:relative; 
+}
+
+.THIS .mainContainer:hover .selectArea{
+  display:block;  
+}
+
+.THIS .selectButton{
+  padding:1rem!important;  
+}

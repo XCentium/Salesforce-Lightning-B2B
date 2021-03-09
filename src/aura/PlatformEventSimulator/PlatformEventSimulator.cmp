@@ -1,0 +1,89 @@
+<aura:component controller="PlatformEventSimulatorController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"  access="global" >
+  
+  	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>     
+    <aura:attribute name="recordId" type="String" />
+
+    <aura:attribute name="deviceId" type="String" />
+    <aura:attribute name="objectName" type="String" />
+    <aura:attribute name="parentField" type="String" />
+    <aura:attribute name="eventName" type="String" />
+    <aura:attribute name="objectFields" type="String[]" />
+    <aura:attribute name="objectValue" type="Object" />
+    
+    <div class="slds-panel slds-grid slds-grid_vertical slds-nowrap">
+        <div class="slds-form slds-form_stacked slds-grow slds-scrollable_y">
+            <div class="slds-panel__section">
+                <img src="{!$Resource.IOTCloudLogo}"/> <p/>
+                <h3 class="slds-text-heading_small slds-m-bottom_medium">IOT Event Simulator</h3>
+                
+                <div class="slds-tabs_default">
+                    <ul class="slds-tabs_default__nav" role="tablist">
+                        <li class="slds-tabs_default__item slds-is-active" title="Single Event" role="presentation" aura:id="tab-default-1"><a class="slds-tabs_default__link" onclick="{!c.selectTab1}" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-default-1" >Single Event</a></li>
+                        <li class="slds-tabs_default__item" title="Generator" role="presentation" aura:id="tab-default-2"><a class="slds-tabs_default__link" onclick="{!c.selectTab2}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2" >CSV</a></li>
+                      <!--  <li class="slds-tabs_default__item" title="CSV" role="presentation" aura:id="tab-default-3"><a class="slds-tabs_default__link" onclick="{!c.selectTab3}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-3" >Generator</a></li> -->
+                    </ul>
+                    <div aura:id="msgDiv"/>
+                    <div aura:id="tab-content-1" class="slds-tabs_default__content slds-show" role="tabpanel" aria-labelledby="tab-default-1__item">     
+                        <ul>
+                            <aura:iteration var="item" items="{!v.objectFields}" indexVar="indx">
+                                <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="text-input-id-1">{!item}</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" id="{!item}" class="slds-input" />
+                                        </div>
+                                    </div>
+                                </li>       
+                            </aura:iteration>
+                            <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                                <div class="slds-form-element">
+                                    <lightning:button variant="brand" label="Send Event" onclick="{! c.handleSend }" />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div aura:id="tab-content-2" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-2__item">
+                        
+                        <div class="slds-form-element">
+                          <span class="slds-form-element__label" id="file-selector-id">Attachment</span>
+                          <div class="slds-form-element__control">
+                            <div class="slds-file-selector slds-file-selector_files">
+                              <div class="slds-file-selector__dropzone">
+                                  <input type="file" class="" accept=".csv" id="file-upload-input-01" aura:id="file" aria-describedby="file-selector-id"/>
+                              <!--  <label class="slds-file-selector__body" for="file-upload-input-01">
+                                  <span class="slds-file-selector__button slds-button slds-button_neutral">
+                   
+                                        <c:svg xlinkHref="/resource/SLDS221/assets/icons/utility-sprite/svg/symbols.svg#upload" class="slds-button__icon slds-button__icon_left"/>
+
+                                      Upload Files</span>
+                                  
+                                    
+                                  <span class="slds-file-selector__text slds-medium-show"></span>
+                                </label> -->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="slds-form-element">
+                          
+                            <div class="slds-form-element">
+                                <ui:button label="Send Events" press="{!c.save}"/>
+                                <!--<lightning:button variant="brand" label="Send Events" onclick="{! c.handleSend }" /> -->
+                            </div>                                                      
+                        </div>
+                         <lightning:spinner variant="brand" size="large" aura:id="eventSpinner" class="slds-hide"/>
+                    </div>
+           
+                    
+                </div>
+                
+               
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    
+</aura:component>

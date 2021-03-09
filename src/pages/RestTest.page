@@ -1,0 +1,57 @@
+<apex:page sidebar="false" standardStylesheets="false" showHeader="true">
+  <head> 
+    <title>REST TEST</title>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-49393906-1']);
+      _gaq.push(['_setDomainName', 'salesforce.com']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"/> 
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"/> 
+  </head>  
+  <body>
+    <script>
+      jQuery(document).ready(function($) {
+      $('#queryform').submit(function(){
+        $.ajax($('#query').val(),
+        {
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}'); // set session Id to authenticate
+          },
+          success: function(response) {
+            $('#results').empty(); // clear the results before submitting the next rest call
+            $('#results').append(JSON.stringify(response, null, '  ')); // stringify JSON results from REST API call
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.status + ': ' + errorThrown);
+          }
+        });
+        return false;
+      });
+    });
+    </script>
+    <form id="queryform">
+      <!-- Default general rest end point -->
+      <!--<input id="query"  value="/services/data/v29.0" size="12" style="width:700px"/>-->
+      <!-- Uncomment the following default for Event Log Files query -->
+      <input id="query" value="/services/data/v31.0/query?q=select+Id+,+EventType+,+LogDate+,+LogFile+,+LogFileLength+from+EventLogFile+Order+by+LogDate+DESC" 
+      style="font-family:monospace; width:800px; height:20px; font-size:18px;"/>
+      <input type="submit" id="submit" value="Submit"  />
+    </form>
+    <p>Results:</p>
+    <pre id="results" style="font-family:monospace;font-size:18px;">
+    </pre>
+  </body>
+</apex:page>

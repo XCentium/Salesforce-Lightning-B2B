@@ -1,0 +1,16 @@
+<!--................................................................-->
+<!--Written by: Hanul Park..........................................-->
+<!--Release: 208(Summer 17).........................................-->
+<!--Package: Mixpanel...............................................-->
+<!--Version: 1.0....................................................-->
+<!--Documentation/Manifest: https://salesforce.quip.com/vWgkAaprUKJX-->
+<!--................................................................-->
+
+<aura:component extensible="true" controller="MixpanelCtrl" access="global"
+                description="This component is the top level lighnting component for tracking events and updates.
+                             The component can be extended to any lightning component to send messages to Mixpanel">
+	<aura:handler name="MixpanelEvent" event="c:MixpanelEvent" action="{!c.handleEvent}"></aura:handler>
+	<aura:handler name="MixpanelUpdate" event="c:MixpanelUpdate" action="{!c.handleUpdate}"></aura:handler>
+    
+    {!v.body}
+</aura:component>

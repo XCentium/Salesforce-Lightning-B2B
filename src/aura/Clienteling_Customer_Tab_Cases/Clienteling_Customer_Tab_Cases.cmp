@@ -1,0 +1,82 @@
+<aura:component controller="ClientellingController">
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="overlayClass" type="String"/>
+	<aura:attribute name="ContactId" type="String"/>
+    <aura:attribute name="Cases" type="Case[]"/>
+    <aura:attribute name="selectedCase" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.getCases}"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index"> 
+    <aura:iteration var="case" items="{!v.Cases}" indexVar="index"> 
+            <div class="order">
+                <div class="slds-media padding">
+                    <div class="profilepicture">
+                        <lightning:icon iconName="standard:case" size="small" alternativeText="Indicates approval"/> 
+                    </div>
+                    <div class="slds-media__body">
+                        <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">Case {!case.CaseNumber }</h1>
+                    </div>
+                </div>
+                <div class="padding">
+                    <p><strong>{!case.Subject}</strong></p>
+                    <p>Status: {!case.Status}</p>
+                    <button class="slds-button slds-button_brand toprightbutton" aura:id="{!case.Id}" id="{!case.Id}" onclick="{!c.OpenDialog}" style="{!'background-color:' + setting.Primary_Button_Color__c + ';border-color:' + setting.Primary_Button_Color__c + ';'}">View</button>
+                </div>
+            </div>                  
+    </aura:iteration>
+   <!-- EDIT Case MODAL -->
+    <section role="dialog" aura:id="CaseModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit Case</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <ul class="slds-tabs--scoped__nav" role="tablist">
+                   <li aura:id="t1" class="slds-tabs--scoped__item slds-text-title--caps slds-active" title="your tab 1" role="presentation" onclick="{! c.tabOneAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" id="tab-scoped-1__item">Details</a></li>
+                   <li aura:id="t2" class="slds-tabs--scoped__item slds-text-title--caps"  role="presentation" onclick="{! c.tabTwoAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-2" id="tab-scoped-2__item">Feed</a></li>
+                </ul>
+                <div aura:id="tab1" class="slds-tabs--scoped__content slds-show" role="tabpanel" aria-labelledby="tab-scoped-1__item">
+                	<div class="paneltwothirds">            
+                    	<lightning:recordEditForm aura:id="edit" 
+                                                  recordId="{!v.selectedCase}" 
+                                                  onsuccess="{!c.handleSuccess}" 
+                                                  objectApiName="Case"  >
+                            <div aura:id="msg">
+                                <lightning:messages  />
+                            </div>
+                            <lightning:inputField fieldName="CaseNumber" />
+                            <lightning:inputField fieldName="Subject"/>
+                            <lightning:inputField fieldName="Status" />
+                            <lightning:inputField fieldName="Origin" />
+                            <lightning:inputField fieldName="Type"/>
+                            <lightning:inputField fieldName="Description" />
+                            <div class="slds-m-top_medium">
+                                <lightning:button disabled="{!v.disabled}" variant="neutral" type="submit" name="save" label="Save" />
+                            </div>
+                         </lightning:recordEditForm>
+                    </div>
+                    <div class="panelonethird">
+                        <c:Clienteling_Einstein_Sentiment
+                            Contact="{!v.Contact}"
+                            appSettings="{!v.appSettings}"
+                            NeutralValue="55"
+                            PositiveValue="35"
+                            NegativeValue="10"
+                        />
+                   </div>
+                </div>      
+                <div aura:id="tab2" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-2__item">
+                     <div aura:id="feedContainer" class="feed-container">
+                        <forceChatter:feed type="Record" /> 
+                     </div>    
+             	</div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}" style="{!'background-color:' + setting.Primary_Button_Color__c + '!important;border-color:' + setting.Primary_Button_Color__c + '!important;'}">Close</button>
+            </footer>
+        </div>
+        </section>
+    </aura:iteration>
+</aura:component>

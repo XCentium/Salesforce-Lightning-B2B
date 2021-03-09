@@ -1,0 +1,36 @@
+<!--
+ - Created by msobczak on 11/15/2018.
+ -->
+
+<aura:component description="ckzMessageDisplay" access="global">
+
+    <aura:attribute name="severity" type="String" required="true" access="global" />
+    <aura:attribute name="message" type="String" required="true" access="global" />
+    <aura:attribute name="title" type="String" required="false" default="" access="global" />
+    <aura:attribute name="closable" type="Boolean" required="false" default="false"/>
+
+    <aura:if isTrue="{!v.severity == 'confirm'}">
+        <ui:message title="{!v.title}" severity="confirm" closable="{!v.closable}">
+            {!v.message}
+        </ui:message>
+    </aura:if>
+
+    <aura:if isTrue="{!v.severity == 'info'}">
+        <ui:message title="{!v.title}" severity="info" closable="{!v.closable}">
+            {!v.message}
+        </ui:message>
+    </aura:if>
+
+    <aura:if isTrue="{!v.severity == 'warning'}">
+        <ui:message title="{!v.title}" severity="warning" closable="{!v.closable}">
+            {!v.message}
+        </ui:message>
+    </aura:if>
+
+    <aura:if isTrue="{!v.severity == 'error'}">
+        <ui:message title="{!v.title}" severity="error" closable="{!v.closable}">
+            {!v.message}
+        </ui:message>
+    </aura:if>
+
+</aura:component>

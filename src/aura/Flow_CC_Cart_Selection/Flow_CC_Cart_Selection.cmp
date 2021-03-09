@@ -1,0 +1,32 @@
+<aura:component controller="Flow_B2BCommerce" implements="lightning:availableForFlowScreens" access="global">
+	<aura:attribute name="ContactId" type="string"/>
+    <aura:attribute name="CartId" type="string"/>
+    <aura:attribute name="Carts" type="String[]"/>
+    <aura:attribute name="Items" type="String[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="half">
+        <div class="padding">
+            <h1 class="pagetitle"><lightning:icon iconName="standard:fulfillment_order"  size="x-small"/> Current Cart Information</h1>
+            <aura:iteration items="{!v.Carts}" var="cart">
+                <strong>Cart: </strong>{!cart.Name}<br/>
+                <strong>Total: </strong><ui:outputCurrency aura:id="curr" value="{!cart.ccrz__TotalAmount__c}" format="¤#,##0.00"/><br/> 
+            </aura:iteration>
+        </div>
+    </div>
+    <div class="half">
+        <div class="padding">
+            <h1 class="pagetitle"><lightning:icon iconName="standard:product"  size="x-small"/> Items in Your Cart</h1>
+            <aura:iteration items="{!v.Items}" var="item">
+                <aura:if isTrue="{!item.ccrz__Product__r.Name != ''}">
+                    <div class="product">
+                        <div class="padding">
+                            <strong>Product: </strong>{!item.ccrz__Product__r.Name}<br/>
+                            <strong>Price: </strong><ui:outputCurrency aura:id="curr" value="{!item.ccrz__Price__c}" format="¤#,##0.00"/><br/> 
+                        </div>
+                    </div>
+                </aura:if>
+            </aura:iteration>
+        </div>
+    </div>
+    <div class="clear"></div>
+</aura:component>

@@ -1,0 +1,7 @@
+<design:component>
+	<design:attribute name="GmapAddress"/>
+    <design:attribute name="GmapCity"/>
+    <design:attribute name="GmapState" />
+    <design:attribute name="GmapPostalCode" />
+    <design:attribute name="GmapCountry" />
+</design:component>

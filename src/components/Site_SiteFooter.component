@@ -1,0 +1,14 @@
+<apex:component controller="SDOSiteController">
+
+<apex:outputPanel styleClass="pkbFooter" layout="block">
+    <apex:outputPanel styleClass="pkbPoweredBySFDC">
+        <a href="http://www.salesforce.com/crm"><apex:outputPanel styleClass="pkbPoweredBySFDCText">salesforce.com</apex:outputPanel></a>
+    </apex:outputPanel>
+    <apex:outputPanel styleClass="pkbFooterNavigation">
+        <apex:outputLink value="{!homeUrl}">Home</apex:outputLink>&nbsp;|&nbsp;
+        <apex:outputLink value="{!productUrl}">Product</apex:outputLink>
+    </apex:outputPanel>
+    <br class="pkbClearfloat"/>
+</apex:outputPanel>
+
+</apex:component>

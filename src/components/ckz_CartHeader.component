@@ -1,0 +1,25 @@
+<!--
+ - Created by brandon.rogers on 2019-07-03.
+ -->
+
+<apex:component id="ckz_CartHeader">
+
+    <script id="CKZ-CartDetail-Header-View" type="text/template">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="cart_sort cc_cart_sort">
+                    <span class="cc_cart_sort_text">{{pageLabelMap 'Sort'}}</span>
+                    <a href="#" class="cart_sort_item cc_cart_sort_item" data-sort="name"><span class="label label-default cc_cart_sort_text">{{pageLabelMap 'Name'}}</span></a>
+                    <a href="#" class="cart_sort_item cc_cart_sort_item" data-sort="sku"><span class="label label-default cc_cart_sort_text">{{pageLabelMap 'SKU'}}</span></a>
+                    <a href="#" class="cart_sort_item cc_cart_sort_item" data-sort="dateAdded"><span class="label label-default cc_cart_sort_text">{{pageLabelMap 'Date_Added'}}</span></a>
+                </p>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function($){
+            CCRZ.uiProperties.CartDetailView.partials.headerSection = '#CKZ-CartDetail-Header-View';
+        });
+    </script>
+</apex:component>

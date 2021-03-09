@@ -1,0 +1,71 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="ComponentTitle" type="String" />
+    <aura:attribute name="Resources" type="String[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.ScreenChoice}" action="{!c.init}"/>
+    <lightning:spinner aura:id="Spinner" alternativeText="Loading" size="medium" variant="brand" class="slds-hide"/>
+    <aura:iteration items="{!v.Settings}" var="setting">
+        <aura:if  isTrue="{!or(v.recid == '', v.recid == null)}" >
+            <div class="threequarterscentered">
+                <div class="center">
+            		<h3><lightning:icon iconName="standard:email_chatter" size="x-small"/> <span class="headerdown">IDO Owners</span></h3>
+            		<p>These are your IDO Owners. Feel free to contact us anytime with suggestions or comments.</p>
+                </div>
+            </div>
+            <div class="cardWrapper">
+                <aura:iteration items="{!v.Resources}" var="resource">
+                    <aura:if isTrue="{!resource.type__c == 'IDO Owner'}">
+                        <div class="cardhalf">
+                            <div class="padding">
+                                <div class="owner">
+                                    <h3 class="borderbottom relative">
+                                        <div class="padding">
+                                            {!resource.name}
+                                            <span class="slds-badge slds-badge absolutetopright">{!resource.title__c}</span>
+                                        </div>
+                                    </h3>
+                                    <div class="padding">
+                                        <aura:if isTrue="{!resource.image__c != ''}">
+                                            <div class="fifth">
+                                                <img src="{!resource.image__c}" class="brandlogo resourcepic"/>
+                                            </div>
+                                            <div class="fourfifths">
+                                                <ui:outputRichText value="{!resource.description__c}"/>
+                                                <aura:if isTrue="{!resource.email__c != null}">
+                                                    <strong>Contact Info: </strong> <a href="{! 'mailto:' + resource.email__c}">{!resource.email__c}</a>
+                                                </aura:if>
+                                            </div>
+                                            <div class="clear"></div>
+                                            <aura:set attribute="else">
+                                                <ui:outputRichText value="{!resource.description__c}"/>
+                                                <aura:if isTrue="{!resource.email__c != null}">
+                                                    <strong>Contact Info: </strong> <a href="{! 'mailto:' + resource.email__c}">{!resource.email__c}</a>
+                                                </aura:if>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:if>
+                </aura:iteration>
+            </div>
+            <aura:set attribute="else">
+                <c:FIDO_SingleRecord Industry="{!v.Industry}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}"/>
+            </aura:set>
+        </aura:if>
+    </aura:iteration>
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

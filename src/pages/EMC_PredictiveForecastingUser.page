@@ -1,0 +1,15 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    <div class="slds-m-bottom_medium">
+        <div class="slds-text-heading_large">Einstein Predictive Forecasting</div>
+    </div>
+    
+    <div>
+        <table class="slds-table">
+            <tr>
+                <div ng-repeat="period in periods" class="slds-box has-hover slds-m-horizontal_small slds-p-around_small">
+                    {{period.FullyQualifiedLabel}}
+                </div>
+            </tr>
+        </table>
+    </div>
+</apex:page>

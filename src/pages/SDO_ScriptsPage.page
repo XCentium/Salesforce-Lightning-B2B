@@ -1,0 +1,57 @@
+<apex:page controller="SDO_Tools" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" showHeader="false">
+    <!--
+    <apex:composition template="SDO_ToolsLayout">
+        <apex:define name="_toolspage">
+        -->
+            <div class="page-content" data-tab="home">
+                 <div class="tiles">
+                    <div>
+                        <h3>Demo Stories</h3>
+                    </div>
+
+                    <div class="tile cloud">
+                        <div class="tile-body">
+                            <a target="_blank" href="https://www.cur8r.io/showcase/the-official-sdo-sales-cloud-demos">
+                                <apex:image styleClass="scriptCloud" value="{!$Resource.salesCloudLogo}"/>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="tile cloud">
+                        <div class="tile-body">
+                            <a target="_blank"  href="https://www.cur8r.io/showcase/the-official-sdo-service-cloud-demos">
+                                <apex:image styleClass="scriptCloud" value="{!$Resource.serviceCloudLogo}"/>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="tile cloud">
+                        <div class="tile-body">
+                        <a target="_blank" href="https://www.cur8r.io/showcase/platform-101">
+                            <apex:image styleClass="scriptCloud" value="{!$Resource.platformLogo}"/>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tiles">
+                    <div>
+                        <h3>Videos</h3>
+                    </div>
+
+                    <div class="tile cloud">
+                        <div class="tile-body">
+                            <a target="_blank" href="https://www.youtube.com/watch?v=2SaY4Vve6es">
+                                <apex:image styleClass="scriptCloud" value="{!$Resource.salesPath}"/>
+                            </a>
+                        </div>
+                         <div class="tile-object">
+                                <div class="video-name name">
+                                    <span style="cursor:pointer;color:#333 !important;">
+                                        Sales Path
+                                    </span>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                
+            </div>
+
+</apex:page>

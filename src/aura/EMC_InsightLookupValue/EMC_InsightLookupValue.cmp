@@ -1,0 +1,11 @@
+<aura:component >
+    <aura:attribute name="lookupValue" type="Object"></aura:attribute>
+    <aura:attribute name="lookupField" type="Object"></aura:attribute>
+    <aura:attribute name="lookupDisplayed" type="Object"></aura:attribute>
+    <aura:attribute name="index" type="Integer"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"></aura:handler>
+    
+    <aura:registerEvent name="lookupSelected" type="c:EMC_InsightEvent"></aura:registerEvent>
+    
+    <div onclick="{!c.selectedEvent}">{!v.lookupDisplayed}</div>
+</aura:component>

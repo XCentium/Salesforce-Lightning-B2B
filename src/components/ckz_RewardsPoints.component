@@ -1,0 +1,240 @@
+<apex:component id="ckz_RewardsPoints" controller="ckz_ctrl_RewardsPoints">
+
+    <script id="CKZ-CartDetail-ActionTotals-RewardsPoints-View" type="text/template">
+
+        <!-- ACTION TOTALS -->
+        <div class="row">
+            <div class="col-sm-4">
+                <!-- REWARD POINTS -->
+                <apex:outputText rendered="{!pointsEnabled}">
+                    <h3 class="cc_title">
+                        {{pageLabelMap 'RewardPointsHeader'}}
+                        <!--<span class="small">({!pointsBalance} Available)</span>-->
+                    </h3>
+                    <p>{{pageLabelMap 'RewardPointsAvailablePoints'}}: {!pointsBalance}</p>
+                    <div class="pointsMessagingSection-Error"></div>
+                    <label class="sr-only" for="addPointsId">{{pageLabelMap 'RewardPointsEnterPoints'}}</label>
+                    <div class="input-group input-group-sm m-b-2">
+                        <input type="number" class="form-control" id="addPointsId" name="addPointsId" value="{!pointsApplied}" placeholder="{{pageLabelMap 'RewardPointsEnterPoints'}}">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" id="addPointsBtn" onclick="javascript:CCRZ.subsc.applyPoints('{{this.sfid}}');" type="button">
+                                {{pageLabelMap 'Apply'}}
+                            </button>
+                        </span>
+                    </div>
+                </apex:outputText>
+
+                <!-- COUPON CODES -->
+                <!--{{#ifStoreSetting 'Display_Cart_Coupon__c'}}
+                    <h3 class="cc_title">{{pageLabelMap 'CartInc_discountCodes'}}</h3>
+
+                    {{#if this.hasCoupon}}
+                        <form id="couponClearForm" class="cc_coupon_clear_form">
+                            <div class="discount_code cc_discount_code">
+                                <div class="input-group input-group-sm cc_clear_coupon_code">
+                                    <input type="text" id="couponAppliedId" name="couponAppliedId" class="form-control" value="{{pageLabelMap 'CartInc_AppliedCoupon'}} {{this.couponName}}" disabled/>
+                                    <span class="input-group-btn">
+                                        <button id="clearCouponBtn" type="button" class="btn btn-default cc_clear_coupon">{{pageLabelMap 'CartInc_ClearCoupon'}}</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    {{else}}
+                        <form id="couponAddForm" class="cc_coupon_add_form">
+                            <div class="discount_code cc_discount_code">
+                                <div id="couponAddError" class="cc_coupon_add_error"></div>
+                                <div class="couponMessagingSection-Error"></div>
+
+                                <div class="input-group input-group-sm m-b-1">
+                                    <input type="text" id="addCouponId" name="couponId" class="form-control cc_add_coupon_id" placeholder="{{pageLabelMap 'CartInc_CouponPlaceholder'}}"/>
+                                    <span class="input-group-btn">
+                                        <button id="addCouponBtn" type="button" class="btn btn-primary cc_add_coupon">
+                                            {{pageLabelMap 'Apply'}}
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    {{/if}}
+                {{/ifStoreSetting}}-->
+            </div>
+
+
+            <div class="col-sm-4 col-sm-offset-4">
+                <div class="cc_action_totals checkout text-right m-b-3">
+                    <!-- SUBTOTAL -->
+                    {{#if this.subtotalAmount}}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="ckz_subTotal m-b-2">
+                                <span class="cc_label">{{pageLabelMap 'CartInc_Subtotal'}}:</span>
+                            </h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <h3 class="ckz_subTotal m-b-2">
+                                <span class="cc_value">{{{price this.subtotalAmount}}}</span>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!--<h3 class="ckz_subTotal m-b-2">
+                        <span class="cc_label">{{pageLabelMap 'CartInc_Subtotal'}}:</span>
+                        <span class="cc_value">{{{price this.subtotalAmount}}}</span>
+                    </h3>-->
+                    {{/if}}
+
+                    <!-- REWARDS POINTS APPLIED -->
+                    <apex:outputText rendered="{!showPointsDollarValue}">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h3 class="ckz_subTotal m-b-2">
+                                    <span class="cc_label">{{pageLabelMap 'RewardPoints_ValueApplied'}}:</span>
+                                </h3>
+                            </div>
+                            <div class="col-sm-6">
+                                <h3 class="ckz_subTotal m-b-2">
+                                    <span class="cc_value">${!pointsDollarValue}</span>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h3 class="ckz_subTotal m-b-2">
+                                    <span class="cc_label">{{pageLabelMap 'RewardPoints_Subtotal'}}:</span>
+                                </h3>
+                            </div>
+                            <div class="col-sm-6">
+                                <h3 class="ckz_subTotal m-b-2">
+                                    <span class="cc_value">{{{price {!postPointsSubtotal} }}}</span>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <!--<h3 class="ckz_rewardPoints m-b-2">
+                            <span class="cc_label">{{pageLabelMap 'RewardPoints_ValueApplied'}}:</span>
+                            <span class="cc_value">${!pointsDollarValue}</span>
+                        </h3>-->
+
+                        <!--<h3 class="ckz_rewardPoints m-b-2">
+                            <span class="cc_label">{{pageLabelMap 'RewardPoints_Subtotal'}}:</span>
+                            <span class="cc_value">${!postPointsSubtotal}</span>
+                        </h3>-->
+
+                        <!--<li class="grand_total" style="color:rgb(204, 51, 51);">{{pageLabelMap 'RewardPointsValueApplied'}}: ${!pointsDollarValue}</li>
+                        <li class="grand_total">Your Cost: ${!postPointsSubtotal}</li>-->
+                    </apex:outputText>
+
+                    <!-- TOTAL -->
+                    {{#if this.totalInfo}}
+                    <p class="cart_total_amount cc_cart_total_amount">{{this.totalInfo}}</p>
+                    {{/if}}
+
+                    <div class="totalsmessagingSection cc_total_messaging_section"></div>
+
+                    <!-- APPLY DISCOUNTS -->
+                    <!--{{#if false }}
+                    {{ else }}
+                        {{#ifStoreSetting 'AutoCalcPriceAdjust__c'}}
+                            {{else}}
+                                <button type="button" class="btn btn-default btn-sm btn-block getExtPricingButton cc_get_ext_pricing_button">
+                                    {{pageLabelMap 'CartInc_ApplyDiscounts'}}
+                                </button>
+                        {{/ifStoreSetting}}
+                    {{/if}}-->
+
+                    <!-- CHECKOUT -->
+                    {{#if this.ECartItemsS}}
+                    {{#ifNotEquals this.ECartItemsS.models.length 0}}
+                    {{#if this.allowCheckout}}
+                    {{#ifEquals this.preventCheckout false}}
+                    <button type="button" class="btn btn-primary btn-sm btn-block checkOutBtn cc_checkout_btn">
+                        {{pageLabelMap 'CartInc_Checkout'}}
+                    </button>
+                    {{/ifEquals}}
+                    {{/if}}
+                    {{/ifNotEquals}}
+                    {{/if}}
+
+                    <!-- REQUEST FOR QUOTE -->
+                    {{#if false }}
+                    {{#ifDisplay 'rfq.GuestUser'}}
+                    <button class="btn btn-default btn-sm btn-block remove cc_rfq_link_button" data-toggle="modal" data-target="#rfqModal" type="button">
+                        {{pageLabelMap 'CartRFQForm_Header'}}
+                    </button>
+                    {{/ifDisplay}}
+                    {{else}}
+                    {{#ifDisplay 'rfq.LoggedIn'}}
+                    <button class="btn btn-default btn-sm btn-block remove cc_rfq_link_button" data-toggle="modal" data-target="#rfqModal" type="button">
+                        {{pageLabelMap 'CartRFQForm_Header'}}
+                    </button>
+                    {{/ifDisplay}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/javascript">
+
+        jQuery(function ($) {
+
+            var rewardPtsEnabled = false;
+
+            if (CCRZ.pagevars.pageConfig["c.rewardpts"]) {
+                if (CCRZ.pagevars.pageConfig["c.rewardpts"] == "TRUE") {
+                    rewardPtsEnabled = true;
+                }
+            }
+
+            if (rewardPtsEnabled == false) {
+                return false;
+            }
+
+            CCRZ.uiProperties.CartDetailView.partials.actionsTotals = '#CKZ-CartDetail-ActionTotals-RewardsPoints-View';
+
+            CCRZ.subsc = CCRZ.subsc || {};
+
+            CCRZ.subsc.applyPoints = function (cartId) {
+
+                $('.addPointsBtn').prop('disabled', true);
+                CCRZ.pubSub.trigger('pageMessage', {});
+
+                var pointsToApply = document.getElementById('addPointsId').value;
+                var remoteCall = _.extend(CCRZ.RemoteInvocation, {
+                    className: 'ckz_ctrl_RewardsPoints'
+                });
+
+                remoteCall.invokeCtx(
+                    'applyPoints',
+                    cartId,
+                    pointsToApply,
+                    function (resp) {
+
+                        if (resp && resp.success) {
+
+//                        if(resp.messages) {
+//                            CCRZ.pubSub.trigger('pageMessage', resp);
+//                        }
+
+                            window.location.reload();
+                        } else {
+                            $('.addPointsBtn').prop('disabled', false);
+                            if (resp.messages) {
+                                CCRZ.pubSub.trigger('pageMessage', resp);
+                            }
+                        }
+                    }, {
+                        buffer: false,
+                        escape: false,
+                        nmsp: false
+                    }
+                );
+            };
+
+        });
+    </script>
+
+    {!blank}
+</apex:component>

@@ -1,0 +1,114 @@
+<apex:component id="ckz_OrderConf_OrderSummary_RP" controller="ckz_ctrl_RewardsPointsCheckout">
+
+    <script id="CKZ-OrderReviewSummary-Desktop" type="text/template">
+        <div class="panel panel-default cc_panel cc_order_summary">
+            <div class="panel-heading cc_heading">
+                <h4 class="panel-title cc_title">Order Summary</h4>
+            </div>
+            <div class="panel-body cc_panel-body cc_body">
+                <span class="address summaryLabel cc_summary_label">{{pageLabelMap 'LLICheckOut_BuyerInfoHeader'}}</span>
+                {{#with this.orderData}}
+                <span class="cc_buyer_name">{{buyerFirstName}} {{buyerLastName}}</span><br>
+                <span class="cc_buyer_phone">{{buyerPhone}}</span><br>
+                <span class="cc_buyer_email">{{buyerEmail}}</span><br>
+                {{/with}}
+                {{#ifEquals this.orderData.ECartItemGroupsS.length 1}}
+                <span class="address summaryLabel cc_shipping_address">{{pageLabelMap 'LLICheckOut_ShipAddrHeader'}}</span>
+                {{#with this.orderData.ECartItemGroupsS.models.[0].attributes}}
+                {{> addressDisplay shipTo}}
+                {{#if shipMethod}}
+                <p class="cc_shipping_method">
+                    <span class="cc_shipping_method_label">{{pageLabelMap 'LLICheckOut_ShippingMethod'}}</span>
+                    <span class="cc_shipping_method_value">{{shipMethod}}</span>
+                </p>
+                {{/if}}
+                {{#if shipAmount}}
+                <p class="cc_ship_amount">
+                    <span class="cc_shipping_amount_label">{{pageLabelMap 'LLICheckOut_ShippingAmount'}}&#58; </span>
+                    <span class="cc_shipping_amount_value">{{{price shipAmount}}}</span>
+                </p>
+                {{/if}}
+                {{#if requestDate}}
+                <p class="cc_req_date">
+                    <span class="cc_req_date_label">{{pageLabelMap 'LLICheckout_RequestedDeliveryDt'}}</span>
+                    <span class="cc_req_date_value">{{requestDate}}</span>
+                </p>
+                {{/if}}
+                {{#if note}}
+                <p class="cc_ship_notes">
+                    <span class="cc_ship_notes_label">{{pageLabelMap 'LLICheckOut_ShippingNotes'}}&#58; </span>
+                    <span class="cc_ship_notes_value">{{note}}</span>
+                </p>
+                {{/if}}
+                {{/with}}
+                {{else}}
+                <span class="cc_shipping_label">Shipping</span>
+                <p class="cc_multiple_groups">{{pageLabelMap 'LLICheckoutReview_MultipleGroups'}}</p>
+                {{/ifEquals}}
+                <hr>
+                <div class="cc_billing">
+                    <span class="cc_billing_address_label">{{pageLabelMap 'LLICheckOut_BillAddrHeader'}}</span>
+                    {{>addressDisplay billTo}}
+                </div>
+                <p class="cc_subtotal">
+                    <span class="pull-left cc_subtotal_label">{{pageLabelMap 'CartInc_Subtotal'}}&#58;</span>
+                    <span class="pull-right cc_subtotal_value">{{{price this.orderData.subtotalAmount}}}</span>
+                </p>
+
+                <!-- msobczak reward points -->
+                <apex:outputText rendered="{!showPointsDollarValue}">
+                    <p class="cc_subtotal" style="clear: both;">
+                        <span class="pull-left cc_subtotal_label" style="color:rgb(204, 51, 51);">Points Value</span>
+                        <span class="pull-right cc_subtotal_value" style="color:rgb(204, 51, 51);">-${!pointsDollarValue}</span>
+                    </p>
+                </apex:outputText>
+
+                {{#ifStoreSetting 'Skip_Tax_Calculation__c'}}
+                &#160;
+                {{else}}
+                {{#if this.orderData.taxAmount}}
+                <p class="cc_subtotal">
+                    <span class="pull-left cc_est_tax_label">{{pageLabelMap 'CheckOut_EstimatedTax'}}&#58;</span>
+                    <span class="pull-right cc_est_tax_value">{{{price this.orderData.taxAmount}}}</span>
+                </p>
+                {{/if}}
+                {{/ifStoreSetting}}
+                {{#ifStoreSetting 'Skip_Shipping_Calculation__c'}}
+                &#160;
+                {{else}}
+                {{#if this.orderData.shipAmount}}
+                <p class="cc_shipping">
+                    <span class="pull-left cc_shipping_label">{{pageLabelMap 'CartInc_Shipping'}}&#58;</span>
+                    <span class="pull-right cc_shipping_value">{{{price this.orderData.shipAmount}}}</span>
+                </p>
+                {{/if}}
+                {{/ifStoreSetting}}
+                <hr>
+                <p class="cc_grand_total">
+                    <span class="pull-left cc_grand_total_label">{{pageLabelMap 'CartInc_GrandTotal'}}&#58;</span>
+                    <span class="pull-right cc_grand_total_value">{{{price this.orderData.totalAmount}}}</span>
+                </p>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            var rewardPtsEnabled = false;
+
+            if(CCRZ.pagevars.pageConfig["c.rewardpts"]) {
+                if(CCRZ.pagevars.pageConfig["c.rewardpts"] == "TRUE") {
+                    rewardPtsEnabled = true;
+                }
+            }
+
+            if(rewardPtsEnabled == false) {
+                return false;
+            }
+
+            CCRZ.uiProperties.OrderDetailLLIView.partial.orderReviewSummary = '#CKZ-OrderReviewSummary-Desktop';
+        });
+    </script>
+
+</apex:component>

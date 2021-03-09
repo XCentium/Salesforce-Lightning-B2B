@@ -1,0 +1,18 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="accountname" type="String" default=''/>
+    <aura:attribute name="contactname" type="String" default=''/>
+    <aura:attribute name="oppname" type="String" default=''/>
+    <aura:attribute name="leadname" type="String" default=''/>
+    <aura:attribute name="casename" type="String" default=''/>
+    <aura:attribute name="recId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+	<div class="footer">
+        <div class="center">
+            <div class="padding">
+                <button class="slds-button hovereffect" aura:id="{!v.recId}" id="{!v.recId}" onclick="{!c.toAccount}">
+                    <lightning:icon iconName="utility:preview" size="xx-small"/><span class="buttonsmalltext">View</span>
+                </button>
+            </div>
+        </div>
+	</div>
+</aura:component>

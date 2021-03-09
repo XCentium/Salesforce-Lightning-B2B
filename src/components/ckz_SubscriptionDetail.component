@@ -1,0 +1,310 @@
+<!--
+ - Created by brandon.rogers on 2/6/19.
+ -->
+
+<apex:component id="ckz_SubscriptionDetail">
+
+    <script id="CKZ-SubscriptionDetail" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_subscription_detail m-t-1">
+            <div class="panel-body MyAccount_SubscriptionDetail_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">
+                            {{pageLabelMap 'MyAccount_MySubscriptions_Title'}}
+                            {{#if this.loaded}}
+                                <small>{{this.name}}</small>
+                            {{/if}}
+                        </h2>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <button type="button" class="btn btn-default mySubscriptions cc_my_subscriptions">{{pageLabelMap 'MySubscriptions_MySubscriptionsBtn'}}</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body cc_body cc_myaccount_content">
+                <div class="messagingSection-invoice-Error" style="display: none"></div>
+                <div class="messagingSection-invoice-Warning" style="display: none"></div>
+                <div class="messagingSection-invoice-Info" role="alert" style="display: none">
+                    <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&#215;</span>
+                    </button>
+                </div>
+
+                {{#if this.loaded}}
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{productLink this.subProduct 'cc_subscription_image' image=(displayImage this.mediaWrapper 'subImage img-responsive' alt=this.subProduct.name dataId=this.subProduct.sku)}}
+                        </div>
+
+                        <div class="col-xs-10">
+                            <div class="cc_subscription_product_label">
+                                {{productLink this.subProduct 'cc_prod_link' text=(pageLabelMap 'MySubscriptions_ProductDetails' this.subProduct.sku this.subProduct.name this.subProduct.productType this.subProduct.productStatus)}}
+                            </div>
+
+                            <p class="cc_subscription_product_desc">
+                                {{unescape this.subProduct.shortDesc}}
+                            </p>
+
+                            {{#if this.includedItems}}
+                                <a class="subscriptionField included_items cc_included_items" href="#additional_info{{this.subProduct.sku}}" id="additionalInfoLink" data-toggle="modal">
+                                    {{pageLabelMap 'MySubscriptions_IncludedItems'}}
+                                </a>
+
+                                <div id="additional_info{{this.subProduct.sku}}" class="modal included_items fade cc_modal cc_subscription_included_items" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog cc_modal-dialog" role="document">
+                                        <div class="modal-content cc_modal-content">
+                                            <div class="modal-header cc_modal-header">
+                                                <button type="button" class="close cc_close" data-dismiss="modal" arial-label="Close">
+                                                    <span aria-hidden="true">&#215;</span>
+                                                </button>
+                                                <h4 class="modal-title cc_modal-title" id="myModalLabel">{{this.subProduct.name}} {{pageLabelMap 'MySubscriptions_IncludedItems'}}</h4>
+                                            </div>
+
+                                            <div class="modal-body cc_modal-body">
+                                                {{#each this.includedItems}}
+                                                    <div class="row">
+                                                        <div class="col-md-8 cc_sub_included_item-name">
+                                                            {{{displayProductName 'Aggregate_Display' this.translatedParentProductName this.translatedProductName }}}
+                                                        </div>
+                                                        <div class="col-md-4 pull-right cc_sub_included_item-qty">
+                                                            {{pageLabelMap 'MySubscriptions_Qty'}} {{this.quantity}}
+                                                        </div>
+                                                    </div>
+                                                {{/each}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/if}}
+
+                            {{#if this.quantity}}
+                                <p class="cc_subscription_product_qty">
+                                    {{pageLabelMap 'MySubscriptions_QuantityLabel' this.quantity}}
+                                </p>
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <div class="row cc_address_row">
+                        <div class="col-xs-6">
+                            {{#if this.orderAddr}}
+                                <div class="cc_order_address">
+                                    <div class="cc_order_address_label">{{pageLabelMap 'MySubscriptions_OrderAddressLabel'}}</div>
+                                    <div class="cc_order_address_value">{{> addressDisplay this.orderAddr}}</div>
+                                </div>
+                            {{/if}}
+                        </div>
+
+                        <div class="col-xs-6">
+                            {{#if this.instAddr}}
+                                <div class="cc_installment_address">
+                                    <div class="cc_installment_address_label">{{pageLabelMap 'MySubscriptions_InstallmentAddressLabel'}}</div>
+                                    <div class="cc_installment_address_value">{{> addressDisplay this.instAddr}}</div>
+                                </div>
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    {{#if this.storedPayment}}
+                        <div class="row cc_stored_payment_row">
+                            <div class="col-xs-12">
+                                <h3 class="cc_title">{{pageLabelMap 'MySubscriptions_SubscriptionStoredPaymentHdr'}}</h3>
+
+                                <div class="table-responsive">
+                                    <table id="subscriptionStoredPaymentTable" class="table cc_subsription_stored_payment table-hover cc_table">
+                                        <thead>
+                                            <tr class="cc_table_header_row">
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_name">{{pageLabelMap 'MySubscriptions_StoredPaymentName'}}</span>
+                                                </th>
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_account_type">{{pageLabelMap 'MySubscriptions_StoredPaymentAccountType'}}</span>
+                                                </th>
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_account_number">{{pageLabelMap 'MySubscriptions_StoredPaymentAccountNumber'}}</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr class="cc_table_row {{this.storedPayment.sfid}}">
+                                                <td class="cc_table_col">
+                                                    <span class="cc_col_subscription_name">
+                                                        <a href="javascript:void(0);" data-id="{{this.storedPayment.sfid}}" data-type="{{this.storedPayment.accountType}}" class="gotoUpdatePayment cc_goto_update_payment">{{this.storedPayment.displayName}}</a>
+                                                    </span>
+                                                </td>
+                                                <td class="cc_table_col">
+                                                    <span class="cc_col_subscription_account_type">
+                                                        {{pageLabelMapMultiString 'MyWallet_AcctType_' this.storedPayment.accountType}}
+                                                    </span>
+                                                </td>
+                                                <td class="cc_table_col">
+                                                    <span class="cc_col_subscription_account_number">
+                                                        {{pageLabelMapMultiString 'MyWallet_AcctNum_' this.storedPayment.accountType this.storedPayment.accountType this.storedPayment.accountNumber this.storedPayment.subAccountNumber (pageLabelMapMultiString 'PaymentType_' this.storedPayment.paymentType) (pageLabelMapMultiString 'PaymentExpMonth_' this.storedPayment.expirationMonth) (pageLabelMap this.storedPayment.expirationYear)}}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <p class="cc_modify_stored_payment">
+                                    <input type="button" class="btn btn-default btn-sm gotoModifyPayment cc_goto_modify_payment" data-sub="{{this.sfid}}" data-id="{{this.storedPayment.sfid}}" data-type="{{this.storedPayment.accountType}}" value="{{pageLabelMap 'MySubscriptions_ModifyStoredPaymentLabel'}}"/>
+                                </p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if this.sptOrderCount}}
+                        {{#ifNotEquals this.subStatus 'Cancelled'}}
+                            <div class="row cc_subscription_order_row">
+                                <div class="col-xs-12">
+                                    {{#ifGreater this.orderCountRemaining 0}}
+                                        <span class="cc_next_order_label">{{pageLabelMap 'MySubscriptions_NextShipmentLabel' this.orderNextDate}}</span>
+                                        <p class="cc_next_order_details">
+                                            {{pageLabelMap 'MySubscriptions_ShippingDetails' this.sptOrderFreq (pageLabelPrefixMap 'MySubscriptions_Frequency_' this.sptOrderFreqUOM) this.orderLastDate}}
+                                        </p>
+                                    {{else}}
+                                        <span class="nextOrderLabel">{{pageLabelMap 'MySubscriptions_NoNextShipmentLabel'}}</span>
+                                    {{/ifGreater}}
+                                </div>
+                            </div>
+                        {{/ifNotEquals}}
+                    {{/if}}
+
+                    {{#if this.orderHistory}}
+                        <div class="row cc_subscription_order_history">
+                            <div class="col-xs-12">
+                                <h3 class="cc_title">{{pageLabelMap 'MySubscriptions_OrderHistoryHdr'}}</h3>
+                                <div class="table-responsive">
+                                    <table id="orderTable" class="cc_subsription_orders table-hover cc_table">
+                                        <thead>
+                                            <tr class="cc_table_header_row">
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_order_name">{{pageLabelMap 'MySubscriptions_OrderName'}}</span>
+                                                </th>
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_order_date">{{pageLabelMap 'MySubscriptions_OrderDate'}}</span>
+                                                </th>
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_order_total">{{pageLabelMap 'MySubscriptions_OrderTotal'}}</span>
+                                                </th>
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_order_status">{{pageLabelMap 'MySubscriptions_OrderStatus'}}</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {{#each this.orderHistory}}
+                                                <tr class="cc_table_row {{this.sfid}}">
+                                                    <td class="cc_table_col">
+                                                        <span class="cc_col_subscription_order_name"><a href="javascript:void(0);" data-id="{{this.encryptedId}}" class="gotoOrderDetails cc_goto_order_details">{{this.name}}</a></span>
+                                                    </td>
+                                                    <td class="cc_table_col">
+                                                        <span class="cc_col_subscription_order_date">{{this.orderDate}}</span>
+                                                    </td>
+                                                    <td class="cc_table_col">
+                                                        <span class="cc_col_subscription_order_total">{{price this.orderTotal this.currencyIsoCode}}</span>
+                                                    </td>
+                                                    <td class="cc_table_col">
+                                                        <span class="cc_col_subscription_order_status">{{this.orderStatus}}</span>
+                                                    </td>
+                                                </tr>
+                                            {{/each}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if this.sptInstCount}}
+                        {{#ifNotEquals this.subStatus 'Cancelled'}}
+                            <div class="row cc_subscription_order_history">
+                                <div class="col-xs-12">
+                                    {{#ifGreater this.instCountRemaining 0}}
+                                        <span class="cc_next_installment_label">{{pageLabelMap 'MySubscriptions_NextPaymentLabel' (price this.topRecurringPrice this.currencyIsoCode) this.instNextDate this.currencyIsoCode }}</span>
+
+                                        {{#each this.subChildren}}
+                                            <p class="cc_future_installment_detail">
+                                                {{pageLabelMap 'MySubscriptions_PaymentDetailModifiers' this.instCountRemaining (price this.recurringPriceSubAmt ../currencyIsoCode) ../sptInstFreq (pageLabelPrefixMap 'MySubscriptions_Frequency_' ../sptInstFreqUOM) this.instLastDate}}
+                                            </p>
+                                        {{/each}}
+
+                                        <p class="cc_future_installment_detail_total">
+                                            {{pageLabelMap 'MySubscriptions_PaymentDetails' this.instCountRemaining this.sptInstFreq (pageLabelPrefixMap 'MySubscriptions_Frequency_' this.sptInstFreqUOM) this.instLastDate}}
+                                        </p>
+                                    {{else}}
+                                        <span class="cc_next_installment_label">{{pageLabelMap 'MySubscriptions_NoNextPaymentLabel'}}</span>
+                                    {{/ifGreater}}
+                                </div>
+                            </div>
+                        {{/ifNotEquals}}
+                    {{/if}}
+
+                    {{#if this.installmentPayments}}
+                        <div class="row cc_subscription_installment_payments">
+                            <div class="col-xs-12">
+                                <h3 class="cc_title">{{pageLabelMap 'MySubscriptions_SubscriptionPaymentsHdr'}}</h3>
+
+                                <div class="table-responsive">
+                                    <table id="installmentTable" class="cc_subsription_payments table-hover cc_table">
+                                        <thead>
+                                            <tr class="cc_table_header_row">
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_payment_name">{{pageLabelMap 'MySubscriptions_PaymentName'}}</span>
+                                                </th>
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_payment_account_number">{{pageLabelMap 'MySubscriptions_PaymentAccount'}}</span>
+                                                </th>
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_payment_amount">{{pageLabelMap 'MySubscriptions_PaymentAmount'}}</span>
+                                                </th>
+                                                <th class="cc_table_header">
+                                                    <span class="cc_table_header_subscription_payment_payment_ts">{{pageLabelMap 'MySubscriptions_PaymentTS'}}</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {{#each this.installmentPayments}}
+                                                <tr class="cc_table_row {{this.sfid}}">
+                                                    <td class="cc_table_col">
+                                                        <span class="cc_col_subscription_payment_name"><a href="javascript:void(0);" data-id="{{this.sfid}}" class="gotoPaymentDetails cc_goto_payment_details">{{this.name}}</a></span>
+                                                    </td>
+                                                    <td class="cc_table_col">
+                                                        <span class="cc_col_subscription_payment_account_number">{{pageLabelMapMultiString 'PaymentDisplay_' this.accountType this.accountType this.accountNumber this.subAccountNumber}}</span>
+                                                    </td>
+                                                    <td class="cc_table_col">
+                                                        <span class="cc_col_subscription_payment_amount">{{price this.amount this.currencyIsoCode}}</span>
+                                                    </td>
+                                                    <td class="cc_table_col">
+                                                        <span class="cc_col_subscription_payment_payment_ts">{{this.paymentTSStr}}</span>
+                                                    </td>
+                                                </tr>
+                                            {{/each}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    <div id="modalSecDetail"></div>
+                {{/if}}
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.SubscriptionDetailView.desktop.tmpl = 'CKZ-SubscriptionDetail';
+        });
+    </script>
+</apex:component>

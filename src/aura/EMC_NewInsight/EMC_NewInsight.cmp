@@ -1,0 +1,5 @@
+<aura:component >
+    <aura:attribute name="parentType" type="String"></aura:attribute>
+	<aura:attribute name="insight" type="Object"></aura:attribute>
+	<aura:attribute name="insightType" type="Object"></aura:attribute>
+</aura:component>

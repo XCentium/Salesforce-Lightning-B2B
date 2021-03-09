@@ -1,0 +1,30 @@
+<aura:component >
+   <aura:attribute name="label" type="String" default="Search"/>
+   <aura:attribute name="displayMode" type="String" default="picklist"/> <!-- picklist or radio --> 
+   <aura:attribute name="selectedValue" type="String" default="NoFilter"/>
+   <aura:attribute name="fieldName" type="String" default=""/>
+   <aura:attribute name="uniqueFilterName" type="String" default="ToBeDefined"/>
+    
+    
+   <aura:registerEvent name="sendFilter" type="c:CatalogSendFilterEvent"/>
+   
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    
+   <aura:if isTrue="{!v.displayMode=='radio'}">
+         <span class="slds-form-element__label slds-m-bottom_none">{!v.label}</span>
+       <lightning:input type="radio" label="Do not filter" name="options" value="NoFilter" checked="true" onchange="{!c.handleRadioClick}"/>
+       <lightning:input type="radio" label="Is true" name="options" value="isTrue" onchange="{!c.handleRadioClick}" />
+       <lightning:input type="radio" label="Is false" name="options" value="isFalse"  onchange="{!c.handleRadioClick}"/>
+          
+	</aura:if> 
+    
+   <aura:if isTrue="{!v.displayMode=='picklist'}">
+       <lightning:select name="booleanPicklist" label="{!v.label}" aura:id="booleanPicklist" value="{!v.selectedValue}" onchange="{!c.picklistSelect}">
+                <option text="Do not filter" value="NoFilter" selected="true"/>
+                <option text="Is True" value="isTrue" />
+                <option text="Is False" value="isFalse" />
+       </lightning:select>    
+   </aura:if>  
+      
+
+</aura:component>

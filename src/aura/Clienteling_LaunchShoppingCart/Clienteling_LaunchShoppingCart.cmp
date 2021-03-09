@@ -1,0 +1,32 @@
+<aura:component controller="ClientellingController"  access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="userName" type="string"/>
+    <aura:attribute name="contName" type="string"/>
+    <aura:attribute name="url" type="string"/>
+    <aura:attribute name="buttonLabel" type="string"/>
+    <aura:attribute name="ContactID" type="String"/>
+    <aura:attribute name="Contact" type="Contact[]"/>
+    <button class="slds-button slds-button_outline-brand" onclick="{!c.toggleModal}">
+        {!v.buttonLabel}
+    </button>
+    <div class="demo-only">
+      <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" 
+               class="slds-modal slds-modal_large" aura:id="modal">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                    title="Close" onclick="{!c.toggleModal}">
+                <lightning:icon class="iconPerson" iconName="utility:close" variant="inverse"/>
+            </button>
+              <aura:iteration var="contact" items="{!v.Contact}" indexVar="index"> 
+              	<div class="slds-text-heading_small"><lightning:icon iconName="utility:user" size="small"/>{!v.userName} logged in as {!contact.FirstName + ' ' + contact.LastName}</div>
+          	  </aura:iteration>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height: 600px;">
+              <iframe src="{!v.url}" width="100%" height="100%"/>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop" aura:id="backdrop"></div>
+    </div>
+</aura:component>

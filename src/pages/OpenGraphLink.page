@@ -1,0 +1,62 @@
+<apex:page lightningStylesheets="true" standardStylesheets="false" showHeader="false" sidebar="false" controller="OpenGraphLinkController">
+    <apex:slds />
+    <head>
+        <meta property="og:title" content="{!title}" />
+        <meta property="og:description" content="{!description}" />
+        <meta property="og:url" content= "{!url}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="{!imageUrl}" />
+        
+        <script>
+        const redirectToUri = () => {
+            let urlParam, recordId, recordType, pathPrefix;
+            
+            urlParams = new URLSearchParams(window.location.search);
+            
+            if(!urlParams.has('recordId')) {
+            alert('No recordId. Add either a case or knowledge article version id to the url')
+            return true;
+        }
+        if(!urlParams.has('community')) {
+            alert('No community parameter. Add the url path for the community you would like to redirect to.')
+            return true;
+        }
+        
+        recordId = urlParams.get('recordId')
+        recordType = recordId.startsWith('500') ? 'case' : 'article';
+        pathPrefix = urlParams.get('community')
+        
+        OpenGraphLinkController.getNetworkUrl(pathPrefix,(req, res) => {
+            console.log(res)
+            let networkUrl = res.result
+            let redirectUri = networkUrl + '/s/' + recordType + '/' + recordId
+            console.log(redirectUri)
+            window.location.href = redirectUri;
+        })
+        }
+        
+        window.onload = redirectToUri
+        </script>
+        <style>
+            body {
+            height: 100vh;
+            width: 100vw;
+            }
+            
+            div {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 2em;
+            font-family: 'Salesforce Sans';
+            }
+        </style>
+    </head>
+    
+    <body class=" slds-scope">
+        <div class="">
+            Redirecting...
+        </div>
+    </body>
+</apex:page>

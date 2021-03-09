@@ -1,0 +1,52 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+<aura:attribute name="backgroundColor" type="String" default="#f2f2f2" />
+    <aura:attribute name="iconbackgroundColor" type="String" default="#f2f2f2" />
+             <aura:attribute name="Header" type="String" default="Still Need Help?" access="global" />
+             <aura:attribute name="SupportNumber" type="String" default="1-800-428-2667" access="global" />
+
+	<div style="{!'background-color:' + v.backgroundColor}">
+    <div class="wrapper">
+        <div class="slds-p-around_medium forceCommunityRichText">
+            <h1 style="text-align: center;">{!v.Header}</h1>
+            <div class="slds-grid slds-p-vertical_medium slds-wrap">
+                 <div class="slds-col slds-small-size_1-of-1 slds-medium-size_1-of-3 open-ticket slds-text-align_center slds-p-vertical_large slds-p-horizontal_large">
+                     <div class="icon"> <a href="/s/contactsupport">
+                            <i class="far fa-life-ring"></i></a>
+                    </div>
+                    <div class="slds-p-top_small slds-text-heading_small">
+                        <a href="/s/contactsupport">Open A Ticket</a>
+                    </div>
+                    <div class="slds-text-body_regular">
+                        Please allow 24 hours for a response.
+                    </div>
+
+                </div>
+                <div class="slds-col slds-small-size_1-of-1 slds-medium-size_1-of-3 call-us slds-text-align_center slds-p-vertical_large slds-p-horizontal_large">
+                    <div class="icon">
+                        <i class="fas fa-phone-volume"></i>
+                    </div>
+                    <div class="slds-p-top_small">
+                        <span class="slds-text-body_regular">Call Us</span>&nbsp;<span class="slds-text-heading_small">{!v.SupportNumber}</span>
+                    </div>
+                    <div class="slds-text-body_regular">
+                        Monday to Friday / 8am-8pm ET
+                    </div>
+
+                </div>
+                <div class="slds-col slds-small-size_1-of-1 slds-medium-size_1-of-3 live-chat slds-text-align_center slds-p-vertical_large slds-p-horizontal_large">
+                    <div class="icon">
+                        <i class="far fa-life-ring"></i>
+                    </div>
+                    <div class="slds-p-top_small slds-text-heading_small">
+                        Live Chat
+                    </div>
+                    <div class="slds-text-body_regular">
+                        Monday to Sunday / 8am-11pm ET
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+</aura:component>

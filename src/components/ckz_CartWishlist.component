@@ -1,0 +1,43 @@
+<!--
+ - Created by brandon.rogers on 2019-07-03.
+ -->
+
+<apex:component id="ckz_CartWishlist">
+    <script id="CKZ-CartWishlist" type="text/template">
+        <div class="btn-group dropdown">
+            <button type="button" class="btn btn-link btn-sm dropdown-toggle p-a-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="far fa-plus"></i>
+                {{pageLabelMap 'AddtoWishlist'}}
+                <i class="fas fa-caret-down"></i>
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="dropWish">
+                {{#each this}}
+                <li><a href="javascript:void(0);" class="pickWish" data-id="{{sfid}}">{{{name}}}</a></li>
+                {{/each}}
+                <li role="separator" class="divider"></li>
+                <li>
+                    <div class="row center-block">
+                        <div class="col-xs-12">
+                            <div class="input-group input-group-sm">
+                                <input id="newWishList" type="text" class="form-control newListName" placeholder="{{pageLabelMap 'MyAccount_Name'}}">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default pickWish" data-id="-1" type="button">
+                                        <i class="far fa-check"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function($){
+            CCRZ.uiProperties.wishlistPickerModal.desktop.tmpl = 'CKZ-CartWishlist';
+
+        });
+    </script>
+</apex:component>

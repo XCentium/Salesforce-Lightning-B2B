@@ -1,0 +1,41 @@
+<template>
+    <lightning-card  class="bear-tile">
+        <template if:true={removed}>
+            <div slot="actions">
+                <lightning-button-menu alternative-text="Show menu">
+                    <lightning-menu-item value="MenuItemOne" label="Ignore"></lightning-menu-item>
+                    <lightning-menu-item value="MenuItemTwo" label="Acknowledge"></lightning-menu-item>
+                    <lightning-menu-item value="MenuItemThree" label="Remind Me Later" onclick={handleRemindMeLater}></lightning-menu-item>
+                </lightning-button-menu>
+            </div>
+            <div slot="title" onclick={handleOpenRecordClick}>
+                <a>{notification.Name}</a>
+    
+            </div>
+        </template>
+        <template if:false={removed}>
+            <div slot="title" >
+                <h2>{notification.Name}</h2>
+            </div>
+
+        </template>
+        
+        
+        <div class="slds-p-horizontal_small">
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="action:add_contact" alternative-text="add_contact" title="add_contact"></lightning-icon>
+                    <!--<img src={appResources.bearSilhouette} alt="Bear profile" class="bear-silhouette" width="200"/>-->
+                </div>
+                <div class="slds-media__body">
+                    <p class="slds-m-bottom_xx-small">{notification.Description__c}</p>
+                    <p class="slds-m-bottom_xx-small"><b>Score:</b> {notification.Einstein_Score__c}</p>
+                    <p class="slds-m-bottom_xx-small"><b>Type:</b> {notification.Notification_Type__c} </p>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+        <p class={pClass} >{notification.Priority__c}</p>
+    </lightning-card>
+</template>

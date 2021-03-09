@@ -1,0 +1,105 @@
+<!--
+/*
+
+*/
+-->
+
+<aura:component controller="PricerLookupFieldController" >
+    <!-- Required Scripts/Styles -->
+    <!-- Salesforce Lightning Design System : https://www.lightningdesignsystem.com/  is already included-->
+
+    <!--Public Attributes -->
+    <aura:attribute name="sObjectAPIName" type="String" required="true" description="The API name of the SObject to search" />
+    <aura:attribute name="label" type="String" default="" description="The label to assign to the lookup, eg: Account" />
+    <aura:attribute name="pluralLabel" type="String" required="true" description="The plural label to assign to the lookup, eg: Accounts" />
+    <aura:attribute name="displayHeader" type="Boolean" default="false" description="Display or not a label above the field"/>
+    <aura:attribute name="iconName" type="String" default="standard:topic" description="Icon to be displayed in the lookup field" />
+    <aura:attribute name="selectedItemId" type="String" default="" description="Set or return the recordId of the item in the lookup field"/>
+    <aura:attribute name="selectedItemLabel" type="String" default="" description="Return the name of the item in the lookup field"/>
+	<aura:attribute name="pricebookId" type="String" default="" description=""/>
+    
+    <!-- Internal attributes -->
+    <aura:attribute name="searchString" type="String" description="The search string to find." />
+    <aura:attribute name="matches" type="List" description="The resulting matches returned by the Apex controller." />
+    <aura:attribute name="searchMessage" type="String" default=""/>
+    <aura:attribute name="selector" type="Integer" description="tracker for keyup, keydown and mouse hover in the lookup menu"/>
+	<aura:attribute name="selectorRecId" type="String" default="" description="hovered element record id in the lookup menu"/>	
+    <aura:attribute name="selectorRecLabel" type="String" default="" description="hovered element record Label in the lookup menu"/>	
+    <aura:attribute name="fireScrollEventAfterRendering" type="Boolean" default="false" description=""/>	
+    
+    <!-- Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.initLookup}"/>
+    <!--<aura:handler name="change" value="{!v.selectedItemId}" action="{!c.autoClear}"/>-->
+    <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
+
+    
+    <!-- Events -->
+    <aura:registerEvent name="askPricerToScroll" type="c:PricerScrollEvent"/>
+    <aura:registerEvent name="newSectionRequested" type="c:NewSectinRequested"/>
+    
+    <!-- Methods -->
+    <aura:method name="getCmpId" action="{!c.getCmpId}"/>
+    <aura:method name="focus" action="{!c.focus}"/>
+    
+    <!-- DISABLED EVENTS
+    <aura:registerEvent name="updateLookupIdEvent" type="c:UpdateLookupId"/>
+    <aura:registerEvent name="clearLookupIdEvent" type="c:ClearLookupId"/>
+    -->
+
+    <!-- Lookup Markup : See https://www.lightningdesignsystem.com/components/lookups -->
+    <div class="slds" aura:id="mainDiv">
+    <div class="{!$Browser.formFactor!='DESKTOP'?'modalContent':' '}">
+    <div aura:id="lookup-div" class="slds-lookup" data-select="single" data-scope="single" data-typeahead="true">
+        <!-- This is the Input form markup -->
+        <div class="slds-form-element">
+          <aura:if isTrue="{!v.displayHeader}">
+              <label class="slds-form-element__label" for="lookup">{!v.label}</label>
+          </aura:if>
+            <div aura:id="lookupFieldContainer" class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                <lightning:icon iconName="utility:search" size="x-small" alternativeText="Search" class="slds-input__icon"/>
+                <!-- This markup is for when an item is currently selected -->
+                <div aura:id="lookup-pill" class="slds-pill-container slds-hide" style="background-color:white;">
+                        <span class="slds-pill slds-pill--bare">
+                            <span class="slds-pill__label">
+                                <lightning:icon iconName="{!v.iconName}" size="small" alternativeText="" class="slds-icon--small"/>&nbsp;&nbsp;{!v.searchString}
+
+                            </span>
+                            <button class="slds-button slds-button--icon-bare" onclick="{!c.clear}">
+                                <lightning:icon iconName="utility:close" size="x-small" alternativeText="Search" class="slds-button__icon"/>
+                                <span class="slds-assistive-text">Remove</span>
+                            </button>
+                        </span>
+                    </div> 
+                    <!-- This markup is for when searching for a string -->
+                    <ui:inputText aura:id="lookup" value="{!v.searchString}" class="slds-input" updateOn="keyup" keyup="{!c.search}" blur="{!c.inputBlur}" click="{!c.search}" />
+                </div>
+            </div>
+            <!-- This is the lookup list markup. Initially it's hidden -->
+            <div aura:id="lookuplist" class="slds-lookup__menu" role="listbox" style="">
+                <div class="slds-lookup__item">
+                    <button class="slds-button">
+
+                        <lightning:icon iconName="utility:search" size="small" alternativeText="Search" class=""/>
+                        &nbsp; {!v.searchMessage}
+                    </button>
+                </div>
+                <ul aura:id="lookuplist-items" class="slds-lookup__list" style="max-height:200px" role="presentation">
+                    <aura:iteration items="{!v.matches}" var="match" indexVar="iv">
+                        <li class="{!match.kbSelected?'slds-lookup__item kbSelected':'slds-lookup__item'}">  
+                            <a id="{!globalId + '_id_' + match.SObjectId}" role="option" data-index="{!iv}"
+                               onmousedown="{!c.select}" onmouseover="{!c.itemOver}">
+                                <lightning:icon iconName="{!v.iconName}" size="small" alternativeText="" class="slds-icon--small"/>&nbsp;&nbsp;{!match.SObjectLabel}
+                            </a>
+                        </li>
+                    </aura:iteration>
+                    <li class="slds-lookup__item slds-hide">
+                        <a id="{!globalId + '_id_' + addItem}" role="option" onmousedown="{!c.createRecord}">
+                            <lightning:icon iconName="utility:add" size="small" alternativeText="" class="slds-icon--small"/>&nbsp;&nbsp;Add&nbsp;{!v.label}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>    
+    </div>
+</aura:component>

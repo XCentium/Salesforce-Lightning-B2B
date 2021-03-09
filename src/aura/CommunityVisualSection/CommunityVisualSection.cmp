@@ -1,0 +1,36 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+	<aura:attribute name="prefix" type="String" />
+    <aura:attribute name="Title1" type="String" default=""/>
+    <aura:attribute name="backgroundColor" type="String" default="#377EAF"/>
+    <aura:attribute name="Content1" type="String" default=""/>
+    <aura:attribute name="Link1" type="String" default=""/>
+    <aura:attribute name="Image1" type="String" default=""/>
+    <aura:attribute name="ExternalImage" type="String" default=""/>
+    <aura:attribute name="boxpadding" type="String" default="40"/>
+    <aura:attribute name="titleColor" type="String" default="#ffffff"/>
+    <aura:attribute name="textColor" type="String" default="#ffffff"/>
+    <aura:attribute name="buttonText" type="String" default="Learn More"/>
+    <aura:attribute name="backgroundImageOpacity" type="String" default="0.5"/>
+    <div class="wrapper" style="{!'background-color:'+v.backgroundColor+';'}">
+        <aura:if isTrue="{!v.ExternalImage != ''}">
+            <div class="overlay backgroundimage" style="{!'opacity:' + v.backgroundImageOpacity + ';background-image: url('+ v.ExternalImage +');'}"></div>	
+                <div class="padding content" style="{!'padding:' + v.boxpadding + 'px 10px;'}">
+                    <h1 style="{!'color:' + v.titleColor + ';'}">{!v.Title1}</h1>
+                    <p class="text" style="{!'color:' + v.textColor + ';'}">{!v.Content1}</p>
+                    <aura:if isTrue="{!v.buttonText != ''}">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.GotoURL}">{!v.buttonText}</button>
+                    </aura:if>
+                </div>
+          <aura:set attribute="else">
+              <div class="overlay backgroundimage" style="{!'opacity:' + v.backgroundImageOpacity + ';background-image: url('+$SfdcSite.pathPrefix +'/resource/'+v.Image1+');'}"></div>	
+                <div class="padding content" style="{!'padding:' + v.boxpadding + 'px 10px;'}">
+                    <h1 style="{!'color:' + v.titleColor + ';'}">{!v.Title1}</h1>
+                    <p class="text" style="{!'color:' + v.textColor + ';'}">{!v.Content1}</p>
+                    <aura:if isTrue="{!v.buttonText != ''}">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.GotoURL}">{!v.buttonText}</button>
+                    </aura:if>
+                </div>
+          </aura:set>  
+        </aura:if>
+    </div>      
+</aura:component>

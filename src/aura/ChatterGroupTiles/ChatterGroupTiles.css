@@ -1,0 +1,73 @@
+.THIS .blocklink{
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.THIS .blockcontent{
+    background-color: rgba(0,0,0,.4);
+    -webkit-transition: background .8s ease;
+    transition: background .8s ease;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+.THIS .blocktitle{
+    color: #ffffff;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 1rem;
+    vertical-align: middle;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display:table-cell;
+}
+.THIS .backgroundimage{
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+.THIS  a:hover {
+    text-decoration: none;
+}
+
+.outerDiv.THIS {
+  padding: 0;
+  display: -ms-flexbox;
+  -ms-flex-wrap: wrap;
+  -ms-flex-direction: column;
+  -webkit-flex-flow: row wrap; 
+  flex-flow: row wrap; 
+  display: -webkit-box;
+  display: flex;
+}
+.THIS .innerdiv {
+    border:1px solid white;
+    height:250px;
+    text-align:center;
+    color:white;
+    font-size:2em;
+    background:white;
+    -webkit-box-flex: auto;
+  	-ms-flex: auto;
+  	flex: auto; 
+  	width: calc(240px - 1rem); 
+}
+
+@media only screen and (max-width: 480px){
+    .THIS .innerdiv {
+        width:50%;
+        height:200px;
+    }
+}

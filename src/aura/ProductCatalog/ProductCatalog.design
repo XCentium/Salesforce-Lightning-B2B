@@ -1,0 +1,5 @@
+<design:component >
+    <design:attribute name="title" label="Page Title"/>
+    <design:attribute name="subtitle" label="Subtitle"/>
+    <design:attribute name="logoTitlePosition" label="Logo/Title Position" datasource="Left Aligned,Centered,Right Aligned"/>
+</design:component>

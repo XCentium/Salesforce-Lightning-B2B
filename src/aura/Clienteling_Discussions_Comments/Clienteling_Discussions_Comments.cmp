@@ -1,0 +1,35 @@
+<aura:component >
+	
+                              <div class="slds-feed__item-comments">
+                                    <ul>
+                                      <li>
+                                        <article class="slds-comment slds-media slds-hint-parent">
+                                          <div class="slds-media__body">
+                                            <header class="slds-media slds-media_center">
+                                              <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                                                <p class="slds-truncate" title="Jenna Davis"><a href="javascript:void(0);">{!comment.CreatedBy.FirstName + ' ' + comment.CreatedBy.LastName}</a></p>
+                                              </div>
+                                              <div class="slds-p-horizontal_medium slds-p-vertical_x-small slds-grid">
+                                                  <span class="slds-text-body_small slds-col_bump-left">{!index + 1} of {!disc.CommentCount}</span>
+                                              </div>
+                                            </header>
+                                            <div class="slds-comment__content slds-text-longform">
+                                            	<aura:unescapedHtml value="{!comment.CommentBody}" />   
+                                            </div>
+                                            <footer>
+                                              <ul class="slds-list_horizontal slds-has-dividers_right slds-text-body_small">
+                                                <li class="slds-item">
+                                                  <button class="slds-button_reset slds-text-color_weak" title="Like this item" aria-pressed="false">Like</button>
+                                                </li>
+                                                <li class="slds-item">
+                                                    <ui:outputDateTime value="{!comment.SystemModstamp}" format="MMM dd, yyyy hh:mm a z" />
+                                                </li>
+                                              </ul>
+                                            </footer>
+                                          </div>
+                                        </article>
+                                      </li> 
+                                    </ul>
+                                  </div>
+                                  
+</aura:component>

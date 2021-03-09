@@ -1,0 +1,62 @@
+<aura:component controller="LightningProductPricer" implements="force:appHostable" access="global">
+    <aura:attribute name="sObjectName" type="String" default=""/>
+    <aura:attribute name="recordId" type="String" default=""/>
+    <aura:attribute name="accountId" type="String" default=""/>
+    <aura:attribute name="currentStep" type="Integer" default="1"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.accountId}" action="{!c.accountIdChanged}"/>
+    
+    
+    <div style="height:100%;width:100%;" ontouchmove="{!c.handleTouchMove}">
+        <aura:if isTrue="{!v.currentStep==1}">
+           <div class="stepOuterClass">
+            	<div class="stepContent">
+                     
+                    <div style="margin-bottom:50px;font-size: 40px;">{!$Label.c.Pricer_choose_account}</div>  
+                    <div>
+                    <c:PricerLookupField aura:id="PricerLookupFieldCmp"
+                                         label="Account"
+                                         pluralLabel="Accounts"
+                                         sObjectAPIName="Account"
+                                         selectedItemId="{!v.accountId}"
+                                         iconName="standard:account"/>   
+                   </div>     
+                </div>
+            </div>       
+  
+        </aura:if>  
+        
+        <aura:if isTrue="{!v.currentStep==2}">
+            <div class="stepOuterClass">
+            	<div class="stepContent">
+                     <div style="margin-bottom:50px;font-size: 40px;">{!$Label.c.Pricer_what_to_create}</div>   
+                     <div style="margin-bottom:50px">
+                         <lightning:button label="{!$Label.c.Pricer_An_opportunity}" variant="brand" class="step2Button" onclick="{!c.newOppClick}" />
+                     </div>
+                     <div>
+                         <lightning:button label="{!$Label.c.Pricer_An_order}" variant="brand" class="step2Button" onclick="{!c.newOrderClick}" />
+                     </div>    
+            	</div>        
+            </div>
+        </aura:if>   
+        
+        
+        <aura:if isTrue="{!v.currentStep==3}">
+            <lightning:spinner alternativeText="Loading" size="large" />
+        </aura:if>  
+        
+        <aura:if isTrue="{!v.currentStep==4}">   
+            <div style="" >
+            <ui:scrollerWrapper class="scrollerSize">    
+                <c:PricerGrid recordId="{!v.recordId}"
+                              sObjectName='{!v.sObjectName}'
+                              source="tab"/>   
+            </ui:scrollerWrapper>        
+            </div>
+        </aura:if>   
+        
+        
+    </div>     
+    
+</aura:component>

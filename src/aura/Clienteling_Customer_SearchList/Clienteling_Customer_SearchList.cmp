@@ -1,0 +1,25 @@
+<aura:component implements="forceCommunity:searchInterface" controller="ClientellingController">
+<aura:attribute name="searchText" type="String"/>
+<aura:attribute name="SelectedContact" type="String"/>
+<aura:attribute name="contactList" type="Contact[]" default=""/>
+<aura:handler value="{!this}" name="init" action="{!c.init}"/>    
+    <div class="slds-card" role="banner">
+        <div class="padding">
+            <h2>Enter a Contact's Name</h2>
+            <div class="padding">
+                <div class="slds-form-element slds-lookup" data-select="single">
+                    <div class="slds-form-element__control">
+                        <div class="slds-input-has-icon slds-input-has-icon--right">
+                            <lightning:buttonIcon iconName="utility:search" variant="bare" onclick="{! c.handleClick }" alternativeText="Search" class="slds-input__icon" />
+                            <ui:inputText value="{!v.searchText}" class="slds-lookup__search-input slds-input" placeholder="Search for Customers" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<c:Clienteling_Customer_SearchResult 
+	recordIds="{!v.contactList}"
+    SelectedContact="{!v.SelectedContact}"                                
+/>  
+</aura:component>

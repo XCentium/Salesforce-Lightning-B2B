@@ -1,0 +1,40 @@
+.THIS.container {
+    position: relative;
+    height: 668px;
+}
+
+.THIS .button-container {
+    background-color: white;
+}
+
+.THIS .main {
+    position:absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow-y:auto;
+}
+.THIS .button-container {
+    position:absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #FDFDFD;
+}
+
+.THIS .reason-container {
+    position:relative;
+    padding: .5rem !important;
+}
+
+.THIS .reason-container:nth-child(n+1) {
+    margin-bottom: .5rem !important;
+}
+
+.THIS .close {
+    position: absolute;
+    top: .25rem;
+    right: .5rem;
+    z-index: 5;
+}

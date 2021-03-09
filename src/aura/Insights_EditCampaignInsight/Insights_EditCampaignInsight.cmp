@@ -1,0 +1,46 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    <aura:attribute name="insight" type="Map" default="{}"></aura:attribute>
+    <aura:attribute name="typeOptions" type="Map[]"></aura:attribute>
+    <aura:attribute name="trendTypeOptions" type="Map[]"></aura:attribute>
+    <aura:attribute name="disableSave" type="Boolean" default="true"></aura:attribute>
+    
+    <aura:handler name="change" value="{!v.insight}" action="{!c.handleValueChange}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <div class="action-body">
+        <div class="row">
+            <lightning:select aura:id="insightType"
+                              label="Type"
+                              value="{!v.insight.InsightType}">
+                <aura:iteration items="{!v.typeOptions}" var="option">
+                    <option value="{!option.value}" selected="{!option.selected}">{!option.label}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        
+        <div class="row">
+            <lightning:input label="Marketing Asset Id (ListEmail, MarketingForm, MarketingLink, or Landing Page)" value="{!v.insight.MarketingAssetId}"></lightning:input>
+        </div>
+        
+        <div class="row">
+            <lightning:select aura:id="insightTrendType"
+                              label="Trend Type"
+                              value="{!v.insight.TrendType}">
+                <aura:iteration items="{!v.trendTypeOptions}" var="option">
+                    <option value="{!option.value}" selected="{!option.selected}">{!option.label}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        
+    </div>
+    
+    <div class="action-footer">
+        <div class="row">
+            <lightning:button label="Back" class="column" variant="neutral" onclick="{!c.goBack}"></lightning:button>
+            <lightning:button label="Save" class="column flex-right" variant="brand" 
+                              onclick="{!c.handleSave}"
+                              disabled="{!v.disableSave}" ></lightning:button>
+        </div>
+    </div>
+</aura:component>

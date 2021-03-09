@@ -1,0 +1,21 @@
+<apex:page showHeader="false" sidebar="false">
+  <html>
+  <head>
+      <meta property="og:title" content="Sunnie Foods Delivery" />
+      <meta property="og:image" content="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Grocery/OGCardImage_ThanksForShopping.png" />
+      <meta property="og:description" content="" />
+      
+      
+          
+   
+  </head>
+  <body>
+  <apex:image url="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Grocery/OGCardImage_ThanksForShopping.png" width="75%"/>
+  </body>
+  <footer>
+
+</footer>
+  </html>
+  
+  
+</apex:page>

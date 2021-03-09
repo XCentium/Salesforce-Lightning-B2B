@@ -1,0 +1,749 @@
+<apex:page cache="false" showHeader="false" contentType="text/css" controller="SDOSiteController">
+
+/*** New CSS ***/
+
+.tabsNewBar{
+    width: 100%;
+}
+
+.bodyDiv{
+    min-height: 1500px;
+}
+
+body.default .pkbPage {
+    width: 980px;
+    
+}
+
+.pkbPage {
+    clear: both;
+    margin: 0 auto;
+    overflow: hidden;
+    text-align: left;
+}
+
+.pkbHeader {
+    clear: both;
+    display: block;
+    overflow: hidden;
+    width: 982px;
+}
+
+
+    /** Portal Default CSS **/
+    #sidebarDiv {
+        height:1110px;
+        background-color:transparent;
+        top:20px;
+        left:0;
+        position:absolute;
+        top:0;
+        z-index:10;
+    }
+
+
+        #sidebarDiv .sidebarInner {
+            background-color:transparent;
+            padding-bottom:0.1px;
+            width:200px;
+        }
+    
+            .sidebarModule {
+                background-color:#FFFFFF;
+                border:1px solid #C1C1C1;
+                margin:0 0 10px 10px;
+                padding:0;
+                overflow:hidden;
+            }
+            
+                .sidebarModuleHeader, .nestedModule .sidebarModuleHeader {
+                    background-color:#5684B2;
+                    color:#FFFFFF;
+                    font-family:Arial,Helvetica,sans-serif;
+                    font-size:91%;
+                    padding:5px 15px;
+                    font-weight:bold;
+                }
+                
+                .sidebarModuleBody{
+                    padding: 10px;
+                }
+    
+
+    /** Strip Knowledge CSS **/
+    .pkbGrayBoxTitle {
+    }
+    body.default .pkbHeader .pkbHeaderTabs td.selected a{
+    }
+
+
+
+
+
+
+
+
+
+
+/*** End New CSS ***/
+
+/***** page-wide styles *****/
+body  {
+    -x-system-font: none;
+    background: #E3E3E3 none repeat scroll 0 0;
+    font-size:12px;
+    font-size-adjust: none;
+    font-stretch: normal;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    text-align: center;
+}
+
+body, h1, h2, h3, h4, h5, h6 {
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+
+}
+{!allComponentTitle} {
+display:none;
+}
+
+
+{!showComponentTitle} {
+display: block;
+}
+
+{!allTabTitle} {
+display:none;
+}
+
+
+{!showTabTitle} {
+display: table-cell;
+}
+
+p {
+    line-height: 18px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    display:inline;
+}
+
+h1,h1 a {
+    color: #FF1100;
+    font-size: 18px;
+    line-height: 18px;
+}
+
+ul li, ol li {
+    margin-left: 20px;
+}
+
+
+a, a:hover {
+    color: #015BA7;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.clear {
+    clear: both;
+}
+
+.emphasize {
+    font-weight: bold;
+}
+
+
+/* END OF GENGERAL STYLE.... */
+
+/**** Knowledge Specific ****/
+
+.pkbErrorMessages {
+    font-weight: bold;
+    text-align: center;
+    color:red;
+    font-size:14px;
+}
+/***** layout *****/
+
+/** Removed for SSEStyle
+.pkbMain {
+    margin: 0px 0px 20px 282px;
+    width: 700px;
+}
+
+.pkbLeft {
+    float: left;
+    width: 266px;
+    margin-left: 16px;
+    _margin-left: 8px; /* ie dm bug */
+/*}
+
+**/
+
+/***** header *****/
+
+/** Removed for SSEStyle
+body.default {
+    background: #89817D none repeat scroll 0 0;
+    text-align: center;
+}
+
+body.default .pkbPage {
+    background: #89817D url( {!$Resource.pkb_image_bg} ) repeat-y scroll center top;
+    padding: 0 0 0 15px;
+    _padding: 0 0 0 7px;
+    width: 998px;
+}
+
+.pkbPage {
+    clear: both;
+    margin: 0 auto;
+    overflow: hidden;
+    text-align: left;
+}
+
+.pkbHeader {
+    clear: both;
+    display: block;
+    overflow: hidden;
+    width: 982px;
+}
+
+body.default .pkbHeader {
+    margin-left: 0;
+}
+
+
+body.default .pkbHeader {
+    background: transparent url( {!$Resource.pkb_image_insertYourLogo} ) no-repeat scroll 0 0;
+    height: 114px;
+}
+
+.pkbHeaderTabs td {
+    margin: 0;
+    padding: 0 0 0 7px;
+}
+
+.pkbHeaderTabs {
+    clear: both;
+    display: block;
+    float: none;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    padding: 0;
+}
+
+.pkbHeaderTabs td a {
+    padding: 5px 15px 3px 6px;
+}
+
+
+body.default .pkbHeader .pkbHeaderTabs {
+    background: transparent url( {!$Resource.pkb_image_bgMenu} ) no-repeat scroll left top;
+    border-bottom: medium none;
+    color: #FFFFFF;
+    font-size: 13px;
+    height: 32px;
+    margin: 0;
+    padding-left: 24px;
+    text-align: left;
+}
+
+
+body.default .pkbHeader .pkbHeaderTabs td {
+    background: transparent none repeat scroll 0 0;
+    float: left;
+    line-height: 20px;
+}
+
+
+body.default .pkbHeader .pkbHeaderTabs td.selected {
+    background: transparent url( {!$Resource.pkb_image_tab} ) no-repeat scroll left top;
+    height: 32px;
+    margin-left: 5px;
+    overflow: hidden;
+    padding: 0 0 0 12px !important;
+}
+
+body.default .pkbHeader .pkbHeaderTabs td.selected a {
+    background: transparent url( {!$Resource.pkb_image_tab} ) no-repeat scroll right top;
+    border-right: medium none;
+    color: #333333;
+    display: block;
+    height: 32px;
+    margin-top: 0;
+    padding: 8px 24px 0 15px;
+}
+
+
+body.default .pkbHeader .pkbHeaderTabs td a {
+    background: transparent none repeat scroll 0 0;
+    color: #FFFFFF;
+    display: block;
+    float: left;
+    height: 32px;
+}
+
+body.default .pkbHeader h1 {
+    height: 82px;
+}
+
+body.default .pkbHeader h1 a {
+    background: transparent url( {!$Resource.UCIBanner} ) no-repeat scroll 0 0;
+    display: block;
+    width: 300px;
+    height: 82px;
+}
+**/
+
+/*** search box ****/
+.pkbSearchBox {
+    background: transparent url( {!$Resource.pkb_image_searchBoxBg} ) no-repeat scroll center center;
+    margin:10px 10px 0px 18px;
+    width: 929px;
+    height:47px;
+}
+
+.pkbSearchBox .pkbSearchBoxText {
+    font-size:12px;
+    color:#666666;
+    padding:15px 50px 0px ;
+    text-align:right;
+}
+
+
+
+
+/* ---- Main part : search result --- */
+
+.pkbResultPanel {
+    background: transparent url( ) no-repeat scroll left bottom;
+    margin: 12px 0px 0px 0px;
+    width: 760px;
+    padding:0;
+    border: 1px solid #ccc;
+}
+
+.pkbResultPanel .pkbResultTop {
+    background: transparent url() no-repeat scroll left top;
+    /*padding: -1px 10px 10px 20px;*/
+}
+
+
+
+.pkbResultPanel .pkbResultInner {
+    color:#666666;
+    background: white none repeat scroll 0 0;
+    padding: 10px 20px 10px 20px;
+}
+
+.pkbResultInner .pkbResultSelectedCategories {
+    width:630px;
+    padding-bottom:10px;
+    border-bottom: 1px dotted #999999;
+}
+
+
+
+.pkbResultInner h2 {
+    display: block;
+    font-size:14px;
+    font-weight:bold;
+    padding-bottom:8px;
+    padding-top:20px;
+}
+
+
+.pkbResultInner li.pkbArticle, .pkbResultInner li.pkbSearchResult {
+    margin:0 0 5px 10px;
+}
+
+.pkbResultInner li.pkbSearchResult a {
+    color:#3C83B7;
+    text-decoration:underline;
+    font-size:14px;
+}
+
+.pkbResultInner li.pkbArticle a {
+    color:#666666;
+    font-size:14px;
+}
+
+.pkbArticleType {
+    color:#888888;
+    font-size:11px;
+    font-style:italic;
+}
+
+.pkbResultArticleAbstract {
+    color:#999999;
+    margin:0 0 8px 10px ;
+
+}
+
+.pkbResultSummary {
+    color:#666666;
+    border-top: 1px dotted #999999;
+    padding-top:4px;
+    padding-bottom:16px;
+}
+
+/****** blue column such as category column in home ****/
+
+.pkbColumnPanel {
+    background: transparent url( {!$Resource.pkb_image_columnBg} ) no-repeat scroll left bottom;
+    margin: 12px 4px 0px 0px;
+    padding: 0 0 8px;
+    width: 218px;
+}
+
+.pkbColumnPanel .pkbColumnTop {
+    background: transparent url( {!$Resource.pkb_image_columnBg} ) no-repeat scroll left top;
+    padding: 15px 10px 5px 20px;
+    color:#000000;
+    font-size:15px;
+}
+
+.pkbColumnPanel .pkbColumnInner {
+    color:#666666;
+    background: #f1f4f6 none repeat scroll 0 0;
+    border-color: #cccccc;
+    border-style: solid;
+    border-width: 0 1px 0 1px;
+    padding: 5px 20px 12px 20px;
+    font-size:12px;
+}
+
+.pkbColumnPanel .pkbColumnInner ul {
+    margin-top: 10px;
+}
+
+.pkbColumnPanel .pkbColumnInner ul li {
+    margin-left: 0px;
+}
+
+.pkbColumnPanel .pkbColumnInner ul li a {
+    color:#3C83B7;
+    font-size:12x;
+    font-weight:bold;
+}
+.pkbColumnPanel .pkbColumnInner ul li a:hover {
+    text-decoration:underline;
+}
+
+/***** GrayBox such as Most Popular articles in home *****/
+
+/** Removed for SSEStyle
+.pkbGrayBox {
+    background: transparent url( {!$Resource.pkb_image_filterPanelBg} ) no-repeat scroll left bottom;
+    margin: 12px 0px;
+    padding: 0 0 8px;
+    width: 248px;
+}
+
+
+.pkbGrayBoxTitle {
+    background: transparent url( {!$Resource.pkb_image_filterPanelBg} ) no-repeat scroll left top;
+    padding: 18px 10px 18px;
+}
+**/
+
+.pkbGrayBoxTitle h2 {
+    display: block;
+    font-size: 13px;
+}
+
+.pkbGrayBoxInner {
+    background: #fdfdfd none repeat scroll 0 0;
+    border-color: #dbdbdb;
+    border-style: solid;
+    border-width: 0 6px 0 5px;
+    padding: 10px 10px;
+}
+
+.pkbGrayBoxInner ul li {
+    font-size: 13px;
+    color: #727272;
+    margin: 0px 0px 16px 0px;
+}
+
+.pkbGrayBoxInner a {
+    color: #666666;
+}
+
+.pkbGrayBoxInner a:hover {
+    color: #000000;
+}
+
+/***** GrayPanel such as Most Popular articles in home *****/
+
+.pkbGrayPanel {
+    background: transparent url( {!$Resource.pkb_image_leftPanelBg} ) no-repeat scroll left bottom;
+    margin: 12px 0px;
+    padding: 0 0 8px;
+    width: 248px;
+}
+
+
+.pkbGrayPanelTop {
+    background: transparent url( {!$Resource.pkb_image_leftPanelBg} ) no-repeat scroll left top;
+    padding: 8px 10px 8px;
+}
+
+.pkbGrayPanelInner {
+    background: #fdfdfd none repeat scroll 0 0;
+    border-color: #dbdbdb;
+    border-style: solid;
+    border-width: 0 6px 0 5px;
+    padding: 10px 10px;
+}
+
+
+.pkbGrayPanelInner ul li.subcategory {
+    margin: 0px 0px 6px 0px;
+    padding-left:8px;
+}
+
+.pkbGrayPanelInner ul li.subcategory a {
+    font-size: 13px;
+    color: #666666;
+}
+
+.pkbGrayPanelInner ul li.subsubcategory {
+    margin: 0px 0px 4px 0px;
+    padding-left:20px;
+}
+
+.pkbGrayPanelInner ul li.subsubcategory a {
+    font-size: 11px;
+    color: #727272;
+}
+
+.pkbGrayPanelInner ul li.maincategory {
+    margin: 0px 0px 6px 0px;
+    padding-bottom:3px;
+    padding-left:0px;
+}
+
+.pkbGrayPanelInner ul li.maincategory a  {
+    font-size: 14px;
+    color: #668B42;
+}
+
+a.currentcategory, a.currentcategory {
+    font-weight:bold;
+}
+
+
+/*** imagine area ***/
+
+.pkbImagine {
+    background: transparent url({!$Resource.pkb_image_imagine}) no-repeat scroll left top;
+    width:672px;
+    height:249px;
+    border:none;
+    margin:0px auto;
+}
+
+.pkbImagineTitle {
+    color:#7BAA47;
+    font-size:20px;
+    margin-left:15px;
+}
+    /*margin-top:50px; This went w/ pkbImagineTitle*/
+
+
+.pkbImagineText {
+    color:#666666;
+    font-size:12px;
+    padding-left:10px;
+    width:200px;
+}
+
+/**** footer *****/
+
+.pkbPageBottom {
+    width: 998px;
+    background: #89817D url( {!$Resource.pkb_image_bgBottom} ) no-repeat scroll center top;
+    margin: 0px auto;
+}
+
+.pkbFooter {
+    width: 982px;
+    _width: 1014px;
+    padding: 10px;
+    margin: 0px auto;
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    line-height: normal;
+    text-align: center;
+    line-height: 36px;
+    height: 36px;
+}
+
+.pkbFooter a {
+    color: #FFFFFF;
+}
+
+.pkbFooter .pkbFooterNavigation {
+    text-align: center;
+}
+
+.pkbClearfloat {
+    clear: both;
+    font-size: 1px;
+    height: 0;
+    line-height: 0;
+}
+
+.pkbPoweredBySFDC a {
+    float: left;
+    background: transparent url( {!$Resource.pkb_image_poweredBySfdc} ) no-repeat scroll top left;
+    width: 129px;
+    height: 36px;
+}
+
+.pkbPoweredBySFDCText {
+    display: none;
+}
+
+/* The category input field must be hidden */
+
+.categoryHiddenInputField {
+    visibility:hidden;
+}
+
+/* The following styles is to have the knowledge renderer looking good */
+
+
+.pkbFullWidthPanel {
+    background: transparent url( {!$Resource.pkb_image_fullWidthBg} ) no-repeat scroll left bottom;
+    margin: 12px 0px 0px 12px;
+    width: 960px;
+    padding:0 0 15px;
+}
+
+.pkbFullWidthPanel .pkbFullWidthTop {
+    background: transparent url( {!$Resource.pkb_image_fullWidthBg} ) no-repeat scroll left top;
+    padding: 8px 10px 10px 20px;
+}
+
+
+
+.pkbFullWidthPanel .pkbFullWidthInner {
+    color:#666666;
+    background: white none repeat scroll 0 0;
+    border-color: #cccccc;
+    border-style: solid;
+    border-width: 0 1px 0 1px;
+    padding: 10px 20px 10px 20px;
+}
+
+div.bPageTitle div.ptBody {
+    background-color: #FFFFFF;
+    color: #666666;
+}
+
+div.bPageTitle div.ptBody img {
+    display: none;
+    width: 0;
+}
+
+.pkbFullWidthInner h2.pageDescription {
+    padding-top: 0;
+}
+
+.pkbFullWidthInner .knowledgeTabPanel .bPageBlock {
+    background-color: #999999;
+    border-color: #999999;
+}
+
+.pkbFullWidthInner .knowledgeTabPanel .bPageBlock .pbFooter {
+    background-color: #999999;
+}
+
+.pkbFullWidthInner .knowledgeTabPanel .x-tab-strip-top  .x-tab-right {
+    background: url( {!$Resource.pkb_image_tabs_sprite}) no-repeat scroll 0 0;
+}
+
+.pkbFullWidthInner .knowledgeTabPanel .x-tab-strip-top  .x-tab-strip-inner {
+    background: url( {!$Resource.pkb_image_tabs_sprite}) repeat-x scroll 0 -20px;
+}
+
+.pkbFullWidthInner .knowledgeTabPanel .x-tab-strip-top  .x-tab-left {
+    background: url( {!$Resource.pkb_image_tabs_sprite}) no-repeat scroll right -40px;
+}
+
+.pkbFullWidthInner .knowledgeTabPanel .x-tab-strip-top .x-tab-strip-active .x-tab-right {
+    background: url( {!$Resource.pkb_image_tabs_sprite}) no-repeat scroll 0 -60px;
+}
+
+.pkbFullWidthInner .knowledgeTabPanel .x-tab-strip-top .x-tab-strip-active .x-tab-strip-inner {
+    background: url( {!$Resource.pkb_image_tabs_sprite}) repeat-x scroll 0 -80px;
+}
+
+.pkbFullWidthInner .knowledgeTabPanel .x-tab-strip-top .x-tab-strip-active .x-tab-left {
+    background: url( {!$Resource.pkb_image_tabs_sprite}) no-repeat scroll right -100px;
+}
+
+.pkbFullWidthInner .knowledgeTOCRendererSection.selected {
+    background-color:#668B42;
+}
+
+.pkbFullWidthInner .knowledgeTOCRendererContent .sectionName.selected {
+    background-color:#668B42;
+}
+
+.bPageBlock {
+background-color:#EEEFEE !important; 
+background-position:left bottom !important;
+background-repeat:no-repeat !important;
+border-top:4px solid #222222 !important;
+clear:both !important;
+margin-bottom:9px !important;
+padding-bottom:9px !important;
+}
+
+.bPageBlock .pbHeader {
+background-color: #E8E8E8 !important;
+border-bottom:1px solid #FFFFFF!important;
+margin:0 2px 0 0 !important;
+padding-bottom:2px !important;
+}
+
+
+.bPageBlock .pbFooter, .bWizardBlock .pbFooter {
+background-color:transparent !important;
+background-position:right bottom !important;
+background-repeat:repeat-x !important;
+display:block !important;
+float:right !important;
+height:9px !important;
+width:9px !important;
+}
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

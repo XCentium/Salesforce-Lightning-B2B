@@ -1,0 +1,10 @@
+<!--
+ - Created by scheck on 11/6/18.
+ -->
+
+<design:component>
+    <sfdc:objects>
+        <sfdc:object>blng__Invoice__c</sfdc:object>
+        <sfdc:object>Account</sfdc:object>
+    </sfdc:objects>
+</design:component>

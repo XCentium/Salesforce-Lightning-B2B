@@ -1,0 +1,30 @@
+<aura:component controller="LightningOpenLeadController" implements="force:hasRecordId,forceCommunity:availableForAllPageTypes">
+  <ltng:require styles="/resource/SLDS90/assets/styles/salesforce-lightning-design-system-ltng.css" />
+  <aura:attribute name="opens" type="Lead[]" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+  
+    <div class="slds">
+
+        <h2 class="slds-text-heading--small slds-truncate">Lead Inbox</h2>
+        <table class="slds-table slds-table--bordered">
+           <thead>
+                <th scope="col">Name</th>
+                <th>Title</th>
+                <th>Source</th>
+                <th>Company</th>
+                <th></th>
+            </thead>   
+            <aura:iteration items="{!v.opens}" var="item">
+                <tr>
+                    <td class="slds-cell-wrap"> <a href="{!'detail/'+item.Id}"><span class="slds-truncate">{!item.Name}</span></a></td>
+                    <td class="slds-cell-wrap"> <span class="slds-truncate">{!item.Title}</span></td>
+                    <td class="slds-cell-wrap"> <span class="slds-truncate">{!item.LeadSource}</span></td>
+                    <td class="slds-cell-wrap"> <span class="slds-truncate">{!item.Company}</span></td>
+                    <td><a href="javascript:void(0)" onclick = "{!c.updateRecord}" data-vOwnerId="{!item.OwnerId}" data-vLeadId="{!item.Id}" class="slds-button slds-button--neutral slds-button--small">Accept</a></td>        
+                </tr>
+          </aura:iteration>
+       </table>
+      
+    </div>
+</aura:component>

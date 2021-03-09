@@ -1,0 +1,50 @@
+<aura:component controller="EMC_InsightsCtrl">
+    <aura:attribute name="field" type="Object"></aura:attribute>
+    <aura:attribute name="didInit" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="isRunning" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="searchTerm" type="String"></aura:attribute>
+    <aura:attribute name="lookupField" type="String"></aura:attribute>
+    <aura:attribute name="lookupValues" type="Object[]"></aura:attribute>
+    <aura:attribute name="showLookup" type="Boolean" default="false"></aura:attribute>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"></aura:handler>
+    <aura:handler name="lookupSelected" event="c:EMC_InsightEvent" action="{!c.handleEvent}"></aura:handler>
+    
+    <div>
+        <aura:if isTrue="{!v.field.type == 'string'}">
+            <lightning:input label="{!v.field.label}"
+                             value="{!v.field.value}"></lightning:input>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.field.type == 'text'}">
+            <lightning:textarea label="{!v.field.label}"
+                             	value="{!v.field.value}"></lightning:textarea>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.field.type == 'time'}">
+            <lightning:input type="date"
+                             label="{!v.field.label}"
+                             value="{!v.field.value}"></lightning:input>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.field.type == 'number'}">
+            <lightning:input type="number"
+                             label="{!v.field.label}"
+                             value="{!v.field.value}"></lightning:input>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.field.type == 'lookup'}">
+            <lightning:input aura:id="searchTerm" label="{!v.field.label}" value="{!v.searchTerm}" onchange="{!c.lookup}"></lightning:input>
+            <lightning:input class="hidden" value="{!v.field.value}"></lightning:input>
+            
+            <aura:if isTrue="{!v.lookupValues.length > 0 &amp;&amp; v.showLookup == true}">
+                <div class="lookups">
+                    <aura:iteration items="{!v.lookupValues}" var="lookupValue" indexVar="index">
+                        <c:EMC_InsightLookupValue lookupValue="{!lookupValue}" lookupField="{!v.lookupField}"></c:EMC_InsightLookupValue>
+                    </aura:iteration>
+                </div>
+            </aura:if>
+        </aura:if>
+    </div>
+    
+</aura:component>

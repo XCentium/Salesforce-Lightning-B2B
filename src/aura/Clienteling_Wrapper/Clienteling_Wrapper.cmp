@@ -1,0 +1,116 @@
+<aura:component controller="ClientellingController">
+    <aura:handler name="change" value="{!v.PageShown}" action="{!c.handleValueChange}"/>
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="prefix" type="String" />
+    <aura:attribute name="searchText" type="String" default=""/>
+    <aura:attribute name="menuStatus" type="String" default="Closed"/>
+    <aura:attribute name="PageShown" type="String" default="Home" />  
+    <aura:attribute name="SelectedContact" type="String" default=""/>
+    <aura:handler value="{!this}" name="init" action="{!c.init}"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+        <aura:if isTrue="{!setting.Page_Layout__c == 'Left Sidebar' }"> 		
+            <div class="sidebar" style="{!'background:' + setting.Hex_Color_Scheme__c}">
+                <c:Clienteling_TopBar 
+                    appSettings="{!v.appSettings}" 
+                />
+                <ul class="sidebarul">
+					<c:Clienteling_Navigation
+                        PageShown="{!v.PageShown}" 
+                        appSettings="{!v.appSettings}"  
+                        menuStatus="{!v.menuStatus}"                      
+                    />  
+                </ul>	
+                <c:Clienteling_User_Status />
+            </div>
+            <div class="body" style="{!'background-image:url('+$SfdcSite.pathPrefix +'/resource/'+ setting.App_background_Static_Resource__c +');background-color:'+ setting.App_background_color__c + ';'}">
+                <div class="padding"> 
+                        <c:Clienteling_Page   
+                           PageName="{!v.PageShown}" 
+                           appSettings="{!v.appSettings}" 
+                           SelectedContact="{!v.SelectedContact}"        
+                        />
+                </div>
+            </div>
+     	</aura:if> 
+        <aura:if isTrue="{!setting.Page_Layout__c == 'Top Navigation' }">
+            <ul class="topnavul hidenav" aura:id="primarynav">
+                <c:Clienteling_Navigation
+                    PageShown="{!v.PageShown}" 
+                    appSettings="{!v.appSettings}"  
+                    menuStatus="{!v.menuStatus}"                      
+                />  
+            </ul>
+            <div aura:id="outerwrapper" class="outerwrapper sidebarclosedbody" style="{!'background-image:url('+$SfdcSite.pathPrefix +'/resource/'+ setting.App_background_Static_Resource__c +');background-color:'+ setting.App_background_color__c + ';'}">
+                <div class="topnav" style="{!'background:' + setting.Hex_Color_Scheme__c}">
+                    <div class="topfixedHeader" style="{!'background-color:' + setting.Logo_Background_Color__c + ';' }">
+                        <div class="toplogo">
+                            <div class="padding">
+                                    <img src="{!'/resource/' + setting.App_Logo__c}" class="logo"/> 
+                            </div>
+                        </div>
+                        <div class="menuicon">
+                            <button class="buttonnostyle" onclick="{!c.ShowHideMenu}">
+                                <img src="/resource/ClientelingMenuIcon" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="fullbody">
+                    <div class="padding"> 
+                            <c:Clienteling_Page   
+                               PageName="{!v.PageShown}" 
+                               appSettings="{!v.appSettings}" 
+                               SelectedContact="{!v.SelectedContact}"        
+                            />
+                    </div>
+                </div>
+        	</div>
+        </aura:if>
+        <aura:if isTrue="{!setting.Page_Layout__c == 'Fixed Footer Nav' }">
+            <div aura:id="outerwrapper" class="outerwrapper sidebarclosedbody" style="{!'background-image:url('+$SfdcSite.pathPrefix +'/resource/'+ setting.App_background_Static_Resource__c +');background-color:'+ setting.App_background_color__c + ';'}">
+                <div class="topnav theme3" style="{!'background:' + setting.Hex_Color_Scheme__c}">
+                    <div class="topfixedHeader" style="{!'background-color:' + setting.Logo_Background_Color__c + ';' }">
+                        <div class="toplogo">
+                            <div class="padding" onclick="{!c.gotoHome}">
+                            	<img src="{!'/resource/' + setting.App_Logo__c}" class="logo"/> 
+                            </div>
+                        </div>
+                        <div class="toprightuserstatus">
+                        	<c:Clienteling_User_Status />
+                    	</div>
+                        <div class="headerSearch">
+                        	<div class="slds-form-element slds-lookup" data-select="single">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-input-has-icon slds-input-has-icon--right">
+                                        <lightning:buttonIcon iconName="utility:search" variant="bare" onclick="{! c.handleSearch }" alternativeText="Search" class="slds-input__icon" />
+                                        <ui:inputText value="{!v.searchText}" class="slds-lookup__search-input slds-input" placeholder="Type to search" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="fullbody fullbodytheme3">
+                    <div class="padding"> 
+                            <c:Clienteling_Page   
+                               PageName="{!v.PageShown}" 
+                               appSettings="{!v.appSettings}" 
+                               SelectedContact="{!v.SelectedContact}"        
+                            />
+                    </div>
+                </div>
+                <div class="fixedfooter" style="{!'background-color:' + setting.Hex_Color_Scheme__c  + ';' }">
+                        <ul>
+                            <c:Clienteling_Navigation
+                                PageShown="{!v.PageShown}" 
+                                appSettings="{!v.appSettings}"  
+                                menuStatus="{!v.menuStatus}"                      
+                            />  
+                        </ul>
+                </div>
+        	</div>
+            
+        </aura:if>
+	</aura:iteration>
+</aura:component>

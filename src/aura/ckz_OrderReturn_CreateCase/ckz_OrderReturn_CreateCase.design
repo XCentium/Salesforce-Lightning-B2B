@@ -1,0 +1,8 @@
+<design:component label="B2B Order Return - Create Case">
+    <design:attribute name="caseOwnerName" label="New Case owner name" description="change this to the correct name!" />
+    <design:attribute name="recordId" label="Record Id" />
+    <design:attribute name="selectedItemsString" label="Selected Items string" />
+    <design:attribute name="newCaseSubject" label="New Case subject" />
+    <design:attribute name="newCaseDesc" label="New Case Description" />
+
+</design:component>

@@ -1,0 +1,37 @@
+/*.THIS .left-button{
+    border-right-color: #ffffff;
+    border-right-style: solid;
+    border-right-width: 1px;
+    
+}
+.THIS .right-button{
+    border-left-color: #ffffff;
+    border-left-style: solid;
+    border-left-width: 1px;
+    
+}*/
+.THIS .recommendation-footer{
+    border-bottom-right-radius: 0.2rem;
+    border-bottom-left-radius: 0.2rem;
+    
+}
+.THIS .success-icon .slds-icon{
+    fill: #4bca81;
+    
+}
+.THIS .fail-icon .slds-icon{
+    fill: #c23934;
+    
+}
+.THIS.action-card{
+    
+}
+.THIS .nbafooter{
+    min-height: 23px;
+}
+.THIS .nbamessage{
+    height: 38px;
+    text-overflow: ellipsis;
+	overflow: hidden;
+	
+}

@@ -1,0 +1,35 @@
+<apex:component >
+<apex:includeScript value="{!URLFOR($Resource.SDO_jqueryui192, '/js/jquery-1.8.3.js')}"/>
+   
+    <style type="text/css" media="all">
+        @import url("{!$Site.prefix}/apex/Community_Widget_CSS_Override");
+    </style>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log("Recent Cases Widget Ready!");
+        });
+    </script>
+    
+     <div class="widget_outer">
+        <div class="widget_inner">
+            <div class="widget_header">
+                <div>Most Viewed Articles</div>
+            </div>
+            <div class="widget_body">
+                <table class="table table-condensed">
+                    <tbody>
+                       
+                        <knowledge:articleList articleVar="article"
+                            sortBy="mostViewed"
+                            pageSize="10"
+                        >
+                            <li type="none"><a href="{!URLFOR($Action.KnowledgeArticle.View, article.id)}" target="_top">{!article.title}</a></li>
+                        </knowledge:articleList>
+                        
+                    </tbody>
+                 </table>   
+            </div>
+        </div>
+     </div>     
+</apex:component>

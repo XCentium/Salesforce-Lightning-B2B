@@ -1,0 +1,23 @@
+.THIS.wrapper{
+    width:100%;
+    display:block;
+}
+.THIS .subbox{
+    width:calc((100% / 2) - 22px);
+    text-align:center;
+    margin:10px;
+  	float:left;
+    border:1px solid #ddd;
+}
+.THIS .inner{
+    overflow-y: auto;
+  	overflow-x: hidden;
+    overflow: scroll;
+  	direction: ltr;
+}
+.THIS .titleSmall{
+    font-size:12px;
+    display:block;
+    width:100%;
+    text-align:center;
+}

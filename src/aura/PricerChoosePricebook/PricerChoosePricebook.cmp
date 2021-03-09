@@ -1,0 +1,59 @@
+<aura:component controller="LightningProductPricer">
+    <aura:attribute name="recordId" type="String"/>
+	<aura:attribute name="sObjectName" type="String"/>
+	<aura:attribute name="currentPricebookId" type="String"/>
+	<aura:attribute name="currentPricebookName" type="String"/>    
+    <aura:attribute name="options" type="List" access="PRIVATE"/>
+    <aura:attribute name="selectedValue" type="String" access="PRIVATE"/>
+    <aura:attribute name="selectedText" type="String" access="PRIVATE"/>
+    <aura:attribute name="isApexInProgress" type="Boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:registerEvent name="reloadPricer" type="c:PricerReloadEvent"/>
+    
+  <div aura:id="about" role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+    <div class="slds-modal__container">
+      <div class="slds-modal__header">
+
+        <lightning:buttonicon iconName="utility:close" size="large" alternativeText="icon" class="slds-modal__close" variant="bare-inverse" onclick="{!c.closeModal}"/>
+        <h2 id="header43" class="slds-text-heading--medium">{!$Label.c.Pricer_Change_Pricebook}</h2>
+      </div>
+      <div class="slds-modal__content slds-p-around--medium">
+     
+     <p class="slds-p-bottom--x-small">{!$Label.c.Pricer_ChangePricebookDetailText1}</p>
+     <p class="slds-p-bottom--x-small">{!$Label.c.Pricer_PriceChangePricebookDetailText2}</p>     
+          
+     <lightning:input name="input2" label="{!$Label.c.Pricer_Current_Pricebook}" value="{!v.currentPricebookName}" disabled="true"/>    
+     <div class="slds-p-bottom--x-small" style="width: 100%;">
+        <lightning:select name="colorId" label="{!$Label.c.Pricer_Choose_a_new_pricebook}" aura:id="pricebookId" value="{!v.selectedValue}" >
+            <aura:iteration items="{!v.options}" var="option">
+                <option text="{!option.label}" value="{!option.value}" selected="{!option.selected}"/>
+            </aura:iteration>
+        </lightning:select>     
+     </div>      
+     <p class="slds-p-bottom--x-small"><b>{!$Label.c.Pricer_Are_you_sure_you_want_to_proceed}</b></p>
+      
+
+      </div>
+      <div class="slds-modal__footer" style="position:relative;height:58px">
+        <aura:if isTrue="{!v.isApexInProgress}">
+        	<div role="status" class="slds-spinner slds-spinner_brand slds-spinner_small" >
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+        	</div>
+        <aura:set attribute="else">
+            <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}">{!$Label.c.Pricer_Cancel}</button>
+            <button class="slds-button slds-button--brand" onclick="{!c.changePB}">{!$Label.c.Pricer_Confirm}</button>
+   		</aura:set>
+        </aura:if>
+            
+        
+      </div>
+    </div>
+  </div>
+  <div aura:id="greyzone" class="slds-backdrop slds-backdrop--open"></div>
+
+
+
+</aura:component>

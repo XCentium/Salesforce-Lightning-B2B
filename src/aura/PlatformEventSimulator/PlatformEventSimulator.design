@@ -1,0 +1,7 @@
+<design:component label="Platform Events - Simulator">
+    <design:attribute name="deviceId" label="Device Key Field" required="true" default="DeviceId__c"/>
+    <design:attribute name="eventName" label="Platform Event Name" required="true" datasource="apex://rm_EventDesignPicklist"/>
+    <design:attribute name="objectName" label="Persisted Event Custom Object Name (Optional)" default="Sample_Event_Data_Store__c"/>
+   
+      
+</design:component>

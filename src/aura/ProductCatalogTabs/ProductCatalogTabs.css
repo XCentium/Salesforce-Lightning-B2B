@@ -1,0 +1,27 @@
+.THIS.tab-bar {
+	border-top: 0;
+	border-bottom: 3px solid #1589EE;
+	color: #16325c;
+	display:flex;
+	height: 2.5rem;
+	padding: 0 1rem;
+	position: relative;
+	user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+}
+.THIS.tab-bar-secondary{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;    
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 0%;
+    -ms-flex: 1 1 0%;
+    flex: 1 1 0%;
+    min-width: 0;
+}

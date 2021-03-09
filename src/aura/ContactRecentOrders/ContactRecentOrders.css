@@ -1,0 +1,23 @@
+.THIS {
+}
+.THIS .padding{
+    overflow:scroll;
+    padding:0px 10px;
+}
+.THIS .product{
+    width:100%;
+    margin:5px 0px;
+    padding:5px 0px;
+    text-align:center;
+}
+.THIS .product img{
+    width:50%;
+    height:auto;
+    margin:0 auto;
+}
+.THIS .slds-card__header{
+    padding:2px 0px;
+}
+.THIS .slds-card__body{
+    margin-bottom:0;
+}

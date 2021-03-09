@@ -1,0 +1,44 @@
+<design:component Label="Customer 360 Next Best Action" >
+    
+    <design:attribute name="title" 
+                    label="Title"
+                    default="Recommendations"/>    
+  	<design:attribute name="icon" 
+                    label="Einstein Icon"
+                    default="utility:einstein"/>
+    <design:attribute name="iconColor"
+                      label="Einstein Icon color"
+                      default="#0070d2"
+                      description="Set hex color for einstein icon"/>
+    <design:attribute name="action1" 
+                    label="Recommended Action 1"
+                    default="Experience Promo Offer"/>
+    <design:attribute name="message1" 
+                    label="Action 1 Message"
+                    default="Sign up after trial for 15 percent off first six months"/>
+    <design:attribute name="strength1" 
+                    label="Action 1 Strength"
+                    default="3"
+                    datasource="3,2,1"  />
+    <design:attribute name="action2" 
+                    label="Recommended Action 2"
+                    default="Add On Package"/>
+    <design:attribute name="message2" 
+                    label="Action 2 Message"
+                    default="Recommended add on purchased by similar customers"/>
+	<design:attribute name="strength2" 
+                    label="Action 2 Strength"
+                    default="3"
+                    datasource="3,2,1"  />
+    <design:attribute name="action3" 
+                    label="Recommended Action 3"
+                    default="Similar Product"/>
+    <design:attribute name="message3" 
+                    label="Action 3 Message"
+                    default="Recommended add on based on customer's activity"/>
+    <design:attribute name="strength3" 
+                    label="Action 3 Strength"
+                    default="2"
+                    datasource="3,2,1"  />
+	
+</design:component>

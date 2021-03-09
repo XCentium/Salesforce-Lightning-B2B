@@ -1,0 +1,6 @@
+<aura:documentation>
+	<aura:description>Documentation</aura:description>
+	<aura:example name="LogMeIn" ref="LogMeIn" label="LogMeIn">
+		Example Description
+	</aura:example>
+</aura:documentation>

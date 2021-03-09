@@ -1,0 +1,41 @@
+<aura:component >
+    <aura:attribute name="Contact" type="Contact[]"/>
+	<table class="slds-table slds-table_bordered slds-table_cell-buffer">
+		<thead>
+        	<tr class="slds-text-title_caps">
+            	<th scope="col">
+                	<div class="slds-truncate" title="Opportunity Name">Topic</div>
+                </th>
+                <th scope="col">
+                	<div class="slds-truncate" title="Status">Information</div>
+                </th>
+            </tr>
+            <aura:iteration var="contact" items="{!v.Contact}" indexVar="index"> 
+            <tr>
+            	<td class="tablerowborderbottom">Points Balance</td>
+            	<td class="tablerowborderbottom">{!contact.myNTO_Balance__c}</td>
+            </tr>
+            <tr>
+            	<td class="tablerowborderbottom">Loyalty Status</td>
+            	<td class="tablerowborderbottom">{!contact.myNTO_Status__c}</td>
+            </tr>
+            <tr>
+            	<td class="tablerowborderbottom">Next Upgrade</td>
+            	<td class="tablerowborderbottom">3450</td>
+            </tr>
+            <tr>
+            	<td class="tablerowborderbottom">Lifetime Spend</td>
+            	<td class="tablerowborderbottom">$2498.99</td>
+            </tr>
+            <tr>
+            	<td class="tablerowborderbottom">Customer Reward Number</td>
+                <td class="tablerowborderbottom">{!contact.Customer_Rewards__c}</td>
+            </tr>   
+            <tr>
+            	<td>Preferred Store</td>
+                <td>{!contact.Preferred_Store__c}</td>
+            </tr>
+			</aura:iteration>
+		</thead>
+	</table>
+</aura:component>

@@ -1,0 +1,11 @@
+<aura:component access="global" controller="DemoConfigurator" implements="lightning:availableForFlowScreens">
+	<aura:attribute name="Title" type="string" default=""/>
+    <aura:attribute name="Description" type="string" default=""/>
+    <div class="dcHeader">
+    	<div class="padding">
+            <img src="/resource/DemoConfigurator/assets/images/HomeIcon.png" class="icon"/>
+        	<h2>{!v.Title}</h2>
+            <p>{!v.Description}</p>
+        </div>
+    </div>
+</aura:component>

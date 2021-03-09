@@ -1,0 +1,4 @@
+<design:component>
+	<design:attribute Description="Title" Name="Title" />
+    <design:attribute Description="Description" Name="Description" />
+</design:component>

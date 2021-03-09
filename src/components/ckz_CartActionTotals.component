@@ -1,0 +1,105 @@
+<apex:component id="ckz_CartActionTotals">
+
+    <script id="CKZ-CartDetail-ActionTotals-View" type="text/template">
+        <div class="row">
+            <div class="col-sm-4">
+                <!-- COUPON CODES -->
+                {{#ifStoreSetting 'Display_Cart_Coupon__c'}}
+                <h3 class="cc_title">{{pageLabelMap 'CartInc_discountCodes'}}</h3>
+
+                {{#if this.hasCoupon}}
+                    <form id="couponClearForm" class="cc_coupon_clear_form">
+                        <div class="discount_code cc_discount_code">
+                            <div class="input-group input-group-sm m-b-1 cc_clear_coupon_code">
+                                <input type="text" id="couponAppliedId" name="couponAppliedId" class="form-control" value="{{pageLabelMap 'CartInc_AppliedCoupon'}} {{this.couponName}}" disabled/>
+                                <span class="input-group-btn">
+                                    <button id="clearCouponBtn" type="button" class="btn btn-default cc_clear_coupon">{{pageLabelMap 'CartInc_ClearCoupon'}}</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                {{else}}
+                    <form id="couponAddForm" class="cc_coupon_add_form">
+                        <div class="discount_code cc_discount_code">
+                            <div id="couponAddError" class="cc_coupon_add_error"></div>
+                            <div class="couponMessagingSection-Error"></div>
+
+                            <div class="input-group input-group-sm m-b-1">
+                                <input type="text" id="addCouponId" name="couponId" class="form-control cc_add_coupon_id" placeholder="{{pageLabelMap 'CartInc_CouponPlaceholder'}}"/>
+                                <span class="input-group-btn">
+                                    <button id="addCouponBtn" type="button" class="btn btn-primary cc_add_coupon">{{pageLabelMap 'Apply'}}</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                {{/if}}
+                {{/ifStoreSetting}}
+            </div>
+
+
+            <div class="col-sm-4 col-sm-offset-4">
+                <div class="cc_action_totals checkout text-right m-b-3">
+                    <!-- SUBTOTAL -->
+                    {{#if this.subtotalAmount}}
+                    <h3 class="ckz_subTotal m-b-2">
+                        <span class="cc_label">{{pageLabelMap 'CartInc_Subtotal'}}:</span>
+                        <span class="cc_value">{{{price this.subtotalAmount}}}</span>
+                    </h3>
+                    {{/if}}
+
+                    <!-- TOTAL -->
+                    {{#if this.totalInfo}}
+                    <p class="cart_total_amount cc_cart_total_amount">{{this.totalInfo}}</p>
+                    {{/if}}
+
+                    <div class="totalsmessagingSection cc_total_messaging_section"></div>
+
+                    <!-- APPLY DISCOUNTS -->
+                    <!--{{#if false }}
+                    {{ else }}
+                        {{#ifStoreSetting 'AutoCalcPriceAdjust__c'}}
+                            {{else}}
+                                <button type="button" class="btn btn-default btn-sm btn-block getExtPricingButton cc_get_ext_pricing_button">
+                                    {{pageLabelMap 'CartInc_ApplyDiscounts'}}
+                                </button>
+                        {{/ifStoreSetting}}
+                    {{/if}}-->
+
+                    <!-- CHECKOUT -->
+                    {{#if this.ECartItemsS}}
+                    {{#ifNotEquals this.ECartItemsS.models.length 0}}
+                    {{#if this.allowCheckout}}
+                    {{#ifEquals this.preventCheckout false}}
+                    <button type="button" class="btn btn-primary btn-sm btn-block checkOutBtn cc_checkout_btn">
+                        {{pageLabelMap 'CartInc_Checkout'}}
+                    </button>
+                    {{/ifEquals}}
+                    {{/if}}
+                    {{/ifNotEquals}}
+                    {{/if}}
+
+                    <!-- REQUEST FOR QUOTE -->
+                    {{#if false }}
+                    {{#ifDisplay 'rfq.GuestUser'}}
+                    <button class="btn btn-default btn-sm btn-block remove cc_rfq_link_button" data-toggle="modal" data-target="#rfqModal" type="button">
+                        {{pageLabelMap 'CartRFQForm_Header'}}
+                    </button>
+                    {{/ifDisplay}}
+                    {{else}}
+                    {{#ifDisplay 'rfq.LoggedIn'}}
+                    <button class="btn btn-default btn-sm btn-block remove cc_rfq_link_button" data-toggle="modal" data-target="#rfqModal" type="button">
+                        {{pageLabelMap 'CartRFQForm_Header'}}
+                    </button>
+                    {{/ifDisplay}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            CCRZ.uiProperties.CartDetailView.partials.actionsTotals = '#CKZ-CartDetail-ActionTotals-View';
+        });
+    </script>
+</apex:component>

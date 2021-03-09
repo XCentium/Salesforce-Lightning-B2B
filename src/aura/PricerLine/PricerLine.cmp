@@ -1,0 +1,297 @@
+<aura:component controller="LightningProductPricer" access="global">
+
+   	<!-- ATTRIBUTES -->
+    <aura:attribute type="Map" name="marginLimits"/>
+    <aura:attribute name="orgInfo" type="Map"/>
+    <aura:attribute type="Boolean" name="hideMargins" default="false"/>
+    <aura:attribute name="line" type="Object" access="global" required="true"/>
+    <aura:attribute name="index" type="String"/>
+    <aura:attribute name="recordId" type="String" access="global" required="true"/>
+    <aura:attribute name="sObjectName" type="String" />
+    <aura:attribute name="lookupProductId" type="String" access="public"/>
+    <aura:attribute name="width" type="Integer"/>
+    <aura:attribute type="Boolean" name="hideDiscounts" default="false" access="global"/>
+    <aura:attribute name="sectionIndex" type="Integer"/>
+    <aura:attribute name="swipe" type="Map"/>
+    <aura:attribute name="protectSelect" type="Boolean" default="false"/>
+
+    <!-- REGISTER EVENTS -->
+    <aura:registerEvent name="productAddedToLine" type="c:PricerProductAddedSuccess"/>
+    <aura:registerEvent name="upsellProductAvailable" type="c:UpsellProductAvailable"/>
+    <aura:registerEvent name="priceUpdate" type="c:PricerPriceUpdate"/>
+	<aura:registerEvent name="newSectionRequested" type="c:NewSectinRequested"/>
+    <aura:registerEvent name="focusOnLookupField" type="c:PricerFocusOnProductLookup"/>
+    <aura:registerEvent name="openCatalog" type="c:PricerOpenCatalogEvent"/>
+    
+    <!-- HANDLERS -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="typeAheadResultEvent" event="c:TypeAheadResultEvent" action="{!c.getTypeAheadResult}"/>
+    <aura:handler name="change" value="{!v.lookupProductId}" action="{!c.retrieveProductDetails}"/>
+    <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
+
+    <!-- METHODS -->
+    <aura:method name="recalcLine" action="{!c.recalcBasedOnQuantity}" description="Calculates the line total" access="PUBLIC"/>
+    <aura:method name="focusOnQtyField" action="{!c.focusOnQty}" description="Set the focus on qty field"/> 
+	<aura:method name="publicFind" action="{!c.publicFind}">
+   		 <aura:attribute name="cmp" type="String" default=""/>
+    </aura:method>  
+    
+
+
+    <aura:if isTrue="{!and(v.line.isDeleted!=true,$Browser.formFactor=='DESKTOP')}">       
+        <tr aura:id="lineContainer" class="paddingForTD">
+        <aura:if isTrue="{!v.line.oLine.PricebookEntryId!=null}">
+            <td class="{!if(v.width>=950,'','smallerPadding')}" style=""> <lightning:input type="checkbox" label="Red" name="red" checked="{!v.line.isSelected}" variant="label-hidden" class="noPaddingForCheckbox"/></td>
+
+            <td class="slds-cell-wrap">
+
+                  <a href="" onclick="{!c.redirectToRec}" style="color:rgb(62, 62, 60);">  {!v.line.oProduct.Name} </a>
+
+
+            </td>
+            <td>
+                <ui:outputText class="slds-truncate" value="{!v.line.oProduct.ProductCode}" />
+
+            </td>
+
+            <td>
+                <ui:outputCurrency class="slds-truncate" aura:id="unitPrice" value="{!v.line.oLine.PricebookEntry.UnitPrice}"/>
+
+            </td>
+
+            <td onkeyup="{!c.fieldKeyUp}">
+                    <lightning:input aura:id="qtyField" class="qtyField" type="number" name="number" label="Number" variant="label-hidden" value="{!v.line.oLine.Quantity}" autocomplete="false" onchange="{!c.recalcBasedOnQuantity}" step="{!v.line.increment}" min="0"/>
+            </td>
+            <td>
+              <div class="infoIcon" style="display: inline-block;">
+                <ui:inputCurrency class="slds-input lightInputPadding" aura:id="UnitPrice" value="{!v.line.oLine.UnitPrice}" change="{!c.calcDiscount}" disabled="true" />
+                <div class="rightSide slds-nubbin--bottom-left slds-popover slds-popover--tooltip infoTip"
+                      role="tooltip" id="help"
+                      style="width: max-content;max-width: 22rem;position:absolute;bottom:calc(50% + 32px);">
+                    <div class="slds-popover__body" style="white-space: normal;">
+                      <u>{!$Label.c.Pricer_PriceDetail}</u><br/>  
+                      <span class="{!if(v.line.UPQR.Explanation == '','','slds-hide')}">{!$Label.c.Pricer_PriceRestored} <br/></span>  
+                      <aura:unescapedHtml value="{!v.line.UPQR.Explanation}"/>
+                      <span class="{!if(and(v.line.discount > 0,v.line.UPQR.Explanation != ''),' ','slds-hide')}">{!$Label.c.Pricer_ManualDiscount} &nbsp;<b><ui:outputNumber format="0.## %" value="{!v.line.discount}"/></b></span>
+                      </div>
+                </div>
+
+              </div>
+
+
+            </td>
+
+            <td class="{!v.hideDiscounts?'slds-hide':''}">
+
+                <div class="slds-form-element__control slds-input-has-fixed-addon" onkeyup="{!c.fieldKeyUp}">
+                    <ui:inputNumber class="slds-input percentageField" format="0.## %" value="{!v.line.discount}" change="{!c.calcUnitPrice}" />
+                </div>
+            </td>
+
+
+        
+                <td>
+                    <strong><ui:outputCurrency aura:id="lineTotal" value="{!v.line.totalPrice}"/></strong>
+
+
+                </td>
+
+                <td class="{!v.hideMargins?'slds-hide':''}">
+                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                        <ui:inputNumber class="slds-input percentageField" value="{!v.line.margin}" format="0.## %" disabled="true"/>
+                        <!--<span class="slds-form-element__addon">%</span>-->
+                    </div>
+                </td>
+
+                <td class="{!v.hideMargins?'slds-hide':''}" style="width: 20px;">
+
+                              <div class="{!if(v.line.oLine.UnitPrice==0 || v.line.oLine.Quantity==0 || v.line.oLine.Quantity=='0' || v.line.margin==null ,'slds-hide',' ')}">  <div class="{!if(v.line.margin>=v.marginLimits.green,'circle_green',if(v.line.margin>=v.marginLimits.orange,'circle_orange','circle_red'))}"/> </div>
+
+
+                </td>
+
+
+           
+            <td style="padding-right: 0rem!important; padding-left: 0rem!important; width: 20px;">
+                <aura:if isTrue="{!v.line.oLine.PricebookEntryId!=null}">
+	                <button class="slds-button cssForDeleteIcon" onclick="{!c.deleteLine}" style="">
+                        <lightning:icon iconName="utility:delete" size="x-small" alternativeText="Delete line"/>
+                    </button>
+                        <!--
+                    <button class="slds-button" onclick="{!c.debugLine}">
+                        <lightning:icon iconName="utility:info" size="xx-small" alternativeText="Log to debugger"/>
+
+                    </button>
+					-->
+                </aura:if>
+            </td>
+
+            <aura:set attribute="else" >
+              <td class="slds-cell-wrap" colspan="14">
+                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                      <div style="width: 100%;">
+                        <c:PricerLookupField aura:id="PricerLookupFieldCmp"
+                                             label="Product"
+                                             pluralLabel="{!$Label.c.Pricer_ProductPluralLabel}"
+                                             sObjectAPIName="Product2"
+                                             selectedItemId="{!v.lookupProductId}"
+                                             pricebookId="{!v.orgInfo.recordPricebook.Id}"
+                                             iconName="standard:product"/>   
+                      </div>
+                      <div style="text-align:center;margin-left: 10px;">
+                      <lightning:buttonIcon iconName="utility:knowledge_base"  variant="border-filled" alternativeText="Settings" onclick="{!c.openCatalogClick}" />     
+                      </div>  
+                          <!--<span class="slds-form-element__addon">  </span>-->
+                    </div>
+
+
+
+
+              </td>
+            </aura:set>
+
+        </aura:if>
+        </tr>
+       
+    </aura:if>   
+    
+    <aura:if isTrue="{!and(v.line.isDeleted!=true,$Browser.formFactor!='DESKTOP')}">
+      <aura:if isTrue="{!v.line.oLine.PricebookEntryId!=null}">
+        <div aura:id="mobileTileContainer" class="mobileTileContainer">
+         <div class="mobileTileActionButtons">
+           <div>
+	           <lightning:icon iconName="action:delete" alternativeText="delete" onclick="{!c.deleteLine}" />
+           </div>
+             
+         </div>
+         
+         <div aura:id="mobileTile" class="mobileTile" ontouchstart="{!c.tileTouchStart}" ontouchmove="{!c.tileTouchMove}" ontouchend="{!c.tileTouchEnd}" >    
+           <div style="position:relative;"> 
+               <div class="{!v.line.isSelected?'triangle':'triangle slds-hide'}"></div>
+               <div class="slds-text-title_caps" style="margin-bottom:5px" onclick="{!c.selectLine}">
+                   {!v.line.oProduct.ProductCode}&nbsp;-&nbsp;{!v.line.oProduct.Name}</div>
+               <div>
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem  size="3" class="width24">
+                        <div style="padding-right: 10px;"  >
+                        <lightning:input type="number" name="input1" label="{!$Label.c.Pricer_Quantity}"
+                                         value="{!v.line.oLine.Quantity}" min="0"
+                                         onfocus="{!c.mobileQtyOnFocus}" class="maxWidth100" />
+						</div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="" size="3">
+                        <span class="slds-form-element__label" style="margin-bottom:10px">{!$Label.c.Pricer_SalesPrice}</span>
+                        <div><ui:outputCurrency value="{!v.line.oLine.UnitPrice}"/></div>
+                    </lightning:layoutItem>
+                        <lightning:layoutItem padding="" size="3">
+                        <div style="padding-right:10px">
+                        <span class="slds-form-element__label">{!$Label.c.Pricer_Discount}</span>
+                        <div><ui:inputNumber class="slds-input discFieldMobileTile maxWidth100" format="0.## %" value="{!v.line.discount}" focus="{!c.mobileDiscOnFocus}" /></div>
+                        </div>       
+                    </lightning:layoutItem>    
+                    <lightning:layoutItem  size="3" class="width26">
+                        <span class="slds-form-element__label" style="margin-bottom:10px">{!$Label.c.Pricer_Total}</span>
+                        <div><ui:outputCurrency value="{!v.line.totalPrice}"/></div>
+                    </lightning:layoutItem>        
+                </lightning:layout>  
+                </div>
+             </div>
+           </div>
+ 
+                
+      </div>
+      <div aura:id="editLineModal" class="slds-hide" >
+          <div class="editLineModalContent" style="padding-left:15px;padding-right:15px">
+              <div style="display:flex;">
+                <lightning:buttonIcon iconName="utility:dash" size="large" variant="bare"
+                                      alternativeText="substract" class="editLineIncrementBtn"
+                                      onclick="{!c.reduceQtyClick}"/>  
+          		<div style="width:100%;padding: 0 15px;font-size:14px">
+                    <lightning:input   aura:id="ModalQtyField" type="number" name="input1" label="{!$Label.c.Pricer_Quantity}" class="centerInputText"
+                                         value="{!v.line.oLine.Quantity}" pattern="\d*" autocomplete="false"
+                                         onchange="{!c.recalcBasedOnQuantity}" step="{!v.line.increment}" min="0"
+                                     	 />
+                </div>    
+                <lightning:buttonIcon iconName="utility:add" size="large" variant="bare"
+                                      alternativeText="add" class="editLineIncrementBtn"
+                                      onclick="{!c.increaseQtyClick}"/>    
+              </div>
+              <div style="display:flex;"> 
+                <lightning:buttonIcon iconName="utility:dash" size="large" variant="bare"
+                                      alternativeText="substract" class="editLineIncrementBtn"
+                                      onclick="{!c.reduceDiscClick}"/>  
+          		<div style="width:100%;padding: 0 15px;margin-bottom:5px">
+                    <div class="slds-form-element__label" style="display:block;font-size:14px">{!$Label.c.Pricer_Discount}</div>
+                    <ui:inputNumber aura:id="ModalDiscField" class="slds-input discFieldMobileTile width100" format="0.## %"
+                                    value="{!v.line.discount}" updateOn="keydown" keyup="{!c.calcUnitPrice}" change="{!c.calcUnitPrice}"/>
+                </div>    
+                <lightning:buttonIcon iconName="utility:add" size="large" variant="bare"
+                                      alternativeText="add" class="editLineIncrementBtn"
+                                      onclick="{!c.increaseDiscClick}"/>    
+              </div>
+              <div onclick="{!c.editLineContentClick}">
+                  <div style="margin-top:5px;font-size:14px">
+                  <lightning:layout>
+                      <lightning:layoutItem size="4">
+                         <div style="text-align: center;">
+                              <div style="display:block">{!$Label.c.Pricer_SalesPrice}:</div>
+                              <div><ui:outputCurrency value="{!v.line.oLine.UnitPrice}"/></div>  
+                         </div>     
+                      </lightning:layoutItem>
+                      
+                      <lightning:layoutItem size="4">
+                        <div  style="text-align: center;">  
+                            <div style="display:block">{!$Label.c.Pricer_Total}:</div>
+                            <div><ui:outputCurrency value="{!v.line.totalPrice}"/></div>  
+                        </div>    
+                      </lightning:layoutItem> 
+                      
+                      <lightning:layoutItem size="4">
+                        <div  style="text-align: center;">  
+                            <div style="display:block">{!$Label.c.Pricer_Margin}:</div>
+                            <ui:outputNumber class="percentageField" value="{!v.line.margin}" format="0.## %"/>
+                        </div>      
+                      </lightning:layoutItem> 
+                      
+                  </lightning:layout>     
+                  </div>
+    
+                  <div style="margin-top:10px;">
+                      <div class="" style="background: rgb(22, 50, 92);color: rgb(255, 255, 255);padding:10px;border-radius: 10px;font-size:14px">
+                          <u>{!$Label.c.Pricer_Sales_Price_Detail}</u><br/>  
+                          <span class="{!if(v.line.UPQR.Explanation == '','','slds-hide')}">{!$Label.c.Pricer_PriceRestored} <br/></span>  
+                          <aura:unescapedHtml value="{!v.line.UPQR.Explanation}"/>
+                          <span class="{!if(and(v.line.discount > 0,v.line.UPQR.Explanation != ''),' ','slds-hide')}">{!$Label.c.Pricer_ManualDiscount} &nbsp;<b><ui:outputNumber format="0.## %" value="{!v.line.discount}"/></b></span>
+                      </div>
+                  </div>
+                  <div style="height:200px">
+                  
+                  </div>
+              </div>
+              
+              
+              
+          </div>
+          
+      </div>    
+         
+     <aura:set attribute="else" >
+         <div>     
+             <div class="mobileTileNonAbsolute">      
+                 <span class="slds-form-element__label slds-m-bottom_none">{!$Label.c.Pricer_Add_product}</span>
+                 <c:PricerLookupField aura:id="PricerLookupFieldCmp"
+                                      label="Product"
+                                      pluralLabel="{!$Label.c.Pricer_ProductPluralLabel}"
+                                      sObjectAPIName="Product2"
+                                      selectedItemId="{!v.lookupProductId}"
+                                      pricebookId="{!v.orgInfo.recordPricebook.Id}"
+                                      iconName="standard:product"/>   
+             </div> 
+         </div>       
+      </aura:set>       
+       
+    </aura:if>      
+    </aura:if>    
+    
+    
+</aura:component>

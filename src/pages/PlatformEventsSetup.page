@@ -1,0 +1,624 @@
+<apex:page title="Platform Events Setup" controller="PlatformEventsCtrl" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0" >
+    <apex:slds ></apex:slds>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"/>
+    <apex:includeScript value="/apex/PlatformEventsRestCtrl"></apex:includeScript>
+    <link rel="stylesheet" href="/apex/PlatformEventsSetupCSS"/>
+    
+    <script>
+    function PlatformEventButton(pageId, name, data, endpoint, type){
+        this.Name = name;
+        this.Platform_Events_Page__c = pageId;
+        this.Action_Data__c = data;
+        this.Action_Endpoint__c = endpoint;
+        this.Action_Type__c = 'Send';
+    }
+    
+    
+    
+    const remote = PlatformEventsCtrl;
+    const VERBOSE = true;
+    const session = '{!$Api.Session_ID}';
+    const currentUserId = '{!$User.Id}';
+    
+    const app = angular.module('PlatformEventsApp', [])
+    .service('SFDC', SFDC_REST)
+    .controller('MainCtrl', function($scope){
+        $scope.shownPage = 'pages';
+        
+        $scope.$on('set-shown', function(evt, args){
+            $scope.shownPage = args[0];
+            console.log($scope.shownPage);
+            
+            if(args[1]){
+                console.log('Emitting: ', args[1])
+                $scope.$broadcast('set-page',[ args[1] ])
+            }
+            
+        })
+    })
+    
+    .controller('PagesCtrl', function($scope, SFDC){
+        $scope.pages = [];
+        
+        $scope.selectPage = function(pageId){
+            console.log('Broadcasting: ', pageId)
+            $scope.$emit('set-shown', ['setup', pageId]);
+        }
+        
+        $scope.launchPage = function(recordId){
+            window.open('/apex/PlatformEventsPage?id=' + recordId, '_blank');
+        }
+        
+        $scope.setTheme = function(theme){
+            let styles = {};
+            theme = theme.toLowerCase();
+            
+            switch(theme) {
+                case 'dark':
+                    styles['color'] = '#fff';
+                    styles['fill'] = '#fff';
+                    break;
+                case 'light':
+                    styles['color'] = '#333';
+                    styles['fill'] = '#333';
+                    break;
+                default: 
+                    styles['color'] = '#fff';
+                    styles['fill'] = '#fff';
+                    break;
+            }
+            return styles;
+        }
+        
+        $scope.getPages = function(){
+            return new Promise(function(resolve,reject){
+                remote.getPages(function(res,evt){
+                    if(evt.status){
+                        $scope.pages = res;
+                        $scope.$apply();
+                        resolve(res);
+                    } else {
+                        reject(res);
+                    }
+                })
+            })
+        }
+        
+        $scope.deletePage = function(pageIndex, pageId){
+            if(confirm('Do you want to remove this page?')){
+                remote.deletePage(pageId, function(res,evt){
+                    if(evt.status){
+                        $scope.pages.splice(pageIndex, 1);
+                        $scope.$apply();
+                    } else {
+                        console.log('PagesCtrl:deletePage', evt);
+                    }
+                })
+            }
+        }
+        
+        $scope.newPage = function(){
+            console.log('Emit new page')
+            $scope.$emit('set-shown', ['new-page'])
+        }
+        
+        $scope.$on('new-page', function(evt, args){
+            console.log('new-page',args);
+            $scope.pages.push(args[0]);
+        })
+        
+        $scope.init = async function(){
+            let pages = await $scope.getPages();
+        }
+        
+        $scope.init();
+    })
+    
+    .controller('NewPageCtrl', function($rootScope, $scope){
+        $scope.newPage = {
+            Name: '',
+            Subtitle__c: '',
+            Background_URL__c: ''
+        }
+        
+        $scope.upsertPage = function(){
+            remote.upsertPage(JSON.stringify($scope.newPage), function(res,evt){
+                if(evt.status){
+                    $scope.newPage = {
+                        Name: '',
+                        Subtitle__c: '',
+                        Background_URL__c: ''
+                    }
+                    $rootScope.$broadcast('new-page', [res]);
+                    $scope.$emit('set-shown', ['setup', res.Id]);
+                    $scope.$apply();
+                } else {
+                    console.log('ERROR:PagesCtrl:upsertPage',evt)
+                }
+                
+            })
+        }
+        
+        $scope.back = function(){
+            $scope.$emit('set-shown', ['pages']);
+        }
+        
+        $scope.showPages = function(){
+            $scope.$emit('set-shown', 'pages')
+        }
+    })
+    
+    .controller('SetupCtrl', function($rootScope, $scope, SFDC){
+        $scope.page;
+        $scope.buttons = [];
+        $scope.platformEvents = [];
+        $scope.platformFieldsMap;
+        
+        $scope.getPage = function(pageId){
+            remote.getPage(pageId, function(res,evt){
+                if(evt.status){
+                    console.log('SUCCESS:SetupCtrl:getPage', res);
+                    $scope.page = res;
+                    if(res['Platform_Event_Buttons__r']){
+                        let buttons = res['Platform_Event_Buttons__r'];
+                        
+                        buttons.map(function(button){
+                            console.log(button);
+                            if(button['Action_Data__c']) button['Action_Data__c'] = JSON.parse(button['Action_Data__c']);
+                        })
+                        $scope.buttons = buttons;
+                        
+                        delete res['Platform_Event_Buttons__r'];
+                    } else {
+                        $scope.buttons = [];
+                    }
+                    $scope.$apply();
+                } else {
+                    console.log('ERROR:SetupCtrl:getPage',evt)
+                }
+            },{escape:false})
+        }
+        
+        $scope.getPlatformEvents = function(){
+            return new Promise(function(resolve,reject){
+                SFDC.get('/sobjects')
+                .then(function(response){
+                    let sobjects = response.data.sobjects;
+                    if(VERBOSE) console.log('getPlatformEvents', sobjects);
+                    let platformEvents = [];
+                    try {
+                        sobjects.map(function(sobject){
+                            if(sobject.name.endsWith('__e')){
+                                platformEvents.push({label: sobject.label, name: sobject.name});
+                            }
+                        })
+                        resolve(platformEvents);
+                    } catch(err){
+                        reject(err);
+                    }
+                })
+            })
+        }
+        
+        $scope.describePlatformEvents = function(platformEvents){
+            let promises = []
+            
+            platformEvents.map(function(platformEvent){
+                promises.push(
+                    SFDC.get('/sobjects/' + platformEvent.name + '/describe')
+                )
+            })
+            
+            return Promise.all(promises)
+        }
+        
+        $scope.deletePage = function(){
+            if(confirm('Do you want to remove this page?')){
+                remote.deletePage($scope.page.Id, function(res,evt){
+                    if(evt.status){
+                        $scope.$emit('set-shown',['pages']);
+                    }
+                })
+            }
+        }
+        
+        $scope.updatePage = function(){
+            remote.upsertPage(angular.toJson($scope.page), function(res,evt){
+                if(evt.status){
+                    let buttons = angular.copy($scope.buttons);
+                    buttons.map(function(button){
+                        if(button['Action_Data__c']){
+                            let actions = button['Action_Data__c'] ? button['Action_Data__c'] : [];
+                            /*actions.map(function(action){
+                                console.log('before', action['data']);
+                                if(action['data']) action['data'] =  action['data'].replace(/'/g, '"');
+                                console.log('after',action['data']);
+                            })*/
+                            console.log('JSON.stringify(actions)',JSON.stringify(actions))
+                            button['Action_Data__c'] = JSON.stringify(actions);
+                        };
+                    })
+                    
+                    remote.upsertButtons(angular.toJson(buttons), function(res,evt){
+                        if(evt.status){
+                            console.log('SUCCESS:SetupCtrl:updatePage', res)
+                            $rootScope.$broadcast('create-toast', ['Page Updated!','success'])
+                        } else {
+                            console.log('ERROR:SetupCtrl:upsertButtons',evt)
+                        }
+                    })
+                } else {
+                    console.log('ERROR:SetupCtrl:upsertPage',evt)
+                }
+            })
+        }
+        
+        $scope.addButton = function(){
+            $scope.buttons.push(new PlatformEventButton($scope.page.Id, '',''))
+        }
+        
+        $scope.addAction = function(button){
+            if(!button.Action_Data__c) button['Action_Data__c'] = []
+            button.Action_Data__c.push({
+                data: null,
+                endpoint: null,
+                timeout: null
+            });
+        }
+        
+        $scope.removeAction = function(button, actionIndex){
+            if(confirm('Delete this action?')){
+                button.Action_Data__c.splice(actionIndex, 1);
+            }
+        }
+        
+        $scope.deleteButton = function(buttonIndex,buttonId){
+            if(confirm('Delete this button?')){
+                remote.deleteButton(buttonId, function(res,evt){
+                    if(evt.status){
+                        $scope.buttons.splice(buttonIndex,1);
+                    } else {
+                        console.log('ERROR:SetupCtrl:deleteButton',evt)
+                    }
+                })
+            }
+            $scope.buttons.splice(buttonIndex,1);
+        }
+        
+        $scope.launchPage = function(recordId){
+            window.open('/apex/PlatformEventsPage?id=' + recordId, '_blank');
+        }
+        
+        $scope.back = function(){
+            $scope.$emit('set-shown', ['pages']);
+        }
+        
+        $scope.$on('set-page', function(evt, args){
+            $scope.getPage(args[0]);
+            let platformEvents;
+            
+            if($scope.platformEvents.length == 0){
+                $scope.getPlatformEvents()
+                .then(function(res){
+                    platformEvents = res
+                })
+                .then(function(){
+                    return $scope.describePlatformEvents(platformEvents)
+                })
+                .then(function(res){
+                    let platformEventDescribes = res
+                    let platformFieldsMap = {}
+                    platformEventDescribes.map(function(platformEventDescribe){
+                        let fields = [];
+                        platformEventDescribe = platformEventDescribe.data
+                        platformEventDescribe.fields.map(function(field){
+                            if(field.createable) fields.push(field)
+                        })
+                        platformFieldsMap[platformEventDescribe.name] = fields
+                    })
+                    console.log('platformFieldsMap', platformFieldsMap)
+                    $scope.platformFieldsMap = platformFieldsMap
+                    $scope.platformEvents = platformEvents
+                    $scope.$apply()
+                })
+            }
+        })
+    })
+    
+    .controller('ToastsCtrl', function($scope,$sce){
+        $scope.Toast =  function Toast(message, type){
+            var self = this;
+            
+            this.INTERVAL_RATE = 1000;
+            this.DURATION = 6000;
+            
+            this.message = message;
+            this.type = type;
+            this.expiry = (new Date).getTime() + self.DURATION;
+            this.shown = true;
+            this.currentTime = (new Date).getTime();
+            
+            this.countdown = function(){
+                
+                self.currentTime += self.INTERVAL_RATE;
+                
+                if(self.expiry <= self.currentTime){
+                    self.dismiss();
+                }
+                $scope.$apply();
+            }
+            
+            this.dismiss = function(){
+                self.shown = false;
+                clearInterval(self.interval);
+            }
+            
+            this.interval = setInterval(this.countdown, self.INTERVAL_RATE);
+        }
+        
+        $scope.toasts = [];
+        
+        $scope.$on('create-toast', function(evt, args){
+            console.log('Toast Event Heard',evt, args)
+            $scope.toasts.push( new $scope.Toast(args[0],args[1]) );
+        })
+        
+        $scope.trustHtml = function(htmlString){
+            return $sce.trustAsHtml(htmlString);
+        }
+        
+        $scope.dismiss = function(idx){
+            $scope.toasts[idx].dismiss();
+        }
+    })
+    </script>
+    
+    <body ng-app="PlatformEventsApp" ng-controller="MainCtrl" xmlns:xlink="http://www.w3.org/1999/xlink" class="slds">
+        
+        <div class="slds-notify_container slds-container_medium slds-is-fixed" ng-controller="ToastsCtrl" >
+            <div ng-repeat="toast in toasts" ng-show="toast.shown" class="slds-notify slds-notify_toast {{'slds-theme_' + toast.type}}">
+                <span class="slds-assistive-text">{{toast.type}}</span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small" ng-bind-html="trustHtml(toast.message)"></h2>
+                </div>
+                <button ng-click="toast.dismiss()" class="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse">
+                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                        <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="main">
+            <div class="main-header">
+                Platform Events Wizard
+            </div>
+            
+            <div ng-show="shownPage == 'pages'" ng-controller="PagesCtrl" class="">
+                
+                <div class="section-subtitle">
+                    Setup and Configuration - <a href="https://salesforce.quip.com/uSbqADIRif1g" target="_blank">Quip</a>
+                </div>
+                <div class="section-header">
+                    <div class="section-title">
+                        Platform Event Pages
+                    </div>
+
+                    <div class="section-actions">
+                        <button ng-click="newPage()" class="section-action slds-button slds-button_brand">Add Page</button>
+                    </div>
+                </div>
+                <div class="cards">
+                    <div ng-repeat="page in pages" class="card" ng-style="setTheme(page.Theme__c)" style="background-image: url('{{page.Background_URL__c}}')">
+                        <div class="card-details">
+                            <div class="card-name">
+                                {{page.Name}}
+                            </div>
+                            <div class="card-subtitle">
+                                {{page.Subtitle__c}}
+                            </div>
+                        </div>
+                        
+                        <div class="card-actions">
+                            
+                            <button ng-click="launchPage(page.Id)" class="card-action">
+                                <svg class="card-action-icon">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#new_window')}"></use>
+                                </svg>
+                                View
+                            </button>
+                            
+                            <button ng-click="selectPage(page.Id)" class="card-action">
+                                <svg class="card-action-icon">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#edit')}"></use>
+                                </svg>
+                                Edit
+                            </button>
+                            
+                            <button ng-click="deletePage($index, page.Id)" class="card-action">
+                                <svg class="card-action-icon">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#delete')}"></use>
+                                </svg>
+                                Delete
+                            </button>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div ng-show="shownPage == 'new-page'" ng-controller="NewPageCtrl" class="">
+                
+                <div class="slds-text-heading_medium slds-m-bottom_medium">
+                    New Platform Event Page Launcher
+                </div>
+                <div class="slds-card slds-p-around_medium">
+                    <div class="slds-panel slds-p-around_medium">
+                        <div class="slds-form-element">
+                            <label>Page Name</label>
+                            <input ng-model="newPage.Name" class="slds-input" placeholder="Title of the page and header.."/>
+                        </div>
+                        <div class="slds-form-element">
+                            <label>Subheader Text</label>
+                            <input ng-model="newPage.Subtitle__c" class="slds-input" placeholder="Subheading on page.."/>
+                        </div>
+                        <div class="slds-form-element">
+                            <label>Background Image</label>
+                            <input ng-model="newPage.Background_URL__c" class="slds-input" placeholder="Page background URL.."/>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_medium slds-text-align_center">
+                        <button ng-click="back();" class="slds-button slds-button_neutral">
+                            Back
+                        </button>
+                        <button ng-click="upsertPage()" class="slds-button slds-button_brand">
+                            Create Page
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div ng-show="shownPage == 'setup'" ng-controller="SetupCtrl"  class="">
+                
+                <div class="slds-text-heading_medium slds-m-bottom_medium">
+                    Platform Event Page
+                </div>
+                <div class="launcher">
+                    <div class="slds-form-element">
+                        <label>Title</label>
+                        <input ng-model="page.Name" class="slds-input" placeholder="Title of the page and header"/>
+                    </div>
+                    <div class="slds-form-element">
+                        <label>Subtitle</label>
+                        <input ng-model="page.Subtitle__c" class="slds-input" placeholder="Subheading on page"/>
+                    </div>
+                    <div class="slds-form-element">
+                        <label>Background Image</label>
+                        <input ng-model="page.Background_URL__c" class="slds-input" placeholder="Page background URL"/>
+                    </div>
+                    <div class="slds-form-element">
+                        <label>Theme</label>
+                        <select ng-model="page.Theme__c" class="slds-select">
+                            <option value="dark" selected="selected">Dark</option>
+                            <option value="light">Light</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="slds-m-top_medium">
+                    
+                    <div class="section-header">
+                        <div class="section-title">
+                            Platform Event Buttons
+                        </div>
+                        <div class="section-actions">
+                            <button ng-click="addButton()" class="section-action slds-button slds-button_brand">Add Button</button>
+                        </div>
+                    </div>
+                    <div ng-repeat="button in buttons" class="button-definition">
+                        <div class="slds-form-element">
+                            <label>Button Label</label>
+                            <input ng-model="button.Name" class="slds-input" placeholder="Button Label"/>
+                        </div>
+                        <!--
+						<div class="slds-form-element">
+                            <label>Action Type</label>
+                            <select ng-model="button.Action_Type__c" class="slds-select">
+                                <option value="Send">Send</option>
+                                <option value="Queue">Queue</option>
+                                <option value="QueueRandom">Queue Random</option>
+                                <option value="Stream">Stream</option>
+                                <option value="StreamRandom">Stream Random</option>
+                            </select>
+                        </div>
+						-->
+                        
+                        <div class="section-actions vertical-margin">
+                            <div ng-click="addAction(button)" class="section-action slds-button slds-button_brand">
+                                Add Action
+                            </div>
+                        </div>
+                        
+                        <div ng-repeat="action in button.Action_Data__c" class="action">
+                            <div class="slds-form-element">
+                                <label>Platform Event Endpoint</label>
+                                <select class="slds-select"
+                                        ng-model="action.endpoint"
+                                        ng-options="platformevent.name as platformevent.label for platformevent in platformEvents">
+                                </select>
+                            </div>
+                            <!--<div class="slds-form-element">
+                                <label>Data</label>
+                                <textarea ng-model="action.data" class="slds-input" placeholder="Platform data"/>
+                            </div>-->
+                            <div ng-if="action.endpoint != null && action.endpoint != ''" ng-repeat="field in platformFieldsMap[action.endpoint]">
+                                <label>{{field.label}}</label>
+                                <input class="slds-input" ng-model="action.data[field.name]"/>
+                            </div>
+                            <!--
+                            <div ng-show="button.Action_Type__c == 'Queue' && !button.Action_Type__c.includes('Random')" class="slds-form-element">
+                                <label>Timeout(in ms)</label>
+                                <input ng-model="action.timeout" class="slds-input" placeholder="Timeout in ms"/>
+                            </div>
+                            <div ng-show="button.Action_Type__c == 'Stream'" class="slds-form-element">
+                                <label>Interval(in ms)</label>
+                                <input ng-model="action.interval" class="slds-input" placeholder="Timeout in ms"/>
+                            </div>
+                            <div ng-show="button.Action_Type__c.includes('Random')" class="slds-form-element">
+                                <label>Min Timeout(in ms)</label>
+                                <input ng-model="action.min" class="slds-input" placeholder="Min Timeout in ms"/>
+                            </div>
+                            <div ng-show="button.Action_Type__c.includes('Random')" class="slds-form-element">
+                                <label>Max Timeout(in ms)</label>
+                                <input ng-model="action.max" class="slds-input" placeholder="Max Timeout in ms"/>
+                            </div>
+							-->
+                            <div class="section-actions vertical-margin">
+                                <button ng-click="removeAction(button, $index)" class="section-action slds-button slds-button_destructive">
+                                    Delete Action
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="section-actions section-footer">
+                            <button ng-click="deleteButton($index, button.Id)" class="section-action slds-button slds-button_destructive">
+                                Delete Button
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-m-top_medium slds-text-align_center">
+                    <button ng-click="back()" class="slds-button slds-button_neutral">
+                        Back
+                    </button>
+                    
+                    <button ng-click="launchPage(page.Id)" class="slds-button slds-button_neutral">
+                        <svg class="slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#new_window')}"></use>
+                        </svg>
+                        View Page
+                    </button>
+                    
+                    <button ng-click="updatePage()" class="slds-button slds-button_brand">
+                        Update Page
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-46606102-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+</apex:page>

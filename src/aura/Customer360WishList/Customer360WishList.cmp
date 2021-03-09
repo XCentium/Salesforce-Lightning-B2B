@@ -1,0 +1,25 @@
+<aura:component controller="Customer360Apex" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="listOfRecords" type="Wishlist_Item__c[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <div class="slds-text-heading_small  slds-grid slds-wrap slds-size_1-of-1 slds-p-top_small"> 
+        <div class="slds-text-heading_small slds-grid slds-wrap slds-size_1-of-1 slds-p-around_medium"> <lightning:icon iconName="utility:pinned" size="x-small" class="slds-p-horizontal_small"/>Wishlist</div>
+        <!-- past 4 orders -->
+        <aura:iteration items="{!v.listOfRecords}" var="interest" >
+            <div class=" slds-size_1-of-4 slds-wrap slds-grid slds-p-horizontal_small " > 
+                <lightning:card class="slds-p-horizontal_small slds-size_1-of-1 slds-wrap slds-grid card-style">
+                    <div class="slds-size_1-of-1 slds-wrap slds-grid card-style">
+                        <div class="card-image slds-p-around_x-small slds-size_1-of-1 slds-grid slds-wrap slds-align_absolute-center" onclick="{!c.setCurrentId}" id="" aura:id="">
+                            <img src="{!interest.Image__c}" class="slds-size_1-of-1 slds-grid slds-wrap slds-align_absolute-center image-class" />
+                        </div>
+                        <div class="card-detail slds-p-around_x-small slds-size_1-of-1 slds-text-title_caps slds-clearfix slds-wrap interest-detail ">
+                            <div class="slds-size_3-of-4 slds-text-title_caps slds-float_left slds-wrap" onclick="{!c.setCurrentId}" id="" aura:id="">{!interest.Title__c}</div>
+                        </div>
+                        <div class="card-amount slds-size_1-of-1 slds-text-body_small interest-detail slds-p-around_x-small" onclick="{!c.setCurrentId}" id="" aura:id="">${!interest.Price__c}</div>
+                    </div>
+                </lightning:card>
+            </div>
+        </aura:iteration>                
+    </div> 
+    
+</aura:component>

@@ -1,0 +1,54 @@
+<aura:component controller="knowledgeSearch_CT" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <ltng:require styles="/resource/SLDS0120/assets/styles/salesforce-lightning-design-system-ltng.css" />
+
+    <aura:handler event="aura:doneRendering" action="{!c.doneRendering}"/>
+    <aura:attribute name="doneRendering" type="Boolean" default="false"></aura:attribute>
+
+    <aura:attribute name="articles" type="KnowledgeArticleVersion[]"/>
+    <aura:attribute name="page" type="integer"/>
+    <aura:attribute name="pages" type="integer"/>
+    <aura:attribute name="total" type="integer"/>
+
+    <aura:attribute name="searchKey" type="String" default=""/>
+
+    <aura:attribute name="searchPlaceholder" type="String" default="Search Knowledge Articles..." />
+    <aura:attribute name="contactSupport" type="Boolean" default="true" />
+    <aura:attribute name="contactSupportURL" type="String" default="/contactsupport" />
+    <aura:attribute name="dataCategory" type="ArticleDataCategory" default=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="c:ArticlePageChange" action="{!c.pageChange}"/>
+    <aura:handler event="c:ArticleSearchKeyChange" action="{!c.searchKeyChange}"/>
+    <aura:handler event="c:KnowledgeDataCategoryEvent" action="{!c.showCategoryArticles}"/>
+    <div class="slds" >
+        <div class="slds-col--padded">
+            <c:ArticleSearchBar searchPlaceholder="{v.searchPlaceholder}" />
+            
+            <c:KnowledgeDataCategory ></c:KnowledgeDataCategory>
+            
+            
+            <c:ArticlesPaginator page="{!v.page}" pages="{!v.pages}" total="{!v.total}"/>
+            <table class="slds-table slds-table--bordered" style="margin-bottom: 10px;">
+                <thead>
+                    <tr>
+                        <td class="data-label" > Article </td>
+                        <td class="data-label summaryCol"> Summary </td>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <aura:iteration items="{!v.articles}" var="a">
+                        <tr>
+                            <td class="slds-truncate"><a href="{! $SfdcSite.pathPrefix + '/s/article/' + a.UrlName }"> {!a.Title}</a></td>
+                            <td class="slds-truncate summaryCol">{!a.Summary}</td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+            <div style="float:right;text-align:right;font-size: 10px;">
+                <p class="csLink">Don't see what you're looking for?<br/>
+                    <a href="{! $SfdcSite.pathPrefix + '/s'+ v.contactSupportURL }">Contact Support</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</aura:component>

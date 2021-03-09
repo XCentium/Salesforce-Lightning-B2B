@@ -1,0 +1,6 @@
+<design:component>
+	<design:attribute name="ComponentLabel" />
+    <design:attribute name="NeutralValue" />
+    <design:attribute name="PositiveValue" />
+    <design:attribute name="NegativeValue"/>
+</design:component>

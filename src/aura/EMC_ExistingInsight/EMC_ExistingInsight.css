@@ -1,0 +1,28 @@
+.THIS.insight {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.THIS .insight-data {
+    
+}
+
+.THIS .insight-type {
+    font-size: 1.25em;
+    font-weight: 300;
+}
+
+.THIS .insight-field {
+    margin-right: .25em;
+}
+
+.THIS .insight-actions {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.THIS .insight-action {
+    padding: .25em .5em;
+}

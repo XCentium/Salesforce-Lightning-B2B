@@ -1,0 +1,174 @@
+<!--
+ - Created by brandon.rogers on 1/25/19.
+ -->
+
+<apex:component id="ckz_MyAccount_ContactInfoEdit">
+
+    <script id="CKZ-MyAccount-ContactInformationEdit-Desktop" type="text/template">
+
+        <div class="panel panel-default cc_panel cc_myaccount_profile m-t-1">
+            <div class="panel-body MyAccount_ContactInfoEdit">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_ContactInformation'}}</h2>
+                    </div>
+                    <div class="col-sm-4 text-right">
+
+                    </div>
+                </div>
+            </div>
+
+            <form id="myAccountForm" class="cc_edit_account_form">
+                {{#ifEquals this.commerceType "B2B"}}
+                {{#if this.preventContactEdit}}
+
+                {{else}}
+                <div class="panel-body MyAccount_ContactInfoEdit_AccountInfo">
+                    <h3 class="cc_title m-t-0">{{pageLabelMap 'MyAccount_ContactInformationEdit_AccountInfo'}}</h3>
+                    <div class="error_update_contact cc_error_update_contact" style="display: none"></div>
+
+                    <div class="form-group">
+                        <label class="cc_contact_input_firstname_label" for="firstNameField">{{pageLabelMap 'MyAccount_Profile_FirstName'}}</label>
+                        <input id="firstNameField" type="text" class="form-control contactInput cc_contact_input_firstname" name="firstName" maxlength=40 value="{{contactBean.firstName}}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="cc_contact_input_lastname_label" for="lastNameField">{{pageLabelMap 'MyAccount_Profile_LastName'}}</label>
+                        <input id="lastNameField" type="text" class="form-control contactInput cc_contact_input_lastname" name="lastName" maxlength=40 value="{{contactBean.lastName}}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="cc_contact_input_phone_label" for="homePhoneField">{{pageLabelMap 'MyAccount_Profile_Phone_Edit'}}</label>
+                        <input id="homePhoneField" type="text" class="form-control contactInput cc_contact_input_phone" name="phone" maxlength=40 value="{{contactBean.phone}}"/>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 myAccMailingAddr cc_mailing_address">
+                            <span class="cc_profile_mailing_label">{{pageLabelMap 'MyAccount_Profile_Contact_Mailing_Address'}}</span><br>
+                            <div class="form-group">
+                                <label class="cc_contact_input_street_label" for="street">{{pageLabelMap 'MyAccount_Profile_MalingStreet_Edit'}}</label>
+                                <input id="street" type="text" class="form-control contactInput cc_contact_input_street" name="mailingAddress.street" maxlength=40 value="{{contactBean.mailingAddress.address1}}"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="cc_contact_input_city_label" for="city">{{pageLabelMap 'MyAccount_Profile_MailingCity_Edit'}}</label>
+                                <input id="city" type="text" class="form-control contactInput cc_contact_input_city" name="mailingAddress.city" maxlength=40 value="{{contactBean.mailingAddress.city}}"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="cc_contact_input_state_label" for="state">{{pageLabelMap 'MyAccount_Profile_MalingState_Edit'}}</label>
+                                <div class="mailingStateSection"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="cc_contact_input_country_label" for="country">{{pageLabelMap 'MyAccount_Profile_MailingCountry_Edit'}}</label>
+                                {{{selectGeo 'country' countryList contactBean.mailingAddress.country 'mailing countryListing form-control' 'mailingAddress.'}}}
+                            </div>
+                            <div class="form-group">
+                                <label class="cc_contact_input_zip_label" for="postalCode">{{pageLabelMap 'MyAccount_Profile_MalingZip_Edit'}}</label>
+                                <input id="postalCode" type="text" class="form-control contactInput cc_contact_input_zip" name="mailingAddress.postalCode" maxlength=40 value="{{contactBean.mailingAddress.postalCode}}"/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 myAccOtherAddr cc_other_address">
+                            <span class="cc_profile_other_label">{{pageLabelMap 'MyAccount_Profile_Contact_Other_Address'}}</span><br>
+                            <div class="form-group">
+                                <label class="cc_contact_input_otherstreet_label" for="otherStreet">{{pageLabelMap 'MyAccount_Profile_OtherStreet_Edit'}}</label>
+                                <input id="otherStreet" type="text" class="form-control contactInput cc_contact_input_otherstreet" name="otherAddress.street" maxlength=40 value="{{contactBean.otherAddress.address1}}"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="cc_contact_input_othercity_label" for="otherCity">{{pageLabelMap 'MyAccount_Profile_OtherCity_Edit'}}</label>
+                                <input id="otherCity" type="text" class="form-control contactInput cc_contact_input_othercity" name="otherAddress.city" maxlength=40 value="{{contactBean.otherAddress.city}}"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="cc_contact_input_otherstate_label" for="otherState">{{pageLabelMap 'MyAccount_Profile_OtherState_Edit'}}</label>
+                                <div class="otherStateSection"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="cc_contact_input_other_country_label" for="otherCountry">{{pageLabelMap 'MyAccount_Profile_OtherCountry_Edit'}}</label>
+                                {{{selectGeo 'country' countryList contactBean.otherAddress.country 'other countryListing form-control cc_contact_input_other_country' 'otherAddress.'}}}
+                            </div>
+                            <div class="form-group">
+                                <label class="cc_contact_input_other_zip_label" for="otherPostalCode">{{pageLabelMap 'MyAccount_Profile_OtherZip_Edit'}}</label>
+                                <input id="otherPostalCode" type="text" class="form-control contactInput cc_contact_input_zip" name="otherAddress.postalCode" maxlength=40 value="{{contactBean.otherAddress.postalCode}}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                {{/ifEquals}}
+
+                <div class="panel-body MyAccount_ContactInfoEdit_UserInfo">
+                    <h3 class="cc_title m-t-0">{{pageLabelMap 'MyAccount_ContactInformationEdit_UserInfo'}}</h3>
+                    <div class="form-group">
+                        <label class="cc_contact_input_other_firstname_label" for="userFirstName">{{pageLabelMap 'MyAccount_Profile_FirstName'}}</label>
+                        <input id="userFirstName" type="text" class="form-control contactInput cc_contact_input_firstname" name="userFirstName" maxlength=40 value="{{userFirstName}}"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="cc_contact_input_lastname_label" for="userLastName">{{pageLabelMap 'MyAccount_Profile_LastName'}}</label>
+                        <input id="userLastName" type="text" class="form-control contactInput cc_contact_input_lastname" name="userLastName" maxlength=40 value="{{userLastName}}"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="cc_contact_input_phone_label" for="userPhone">{{pageLabelMap 'MyAccount_Profile_Phone_Edit'}}</label>
+                        <input id="userPhone" type="text" class="form-control contactInput cc_contact_input_phone" name="userPhone" maxlength=40 value="{{userPhone}}"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="shorter"><strong>{{pageLabelMap 'MyAccount_Profile_Username'}}:</strong></label>
+                        <div>{{username}}</div>
+                        <input id="username" type="hidden" class="form-control contactInput cc_contact_input_username" name="username" maxlength=40 value="{{username}}"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="cc_contact_input_email_label" for="email">{{pageLabelMap 'MyAccount_Profile_Email_Edit'}}</label>
+                        <input id="email" type="text" class="form-control contactInput cc_contact_input_email" name="emailAddress" value="{{emailAddress}}" maxlength=40/>
+                    </div>
+                    <div class="form-group">
+                        <label class="cc_contact_input_language_label" for="language">{{pageLabelMap 'MyAccount_Profile_Language_Edit'}}</label>
+                        <select name="language" value="{{this.language}}" class="form-control cc_user_language">
+                            {{#each this.languageList}}
+                            {{#ifEquals this.label ../language}}
+                            <option value="{{this.value}}" selected>{{this.label}}</option>
+                            {{else}}
+                            <option value="{{this.value}}">{{this.label}}</option>
+                            {{/ifEquals}}
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="cc_contact_input_currencycode_label" for="currencyCode">{{pageLabelMap 'MyAccount_Profile_Currency_Edit'}}</label>
+                        <select name="currencyCode" value="{{this.currencyCode}}" class="form-control cc_currency_code">
+                            {{#each this.currencyList}}
+                            {{#ifEquals this.value ../currencyCode}}
+                            <option value="{{this.value}}" selected>{{this.label}}</option>
+                            {{else}}
+                            <option value="{{this.value}}">{{this.label}}</option>
+                            {{/ifEquals}}
+                            {{/each}}
+                        </select>
+                    </div>
+                    {{#ifDisplay 'reg.tmZn'}}
+                    <div class="form-group">
+                        <label class="cc_contact_input_timezone_label" for="timeZoneValue">{{pageLabelMap 'SiteRegistration_TimeZone_Edit'}}</label>
+                        <select name="timeZoneValue" value="{{this.timeZoneValue}}" class="timeZoneSelect form-control cc_currency_code">
+                            {{#each this.timeZoneOptions}}
+                            {{#ifEquals this.value ../timeZoneValue}}
+                            <option value="{{this.value}}" selected>{{this.label}}</option>
+                            {{else}}
+                            <option value="{{this.value}}">{{this.label}}</option>
+                            {{/ifEquals}}
+                            {{/each}}
+                        </select>
+                    </div>
+                    {{/ifDisplay}}
+
+                    <div class="form-group text-right">
+                        <input type="button" class="btn btn-default btn-sm closeEditProfile cc_close_edit_profile" value="{{pageLabelMap 'Cancel'}}"/>
+                        <input type="button" class="btn btn-primary btn-sm updateProfile cc_update_profile" value="{{pageLabelMap 'Save'}}"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.contactInfoEditView.desktop.tmpl = 'CKZ-MyAccount-ContactInformationEdit-Desktop';
+        });
+    </script>
+</apex:component>

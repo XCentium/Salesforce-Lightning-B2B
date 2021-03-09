@@ -1,0 +1,60 @@
+<apex:page contentType="application/javascript">
+    function MixpanelController(){
+    	const self = this;
+        this.mixpanel = MixpanelCtrl;
+        this.MIXPANEL_TOKEN = "53f404db5545Y000000HrQa2de17090e";
+        
+        this.setMessage = function(){
+            return new Promise(function(resolve,reject){
+            	self.mixpanel.getOrgData(function(res,evt){
+                    console.log('Mixpanel:setMessage',res,evt);
+                	if(evt.status){
+                    	resolve(res);
+                    } else {
+                    	reject(res);
+                    }
+                })
+            })
+        }
+        
+        this.sendEvent = function(eventName, payload){
+            return self.setMessage().then(function(OrgData){
+                let data = {
+                    'event' : eventName,
+                    'properties' : payload
+                }
+                
+                data.properties['token'] = window.atob(self.MIXPANEL_TOKEN);
+                data.properties['org_id'] = OrgData.org_id;
+                data.properties['org_type'] = OrgData.org_type;
+                data.properties['distinct_id'] = OrgData.distinct_id;
+                
+                let dataString = btoa(JSON.stringify(data));
+                
+                self.mixpanel.createEvent(dataString, function(res,evt){
+                    return res;
+                })
+            })
+        };
+        this.sendUpdate = function(operation, payload){
+            
+            return self.setMessage().then(function(OrgData){
+                let data = {
+                    '$token' : window.atob(self.MIXPANEL_TOKEN),
+                    '$distinct_id' : OrgData.distinct_id
+                }
+                if(!operation.startsWith('$')){
+                    '$' + operation;
+                }
+                
+                data[operation] = payload;
+                
+                let dataString = btoa(JSON.stringify(data));
+                
+                self.mixpanel.updateProfile(dataString, function(res,evt){
+                    return res;
+                })
+            })
+        }
+    }
+</apex:page>

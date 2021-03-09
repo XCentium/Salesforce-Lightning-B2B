@@ -1,0 +1,34 @@
+<!--
+ - Created by brandon.rogers on 1/23/19.
+ -->
+
+<apex:component id="ckz_Checkout_LLI_AddressCarousel">
+    <script id="CKZ-address-carousel-desktop-template" type="text/template">
+        {{#if this.AddressList}}
+        <div id="addressCarousel" class="addressCarousel">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownAddressPicker">
+                            {{pageLabelMap 'LLICheckOut_SelectAddress'}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownAddressPicker">
+                            {{#each this.AddressList}}
+                            <li><a class="subItem" data-id="{{sfid}}">{{>addressDisplay this}}</a></li>
+                            <li role="separator" class="divider"></li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+    </script>
+
+    <script type="text/javascript">
+        $(function(){
+            CCRZ.uiProperties.AddressCarousel.desktop.tmpl = 'CKZ-address-carousel-desktop-template';
+        });
+    </script>
+</apex:component>

@@ -1,0 +1,27 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="Title" type="String" default=""/>
+    <aura:attribute name="Content" type="String" default=""/>
+    <aura:attribute name="titleSize" type="String" default="18"/>
+    <aura:attribute name="titleWeight" type="String" />
+    <aura:attribute name="titlemarginbottom" type="String" default="10"/>
+    <aura:attribute name="borderbottomsize" type="String" default="2"/>
+    <aura:attribute name="borderbottomwidth" type="String" default="50"/>
+    <aura:attribute name="borderbottomcolor" type="String" default="#58BB62"/>
+    
+    <aura:attribute name="componentPaddingTopBottom" type="String"/>
+    <aura:attribute name="componentPaddingLeftRight" type="String"/>
+    
+    <aura:attribute name="contentSize" type="String" default="14"/>
+    <aura:attribute name="contentlineheight" type="String" default="16"/>
+    
+    <div style="{!'padding-top:' + v.componentPaddingTopBottom + 'px;'  + 'padding-bottom:' + v.componentPaddingTopBottom + 'px;' + 'padding-left:' + v.componentPaddingLeftRight + 'px;' + 'padding-right:' + v.componentPaddingLeftRight + 'px;'}">
+        <aura:if isTrue="{!v.Title != ''}">
+            <h2 style="{!'font-size:' + v.titleSize + 'px;margin-bottom:' + v.titlemarginbottom + 'px;' + 'font-weight:' + v.titleWeight}">{!v.Title}</h2>
+        </aura:if>
+        
+        <div style="{!'width:' + v.borderbottomwidth + '%;height:' + v.borderbottomsize + 'px;background-color:' + v.borderbottomcolor + ';margin-bottom:' + v.titlemarginbottom + 'px;'}"></div>
+        <aura:if isTrue="{!v.Content != ''}">
+            <p style="{!'font-size:' + v.contentSize + 'px;' + 'line-height:' + v.contentlineheight + 'px;'}">{!v.Content}</p>
+        </aura:if>
+    </div>
+</aura:component>

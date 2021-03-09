@@ -1,0 +1,17 @@
+<aura:component >
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+        	<div class="slds-page-header">
+            	<div class="slds-media">
+                	<div class="profilepicture">
+                    	<lightning:icon iconName="standard:quotes" size="small" alternativeText="Indicates approval"/> 
+                     </div>
+                     <div class="slds-media__body">
+                     	<h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions"> {!setting.Store_Promotions_Page_Label__c}</h1>
+                        <p class="slds-text-body_small slds-line-height_reset">Check out our latest promotions</p>
+                     </div>
+                </div>
+             </div>
+        	<img src="{!'/resource/' + setting.Store_Promotion_Static_Resource__c }" class="imgmaxwidth"/> 
+    </aura:iteration>
+</aura:component>

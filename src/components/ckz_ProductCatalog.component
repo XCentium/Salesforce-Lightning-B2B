@@ -1,0 +1,89 @@
+<!--
+ - Created by brandon.rogers on 2019-06-03.
+ -->
+
+<apex:component id="ckz_ProductCatalog" controller="ckz_ctrl_ProductCatalog">
+
+    <!-- CATEGORY MEDIA TEMPLATE -->
+    <script type="text/x-handlebars-template" id="CKZ-PLP-CategoryMedia">
+        {{#each this}}
+        <img src="{{ccrz__URI__c}}" class="img-responsive catImg"/>
+        <div class="catName">{{ccrz__Category__r.Name}}</div>
+        {{/each}}
+    </script>
+
+    <!-- PRODUCT CATALOG -->
+    <script id="CKZ-productCatalogDesktop" type="text/template">
+        <div class="container-fluid ckz-productCatalog">
+            {{#if this.noSearchResults}}
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="cc_noresults">{{pageLabelMap 'Search_NoResults' this.searchString}}</h3>
+                    <p class="cc_noresults_body">{{pageLabelMap 'Search_NoResultsBody' this.searchString}}</p>
+                </div>
+            </div>
+            {{else}}
+            {{#if this.wasSearch}}
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="cc_search_results">{{pageLabelMap 'Search_Results' this.searchString}}</h3>
+                    <p class="cc_results_body">{{pageLabelMap 'Search_ResultsBody' this.searchString}}</p>
+                </div>
+            </div>
+            {{else}}
+            {{#ifDisplay 'PL.DsplSubCat'}}
+            {{#if this.subcategories}}
+            <h3 class="">{{pageLabelMap 'SubCategories'}}</h3>
+            {{> subcats}}
+            {{/if}}
+            {{/ifDisplay}}
+            {{/if}}
+            {{/if}}
+
+
+            <div class="listPaginationSec paginationTop m-t-3"></div>
+            <div class="prodListSec"></div>
+            <div class="listPaginationSec paginationBottom m-b-3"></div>
+        </div>
+    </script>
+
+    <!-- SUBCATEGORIES -->
+    <script id="subcatDesktop" type="text/template">
+        <div class="row">
+            {{#each this.subcategories}}
+            <div class="col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">
+                        {{#if this.mediaWrapper }}
+                        {{categoryLink this.mockCategory 'cc_category_image' image=(displayImage this.mediaWrapper 'categoryList img-responsive')}}
+                        {{/if}}
+
+                        <h4>{{categoryLink this.mockCategory}}</h4>
+                        <p>{{unescape this.mockCategory.ShortDesc}}</p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            CCRZ.uiProperties.productCatalogView.desktop.tmpl = 'CKZ-productCatalogDesktop';
+
+            CCRZ.pubSub.on('view:productListView:refresh', function () {
+                //RENDER CATEGORY MEDIA
+                var categoryMedia = {!categoryMediaJSON};
+                console.log("categoryMedia: " + JSON.stringify(categoryMedia));
+
+                var mediaSource = $("#CKZ-PLP-CategoryMedia").html();
+                var mediaTemplate = Handlebars.compile(mediaSource);
+                var mediaContext = categoryMedia;
+                var mediaHTML = mediaTemplate(mediaContext);
+                $("#ckz-section-categoryMedia").html(mediaHTML);
+            });
+
+        });
+    </script>
+</apex:component>

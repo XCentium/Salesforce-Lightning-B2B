@@ -1,0 +1,11 @@
+<apex:page >
+<html>
+<header>
+    <meta property="og:title" content="Alert: Your solar panel performance is low." />
+    <meta property="og:image" content="https://i.imgur.com/nmWRWKP.png" />
+ </header>
+  <body>
+  </body>
+
+  </html>
+</apex:page>

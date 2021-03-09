@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>36.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>This page is used by the custom Gantt charts on the Projects object page layout.  Added in April 2016.</description>
+    <label>Gantt_Chart_Milestones</label>
+</ApexPage>

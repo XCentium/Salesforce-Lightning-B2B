@@ -1,0 +1,33 @@
+<apex:page contentType="application/javascript">
+    
+    function Insight(insightTypeId, parentId, rationale, customTitle, supportingData) {
+        this.InsightTypeId = insightTypeId;
+        this.ParentId = parentId;
+        this.Score = Math.random();
+        this.Rationale = rationale;
+        this.CustomTitle = customTitle;
+        this.SupportingData = supportingData;
+    }
+    
+    function InsightUserValue(insightId, ownerId, prepopulatedData){
+        this.InsightId = insightId;
+        this.OwnerId = ownerId;
+        this.ActionPrepopulationValues = JSON.stringify(prepopulatedData);
+        this.Score = Math.random();
+    }
+    
+    function RecordSupportingData(collectionName, itemName, data, descriptor){
+        var collectionObject = {};
+        collectionObject[collectionName] = [];
+        
+        var singleObject = {}
+        singleObject[itemName] = {}
+        singleObject[itemName]['payload'] = data
+        singleObject[itemName]['descriptor'] = descriptor
+        
+        collectionObject[collectionName].push(singleObject)
+        
+        return collectionObject;
+    }
+    
+</apex:page>

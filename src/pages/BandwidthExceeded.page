@@ -1,0 +1,30 @@
+<apex:page showHeader="false" title="{!$Label.site.bandwidth_limit_exceeded}">
+                    <title>Bandwidth Exceeded</title>
+
+  <apex:composition template="StdExceptionTemplate">
+    <apex:define name="icon">
+      <apex:image url="{!$Site.Prefix}{!$Label.site.img_path}/warning.gif"/>
+    </apex:define>
+    <apex:define name="error">
+      <apex:outputText style="font-size: larger; font-weight: bold;" value="{!$Label.site.limit_exceeded}"/>
+      <br/>
+      <br/>
+      <apex:outputText value="{!$Label.site.sorry_for_inconvenience}"/>
+      <apex:outputText escape="false" value=" {!$Label.site.get_in_touch}">
+      <apex:param value="mailto:{!$Site.AdminEmailAddress}"/>
+      <apex:param value="{!$Label.site.email_us}"/>
+    </apex:outputText>
+   </apex:define> 
+  </apex:composition>
+    
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

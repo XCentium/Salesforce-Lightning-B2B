@@ -1,0 +1,30 @@
+<aura:component >
+    <aura:attribute name="sections" type="List"  access="global"/>
+     <aura:attribute name="displaySections" type="List" />
+     <aura:handler event="c:PricerSectionUpdated" action="{!c.refresh}"/>
+
+
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                <thead>
+                    <tr  class="slds-text-title--caps">
+              			<th>{!$Label.c.Pricer_Section}</th>
+						<th>{!$Label.c.Pricer_SubTotal}</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.displaySections}" var="section"  >
+                        <tr class="{!section.isDeleted?'slds-hide':''}">
+                        	<td style="white-space: normal;">{!section.oSection.Name}</td>
+                            <td> <ui:outputCurrency aura:id="sectionTotal" value="{!section.total}"/></td>
+
+                        </tr>
+                    </aura:iteration>
+
+                </tbody>
+            </table>
+
+
+
+
+</aura:component>

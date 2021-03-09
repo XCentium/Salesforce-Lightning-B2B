@@ -1,0 +1,88 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="IntelligentAlerts" >
+    <lightning:quickActionAPI aura:id="quickActionAPI" />
+    <aura:attribute name="ObjectId" type="String" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="accId" type="String" />
+    <aura:attribute name="Alerts" type="Intelligent_Alert__c[]"/>
+    <lightning:card title="Next Best Action" variant="base"> 
+        <aura:set attribute="actions"></aura:set>
+        <aura:set attribute="footer"></aura:set>
+        <div class="slds-card__body_inner"></div>
+        <aura:iteration var="alert" items="{!v.Alerts}" indexVar="index"> 
+            <aura:if isTrue="{!alert.Id == v.recordId}">
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="insightsCardsContainer runtime_sales_insightsInsightsCards">
+                        <div class="insightsCardsContainer runtime_sales_insightsInsightsCards">
+                            <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                                <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-top--small slds-p-horizontal--small" style="background-color: rgb(255, 255, 255); ">
+                                    <div id='score_container' class="slds-list--horizontal slds-wrap slds-m-horizontal--large" style="margin-bottom:5px">                    
+                                        <lightning:layout class="slds-m-bottom_medium" horizontalAlign="spread" verticalAlign="center">
+                                            <lightning:layoutItem>
+                                                <div class="slds-text-heading_large">{!alert.Predicted_on_Shelf_Availablility__c} %</div>
+                                                <div class="slds-text-title_caps slds-text-color_weak">Predicted On Shelf Availability</div>
+                                            </lightning:layoutItem>
+                                            <lightning:layoutItem></lightning:layoutItem>
+                                        </lightning:layout>
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="slds-border--bottom"/>
+                            <div class="slds-grid slds-wrap slds-grid--pull-padded  slds-p-vertical--small" style="background-color: rgb(255, 255, 255); ">
+                                <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+                                    <div class='slds-text-heading--medium slds-text-title--caps slds-text-color--weak slds-p-horizontal--medium' style="margin-left:8px">
+                                        Leading Causes
+                                    </div>
+                                </div>
+                                <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+                                    <div id="{!globalId + '_section1'}" class="slds-list--horizontal slds-wrap slds-m-horizontal--large" style="width:100%">
+                                        <div class='slds-text-body--regular slds-text-color--weak'>
+                                            <lightning:layout>
+                                                <lightning:layoutItem size="3">
+                                                    <div style="font-size: 0.8125rem; float: right; color: rgb(194, 57, 52);">{!alert.Cause_1_Metric__c}</div>
+                                                </lightning:layoutItem>
+                                                <lightning:layoutItem size="1"></lightning:layoutItem>
+                                                <lightning:layoutItem size="8">
+                                                    <div style="font-size: 0.8125rem;">{!alert.Cause_1_Detail__c}</div>
+                                                </lightning:layoutItem>
+                                            </lightning:layout>
+                                            <lightning:layout>
+                                                <lightning:layoutItem size="3">
+                                                    <div style="color: rgb(2, 128, 72); font-size: 0.8125rem; float: right;">{!alert.Cause_2_Metric__c}</div>
+                                                </lightning:layoutItem>
+                                                <lightning:layoutItem size="1"></lightning:layoutItem>
+                                                <lightning:layoutItem size="8">
+                                                    <div style="font-size: 0.8125rem;">{!alert.Cause_2_Detail__c}</div>
+                                                </lightning:layoutItem>
+                                            </lightning:layout>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <aura:if isTrue="{!v.ObjectId != ''}">
+                            <button class="slds-button slds-button_neutral"  onclick="{!c.mapsNavigate}" >Map It</button><br/><br/>
+                            </aura:if>    
+                            <div class="slds-border--bottom" />
+                            <div class="slds-section slds-is-open">
+                                <h3 class="slds-section__title">
+                                    <div class="slds-text-heading_medium">New Store Visit</div>
+                                </h3>
+                                <div class="slds-section__content">
+                                    <div class="slds-form slds-form_stacked">
+                                        <lightning:layout class="slds-m-bottom_x-small">
+                                            <div class="slds-form-element   "><span class="slds-form-element__label">Store</span>
+                                                <div class="slds-form-element__control"><span class="slds-form-element__static"><strong>{!alert.Account__r.Name}</strong></span></div>
+                                            </div>
+                                        </lightning:layout>
+                                        <c:CGCloud_CreateVisitAction recordId="{!alert.Account__r.Id}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aura:if>
+        </aura:iteration>
+    </lightning:card>
+    
+    
+</aura:component>

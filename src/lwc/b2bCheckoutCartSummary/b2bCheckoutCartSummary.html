@@ -1,0 +1,61 @@
+<template>
+	<legend class="slds-text-title_caps slds-var-p-around_x-small spcHeader">
+		Checkout Summary
+	</legend>
+
+	<div class="slds-box slds-var-m-bottom_medium">
+		<div class="slds-var-m-vertical_xx-small">
+			Subtotal:
+			<lightning-formatted-number
+				value={subtotal}
+				format-style="currency"
+				currency-code={currency}
+				class="slds-float_right"
+			></lightning-formatted-number>
+		</div>
+
+		<div class="slds-var-m-vertical_xx-small">
+			Discount:
+			<lightning-formatted-number
+					value={discount}
+					format-style="currency"
+					currency-code={currency}
+					class="slds-float_right"
+			></lightning-formatted-number>
+		</div>
+
+		<div class="slds-var-m-vertical_xx-small">
+			Estimated Shipping:
+			<lightning-formatted-number
+				value={estShipping}
+				format-style="currency"
+				currency-code={currency}
+				class="slds-float_right"
+			></lightning-formatted-number>
+		</div>
+
+		<div class="slds-var-m-vertical_xx-small">
+			Estimated Tax:
+			<lightning-formatted-number
+				value={estTax}
+				format-style="currency"
+				currency-code={currency}
+				class="slds-float_right"
+			></lightning-formatted-number>
+		</div>
+
+		<div
+			class="slds-var-m-vertical_xx-small slds-var-p-vertical_x-small slds-border_top"
+		>
+			<h2 class="slds-text-heading_small">
+				Total:
+				<lightning-formatted-number
+					value={total}
+					format-style="currency"
+					currency-code={currency}
+					class="slds-float_right"
+				></lightning-formatted-number>
+			</h2>
+		</div>
+	</div>
+</template>

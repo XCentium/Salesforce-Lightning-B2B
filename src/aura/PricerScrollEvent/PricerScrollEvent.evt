@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT">
+	<aura:attribute name="whichSection" type="Integer" default="-1"/>
+    <aura:attribute name="lookupGid" type="String"/>
+</aura:event>

@@ -1,0 +1,40 @@
+.THIS #top{
+    padding-left: 10px;
+    font-size: 1.3em;
+    position: relative;
+    top: 1px;
+}
+
+.THIS .rec-cardHeader{
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: Montserrat;
+}
+
+
+.THIS #follower{
+    color: black;
+    font-size: 0.7em;
+    line-height: 0px;
+    text-align: left;
+    height: 10px;
+    left: -5px;
+    top: -4px;
+    position: relative;
+    font-weight: 800;
+}
+
+.THIS #foll{
+    
+    color: white;
+    width: 30px;
+    text-align: center;
+    height: 30px;
+    line-height:30px;
+}

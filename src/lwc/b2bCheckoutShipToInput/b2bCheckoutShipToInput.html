@@ -1,0 +1,32 @@
+<template>
+	<legend class="slds-text-title_caps slds-var-p-around_x-small spcHeader">
+		<abbr class="slds-required" title="required">*</abbr> Ship To
+	</legend>
+
+	<div class="slds-box slds-var-m-bottom_medium">
+		<lightning-radio-group
+			name="radioGroup"
+            label="Ship To"
+            variant="label-hidden"
+			options={options}
+			value={selectedAddress}
+			onchange={handleAddressChange}
+			type="radio"
+			required
+		></lightning-radio-group>
+	</div>
+
+	<legend class="slds-text-title_caps slds-var-p-around_x-small spcHeader">
+		Delivery Instructions
+	</legend>
+
+	<lightning-textarea
+		name="shippingInstructions"
+        label="Delivery Instructions"
+        variant="label-hidden"
+        class="slds-var-m-bottom_medium"
+		value={shippingInstructions}
+		onchange={handleShippingInstructionsChange}
+		placeholder="Cross street, security code, etc..."
+	></lightning-textarea>
+</template>

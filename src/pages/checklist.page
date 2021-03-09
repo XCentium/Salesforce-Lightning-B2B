@@ -1,0 +1,1178 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" controller="ChecklistRemoter">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+
+    <head>
+        <apex:slds />
+        <title>Checklist</title>
+        <!-- Move the styles into a CSS file -->
+        <style>
+        .space-above {
+            margin-top: 8px;
+        }
+        .loading {
+            padding-top: 100px;
+            width: 100%;
+            text-align: center;
+            z-index: 0;
+        }
+        .step#step-1 {
+            transform: translate(163px, 141px);
+        }
+
+        .step#step-2 {
+            transform: translate(151.5px, 209.5px);
+        }
+
+        .step#step-3 {
+            transform: translate(167px, 278px);
+        }
+
+        .step#step-4 {
+            transform: translate(136px, 346.5px);
+        }
+
+        .step#step-5 {
+            transform: translate(168px, 415px);
+        }
+            body {
+                margin: 0;
+                /*padding: 0;*/
+                overflow: hidden;
+                padding: 1.5rem;
+            }
+            
+            
+            .slds-scope .icon {
+                width: 160px;
+                max-height: 160px;
+                margin: 0px auto;
+            }
+            
+            .slds-scope img {
+                width: 24px;
+            }
+            
+            .slds-scope .slds-icon__container--circle, .slds-scope .slds-icon_container--circle {
+                padding: .2rem;
+            }
+
+            .slds-scope .inline-spinner {
+                position: relative;
+                width: 24px;
+                height: 13px;
+                display: inline-flex;
+                margin-top: 5px;
+            }
+            
+            .slds-scope .main-icon {
+                max-height: 96px;
+                max-height: 96px;
+                height: 96px;
+                width: auto;
+            }
+            
+            .slds-scope li {
+                height: 32px;
+                width: 20rem;
+            }
+            
+            .slds-scope .slds-m-left--small {
+            }
+            
+            .check-list-container {
+                height: 28rem;
+            
+            }
+            svg {
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 100%;
+                display:block;
+                width: 100%;
+                position: absolute;
+                top:0;
+                left:0;
+            }
+
+            svg text {
+                font-size: 1.05rem;
+                fill: #055ea7;
+            }
+
+            .step text {
+                fill:  #055ea7;
+                font-size: 0.9rem;
+                font-weight: bold;
+            }
+
+            .slds-scope .slds-icon {
+                fill: blue;
+            }
+           
+            .slds-scope .slds-icon-action-approval {
+                background-color: white;
+            }
+            
+            // Path styles
+            .solid-path {
+                stroke-dasharray: 5;
+                stroke: #499AE2;
+                //stroke-dasharray: 2000;
+                //stroke-dashoffset: 0;
+                //stroke-width: 1.5;
+                stroke: #FFFFFF;
+            }
+
+            .dash-path {
+                stroke-dasharray: 5;
+                stroke: #8dccf1;
+                stroke-width: 2.5;
+
+            }
+            
+            .step {
+            }
+             
+            .step .circle {
+                fill: #fff;          
+            }
+                
+            @keyframes pulse {
+                0% { stroke-width: 1; }
+                50% { stroke-width: 4; }
+                100%: { stroke-width: 1; }
+            }
+                            
+            .step.progress .circle {
+                stroke-width: 1;
+                stroke: #fff;
+                fill: #006dd5;
+                animation-name: pulse;
+                animation-duration: 2s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+            }
+
+            .step.fail .circle {
+                stroke-width: 6;
+                stroke: #FF8C00;
+                fill: rgb(0, 71, 153);
+            }
+
+            .step.warn .circle {
+                stroke-width: 4;
+                stroke: #FF8C00;
+            }
+
+            .step.complete .circle {
+                rx: 8;
+                ry: 8;
+            }
+            
+            .step.hidden {
+                display: none;
+            }
+
+            .circle.hidden {
+                display:none;
+            }
+            .hidden {
+                display:none;
+            }
+            .checkmark {
+                fill: #006dd5;
+                fill-opacity: 1;
+                stroke: none;
+                transform: translate(-359px, -428px)
+            }
+
+            .step .checkmark {
+                display: none;
+            }
+            
+            .step.progress .checkmark {
+                display: none;
+            }
+            
+            .step.complete .checkmark {
+                display: block;
+            }
+            
+            .checkmark__check {
+              transform-origin: 50% 50%;
+              stroke-dasharray: 48;
+              stroke-dashoffset: 48;
+              animation: stroke .3s $curve .8s forwards;
+            }
+
+            .check {
+              /*transform-origin: 10px 10px 10px;*/
+/*              height: 10px;
+              width: 10px;*/
+              fill: rgb(0, 71, 153);
+            }
+
+            .info-icon {
+                fill: white;
+            }
+
+            svg text.ie-bubble {
+                font-size: .75rem;
+                fill: white;
+            }
+
+            svg rect.ie-bubble-rect {
+                fill: #16325c;
+            }
+
+            svg ellipse.ie-circle {
+                fill: #34A0FF;
+                stroke-width: 2;
+                stroke: white;
+            }
+            svg ellipse.transparent-circle {
+                opacity: 0;
+            }
+
+
+
+        </style>    
+    </head>
+    <body>
+        <h1 id="loading" class="loading">Loading...</h1>
+        <div class="slds-scope">
+            <div class="slds-container--medium check-list-container container" id="container">
+
+                <svg id="whole-svg" xmlns="http://www.w3.org/2000/svg">
+                    <text text-anchor="middle" x="50%" y ="40" >Before we start, we'll need to check a few things.</text>
+            
+                    <path class="dash-path" fill="none" d="M 176.00,421.00
+           C 157.00,405.00 138.00,384.00 135.00,348.00
+             139.00,300.00 155.00,299.00 173.00,273.00
+             185.86,243.12 174.00,231.00 156.00,211.00
+             109.17,176.22 119.00,162.87 158.00,143.00"/> 
+             
+             <!-- IE error bubble for the first check -->
+             <rect x="480" y="117" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-1-ie"/>
+             <text x="487" y="135" class="ie-bubble hidden" id="bubble-1-ie-text">
+             </text>
+
+             <!-- error bubble for the first check -->
+             <foreignObject id="bubble-1" class="node hidden" x="480" y="112" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left-top" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+              <!-- IE error bubble for the second check -->
+             <rect x="480" y="182" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-2-ie"/>
+             <text x="487" y="200" class="ie-bubble hidden" id="bubble-2-ie-text">
+             </text>
+
+             <!-- error bubble for the second check -->
+             <foreignObject id="bubble-2" class="node hidden" x="475" y="180" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left-top" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+             <!-- IE error bubble for the third check -->
+             <rect x="487" y="235" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-3-ie"/>
+             <text x="494" y="253" class="ie-bubble hidden" id="bubble-3-ie-text">
+             </text>
+
+             <!-- error bubble for the third check -->
+             <foreignObject id="bubble-3" class="node hidden" x="482" y="233" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+             <!-- IE error bubble for the fourth check -->
+             <rect x="477" y="290" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-4-ie"/>
+             <text x="484" y="308" class="ie-bubble hidden" id="bubble-4-ie-text">
+             </text>
+
+             <!-- error bubble for the fourth check -->
+             <foreignObject id="bubble-4" class="node hidden" x="472" y="288" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+             <!-- IE error bubble for the fifth check -->
+             <rect x="508" y="391" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-5-ie"/>
+             <text x="515" y="409" class="ie-bubble hidden" id="bubble-5-ie-text">
+             </text>
+
+             <!-- error bubble for the fifth check -->
+             <foreignObject id="bubble-5" class="node hidden" x="503" y="389" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+             <!-- IE Information bubble at the bottom -->
+             <rect x="143" y="350" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-error-ie"/>
+             <text x="150" y="365" class="ie-bubble hidden" id="bubble-error-text-ie">
+             </text>
+
+             <!-- Information bubble at the bottom -->
+             <foreignObject id="bubble-error" class="node hidden" x="140" y="350" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin" role="tooltip">
+                         <div class="slds-popover__body" id="bubble-error-text"></div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+                <g class="step progress hidden" id="step-1">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"> 
+                    </ellipse>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text>
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-1" cx="290" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-1" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="270px" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-1" cx="290" cy="-2" rx="10" ry="10"></ellipse>
+                </g>
+
+                <g class="step progress hidden" id="step-2">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"/>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text>
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-2" cx="290" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-2" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="270px" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-2" cx="290" cy="-2" rx="10" ry="10"></ellipse>
+                </g>
+                
+                <g class="step progress hidden" id="step-3">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"/>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text>   
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-3" cx="290" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-3" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="270px" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-3" cx="290" cy="-2" rx="10" ry="10"></ellipse>           
+                </g>
+                
+                <g class="step progress hidden" id="step-4">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"/>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text> 
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-4" cx="310" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-4" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="290" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-4" cx="310" cy="-2" rx="10" ry="10"></ellipse>               
+                </g>
+                
+                <g class="step progress hidden" id="step-5">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"/>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text>  
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-5" cx="310" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-5" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="290" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-5" cx="310" cy="-2" rx="10" ry="10"></ellipse>                      
+                </g>
+                                                                                                
+                </svg>                
+             
+            
+                <div id="submessage" class="slds-align--absolute-center slds-m-vertical--small">
+                    &nbsp;
+                </div>                
+                                
+                <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center">
+                    <ul id="checklist" class=""/>
+                </div>
+            </div>
+
+        </div>                        
+        
+        <script type="text/javascript" src="/analytics/wave/sdk/js/40.0/wizard-min.js"></script>
+
+        <script>
+        Visualforce.remoting.maxretries = 2; // Set maximum number of retries and timeout at page level
+        Visualforce.remoting.timeout = 120000; 
+var DELAY = 0;
+var TEXT_CHAR_WIDTH = 54;
+var checklistItems = [
+    {
+        methodName: '{!$RemoteAction.ChecklistRemoter.dataOk}',
+        successMessage: "Minimum requirements met",
+        failMessage: "Minimum requirements not met",
+        inProgressMessage: "Checking minimum requirements",
+        timeoutMessage: "Minimum requirements not verified"
+    },
+    {
+        methodName: '{!$RemoteAction.ChecklistRemoter.objectUsage}',
+        successMessage: "Optional objects identified",
+        inProgressMessage: "Checking optional object usage",
+        timeoutMessage: "Optional objects not verified"
+
+    },
+    {
+        methodName: '{!$RemoteAction.ChecklistRemoter.fieldAccess}',
+        successMessage: "Field access verified",
+        failMessage: "Field access check failed",
+        inProgressMessage: "Checking field access",
+        timeoutMessage: "Field access not verified",
+        emptyMessage: "The Analytics Integration User has access to all the fields used to create the app using Basic set up. That option is now enabled.",
+        warningMessage: "The Analytics Integration User does not have access to the following fields required for standard settings so basic install is disabled on the next page. Go to org setup and grant the Integration User field level access to the following fields to enable basic set up."
+    },
+    {
+        methodName: '{!$RemoteAction.ChecklistRemoter.configuration}',
+        successMessage: "Salesforce configuration validated",
+        inProgressMessage: "Checking Salesforce configuration",
+        timeoutMessage: "Salesforce configuration not verified"
+    },
+    {
+        methodName: '{!$RemoteAction.ChecklistRemoter.dataInconsistencies}',
+        successMessage: "Data looks good",
+        inProgressMessage: "Checking for data inconsistencies",
+        timeoutMessage: "Data inconsistencies not verified"
+    }    
+]      
+// Note that the SLDS sizes are smaller than the wizard counterparts
+var containerSizeClasses = {
+    "small": ["slds-container--medium"],
+    "medium": ["slds-container--large"],
+    "large": ["slds-container--x-large"]
+};
+
+var wizardMetadata = null;
+
+function setSize(size) {
+    for (var key in containerSizeClasses) {
+        var container = document.querySelector("#container");
+        removeClass(container, containerSizeClasses[key].join("\",\""));
+    }
+    var c2 = document.querySelector("#container");
+    addClass(c2, containerSizeClasses[size].join("\",\""));
+}
+
+function hasClass(ele, cls) {
+    var classes = ele.getAttribute('class');
+    var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+    return reg.test(classes);
+}
+
+function addClass(ele, cls) {
+    // console.warn("adding class " + cls + " to element " + ele);
+
+    if (! hasClass(ele, cls)) {
+        var classes = ele.getAttribute('class');
+        ele.setAttribute('class', classes+" "+cls);
+    }
+}
+
+function removeClass(ele, cls) {
+    // console.warn("removing class " + cls + " from element " + ele);
+
+    if (hasClass(ele, cls)) {
+        var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+        var classes = ele.getAttribute('class');
+        var newClasses = classes.replace(reg, ' ');
+        ele.setAttribute('class', newClasses);
+    }
+}
+
+function uppdateCallback(variables) {
+    var variableName = (variables.length > 0 && variables[0].hasOwnProperty('name')) ? variables[0].name : '';
+    console.warn("update returned " + variableName + " : ", variables);
+    if (
+        // log an error if stuff went wrong
+        variables.length > 0 &&
+        variables[0].hasOwnProperty('errorMessage')){
+        console.error('Error setting variable: ' + variables[0].name + ' Error message: ' + variables[0].errorMessage);
+    }
+};
+
+function showStep(steps, i) {
+    
+    console.warn("showStep: ", steps, i);
+    
+    if (i < steps.length) {
+        // show the blinking point
+        var step = steps[i];
+        var checklistItem = checklistItems[i];
+        removeClass(step, "hidden");
+        step.getElementsByTagName('text')[0].textContent = checklistItem.inProgressMessage;
+        removeClass(step, 'fail');
+        addClass(step, 'progress');
+
+        // hide the i if visible
+        var icon = document.getElementById('info-icon-bubble-' + (i + 1));
+        if (icon){
+            addClass(icon, 'hidden');
+        }
+
+        var iconIE = document.getElementById('info-icon-bubble-ie-' + (i + 1));
+        if (iconIE){
+            addClass(iconIE, 'hidden');
+        }
+
+            setTimeout(function(){
+        
+                // call the remote action
+                Visualforce.remoting.Manager.invokeAction(
+                    checklistItem.methodName,
+                    function(result, event){
+                        return handleRemoteResponse(checklistItem, i, steps, result, event);
+                    }
+        )
+
+        }, DELAY)
+            
+                
+    }
+}
+var inProgress = false;
+
+function getDivs(bubbleMessages){
+    var divs = '';
+    var next_margin = false;
+    for (var i = 0; i < bubbleMessages.length; i++) {
+        var message = bubbleMessages[i];
+        if (message.length == 0){
+            next_margin = true;
+        } else {
+            var div;
+            if (next_margin){
+                next_margin = false;
+                div = '<div class="space-above">';
+            } else {
+                div = '<div>';
+            }
+            divs += (div + message + '</div>');
+        }
+
+    };
+    return divs;
+}
+
+function handleRemoteResponse(checklistItem, i, steps, result, event)
+{
+    var step = steps[i];
+    // remove the in progress blinking
+    removeClass(step, 'progress');
+    var textField = step.getElementsByTagName('text')[0];
+	  var step_num = i + 1;
+    // now we're back from the remote call
+    if(event.status) 
+    {
+        
+        var warning = false;
+        // if there're a messages to show
+        if ((result.hasOwnProperty('messages') && result.messages.length > 0) || result.hasOwnProperty('messagesVariable')){
+            // show the i 
+            var icon = document.getElementById('info-icon-bubble-' + step_num);
+            removeClass(icon, 'hidden');
+            var iconIE = document.getElementById('info-icon-bubble-ie-' + step_num);
+            removeClass(iconIE, 'hidden');
+            var iconCircle = document.getElementById('transparent-circle-bubble-' + step_num);
+            removeClass(iconCircle, 'hidden');
+
+            // set the bubble message
+            var bubble = document.getElementById('bubble-' + step_num);
+            var bubbleMessages = []
+            // messages are in a variable
+            if (result.hasOwnProperty('messagesVariable')){
+                var infoMessages = wizardMetadata.variableDefinitions[result.messagesVariable].computedValue;
+                // there's something in the variable
+                if (infoMessages){
+                    bubbleMessages = [checklistItem.warningMessage].concat( infoMessages.split('\n'));
+                    warning = true;
+                } else {
+                    bubbleMessages = [checklistItem.emptyMessage]
+                }
+            } else {
+                bubbleMessages = result.messages
+            }
+
+            // create the divs
+            var divs = getDivs(bubbleMessages);
+            bubble.firstElementChild.firstElementChild.innerHTML = divs;
+
+            var ieText = document.getElementById('bubble-' + step_num + '-ie-text');
+            var ieRect = document.getElementById('bubble-' + step_num + '-ie');
+            assignLongText(ieRect, ieText, bubbleMessages, TEXT_CHAR_WIDTH);
+        }
+
+        if (result.success == true) 
+        {
+            // check passed
+            // show the checkmark
+            var checkMark = step.getElementsByTagName('use')[0];
+            removeClass(checkMark, 'hidden');
+            textField.textContent = checklistItem.successMessage;
+
+            if (warning){
+                addClass(step, 'warn');
+            }
+        } 
+        else 
+        {
+            // check failed
+            // show the fail
+            addClass(step, 'fail');
+
+            // set the fail message
+            textField.textContent = checklistItem.failMessage;
+
+            // show the error
+            var be = document.getElementById('bubble-error')
+            removeClass(be, 'hidden');
+
+            var beie = document.getElementById('bubble-error-ie');
+            removeClass(beie, 'hidden');
+
+            var errorText = "Oops - your org doesn't meet the basic requirements to create Sales Analytics. Fix the issues described here and click Looks good, next again to rerun the check. Your org needs to pass the check before you can create the app.";
+            // set the text
+            var bet = document.getElementById('bubble-error-text');
+            bet.textContent = errorText;
+
+            var betIE = document.getElementById('bubble-error-text-ie'); 
+            removeClass(betIE, 'hidden');
+            assignLongText(beie, betIE, errorText, TEXT_CHAR_WIDTH);
+            inProgress = false;
+
+            // don't continue
+            return;
+        }
+    }
+    else
+    {
+        //For some reason VF Remoter call failed, but let's not stop the user from moving on
+
+        // show the error
+        var bubble = document.getElementById('bubble-' + step_num);
+        
+        var icon = document.getElementById('info-icon-bubble-' + step_num);
+        removeClass(icon, 'hidden');
+        var iconIE = document.getElementById('info-icon-bubble-ie-' + step_num);
+        removeClass(iconIE, 'hidden');
+        var iconCircle = document.getElementById('transparent-circle-bubble-' + step_num);
+        removeClass(iconCircle, 'hidden');
+        
+        textField.textContent = checklistItem.timeoutMessage;
+        
+        addClass(step, 'warn');
+        
+        bubbleMessages = ["One or more compatibility queries timed out unexpectedly. However, you may still proceed with creating the app."];          
+
+        // create the divs
+        var divs = getDivs(bubbleMessages);
+        bubble.firstElementChild.firstElementChild.innerHTML = divs;
+        
+        var ieText = document.getElementById('bubble-' + step_num + '-ie-text');
+        var ieRect = document.getElementById('bubble-' + step_num + '-ie');
+        assignLongText(ieRect, ieText, bubbleMessages, TEXT_CHAR_WIDTH);
+        
+    }
+  
+    
+    // set all the variables returned by the check
+    if (event.status && result.hasOwnProperty('variableSettings') ){                
+        for (var j = 0; j < result.variableSettings.length; j++) {
+            var setting = result.variableSettings[j];
+            var eventName = null;
+            // if setting has eventName take it from there 
+            // and pass it to the controller
+            if (setting.hasOwnProperty('eventName')){
+                eventName = setting.eventName;
+                delete setting.eventName;
+            }
+            Controller.update(setting, uppdateCallback, eventName);      
+        }
+    }
+    
+    ++i;
+    
+    if (i < steps.length){
+        showStep(steps, i);
+    } else {
+        // set that we're done .. came back from the remote call
+        Controller.update({
+            name: "Can_Continue",
+            value: true
+        });
+
+        inProgress = false;
+    }
+}
+
+function createPath(metadata) {
+    // hide the bubble error
+    var bubble = document.getElementById('bubble-error');
+    var bubbleIE = document.getElementById('bubble-error-ie');
+    var bubbleIEText = document.getElementById('bubble-error-text-ie');
+
+    // if backdoor is set
+    // show message in the bubble, don't do any checks
+    if (metadata && metadata.values.Backdoor){
+        // show the bubble
+        removeClass(bubble, 'hidden');
+        removeClass(bubbleIE, 'hidden');
+        removeClass(bubbleIEText, 'hidden');
+
+        var warningText = 'Skipping Checks...';
+        // set the bubble text
+        document.getElementById('bubble-error-text').textContent = warningText;
+        assignLongText(bubbleIE, bubbleIEText, warningText);
+
+        // set that we're done
+        Controller.update({
+            name: "Can_Continue",
+            value: true
+        });
+
+        // set autoconfig to false
+        Controller.update({
+            name: "autoconfig",
+            value: 'false'
+        });
+        return;
+    }
+    addClass(bubble, 'hidden');
+    addClass(bubbleIE, 'hidden');
+    addClass(bubbleIEText, 'hidden');
+
+    var steps = document.querySelectorAll("[id^='step']");
+    console.warn("showing the first step");
+    inProgress = true;
+    showStep(steps, 0);
+}
+
+function addLoadEvent(func) { 
+    var oldonload = window.onload; 
+    if (typeof window.onload != 'function') { 
+        window.onload = func; 
+    } 
+    else { 
+        window.onload = function() { 
+            if (oldonload) { 
+                oldonload(); 
+            } 
+            func(); 
+        } 
+    } 
+} 
+//Handle moving values from measure/dimension variables to new "all" variables
+function checkOldVariables(metadata){
+  if(metadata.values.Opportunity_Dimension[0].fieldName != '' || metadata.values.Opportunity_Measure[0].fieldName != '')
+  {
+      //Copy Opportunity Measures and Dimensions to new variable
+      //Remove old answers
+      var combinedListOfFields = new Array();
+      var emptylistOfObjects = new Array();
+      for(opt in metadata.values.Opportunity_Dimension)
+      {
+          if (metadata.values.Opportunity_Dimension[opt].fieldName != null)
+          {
+              combinedListOfFields.push(metadata.values.Opportunity_Dimension[opt]);
+          }
+              
+      }
+      for(opt in metadata.values.Opportunity_Measure)
+      {
+          if (metadata.values.Opportunity_Measure[opt].fieldName != null)
+          {
+              combinedListOfFields.push(metadata.values.Opportunity_Measure[opt]);
+          }
+              
+      }           
+      Controller.update({
+            name: "Opportunity_All",
+            value: combinedListOfFields
+        },uppdateCallback,'wizard.update');
+      Controller.update({
+            name: "Opportunity_Dimension",
+            value: emptylistOfObjects
+        },uppdateCallback,'wizard.update');
+      Controller.update({
+            name: "Opportunity_Measure",
+            value: emptylistOfObjects
+        },uppdateCallback,'wizard.update');
+  }
+    if(metadata.values.Account_Dimension[0].fieldName != '' || metadata.values.Account_Measure[0].fieldName != '')
+  {
+      //Copy Account Measures and Dimensions to new variable
+      //Remove old answers
+      var combinedListOfFields = new Array();
+      var emptylistOfObjects = new Array();
+      for(opt in metadata.values.Account_Dimension)
+      {
+          if (metadata.values.Account_Dimension[opt].fieldName != null)
+          {
+              combinedListOfFields.push(metadata.values.Account_Dimension[opt]);
+          }
+              
+      }
+      for(opt in metadata.values.Account_Measure)
+      {
+          if (metadata.values.Account_Measure[opt].fieldName != null)
+          {
+              combinedListOfFields.push(metadata.values.Account_Measure[opt]);
+          }
+              
+      }           
+      Controller.update({
+            name: "Account_All",
+            value: combinedListOfFields
+        },uppdateCallback,'wizard.update');
+      Controller.update({
+            name: "Account_Dimension",
+            value: emptylistOfObjects
+        },uppdateCallback,'wizard.update');
+      Controller.update({
+            name: "Account_Measure",
+            value: emptylistOfObjects
+        },uppdateCallback,'wizard.update');
+  }
+    if(metadata.values.Lead_Dimension[0].fieldName != '' || metadata.values.Lead_Measure[0].fieldName != '')
+  {
+      //Copy Lead Measures and Dimensions to new variable
+      //Remove old answers
+      var combinedListOfFields = new Array();
+      var emptylistOfObjects = new Array();
+      for(opt in metadata.values.Lead_Dimension)
+      {
+          if (metadata.values.Lead_Dimension[opt].fieldName != null)
+          {
+              combinedListOfFields.push(metadata.values.Lead_Dimension[opt]);
+          }
+              
+      }
+      for(opt in metadata.values.Lead_Measure)
+      {
+          if (metadata.values.Lead_Measure[opt].fieldName != null)
+          {
+              combinedListOfFields.push(metadata.values.Lead_Measure[opt]);
+          }
+              
+      }           
+      Controller.update({
+            name: "Lead_All",
+            value: combinedListOfFields
+        },uppdateCallback,'wizard.update');
+      Controller.update({
+            name: "Lead_Dimension",
+            value: emptylistOfObjects
+        },uppdateCallback,'wizard.update');
+      Controller.update({
+            name: "Lead_Measure",
+            value: emptylistOfObjects
+        },uppdateCallback,'wizard.update');
+  }
+  if(metadata.values.Campaign_Dimension[0].fieldName != '' || metadata.values.Campaign_Measure[0].fieldName != '')
+  {
+      //Copy Lead Measures and Dimensions to new variable
+      //Remove old answers
+      var combinedListOfFields = new Array();
+      var emptylistOfObjects = new Array();
+      for(opt in metadata.values.Campaign_Dimension)
+      {
+          if (metadata.values.Campaign_Dimension[opt].fieldName != null)
+          {
+              combinedListOfFields.push(metadata.values.Campaign_Dimension[opt]);
+          }
+              
+      }
+      for(opt in metadata.values.Campaign_Measure)
+      {
+          if (metadata.values.Campaign_Measure[opt].fieldName != null)
+          {
+              combinedListOfFields.push(metadata.values.Campaign_Measure[opt]);
+          }
+              
+      }           
+      Controller.update({
+            name: "Campaign_All",
+            value: combinedListOfFields
+        },uppdateCallback,'wizard.update');
+      Controller.update({
+            name: "Campaign_Dimension",
+            value: emptylistOfObjects
+        },uppdateCallback,'wizard.update');
+      Controller.update({
+            name: "Campaign_Measure",
+            value: emptylistOfObjects
+        },uppdateCallback,'wizard.update');
+  }
+}
+// get bubble that should be shown / hidden on the event
+function getBubble(evt){
+    var bubbleId = evt.target.id.replace('transparent-circle-', '');
+    return document.getElementById(bubbleId);
+}    
+function showBubble(evt){
+    var bubble = getBubble(evt)
+    removeClass(bubble, 'hidden');
+    handleIEBubble(bubble, removeClass);
+}   
+
+function hideBubble(evt){
+    var bubble = getBubble(evt);
+    addClass(bubble, 'hidden');
+    handleIEBubble(bubble, addClass);
+}
+
+function handleIEBubble(bubble, fun){
+    // if it's IE bubble, hide/show the ie-text too 
+    //bubble-1-ie-text
+    // bubble-1-ie
+    // bubble.id is bubble-1
+    var ie = document.getElementById(bubble.id + '-ie');
+    fun(ie, 'hidden');
+
+    var ieText = document.getElementById(bubble.id + '-ie-text');
+    fun(ieText, 'hidden');
+}
+
+function addHoverEvents(){
+    // add the hover over action for the i icons
+    var icons = document.querySelectorAll("[id^='transparent-circle']");
+    for (var i = 0; i < icons.length; i++) {
+        var ic = icons[i];
+        ic.addEventListener('mouseenter', showBubble);
+        ic.addEventListener('mouseleave', hideBubble);
+    };
+    
+}
+
+function ieBs(){
+    // for each g find its style and re-assign the transformation
+    var steps = document.querySelectorAll("[id^='step']");
+    for (var i = 0; i < steps.length; i++) {
+        var g = steps[i];
+        var transform= getComputedStyle(g).getPropertyValue('transform');
+        g.setAttribute('transform', transform);
+    };
+}
+
+function assignLongText(rectElement, textElement, texts, charWidth){
+    var LINE_PADDING = 16;
+    // remove all lines in the text
+    while (textElement.firstChild) {
+        textElement.removeChild(textElement.firstChild);
+    }
+
+    var x = textElement.getAttribute('x');
+    var y = parseInt(textElement.getAttribute('y'));
+    var initialY = y;
+    var textList = Array.isArray(texts) ? texts : [texts];
+    // each item in the list goes to a separate line
+    for (var i = 0; i < textList.length; i++) {
+        // go through the text
+        var text = textList[i].replace(/&#39;/g, "'");
+        var rest = text;
+        do {  
+            if (rest.length <= charWidth){
+                // we're done
+                line = rest;
+                rest = '';
+            } else {
+                // take charWidth substring and find last space in it
+                var iSpace = rest.lastIndexOf(' ', charWidth);
+                var line = rest.substring(0, iSpace);
+                if (! line){
+                    // no space in rest
+                    line = rest;
+                    rest = '';
+                }
+                rest = rest.substring(iSpace).trim();
+            }      
+            // for each line create a span
+            // create the span
+            var svgTSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            svgTSpan.setAttribute('x', x);
+            svgTSpan.setAttribute('y', y);
+            y += LINE_PADDING;
+
+            // text for the span
+            var tSpanTextNode = document.createTextNode(line);
+            svgTSpan.appendChild(tSpanTextNode);
+
+            // add it to the text
+            textElement.appendChild(svgTSpan);
+        } while (rest !== '')   
+    };
+
+    // set the height of the background rect
+    if (rectElement){
+        rectElement.setAttribute('height', y - initialY + 10);
+    }
+}
+
+
+(function (global, wave) {
+    "use strict";
+    var metadata = {};
+    
+    var methods = {
+    
+        ready: function(size, callback) {                                
+            size = size || "small";
+            var visible = false;
+            wave.wizard.publish({name : 'wizard.ready',  "payload" : {size : size, banner: {visible: visible}}, callback : function (response) {
+                var payload = response.payload;
+                metadata = {
+                    page : payload.page,
+                    variableDefinitions : payload.variableDefinitions,
+                    values : payload.initialValues
+                };
+                if (callback instanceof Function) {
+                    callback(metadata);
+                }                    
+            }});
+        },
+        update: function (payload, callback, eventName) {
+            var eventName = eventName ? eventName : 'wizard.update';
+            wave.wizard.publish({
+                name : eventName,  
+                payload : payload, 
+                callback : function (response) {
+                    var variables = response.payload;
+                    if (callback instanceof Function) {
+                        callback(variables);
+                    }
+                }
+            });
+        },                    
+    };
+    
+    if (!global.Controller) {
+        global.Controller = {};
+    }
+    
+    global.Controller = methods;
+    wave.wizard.subscribe({
+        name: 'wizard.next',
+        onData: function(response){
+            if (! inProgress){            
+                console.warn('next thing: ' + response);
+                // re-run the checks
+                createPath(null);
+            }
+        }
+    })
+    
+} (window, Wave));
+
+function receiveResponse(e)
+{
+    if (this.readyState == 4)
+    {
+        // xhr.readyState == 4, so we've received the complete server response
+        if (this.status == 200)
+        {
+            // xhr.status == 200, so the response is good
+            // process the response to get a map Id -> DeveloperName and serialize 
+            // it to string since that's the only var type we can set
+            var fields = JSON.parse(this.responseText);
+            var fieldMap = fields.records.map(function(el){
+                return el.Id + ':' + el.DeveloperName; 
+            }, {});
+
+            Controller.update({
+                name: "OpportunityFieldMap",
+                value: fieldMap,
+            }, uppdateCallback);
+        }
+    }
+}
+
+// get Opportunity custom fields and store them in a variable 
+function getFields(){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", '/services/data/v38.0/tooling/query/?q=SELECT+Id,DeveloperName,TableEnumOrId+FROM+CustomField+WHERE+TableEnumOrId+%3D+%27Opportunity%27', true); 
+    xmlHttp.onreadystatechange = receiveResponse;
+    xmlHttp.setRequestHeader('Authorization', 'Bearer ' + '{!$Api.Session_ID}');
+    xmlHttp.setRequestHeader('Content-Type', 'application/json');
+    xmlHttp.send(null);    
+}
+var IMAGE_LOAD_TIMEOUT = 5000;
+
+addLoadEvent(function() {
+    var size = "medium";
+    setSize(size);
+
+    // load the image before anything else starts happening
+    var image = new Image();
+    image.setAttribute('src', "{!$Resource.map}");
+    
+    addTimeoutEvent(image);
+    
+    function addTimeoutEvent(elem){
+        
+        function controllerReady(){
+            Controller.ready(size, function(metadata) {
+                wizardMetadata = metadata;
+                console.warn("controller.ready callback");
+                Controller.update({
+                    name: "Can_Continue",
+                    value: null
+                });
+                checkOldVariables(metadata);
+                getFields();
+                addHoverEvents();
+                ieBs();
+                createPath(metadata);
+
+
+
+                    });
+                }
+        
+        var timeout = setTimeout(function(){
+            console.warn('time is out');
+            elem.removeEventListener('load',startLoading);
+
+            // hide the loading text
+            var loading = document.getElementById('loading');
+            addClass(loading, "hidden");
+
+            // don't set the image as background to the svg
+            // tell the controller we're ready
+            controllerReady();
+
+        }, IMAGE_LOAD_TIMEOUT);
+
+        elem.addEventListener('load', startLoading);
+
+        function startLoading(){
+            if(timeout){
+              clearTimeout(timeout);
+            }
+            console.log('time is good');
+            // hide the loading text
+            var loading = document.getElementById('loading');
+            addClass(loading, "hidden");
+
+            // set the image as background to the svg
+            var svg = document.getElementById('whole-svg');
+            svg.style.backgroundImage = 'url(' + image.src + ')';
+            // tell the controller we're ready
+            controllerReady();
+        }
+    }
+});
+
+                      
+        </script>
+    </body>
+</html>    
+</apex:page>

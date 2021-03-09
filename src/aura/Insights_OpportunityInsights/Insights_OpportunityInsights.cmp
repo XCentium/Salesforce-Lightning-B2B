@@ -1,0 +1,30 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    <aura:attribute name="insights" type="map[]"></aura:attribute>
+    <aura:attribute name="contactSuggestions" type="map[]"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <div class="row flex-between">
+        <div class="column">
+            <div class="slds-text-heading_medium ">Opportunity Insights</div>
+        </div>
+        <div class="column">
+            <lightning:buttonGroup>
+                <lightning:button variant="neutral" 
+                                  label="New Insight" 
+                                  onclick="{! c.newInsight }"></lightning:button>
+                <lightning:button variant="neutral" 
+                                  label="New Contact" 
+                                  onclick="{! c.newContact }"></lightning:button>
+            </lightning:buttonGroup>
+        </div>
+    </div>
+    
+    <aura:iteration items="{!v.insights}" var="insight">
+        <c:Insights_OpportunityInsight recordId="{!v.recordId}" insight="{!insight}"></c:Insights_OpportunityInsight>
+    </aura:iteration>
+    
+    <aura:iteration items="{!v.contactSuggestions}" var="contactSuggestion">
+        <c:Insights_ContactRoleSuggestion recordId="{!v.recordId}" contactSuggestion="{!contactSuggestion}"></c:Insights_ContactRoleSuggestion>
+    </aura:iteration>
+</aura:component>

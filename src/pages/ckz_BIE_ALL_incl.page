@@ -1,0 +1,34 @@
+<!--
+ - Created by brandon.rogers on 12/13/18.
+ -->
+
+<apex:page id="ckz_BIE_ALL_incl" sidebar="false" showHeader="false" standardStylesheets="false">
+
+    <!--<c:ckz_Header />-->
+    <c:ckz_Header_Pro />
+    <c:ckz_MiniCart />
+    <c:ckz_ContractSelector />
+    <c:ckz_Footer />
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/93082887a8.js" crossorigin="anonymous"></script>
+
+    <!-- Slick Slider -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            const pageName = "ckz_" + CCRZ.pagevars.currentPageName.slice(6).toLowerCase();
+            $("body").addClass(pageName);
+        });
+
+        function collapseRotate(e) {
+            console.log('collapseRotate(' + e + ')');
+
+            $(e).find('i')
+                .toggleClass('fa-angle-right fa-angle-down');
+        }
+    </script>
+
+</apex:page>

@@ -1,0 +1,1 @@
+global class PSIndexOutOfBoundsException extends Exception {}

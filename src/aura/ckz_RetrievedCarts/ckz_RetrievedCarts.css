@@ -1,0 +1,9 @@
+.THIS th.activeCol {
+    width: 75px !important;
+}
+.THIS.activeCol {
+    width: 75px !important;
+}
+.THIS th.col {
+    color: blue;
+}

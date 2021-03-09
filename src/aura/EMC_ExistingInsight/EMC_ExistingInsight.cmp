@@ -1,0 +1,21 @@
+<aura:component >
+    
+   	<aura:attribute name="insight" type="Object"></aura:attribute>
+   	<aura:attribute name="index" type="Object"></aura:attribute>
+    
+    <aura:registerEvent name="assignInsight" type="c:EMC_InsightEvent"></aura:registerEvent>
+    <aura:registerEvent name="editInsight" type="c:EMC_InsightEvent"></aura:registerEvent>
+    <aura:registerEvent name="deleteInsight" type="c:EMC_InsightEvent"></aura:registerEvent>
+    
+    <div class="insight">
+        <div class="insight-data">
+            <div class="insight-type">{!v.insight.InsightType.MasterLabel}</div>
+            <p><b class="insight-field">{!v.insight.label}</b>{!v.insight.displayed}</p>
+        </div>
+        <div class="insight-actions">
+            <a class="insight-action" onclick="{!c.assignInsight}">assign</a>
+            <a class="insight-action" onclick="{!c.editInsight}" href="javascript:void(0)">edit</a>
+            <a class="insight-action" onclick="{!c.deleteInsight}" href="javascript:void(0)">delete</a>
+        </div>
+    </div>
+</aura:component>

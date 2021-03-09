@@ -1,0 +1,191 @@
+<apex:page controller="SDO_Tools" sidebar="false">
+    <title>SDO Tools</title>
+        <style type="text/css">
+            .toolztable{
+                float:left;
+            }
+            .toolztable td{
+                padding:20px;
+                vertical-align:top;
+            }
+            .vidz{
+            width:640px;
+            }
+            .logz{
+                width: 100%;
+                overflow: none;
+            }
+            .showcase{
+                width:100%;
+            }
+            .glyphicon-remove {
+                cursor:pointer;
+                display: none;
+            }
+            .glyphicon{
+                display: block;
+                margin-top: 3px;
+            }
+    </style>
+    <apex:composition template="SDO_Bootstrap_Template"/>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36269828-11', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+    
+    <body>   
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span3">
+                    <div class="well sidebar-nav">
+                        <apex:SectionHeader title="SDO Toolbox"/>
+                        <div>
+                            <div class="input-prepend">
+                              <span class="add-on">
+                                <span class="glyphicon glyphicon-search icon-search"></span>
+                                <span style="display:none" class="glyphicon glyphicon-remove icon-remove" ></span>
+                              </span>
+                              <input placeholder="Search" id="sidebarSearch" type="text" class="form-control"/>
+                            </div>                            
+                        </div>
+                        <ul class="nav nav-list">
+                            <apex:repeat value="{!category_list}" var="c">
+                                <li class="nav-header">{!c.category_title}</li>
+                                <apex:repeat value="{!c.category_tools}" var="t">
+                                    <li>
+                                        <a id="{!t.id}" class="navLink" href="{!t.url__c}" data-search="{!t.Name}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}">
+                                            {!t.Name}
+                                        </a>
+                                    </li>
+                                </apex:repeat>
+                            </apex:repeat>
+                        </ul>               
+                    </div>
+                </div>
+                <div class="span9">
+                   <!-- Welcome Message -->
+                    <div class="row-fluid videocontainer">
+                       <div class="span12">
+                           <apex:iframe src="https://showcase.secure.force.com/SDO_Announcement_Page" height="100px" scrolling="false" id="theIframe"/>
+                        </div>
+                        <center>
+                            <table class="toolztable">
+                                <tr>
+                                <td>
+                                   <a href="https://showcase.secure.force.com/?sc=SC1377" target="_blank">
+                                                <img src="{!$resource.chattercommunitiesbtn}" />
+        </a>
+                                            </td>
+                                            <td>
+                                                <a href="https://showcase.secure.force.com/?sc=SC1346"  target="_blank">
+                                                <img src="{!$resource.servicecloudbtn}" />
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="https://showcase.secure.force.com/?sc=SC1011" target="_blank">
+                                                <img src="{!$resource.outlookappbtn}" />
+                                                </a>
+                                            </td>
+                                  
+                                </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://na1.salesforce.com/sfc/p/30000001au0X/a/300000001CBE/LyoxZHtiZCewXH3OV0TkSF6pH3BQfK94W16VHbvMe5Q=" target="_blank">
+                                    <img src="{!$resource.widgetbutton}" />
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="https://showcase.secure.force.com/?sc=SC0425" target="_blank">                                   
+                                    <img src="{!$resource.communitiesscriptbtn}" />
+                                    </a> 
+                                </td>
+                            </tr>
+                            </table>
+                        </center>
+                    </div>
+                    <br />         
+                    <!-- Tool Frame -->
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <iframe id="tool_frame" frameborder="no" scrolling="auto" width="100%" height="2400px"/>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script type="text/javascript">
+
+        $('#sidebarSearch').keyup(function(){
+            if($('#sidebarSearch').val() == '') {
+                $('.glyphicon-search').fadeIn('fast');
+                $('.glyphicon-remove').hide();
+                $('.navLink').show();
+            } else{
+                $('.glyphicon-search').hide();
+                $('.glyphicon-remove').fadeIn('fast');
+                $('.navLink').hide();
+                $(".navLink[data-search*='" + $('#sidebarSearch').val().toLowerCase() + "']").fadeIn('fast');
+            }
+
+        });
+        $('.glyphicon-remove').click(function(){
+            $("#sidebarSearch").val('');
+            $('.navLink').fadeIn('fast');
+            $('.glyphicon-search').fadeIn('fast');
+            $('.glyphicon-remove').hide();
+        });
+
+        $(document).ready( function() {
+            
+            $('.navLink').each(function(i,v) {
+               $(v).attr('data-search',$(v).attr('data-search').toLowerCase()); 
+            });
+
+
+            $(".navLink").click( function() {
+                $(".videocontainer").hide();
+                setActive($(this).attr("id"));                
+
+                if($(this).attr("data-name").indexOf("Authenticate") > -1) {
+                    window.open($(this).attr("href"),'popUpWindow','height=500,width=1000,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
+                } else {
+                    $("#tool_frame").attr("src", $(this).attr("href"));
+
+                    $("#tool_frame").css("height", $(this).attr("data-name") == "Feedback" ? "550" : "2400");                      
+                }
+                
+                return false;
+            });
+        });
+        
+        function setActive(i) {
+            $(".navLink").each( function() {
+                if($(this).attr("id") == i) {
+                    $(this).parent().addClass("active");
+                } else {
+                    $(this).parent().removeClass("active");
+                }
+            });
+        }
+       
+    </script>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

@@ -1,0 +1,319 @@
+<aura:component
+    controller="PSBulkActionController"
+    implements="force:appHostable,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes"
+    access="global">
+
+    <ltng:require scripts="{! $Resource.siiimple_toast + '/siiimple-toast.min.js'}" styles="{! $Resource.siiimple_toast + '/style.css'}" />
+
+    <aura:attribute name="query" type="String"/>
+    <aura:attribute name="bulkConfig" type="String"/>
+
+    <aura:attribute name="width" type="Integer" default="1200"/>
+    <aura:attribute name="version" type="String" default="v1.0"/>
+
+    <aura:attribute name="title" type="String"/>
+    <aura:attribute name="headerIcon" type="String"/>
+    <aura:attribute name="customHeaderIcon" type="Boolean" default="false"/>
+    <aura:attribute name="tabBackgroundColor" type="String"/>
+
+    <aura:attribute name="sobject" type="String" default="Case"/>
+    <aura:attribute name="idField" type="String"/>
+    <aura:attribute name="editFields" type="String"/>
+    <aura:attribute name="showBulkEdit" type="Boolean" default="true"/>
+    <aura:attribute name="showTasks" type="Boolean" default="true"/>
+    <aura:attribute name="showChatter" type="Boolean" default="true"/>
+    <aura:attribute name="showData" type="Boolean" default="true"/>
+    <aura:attribute name="showSAQL" type="Boolean" default="true"/>
+    
+
+    <aura:attribute name="taskSubject" type="String"/>
+    <aura:attribute name="taskDescription" type="String"/>
+    <aura:attribute name="taskType" type="String"/>
+    <aura:attribute name="taskOwnerId" type="String"/>
+    <aura:attribute name="taskDueDate" type="String"/>
+    <aura:attribute name="taskStatus" type="String"/>
+    <aura:attribute name="taskPriority" type="String"/>
+    <aura:attribute name="taskRecordOwner" type="Boolean"/>
+
+    <aura:attribute name="chatterUsers" type="String"/>
+    <aura:attribute name="chatterGroups" type="String"/>
+    <aura:attribute name="chatterText" type="String"/>
+    <aura:attribute name="chatterMentionOwner" type="Boolean"/>
+
+    <aura:attribute name="sobjectPrefix" type="String"/>
+    <aura:attribute name="configName" type="String"/>
+
+    <aura:attribute name="queryResp" type="Object"/>
+    <aura:attribute name="sobjectDef" type="Object"/>
+    <aura:attribute name="columns" type="Object"/>
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="ids" type="List"/>
+
+    <aura:attribute name="IsSpinner" type="Boolean" default="true"/>
+    <aura:attribute name="errorMsg" type="String"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div style="{! 'max-width: ' + v.width + 'px; margin: auto;'}">
+        <aura:if isTrue="{!v.IsSpinner}">
+            <lightning:spinner variant="brand" size="large"/>
+        </aura:if>
+        <aura:if isTrue="{!v.errorMsg.length > 0}">
+            <ui:message title="Error" severity="error" closable="true" click="{!c.closeError}">
+                {!v.errorMsg}
+            </ui:message>
+        </aura:if>
+        <lightning:layout class="slds-page-header slds-page-header--object-home">
+            <lightning:layoutItem>
+                <aura:if isTrue="{!v.customHeaderIcon}">
+                    <div style="float:right; max-height:45px;">
+                      <img src="{!v.headerIcon}" style="max-height:45px;"></img>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!not(v.customHeaderIcon)}">
+                  <lightning:icon
+                      iconName="{!v.headerIcon}"
+                      alternativeText="Bulk Action Editor"/>
+                </aura:if>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small">
+                <div class="page-section page-header">
+                    <h1 class="slds-text-heading--medium">
+                        <span class="header-label">{!v.title}</span>
+                    </h1>
+                    <h2 class="slds-text-heading--xsmall">
+                        <span class="header-label">Object:&nbsp;</span>
+                        <span class="header-value">{!v.sobjectDef.objectLabel}</span>&nbsp;&nbsp;&nbsp;
+                        <span class="header-label">Record count:&nbsp;</span>
+                        <span class="header-value">{!v.ids.length}</span>
+                    </h2>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <div style="{! 'background-color: ' + v.tabBackgroundColor }">
+        <lightning:tabset
+            aura:id="bulktabs"
+            selectedTabId="bulkEdit"
+            variant="vertical"
+            class="slds-page-header slds-page-header--object-home edit-tabs">
+            <aura:renderIf isTrue="{!v.showBulkEdit}">
+                <lightning:tab label="Bulk Edit" id="bulkEdit">
+                    <form class="slds-form--stacked" id="bulkActionForm" style="width: 100%">
+                        <aura:renderIf isTrue="{!v.sobjectDef.fields.length > 0}">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <aura:iteration items="{!v.sobjectDef.fields}" var="fld" indexVar="i">
+                                        <aura:renderIf isTrue="{! fld.ftype != 'boolean' }">
+                                            <aura:renderIf isTrue="{! (mod(i,2) == 0) ? 'true' : 'false'}">
+                                                <c:PSBulkActionField fld="{!fld}"/>
+                                            </aura:renderIf>
+                                        </aura:renderIf>
+                                    </aura:iteration>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <aura:iteration items="{!v.sobjectDef.fields}" var="fld" indexVar="i">
+                                        <aura:renderIf isTrue="{! fld.ftype != 'boolean' }">
+                                            <aura:renderIf isTrue="{! (mod(i,2) == 1) ? 'true' : 'false'}">
+                                                <c:PSBulkActionField fld="{!fld}"/>
+                                            </aura:renderIf>
+                                        </aura:renderIf>
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-gutters" style="border: 1px solid white;">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <aura:iteration items="{!v.sobjectDef.fields}" var="fld" indexVar="i">
+                                        <aura:renderIf isTrue="{! fld.ftype == 'boolean' }">
+                                            <aura:renderIf isTrue="{! (mod(i,2) == 0) ? 'true' : 'false'}">
+                                                <c:PSBulkActionField fld="{!fld}"/>
+                                            </aura:renderIf>
+                                        </aura:renderIf>
+                                    </aura:iteration>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <aura:iteration items="{!v.sobjectDef.fields}" var="fld" indexVar="i">
+                                        <aura:renderIf isTrue="{! fld.ftype == 'boolean' }">
+                                            <aura:renderIf isTrue="{! (mod(i,2) == 1) ? 'true' : 'false'}">
+                                                <c:PSBulkActionField fld="{!fld}"/>
+                                            </aura:renderIf>
+                                        </aura:renderIf>
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                        </aura:renderIf>
+                        <div class="slds-p-bottom--small slds-align_absolute-center slds-m-top_medium">
+                            <lightning:button
+                                label="Update Records"
+                                variant="brand"
+                                onclick="{!c.onBulkUpdate}"/>
+                            <lightning:button label="Clear" variant="neutral" onclick="{!c.onBulkClear}"/>
+                        </div>
+                    </form>
+                </lightning:tab>
+            </aura:renderIf>
+
+            <aura:renderIf isTrue="{!v.showChatter}">
+                <lightning:tab label="Chatter" id="chatter">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <c:strike_multiLookup
+                                label="Users:"
+                                object="User"
+                                searchField="Name"
+                                placeholder="Select users"
+                                iconName="standard:user"
+                                subtitleField="Title"
+                                order="Name"
+                                limit="5"
+                                loadingMessage="Loading..."
+                                errorMessage="Invalid input"
+                                value="{! v.chatterUsers }"/>
+                            <lightning:input
+                                class="slds-p-top_small slds-p-left_x-small"
+                                aura:id="ChatterMentionOwner"
+                                name="ChatterMentionOwner"
+                                type="checkbox"
+                                label="@mention record owner"
+                                checked="{!v.chatterMentionOwner}"
+                                onchange="{!c.handleChatterOwnerCheck}"/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <c:strike_multiLookup
+                                label="Groups:"
+                                object="CollaborationGroup"
+                                searchField="Name"
+                                placeholder="Select groups"
+                                iconName="standard:groups"
+                                subtitleField=""
+                                order="Name"
+                                limit="5"
+                                loadingMessage="Loading..."
+                                errorMessage="Invalid input"
+                                value="{! v.chatterGroups }"/>
+                        </div>
+                    </div>
+
+                    <div class="slds-p-top_small slds-p-bottom_small">
+                        <lightning:textarea
+                            aura:id="editor"
+                            value="{! v.chatterText }"
+                            label="Chatter Message:"/>
+                    </div>
+
+                    <div class="slds-p-bottom_small slds-align_absolute-center">
+                        <lightning:button label="Post" variant="brand" onclick="{!c.onChatterPost}"/>
+                        <lightning:button
+                            label="Clear"
+                            variant="neutral"
+                            onclick="{!c.onChatterClear}"/>
+                    </div>
+                </lightning:tab>
+            </aura:renderIf>
+
+            <aura:renderIf isTrue="{!v.showTasks}">
+                <lightning:tab label="Tasks" id="tasks">
+                    <form class="slds-form--stacked" id="taskActionForm" style="width: 100%">
+                        <lightning:input
+                            aura:id="TaskSubject"
+                            type="text"
+                            label="Subject:"
+                            value="{!v.taskSubject}"/>
+                        <lightning:textarea
+                            aura:id="TaskDescription"
+                            label="Description:"
+                            value="{!v.taskDescription}"/>
+
+                        <div class="slds-grid slds-gutters">
+
+                            <div class="slds-col ">
+                                <lightning:input
+                                    aura:id="TaskDueDate"
+                                    type="date"
+                                    label="Due Date:"
+                                    value="{!v.taskDueDate}"/>
+                                <aura:renderIf isTrue="{! not(v.taskRecordOwner)}">
+                                    <c:strike_lookup
+                                        label="Owner:"
+                                        object="User"
+                                        searchField="Name"
+                                        placeholder="Select an owner"
+                                        iconName="standard:user"
+                                        subtitleField="Title"
+                                        order="Name"
+                                        limit="5"
+                                        loadingMessage="Loading..."
+                                        errorMessage="Invalid input"
+                                        value="{!v.taskOwnerId}"/>
+                                </aura:renderIf>
+                                <lightning:input
+                                    aura:id="TaskAttachOwner"
+                                    name="TaskAttachOwner"
+                                    type="checkbox"
+                                    label="Assign record owner"
+                                    checked="{!v.taskRecordOwner}"
+                                    onchange="{!c.handleTaskOwnerCheck}"/>
+                            </div>
+                            <div class="slds-col ">
+                                <lightning:select aura:id="TaskType" label="Type:" value="{!v.taskType}">
+                                    <option value=""></option>
+                                    <option value="Call">Call</option>
+                                    <option value="Send Letter">Email</option>
+                                    <option value="Send Quote">Meeting</option>
+                                    <option value="Prep">Prep</option>
+                                    <option value="Other">Other</option>
+                                </lightning:select>
+                                <lightning:select aura:id="TaskStatus" label="Status:" value="{!v.taskStatus}">
+                                    <option value=""></option>
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="On Hold">On Hold</option>
+                                </lightning:select>
+                                <lightning:select
+                                    aura:id="TaskPriority"
+                                    label="Priority:"
+                                    value="{!v.taskPriority}">
+                                    <option value=""></option>
+                                    <option value="High">High</option>
+                                    <option value="Normal">Normal</option>
+                                </lightning:select>
+                            </div>
+                        </div>
+                        <div class="slds-p-bottom_small slds-align_absolute-center slds-m-top_medium">
+                            <lightning:button
+                                label="Create Tasks"
+                                variant="brand"
+                                onclick="{!c.onTasksCreate}"/>
+                            <lightning:button label="Clear" variant="neutral" onclick="{!c.onTaskClear}"/>
+                        </div>
+                    </form>
+                </lightning:tab>
+            </aura:renderIf>
+
+            <aura:renderIf isTrue="{!v.showData}">
+                <lightning:tab label="Data" id="data">
+                    <div
+                        class="slds-scrollable--x"
+                        style="{! 'height: 750px; border: 1px solid #d9dbdd;max-width: ' + sub(v.width, 250) + 'px'}">
+                        <lightning:datatable
+                            keyField="id"
+                            data="{! v.data }"
+                            columns="{! v.columns }"
+                            hideCheckboxColumn="true"
+                            showRowNumberColumn="true"/>
+                    </div>
+                </lightning:tab>
+            </aura:renderIf>
+
+            <aura:renderIf isTrue="{!v.showSAQL}">
+                <lightning:tab label="SAQL Query" id="saql">
+                    <div style="white-space: pre-wrap;">
+                        {!v.query}
+                    </div>
+                </lightning:tab>
+            </aura:renderIf>
+        </lightning:tabset>
+    </div>
+    </div>
+</aura:component>

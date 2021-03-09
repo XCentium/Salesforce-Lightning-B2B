@@ -1,0 +1,197 @@
+<aura:component >
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="menuStatus" type="String"/>
+    <aura:attribute name="PageShown" type="String" default="Home" /> 
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+            <aura:if isTrue="{!v.PageShown == 'Home' }">
+                <li class="active">
+                    <button onclick="{!c.handleClick}" aura:id="Home" id="Home" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                        <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-home-active.png'}" class="navimg"/>
+                        <span class="label bBody navspan" >
+                            Home
+                        </span>
+                        <div class="clear"></div>
+                    </button>
+                </li>
+            <aura:set attribute="else">
+                <li>
+                    <button onclick="{!c.handleClick}" aura:id="Home" id="Home" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                        <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-home.png'}" class="navimg"/>
+                        <span class=" label bBody navspan">
+                            Home
+                        </span>
+                        <div class="clear"></div>
+                    </button>
+                </li>
+            </aura:set>
+            </aura:if> 
+            <aura:if isTrue="{!v.PageShown == 'Customers' }">
+                <li class="active">
+                    <button onclick="{!c.handleClick}" aura:id="Customers" id="Customers" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                        <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-customers-active.png'}" class="navimg"/>
+                        <span class="label bBody navspan" >
+                            Customers
+                        </span>
+                        <div class="clear"></div>
+                    </button>
+                </li>
+            <aura:set attribute="else">
+                <li>
+                    <button onclick="{!c.handleClick}" aura:id="Customers" id="Customers" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                        <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-customers.png'}" class="navimg"/>
+                        <span class="label bBody navspan" >
+                            Customers
+                        </span>
+                        <div class="clear"></div>
+                    </button>
+                </li>
+             </aura:set>
+             </aura:if>
+             <aura:if isTrue="{!setting.Enable_Store_Promotions__c == true}">
+                 <aura:if isTrue="{!v.PageShown == 'Store Promotions' }">
+                     <li class="active">
+                        <button onclick="{!c.handleClick}" aura:id="Store Promotions" id="Store Promotions" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                            <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-promotions-active.png'}" class="navimg"/>
+                            <span class="label bBody navspan" >
+                                {!setting.Store_Promotions_Page_Label__c}
+                            </span>
+                            <div class="clear"></div>
+                        </button>
+                     </li>
+                 <aura:set attribute="else">
+                     <li>
+                        <button onclick="{!c.handleClick}" aura:id="Store Promotions" id="Store Promotions" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                            <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-promotions.png'}" class="navimg"/>
+                            <span class="label bBody navspan" >
+                                {!setting.Store_Promotions_Page_Label__c}
+                            </span>
+                            <div class="clear"></div>
+                        </button>
+                     </li>
+                 </aura:set>
+                 </aura:if>
+             </aura:if>
+             <aura:if isTrue="{!setting.Enable_New_Merchandise__c == true}">
+                <aura:if isTrue="{!v.PageShown == 'New Merchandise' }">
+                    <li class="active">
+                        <button onclick="{!c.handleClick}" aura:id="New Merchandise" id="New Merchandise" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                            <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-new-arrivals-active.png'}" class="navimg"/>
+                            <span class="label bBody navspan" >
+                                {!setting.New_Merchandise_Page_Label__c}
+                            </span>
+                            <div class="clear"></div>
+                        </button>
+                    </li>
+                <aura:set attribute="else">
+                    <li>
+                        <button onclick="{!c.handleClick}" aura:id="New Merchandise" id="New Merchandise" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                            <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-new-arrivals.png'}" class="navimg"/>
+                            <span class="label bBody navspan" >
+                                {!setting.New_Merchandise_Page_Label__c}
+                            </span>
+                            <div class="clear"></div>
+                        </button>
+                    </li>
+                </aura:set>
+                </aura:if>
+              </aura:if> 
+              
+              <aura:if isTrue="{!setting.Shifts_Page_Label__c == true}">
+                <aura:if isTrue="{!v.PageShown == 'Shift Schedule' }">
+                    <li class="active">
+                        <button onclick="{!c.handleClick}" aura:id="Shift Schedule" id="Shift Schedule" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                            <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-community-active.png'}" class="navimg"/>
+                            <span class="label bBody navspan" >
+                                {!setting.Shifts_Page_Label__c}
+                            </span>
+                            <div class="clear"></div>
+                        </button>
+                    </li>
+                    <aura:set attribute="else">
+                        <li>
+                            <button onclick="{!c.handleClick}" aura:id="Shift Schedule" id="Shift Schedule" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                                <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-community-active.png'}" class="navimg"/>
+                                <span class="label bBody navspan" >
+                                    {!setting.Shifts_Page_Label__c }
+                                </span>
+                                <div class="clear"></div>
+                            </button>
+                        </li>
+                    </aura:set>
+                 </aura:if>
+             </aura:if>
+			 <aura:if isTrue="{!setting.Enable_Discussions_Page__c == true}">
+                <aura:if isTrue="{!v.PageShown == 'Discussions' }">
+                    <li class="active">
+                        <button onclick="{!c.handleClick}" aura:id="Discussions" id="Discussions" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                            <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-community-active.png'}" class="navimg"/>
+                            <span class="label bBody navspan" >
+                                {!setting.Discussions_Page_Label__c}
+                            </span>
+                            <div class="clear"></div>
+                        </button>
+                    </li>
+                <aura:set attribute="else">
+                    <li>
+                        <button onclick="{!c.handleClick}" aura:id="Discussions" id="Discussions" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                            <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-community.png'}" class="navimg"/>
+                            <span class="label bBody navspan" >
+                                {!setting.Discussions_Page_Label__c }
+                            </span>
+                            <div class="clear"></div>
+                        </button>
+                    </li>
+                </aura:set>
+             	</aura:if>
+             </aura:if>  
+             <aura:if isTrue="{!setting.Homepage_Show_Wave_Dashboard__c == true}">
+                <aura:if isTrue="{!v.PageShown == 'Analytics' }">
+                        <li class="active">
+                            <button onclick="{!c.handleClick}" aura:id="Analytics" id="Analtyics" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                                <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-analytics-active.png'}" class="navimg"/>
+                                <span class="label bBody navspan" >
+                                    {!setting.Analytics_Page_Label__c}
+                                </span>
+                                <div class="clear"></div>
+                            </button>
+                        </li>
+                    <aura:set attribute="else">
+                        <li>
+                            <button onclick="{!c.handleClick}" aura:id="Analytics" id="Analytics" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                                <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-analytics.png'}" class="navimg"/>
+                                <span class="label bBody navspan" >
+                                    {!setting.Analytics_Page_Label__c}
+                                </span>
+                                <div class="clear"></div>
+                            </button>
+                        </li>
+                    </aura:set>
+                </aura:if>
+              </aura:if>
+             <aura:if isTrue="{!setting.Enable_Training_Page__c == true}">
+                <aura:if isTrue="{!v.PageShown == 'Training' }">
+                    <li class="active">
+                        <button onclick="{!c.handleClick}" aura:id="Training" id="Training" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                            <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-mytrailhead-active.png'}" class="navimg"/>
+                            <span class="label bBody navspan" >
+                                {!setting.Training_Page_Label__c }
+                            </span>
+                            <div class="clear"></div>
+                        </button>
+                    </li>
+                <aura:set attribute="else">
+                    <li>
+                        <button onclick="{!c.handleClick}" aura:id="Training" id="Training" class="slds-button slds-button--neutral uiButton--default uiButton" aria-live="off" type="button" data-aura-rendered-by="338:3;a" data-aura-class="uiButton--default uiButton">
+                            <img src="{!$Resource.ClientelingIcons + '/assets/Images/icon-mytrailhead.png'}" class="navimg"/>
+                            <span class="label bBody navspan" >
+                                {!setting.Training_Page_Label__c }
+                            </span>
+                            <div class="clear"></div>
+                        </button>
+                    </li>
+                </aura:set>
+                </aura:if>
+              </aura:if>
+        
+    </aura:iteration>
+</aura:component>

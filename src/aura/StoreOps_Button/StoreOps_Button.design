@@ -1,0 +1,8 @@
+<design:component label="Store Ops - Button">
+	<design:attribute name="Label"  label="Button Label" placeholder="Learn More"/>
+    <design:attribute name="Icon"  label="Button Icon" description="Structure is utility:groups and all icons can be found here: https://www.lightningdesignsystem.com/icons" placeholder="utility:groups"/>
+    <design:attribute name="IconSize"  label="Button Icon Size" description="The size of the icon. Options include xx-small, x-small, small, medium, or large. This value defaults to medium." placeholder="x-small"/>
+    <design:attribute name="URL"  label="Button URL" description="Use this to navigate to records or tabs. URL Path for Tab is /lightning/n/TABNAME" placeholder="https://salesforce.com"/>
+    <design:attribute name="buttonBackgroundColor"  label="Button Background Color(Hex)" placeholder="#ffffff"/>
+    <design:attribute name="buttonTextColor"  label="Button Background Color(Hex)" placeholder="#547AAF"/>
+</design:component>

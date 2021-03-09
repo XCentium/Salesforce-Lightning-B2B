@@ -1,0 +1,90 @@
+.THIS {
+}
+
+.THIS .piEngagementHistoryList .slds-timeline__icon {
+    z-index: 1;
+  /*  border-color: #f4f6f9*/
+}
+
+.THIS .piEngagementHistoryList .slds-media--timeline:before {
+    z-index: 0
+}
+
+.THIS .piEngagementHistoryList li:last-child .slds-media.slds-media--timeline:before {
+    width: 0
+}
+
+.THIS .piEngagementHistoryList .slds-timeline__title {
+    position: relative
+}
+
+.THIS .piEngagementHistoryList .slds-timeline__title-content:after {
+    content: ' ';
+    position: absolute;
+    bottom: .4em;
+    margin-left: .5em;
+    width: 100%
+}
+
+.THIS .piEngagementHistoryList .slds-timeline__title-content {
+  /*  background: rgb(244, 246, 249) */
+}
+
+.THIS .piEngagementHistoryList .error-text {
+    margin-top: -17px
+}
+
+.THIS .piEngagementHistoryList .slds-card__header {
+    margin-left: 2px
+}
+
+.THIS .piEngagementHistoryList .slds-text-heading--small {
+    vertical-align: middle;
+    margin-left: 2px;
+    font-weight: 700
+}
+
+.THIS .piEngagementHistoryList .activity-count {
+    font-size: 14px;
+    font-weight: normal;
+    vertical-align: text-top
+}
+
+.THIS .piEngagementHistoryList .slds-hidden {
+    display: none
+}
+
+.THIS .piEngagementHistoryList .slds__spinner {
+    margin-left: 3.75rem;
+    margin-bottom: 1.5rem
+}
+
+.THIS .piEngagementHistoryList .slds-icon__spinner {
+    margin-right: .75rem
+}
+
+.THIS .piEngagementHistoryListItem .slds-media__body.timeline-item {
+    position: relative
+}
+
+.THIS .piEngagementHistoryListItem .slds-media__body .timeline-item-date {
+    position: absolute;
+    top: 3px;
+    right: 0;
+    /*background: rgb(244, 246, 249);*/
+    z-index: 1;
+    padding-left: .5rem
+}
+
+.THIS .piEngagementHistoryListItem .activity-name {
+    font-weight: bold;
+    color: #16325c;
+    max-width: 45%;
+    display: inline-block;
+    vertical-align: bottom
+}
+
+.THIS .piEngagementHistoryListItem .warning-icon {
+    vertical-align: 3px;
+    margin-left: 5px
+}

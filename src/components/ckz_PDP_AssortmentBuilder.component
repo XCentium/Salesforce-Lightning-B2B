@@ -1,0 +1,1129 @@
+<!--
+ - Created by brandon.rogers on 3/29/19.
+ -->
+
+<apex:component id="ckz_PDP_AssortmentBuilder" controller="ckz_ctrl_PDP_AssortmentBuilder" allowDML="true">
+
+    <script id="CC-Assortment-ProductDetail-Desktop" type="text/template">
+        <div class="product_detail_container product_type_dk phoneProductItem cc_product_detail_container cc_product_type_dk">
+            <div class="messagingSection-Error" role="alert" style="display: none"></div>
+            <div class="messagingAction-Info" role="alert" style="display: none">
+                <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&#215;</span>
+                </button>
+            </div>
+
+            <div class="row product_detail_main">
+                <div class="col-sm-4">
+                    <div class="prod_media cc_prod_media">
+                        {{#if this.mediaWrappers.[SVG Interactive Diagram]}}
+                        {{#each this.mediaWrappers.[SVG Interactive Diagram]}}
+                        <div class="interactive cc_interactive">{{displaySVG this 'mainProdImage prodDetail img-responsive'}}</div>
+                        {{/each}}
+                        {{/if}}
+
+                        <div id="altImageModal" class="modal fade cc_alt_image_modal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog cc_modal-dialg" role="document">
+                                <div class="modal-content cc_modal-content">
+                                    <div class="modal-header cc_modal-header">
+                                        <button type="button" class="close cc_close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&#215;</span></button>
+                                        <h4 class="modal-title cc_modal-title" id="myModalLabel"></h4>
+                                    </div>
+                                    <div class="modal-body cc_modal-body">
+                                        <img class="modalImg cc_modal_img" src=""/>
+                                        <p class="modalText cc_modal_text"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{#if this.product.mediaWrapper }}
+                        <div class="cc_product_detail_photo_container m-t-1" id="photoContainer">
+                            <div class="row">
+                                <div class="col-sm-2 hidden-xs">
+                                    {{#if this.mediaWrappers.[Alternate Images]}}
+                                    <div class="row">
+                                        {{#each this.mediaWrappers.[Product Image]}}
+                                        <div class="col-xs-12">
+                                            <img class="alternate cc_alternate img-responsive thumbnail" src="{{productImage this}}" data-id="{{this.uri}}"/>
+                                        </div>
+                                        {{/each}}
+
+                                        {{#each this.mediaWrappers.[Alternate Images]}}
+                                        <div class="col-xs-12">
+                                            <img class="alternate cc_alternate img-responsive thumbnail" src="{{productImage this}}" data-id="{{this.uri}}"/>
+                                        </div>
+                                        {{/each}}
+                                    </div>
+                                    {{/if}}
+                                </div>
+
+                                <div class="col-sm-10">
+                                    <div class="cc_main_prod_image">{{displayImage this.product.mediaWrapper 'mainProdImage prodDetail img-responsive'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {{else}}
+                        {{#if this.mediaWrappers.[SVG Interactive Diagram]}}
+                        <!-- SVG INTERACTIVE DIAGRAM -->
+                        {{else}}
+                        <div class="cc_product_detail_photo_container m-t-1" id="photoContainer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="cc_main_prod_image img-responsive">{{displayImage this.product.mediaWrapper 'mainProdImage prodDetail'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+
+                <div class="col-sm-8">
+                    <h2 class="cc_title m-t-3">
+                        {{this.product.prodBean.name}}
+                    </h2>
+
+                    {{#ifDisplay 'PD.DsplSku'}}
+                    <div class="sku cc_sku small">
+                        <!--<span class="cc_label">{{pageLabelMap 'ProductDetailsInc_SKU'}}:</span>-->
+                        <span class="value cc_value">{{this.product.prodBean.sku}}</span>
+                    </div>
+                    {{/ifDisplay}}
+
+                    {{#ifDisplay 'PD.DsplSDesc'}}
+                    <div class="shortDesc cc_short_desc small">
+                        {{{this.product.prodBean.shortDesc}}}
+                    </div>
+                    {{/ifDisplay}}
+
+
+                    <!--{{#ifDisplay 'PR.Enabled'}}
+                    <div id="avgRating" class="rateit cc_rateit" data-rateit-value="{{this.product.avgRating}}" data-rateit-ispreset="true" data-rateit-readonly="true">
+                        <span class="cc_label">{{pageLabelMap 'NumberofReviews' this.numberOfReviews }}</span>
+                    </div>
+                    {{/ifDisplay}}-->
+
+                    {{#ifDisplay 'PD.DsplUOM'}}
+                    <div class="uom cc_uom">
+                        <span class="cc_label">{{pageLabelMap 'ProductDetails_UnitOfMeasure'}}</span>
+                        <span class="value cc_value">{{pageLabelPrefixMap 'UOM_' this.product.prodBean.UnitOfMeasure}}</span>
+                    </div>
+                    {{/ifDisplay}}
+
+                    {{#ifDisplay 'PD.DsplAvlb'}}
+                    <div class="inventory cc_inventory">
+                        <span class="cc_label">{{pageLabelMap 'ProductDetails_Availability'}}</span>
+
+                        {{#ifStoreSetting 'InventoryCheckFlag__c'}}
+                        <span class="value cc_value">{{{this.product.inventory}}}</span>
+                        {{else}}
+                        <span class="value cc_value">{{{pageLabelMap this.product.availMsg}}}</span>
+                        {{/ifStoreSetting}}
+                    </div>
+                    {{/ifDisplay}}
+
+                    <hr/>
+
+
+                    {{#if this.product.showPricing}}
+                    {{#ifDisplay 'PD.DsplPrc'}}
+                    {{#if this.product.price}}
+                    <div class="price_block cc_price_block">
+                        <h3 class="price cc_price m-y-0">
+                                        <span class="value cc_value cc_price{{product.prodBean.id}}">
+                                            {{#if this.highAttrPrice}}
+                                                {{price this.lowAttrPrice}} - {{price this.highAttrPrice}}
+                                            {{else}}
+                                                {{price this.product.price}}
+                                            {{/if}}
+                                        </span>
+                        </h3>
+
+                        {{#ifDisplay 'PD.DsplListPrc'}}
+                        {{#if this.product.basePrice}}
+                        <p class="baseprice cc_baseprice small">
+                            <!--<span class="cc_label">{{pageLabelMap 'ProductDetails_ListPrice'}}</span>-->
+                            <span class="value cc_value"><s>{{price this.product.basePrice}}</s></span>
+                        </p>
+                        {{/if}}
+                        {{/ifDisplay}}
+
+                        <!--{{#ifDisplay 'PD.DsplSvPrc'}}
+                        {{#if this.product.savings}}
+                        <p class="savings">
+                            <span class="cc_label">{{pageLabelMap 'YouSave'}}</span>
+                            <span class="value cc_value">{{price this.product.savings}}</span>
+                        </p>
+                        {{/if}}
+                        {{/ifDisplay}}-->
+
+                        {{#if this.isTierPriced}}
+                        <div class="cc_prt_tool_tip_div cc_prt_tool_tip_div_pdp">
+                                            <span class="cc_prt_tool_tip_text cc_prt_tool_tip_text_pdp" data-toggle="tooltip" title="{{pageLabelMap 'ProductPricingTiers_VolumeHover'}}">
+                                                {{pageLabelMap 'ProductPricingTiers_VolumePricing'}}
+                                            </span>
+                        </div>
+                        {{/if}}
+
+                        {{#if this.product.sellerID}}
+                        <p class="cc_sold_by">
+                            <span class="soldbylabel cc_sold_by_label">{{pageLabelMap 'Prod_SoldBy'}}</span>
+                            <span class="soldbyname cc_sold_by_name">{{pdp-seller-field 'sfdcName' this.product.sellerID this.sellers}}</span>
+                        </p>
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                    {{/ifDisplay}}
+                    {{/if}}
+
+                    {{#if this.product.canAddtoCart}}
+                    {{#unless this.primaryAttr}}
+                    <div class="quantity_block gp_quantity_block cc_quantity_block m-t-3">
+                        {{#if this.product.qtySkipIncrement}}
+                        <div class="row cc_qty_control_row">
+                            <div class="col-md-10 col-md-offset-2">
+                                <div class="form-group">
+                                    <div class="input-group cc_input_group">
+                                                    <span class="input-group-btn cc_input_group_btn">
+                                                        <input type="button" value="{{pageLabelMap 'Prod_QtyDecrFF'}}" class="btn btn-default btn-sm minusFF cc_minusff"/>
+                                                        <input type="button" value="{{pageLabelMap 'Prod_QtyDecrSingle'}}" class="btn btn-default btn-sm minus cc_minus"/>
+                                                    </span>
+
+                                        <input type="text" readonly="true" name="qty" value="0" class="entry form-control input-sm cc_entry" maxlength="7"/>
+
+                                        <span class="input-group-btn cc_input_group_btn">
+                                                        <input type="button" value="{{pageLabelMap 'Prod_QtyIncrSingle'}}" class="btn btn-default btn-sm plus cc_plus"/>
+                                                        <input type="button" value="{{pageLabelMap 'Prod_QtyIncrFF'}}" class="btn btn-default btn-sm plusFF cc_plusff"/>
+                                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{else}}
+                        {{#ifEquals this.product.qtyIncrement 1}}
+                        <div class="row cc_qty_control_row">
+                            <div class="col-md-6 col-md-offset-6">
+                                <div class="form-group">
+                                    <div class="input-group cc_input_group">
+                                                        <span class="input-group-btn cc_input_group_btn">
+                                                            <input type="button" value="{{pageLabelMap 'Prod_QtyDecrSingle'}}" class="btn btn-default btn-sm minus cc_minus"/>
+                                                        </span>
+
+                                        <input id="qty{{index}}" name="quickadd[{{index}}].qty" value="0" class="qty entry form-control input-sm cc_entry" maxlength="7"/>
+
+                                        <span class="input-group-btn cc_input_group_btn">
+                                                            <input type="button" value="{{pageLabelMap 'Prod_QtyIncrSingle'}}" class="btn btn-default btn-sm plus cc_plus"/>
+                                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{else}}
+                        <div class="row cc_qty_control_row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="qty" class="control-label cc_qty">{{pageLabelMap 'Qty'}}</label>
+                                    <input type="text" id="qty" name="qty" value="1" class="input-text entry plus_minus cc_entry form-control" maxlength="7"/>
+                                </div>
+                            </div>
+                        </div>
+                        {{/ifEquals}}
+                        {{/if}}
+
+                        <input type="hidden" name="qtyIncrement" value="{{this.product.qtySingleIncrement}}" class="item_qtyIncrement cc_item_qty_increment"/>
+                        <input type="hidden" name="qtySkipIncrement" value="{{this.product.qtySkipIncrement}}" class="item_qtySkipIncrement cc_item_qty_skip_increment"/>
+                    </div>
+
+                    {{#unless this.showNewSubscriptionSelection}}
+                    {{#if this.product.prodBean.showSubscriptionSelection}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="cc_subscription_selection_div">
+                                <p class="subscription_selection cc_subscription_selection">
+                                    <span class="subscriptionLabel cc_subscription_label">{{pageLabelMap 'Subscribe_And_Save_Label'}}</span>
+                                    <select class="subscriptionFrequencySelection cc_subscription_frequency_selection" data-subscription="{{this.product.prodBean.sku}}">
+                                        {{#each this.product.prodBean.subscriptionFrequencies}}
+                                        <option value="{{safeQuote this}}">{{pageLabelMapMultiString 'Subscribe_And_Save_' this}}</option>
+                                        {{/each}}
+                                    </select>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="action cc_action">
+                                <div class="wishButtons plus_minus cc_plus_minus"></div>
+
+                                <button type="button" class="btn btn-primary btn-sm btn-block addItem cc_add_item" data-sku="{{this.product.prodBean.sku}}" data-seller="{{this.product.sellerID}}">
+                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                    {{pageLabelMap 'Component_MiniwishList_AddToCart'}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{/unless}}
+                    {{/unless}}
+
+                    {{#ifDisplay 'pd.tiersassec'}}
+                    {{else}}
+                    <div class="cc_product_pricing_tiers{{this.product.prodBean.sfid}}"></div>
+                    {{/ifDisplay}}
+                    {{/if}}
+
+                    {{#if this.primaryAttr}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="cc_product_attributes"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="cc_product_attributes_batch_header">
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    {{#if this.showNewSubscriptionSelection}}
+                    <div class="cc_subscription_selection_div">
+                        <h4>{{pageLabelMap 'Subscribe_And_Save_Bundle_Label'}}</h4>
+                        {{#each this.subProdTerms}}
+                        {{#if this.CC_NO_SUBSCRIPTION}}
+                        <div class="cc_item_container item_container">
+                            <div class="radio cc_radio">
+                                <label class="cc_radio_name">
+                                    <input value="nosuboption" data-nme="nosuboption" type="radio" name="subOptionGuider{{this.productSKU}}" {{this.checked}}/>
+                                    {{pageLabelMap 'Prod_NoSubscriptionOptionKit'}}
+                                </label>
+                            </div>
+                        </div>
+                        {{else}}
+                        <div class="cc_item_container item_container">
+                            <div class="radio cc_radio">
+                                <label class="cc_radio_name">
+                                    <input value="{{this.sfid}}" data-nme="{{this.name}}" type="radio" name="subOptionGuider{{this.productSKU}}" {{this.checked}}/>
+                                    {{#if this.modifierSubscriptions}}
+                                    {{insertTokens this.pdpDisplayName this.displayName (price this.productPrice) (price this.subscriptionPrice) (pageLabelPrefixMap 'Subscriptions_Frequency_' this.orderFrequencyUOM) (pageLabelPrefixMap 'Subscriptions_Frequency_' this.installmentFrequencyUOM) this.orderFrequency this.installmentFrequency this.installmentCount this.orderCount (price this.modifierSubscriptions.[0].productPrice) (price this.modifierSubscriptions.[0].subscriptionPrice) this.modifierSubscriptions.[0].orderCount this.modifierSubscriptions.[0].installmentCount this.recurringPricePercentage this.upfrontPricePercentage this.modifierSubscriptions.[0].recurringPricePercentage this.modifierSubscriptions.[0].upfrontPricePercentage }}
+                                    {{else}}
+                                    {{insertTokens this.pdpDisplayName this.displayName (price this.productPrice) (price this.subscriptionPrice) (pageLabelPrefixMap 'Subscriptions_Frequency_' this.orderFrequencyUOM) (pageLabelPrefixMap 'Subscriptions_Frequency_' this.installmentFrequencyUOM) this.orderFrequency this.installmentFrequency this.installmentCount this.orderCount this.recurringPricePercentage this.upfrontPricePercentage}}
+                                    {{/if}}
+                                </label>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/each}}
+                    </div>
+                    {{/if}}
+
+                    <div class="tabSection"></div>
+                </div>
+
+                <div class="col-sm-12 m-t-3">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="dynamicKitSection cc_dynamic_kit_section"></div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h3 class="m-t-1">{{pageLabelMap 'DynamicKitSelections'}}</h3>
+
+                                    <div class="dynamicKitSelSection"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="widgetSection"></div>
+    </script>
+
+
+    <!-- ************************ DEMO ENGINEERING ASSIST WORK - MAX G ************************** -->
+
+    <script id="Assortment-ProductDetail-DynamicSection-Desktop" type="text/template">
+
+        <div class="widget_container">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#tab_dKit" aria-controls="home" role="tab" data-toggle="tab">{{pageLabelMap 'DynamicKitTitle'}}</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="tab_dKit">
+                    <div class="row">
+                        <div class="col-md-12 text-right m-y-1" style="display: flex; flex-direction: row; justify-content: flex-end;">
+                            <!--<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#ckz_PDP_RatioBuilder">
+                                Apply Ratio
+                            </button>-->
+
+                            <button type="button" class="btn btn-default btn-sm continueShoppingButton" id="showRatioGrid" onclick="showRatioModal();">{{pageLabelMap 'PDP_Assortment_Apply_Ratio'}}</button>
+                            <!--<button type="button" class="btn btn-primary continueShoppingButton pull-right" id="reformatGrid" onclick="reformatToGrid();">Show Grid</button>-->
+                        </div>
+                    </div>
+
+                    <!-- Ratio Modal -->
+                    <div class="backdrop" id="theBackdrop" onclick="hideRatioModal();"></div>
+
+                    <div class="modal" id="theModal">
+                        <div class="ratio-modal-content">
+                            <h2>{{pageLabelMap 'PDP_Assortment_RatioModalTitle'}}</h2>
+
+                            <div class="prod-info-header">
+                                <div class="prod-col">
+                                    <div style="font-weight: bold">{{pageLabelMap 'PDP_Assortment_SizeRangeCode'}}</div>
+                                    <div>A3/T0</div>
+                                </div>
+
+                                <div class="prod-col">
+                                    <label for="ratio-selector">{{pageLabelMap 'PDP_Assortment_Select_Ratio'}}</label>
+                                    <select id="ratio-selector" class="form-control" onchange="loadRatio();">
+                                        <option value="">{{pageLabelMap 'PDP_Assortment_Select_Ratio'}}...</option>
+                                        <option value="usRatio">{{pageLabelMap 'PDP_Assortment_Ratio_US'}}</option>
+                                        <option value="ukRatio">{{pageLabelMap 'PDP_Assortment_Ratio_UK'}}</option>
+                                        <option value="asiaRatio">{{pageLabelMap 'PDP_Assortment_Ratio_Asia'}}</option>
+                                    </select>
+                                </div>
+
+                                <div class="prod-col">
+                                    <label for="total-qty-input">{{pageLabelMap 'PDP_Assortment_TotalQuantity'}}</label>
+                                    <input type="number" class='form-control quantity Assortment-quantity' id="total-qty-input" value="0" onchange="calculateQty();"/>
+                                </div>
+
+                                <div class="prod-col">
+                                    <label>{{pageLabelMap 'PDP_Assortment_TotalPercentage'}}</label>
+                                    <div id="percentage-output">0 %</div>
+                                </div>
+
+                                <div style="display: flex; flex-direction: column; justify-content: center;">
+                                    <button type="button" class="btn btn-primary continueShoppingButton pull-right" id="applyRatioBtn" onclick="applyRatio();" style="margin-bottom: 4px;">{{pageLabelMap 'PDP_Assortment_Apply_Ratio'}}</button>
+                                    <button type="button" class="btn btn-primary continueShoppingButton pull-right" id="saveRatioBtn" onclick="saveNewRatio();">{{pageLabelMap 'PDP_Assortment_Save_Ratio'}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ************************ /DEMO ENGINEERING ASSIST WORK - MAX G ************************** -->
+
+                    <div class="widget_column widget_column_for_grid m-b-3">
+                        <ul class="nav nav-tabs" id="kitTabs">
+                            {{#each this}}
+                            <li class="{{#ifEquals @index 0}}active{{/ifEquals}}">
+                                <a href="#kitTab{{@index}}" data-toggle="tab">{{pageLabelMap this.name}}</a>
+                            </li>
+                            {{/each}}
+                        </ul>
+
+                        <div id="kitTabsContent" class="tab-content" style="">
+                            {{#each this}}
+                            <div class="tab-pane {{#ifEquals @index 0}}active{{/ifEquals}}" id="kitTab{{@index}}" {{#ifEquals @index 0}} active {{/ifEquals}}>
+                            {{#each this.relProducts}}
+                            <div class="row item_container">
+                                <div class="col-md-2">
+                                    {{#if product.mediaWrapper}}
+                                    <div class="img">
+                                        <a href="#">{{{displayImage product.mediaWrapper 'prodDetailIncl'}}}</a>
+                                    </div>
+                                    {{/if}}
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="name">
+                                        <a href="#" class="productName prodLink" data-id="{{product.prodBean.sku}}">{{this.product.prodBean.name}}</a>
+                                        <br/>
+                                        <span class="sku">{{this.product.prodBean.sku}}</span>
+                                    </div>
+
+                                    <div class="control">
+                                        {{#if ../isMulti }}
+                                        <input data-grp="{{product.prodBean.sku}}" data-sku="{{product.prodBean.sku}}" data-nme="{{product.prodBean.name}}" data-prc="{{product.price}}" type="checkbox" style="display: none;" class="Assortment-checkbox"/>
+                                        {{else}}
+                                        <input data-grp="guider{{../../sfid}}" data-sku="{{product.prodBean.sku}}" data-nme="{{product.prodBean.name}}" data-prc="{{product.price}}" type="radio" name="guider{{../../sfid}}"/>
+                                        {{/if}}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        {{#listFind ../displayType 'Single-Select Quantity|Multi-Select Quantity' true }}
+                                        <input type="text" value="0" class="form-control quantity Assortment-quantity" data-sku="{{product.prodBean.sku}}" id="qty_{{product.prodBean.sku}}"/>
+                                        <span class="input-group-addon price">{{{price product.price}}}</span>
+                                        {{else}}
+                                        <input type="text" value="1" readonly class="form-control quantity"/>
+                                        <span class="input-group-addon price">{{{price product.price}}}</span>
+                                        {{/listFind}}
+                                    </div>
+                                </div>
+                            </div> <!-- /.row -->
+                            {{/each}}
+                        </div>
+                        {{/each}}
+                    </div>
+
+                    <h4 class="title" style="display: none">{{pageLabelMap 'PDP_Assortment_Options'}}</h4>
+
+                    <div class="widget_container">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="input-group" style="display: none">
+                                    <span class="input-group-addon" id="">{{pageLabelMap 'PDP_Assortment_Multiplier'}}</span>
+                                    <input type="text" class="form-control" placeholder="Multiplier" name="multiplier" id="multiplier" value="1" size="2" readonly="readonly"/></input>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div id="slider_multiply-slider" style="display: none"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-primary btn-sm" name="" onclick="createAssortment();">
+                                        <i class="fa fa-wrench" aria-hidden="true"></i> {{pageLabelMap 'PDP_Assortment_Build'}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RATIO MODAL SECTION -->
+        <!--<div class="modal fade" id="ckz_PDP_RatioBuilder" tabindex="-1" role="dialog" aria-labelledby="ckz_PDP_RatioBuilderLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="ckz_PDP_RatioBuilderLabel">Apply Order Quantity Ratio</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="prod-info-header">
+
+                            <div class="prod-col">
+                                <label for="">Size range code</label>
+                                <div>A3/T0</div>
+                            </div>
+
+                            <div class="prod-col">
+                                <label for="ratio-selector">Select ratio</label>
+                                <select id="ratio-selector" class="form-control" onchange="loadRatio();">
+                                    <option value="">-- Select a Ratio --</option>
+                                    <option value="usRatio">US Ratio</option>
+                                    <option value="ukRatio">UK Ratio</option>
+                                    <option value="asiaRatio">Asia Ratio</option>
+                                </select>
+                            </div>
+
+                            <div class="prod-col">
+                                <label for="total-qty-input">Total quantity</label>
+                                <input type="number" class='form-control quantity Assortment-quantity' id="total-qty-input" value="0" onchange="calculateQty();"/>
+                            </div>
+
+                            <div class="prod-col">
+                                <label style="font-weight: bold">Total percentage</label>
+                                <div id="percentage-output">0 %</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary continueShoppingButton" id="applyRatioBtn" onclick="applyRatio();">Apply Ratio</button>
+                        <button type="button" class="btn btn-primary continueShoppingButton" id="saveRatioBtn" onclick="saveNewRatio();">Save as new Ratio</button>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+
+    </script>
+
+
+    <!--<script id="Assortment-ProductDetail-DynamicFlowSection-Desktop" type="text/template">
+        <div class="widget_container flow">
+            <h2 class="title">{{pageLabelMap 'DynamicKitTitle'}}</h2>
+            <div class="widget_column">
+                {{#each this}}
+                <div class="kitGroup {{this.sfid}}">{{pageLabelMap this.name}}</div>
+                <div class="kitGroupContent {{this.sfid}}">
+                    {{#each this.relProducts}}
+                    <div class="item_container {{product.prodBean.sku}}">
+                        <div class="info">
+                            {{#if product.mediaWrapper}}
+                            <div class="img">
+                                <a href="#">{{{displayImage product.mediaWrapper 'prodDetailIncl'}}}</a>
+                            </div>
+                            {{/if}}
+
+                            <div class="name">
+                                <a href="#" class="productName prodLink" data-id="{{product.prodBean.sku}}">{{this.product.prodBean.name}}</a>
+                                <br/>
+                                <span class="sku">{{this.product.prodBean.sku}}</span>
+                            </div>
+
+                            <div class="qty">
+                                {{#listFind ../displayType 'Single-Select Quantity|Multi-Select Quantity' true }}
+                                <input type="text" value="1" class="form-control quantity"/>
+                                {{else}}
+                                <input type="text" value="1" class="form-control quantity" readonly="readonly"/>
+                                {{/listFind}}
+                            </div>
+
+                            <div class="price">{{{price product.price}}}</div>
+
+                        </div>
+
+                        <div class="control">
+                            {{#if ../isMulti }}
+                            <input data-grp="{{product.prodBean.sku}}" data-sku="{{product.prodBean.sku}}" data-nme="{{product.prodBean.name}}" data-prc="{{product.price}}" type="checkbox"/>
+                            {{else}}
+                            <input data-grp="guider{{../../sfid}}" data-sku="{{product.prodBean.sku}}" data-nme="{{product.prodBean.name}}" data-prc="{{product.price}}" type="radio" name="guider{{../../sfid}}"/>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </script>-->
+
+
+    <script id="Assortment-ProductDetail-DynamicSelSection-Desktop" type="text/template">
+        {{#if this.selectList}}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="input-group input-group-sm">
+                    <input id="configName" class="configName form-control cc_config_name" name="configName" placeholder="{{pageLabelMap 'Label'}}" />
+                    <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary addToCart cc_add_to_cart">
+                                <i class="far fa-cart-plus"></i>
+                                {{pageLabelMap 'Component_MiniwishList_AddToCart'}}
+                            </button>
+                        </span>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-striped m-t-2">
+            <tbody>
+            {{#each this.selectList}}
+            <tr>
+                <td>
+                    <div class="dynamicKitSelSectionUpper text-center">
+                        <div class="name cc_name">
+                            {{this.name}}
+                        </div>
+                    </div>
+
+                    <div class="dynamicKitSelSectionLower text-center m-t-1">
+                                    <span class="cc_qty">
+                                        <span class="cc_qty_label">{{pageLabelMap 'Qty'}}: </span>
+                                        <span class="cc_qty_value">{{quantity}}</span>
+                                    </span> |
+                        <span class="cc_price">
+                                        <span class="cc_price_label">{{pageLabelMap 'ProductDetailsInc_YourPrice'}}: </span>
+                                        <span class="cc_price_value">{{{price this.price}}}</span>
+                                    </span>
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        {{/if}}
+    </script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            if (CCRZ.detailData.jsonProductData && CCRZ.detailData.jsonProductData.product) {
+                if (CCRZ.detailData.jsonProductData.product.prodBean.ProductType === 'Dynamic Kit' && CCRZ.detailData.jsonProductData.product.prodBean.ckzisAssortment) {
+                    console.log("CCRZ Product Type: Assortment");
+
+                    $("body").addClass('ckz_Assortment');
+
+                    CCRZ.uiProperties.productDetailView.desktop.tmpl = 'CC-Assortment-ProductDetail-Desktop';
+                    CCRZ.uiProperties.dynamicKitSelView.desktop.tmpl = 'Assortment-ProductDetail-DynamicSelSection-Desktop';
+                    CCRZ.uiProperties.dynamicKitView.desktop.tmpl = 'Assortment-ProductDetail-DynamicSection-Desktop';
+                    // CCRZ.uiProperties.dynamicKitView.desktop.flow.tmpl = 'Assortment-ProductDetail-DynamicFlowSection-Desktop';
+
+                    CCRZ.pubSub.on('view:dynamicKitView:refresh', function (theView) {
+                        reformatToGrid();
+                        createRatioGrid();
+
+                        if ({!doReconfigure}) {
+                        <apex:repeat value="{!productQtyMap}" var="productId" >
+                            $("#qty_{!productId}").val({!productQtyMap[productId]});
+                        </apex:repeat>
+
+                            createAssortment();
+
+                            // $(".addToCart").bind("click", function(){
+                            //     predeleteOldLine();
+                            // });
+                        }
+
+                        // init multiply-slider
+
+                       /* $("#slider_multiply-slider").noUiSlider({
+                            start: 1,
+                            range: {
+                                'min': 1,
+                                'max': 20
+                            },
+                            step: 1
+                        });
+
+                        $("#slider_multiply-slider").on("slide", function () {
+                            $("#multiplier").val($('#slider_multiply-slider').val());
+                            applyQuantities();
+                        });*/
+                    });
+                }
+            }
+        });
+
+
+        function showRatioModal() {
+            $("#theBackdrop").show();
+            $("#theModal").show("fast");
+        }
+
+        function hideRatioModal() {
+            $("#theBackdrop").hide();
+            $("#theModal").hide("fast");
+        }
+
+        function cancel() {
+            console.log("cancel");
+            window.top.location = "/ccrz__Cart?cartId={!cartId}";
+        }
+
+        function applyQuantities() {
+            console.log("applyQuantities");
+
+            var domElements;
+            if ($(".productDisplayGrid").is(":visible")) {
+                domElements = $(".productDisplayGrid input.quantity");
+            } else {
+                domElements = $(".tab-content .item_container .quantity");
+                var testAttr = domElements.attr('data-section');
+                if (typeof testAttr === typeof undefined || testAttr === false) {
+                    var dom_kit_tabs = $("#kitTabs li a");
+                    _.each(domElements, function (domElement) {
+                        var kitTabIdHash = '#' + $(domElement).parents(".tab-pane").attr("id");
+                        var relatedTab = _.find(dom_kit_tabs, function (tabDomElement) {
+                            return $(tabDomElement).attr("href") == kitTabIdHash;
+                        });
+
+                        $(domElement).attr("data-section", $(relatedTab).text());
+                    });
+                }
+            }
+
+            var groupedProductObjects = _.groupBy(domElements, function (domElement) {
+                return $(domElement).attr("data-section");
+            });
+
+            var baseAmount = $("#multiplier").val();
+            _.each(groupedProductObjects, function (productGroup) {
+
+                var groupCount = productGroup.length;
+                var index = 1;
+                var frontHalf = true;
+                var isMiddle = false;
+                _.each(productGroup, function (productObject) {
+                    var multiplier = index;
+
+                    if (frontHalf && index == (groupCount / 2)) {
+                        isMiddle = true;
+                    }
+
+                    if (frontHalf && (index > (groupCount / 2)) || index == groupCount / 2) {
+                        frontHalf = false;
+                    }
+
+                    if (frontHalf) {
+                        index++;
+                    } else {
+                        if (isMiddle) {
+                            isMiddle = false
+                        } else {
+                            index--;
+                        }
+                    }
+
+                    $(productObject).val(baseAmount * multiplier);
+                });
+            });
+
+            syncValues();
+        }
+
+
+        var deleted = false;
+
+        function createAssortment() {
+            console.log("createAssortment");
+
+            syncValues();
+            jQuery($('.Assortment-checkbox').prop('checked', true));
+            jQuery($('.Assortment-checkbox').trigger('change'));
+
+            // jQuery($(".addToCart").bind("click", function(){
+            //     predeleteOldLine();
+            // }));
+
+            $(".assortment-selections").removeClass("hide");
+        }
+
+        function predeleteOldLine() {
+            console.log("predeleteOldLine");
+
+            if (!deleted) {
+                deleted = true;
+                deleteOldLine();
+            }
+        }
+
+        function createRatioGrid() {
+            console.log("createRatioGrid");
+
+            syncValues();
+            if ($(".ratioDisplayGrid").length == 0) {
+                var dom_items = $(".dynamicKitSection .item_container");
+                var dom_kit_tabs = $("#kitTabs li a");
+
+                var product_objects = _.map(dom_items, function (dom_element) {
+                    var kitTabIdHash = '#' + $(dom_element).parent(".tab-pane").attr("id");
+                    var relatedTab = _.find(dom_kit_tabs, function (tabDomElement) {
+                        return $(tabDomElement).attr("href") == kitTabIdHash;
+                    });
+
+                    var product_object = {
+                        name: $(dom_element).find(".productName").text().trim().replace(/\s\s+/g, " "),
+                        prod_id: $(dom_element).find(".productName").attr("data-id"),
+                        sku: $(dom_element).find(".sku").text().trim(),
+                        dom_checkbox: $(dom_element).find(".control input").clone(true, true),
+                        dom_qty: $(dom_element).find(".quantity").clone(true, true),
+                        image: $(dom_element).find(".prodDetailIncl").attr("src"),
+                        price: $(dom_element).find(".price").text(),
+                        section: $(relatedTab).text()
+                    };
+
+                    return product_object;
+                });
+
+                product_objects = _.sortBy(product_objects, function (product_object) {
+                    var numericMatches = product_object.name.match(/\d+/g);
+                    if (numericMatches != null) {
+                        return Number(numericMatches[0]);
+                    } else {
+                        return product_object.name;
+                    }
+                });
+
+                var groupedProductObjects = _.groupBy(product_objects, function (product_object) {
+                    return product_object.name;
+                });
+
+                var groupedByColor = _.groupBy(product_objects, function (product_object) {
+                    return product_object.section;
+                });
+
+                var displayGrid = $("<table class=\"table table-striped ratioDisplayGrid\" id='ratio-table'></table>");
+
+                $("#theModal").append(displayGrid);
+                displayGrid.hide();
+
+                var displayGridHeader = $("<tr class=\"productGridHeader\"><th></th></tr>");
+                displayGrid.append(displayGridHeader);
+                var columnMap = [];
+                _.each(groupedByColor, function (productGroup) {
+                    var headerItem = ("<th class=\"productGridHeaderItem\"><span>" + productGroup[0].section + "</span></th>");
+                    displayGridHeader.append(headerItem);
+                    columnMap.push(productGroup[0].section);
+                });
+
+                _.each(groupedProductObjects, function (productGroup) {
+                    var productRow = $("<tr class=\"productGridRow\"><th class=\"productGridRowHeader text-center\">" + productGroup[0].name + "<img src=\"" + productGroup[0].image + "\" class=\"prodDetailInc1 center-block\" /></th></tr>");
+                    var columnIterator = 0;
+                    displayGrid.append(productRow);
+                    _.each(productGroup, function (productObject) {
+                        while (productObject.section != columnMap[columnIterator]) {
+                            productRow.append("<th class='productGridItem'></th>");
+                            columnIterator++;
+                            columnIterator = columnIterator % columnMap.length;
+                            if (columnIterator == 0) {
+                                console.log("Something odd happened");
+                                break;
+                            }
+                        }
+
+                        var productCell = $("<th class='productGridItem' data-section='" + productObject.section + "' data-sku='" + productObject.sku + "'></th>");
+                        productRow.append(productCell);
+                        productCell.append(productObject.dom_checkbox);
+                        productCell.append("<div class='input-group input-group-sm qty-modal' data-sku='" + productObject.sku + "'></div>");
+                        productObject.dom_qty.attr("data-section", productObject.section);
+                        $("[data-sku=" + productObject.sku + "] .qty-modal").append("<div class='input-grp'><input type='text' onchange='sumPercentage();' value='0' class='form-control quantity Assortment-quantity' data-sku='" + productObject.sku + "' id='" + productObject.sku + '-ratio' + "' data-section='" + productObject.section + "' style='border-bottom-left-radius: 0;'><span class='input-group-addon' style='border-bottom-right-radius: 0;'>%</span></div>");
+                        // productCell.append(productObject.dom_qty);
+
+                        $("[data-sku=" + productObject.sku + "] .qty-modal").append("<div class='input-grp'><input type='text' value='0' class='form-control Assortment-quantity qty' data-sku='" + productObject.sku + "' id='" + productObject.sku + '-quantity' + "' data-section='" + productObject.section + "' style='border-top-left-radius: 0;' readonly><span class='input-group-addon' style='border-top-right-radius: 0;'>#</span></div>");
+                        // productCell.append("<span>"+productObject.price+"</span>");
+                        columnIterator++;
+                        columnIterator = columnIterator % columnMap.length;
+                    });
+                });
+            }
+
+            $(".ratioDisplayGrid").slideDown();
+
+        }
+
+        function reformatToGrid() {
+            console.log("reformatToGrid");
+
+            syncValues();
+            if ($(".productDisplayGrid").is(":visible")) {
+                $("#kitTabs").slideDown();
+                $("#kitTabsContent").slideDown();
+                $(".productDisplayGrid").slideUp();
+
+                $("#reformatGrid").text("Show Grid");
+            } else {
+                if ($(".productDisplayGrid").length == 0) {
+                    var dom_items = $(".dynamicKitSection .item_container");
+                    var dom_kit_tabs = $("#kitTabs li a");
+
+                    var product_objects = _.map(dom_items, function (dom_element) {
+                        var kitTabIdHash = '#' + $(dom_element).parent(".tab-pane").attr("id");
+                        var relatedTab = _.find(dom_kit_tabs, function (tabDomElement) {
+                            return $(tabDomElement).attr("href") == kitTabIdHash;
+                        });
+
+                        var product_object = {
+                            name: $(dom_element).find(".productName").text().trim().replace(/\s\s+/g, " "),
+                            prod_id: $(dom_element).find(".productName").attr("data-id"),
+                            sku: $(dom_element).find(".sku").text().trim(),
+                            dom_checkbox: $(dom_element).find(".control input").clone(true, true),
+                            dom_qty: $(dom_element).find(".quantity").clone(true, true),
+                            image: $(dom_element).find(".prodDetailIncl").attr("src"),
+                            price: $(dom_element).find(".price").text(),
+                            section: $(relatedTab).text()
+                        };
+
+                        return product_object;
+                    });
+
+                    product_objects = _.sortBy(product_objects, function (product_object) {
+                        var numericMatches = product_object.name.match(/\d+/g);
+                        if (numericMatches != null) {
+                            return Number(numericMatches[0]);
+                        } else {
+                            return product_object.name;
+                        }
+                    });
+
+                    var groupedProductObjects = _.groupBy(product_objects, function (product_object) {
+                        return product_object.name;
+                    });
+
+                    var groupedByColor = _.groupBy(product_objects, function (product_object) {
+                        return product_object.section;
+                    });
+
+                    var displayGrid = $("<table class=\"table table-striped productDisplayGrid\" id='quantity-table'></table>");
+
+                    $(".widget_column_for_grid").prepend(displayGrid);
+                    displayGrid.hide();
+
+                    var displayGridHeader = $("<tr class=\"productGridHeader\"><th></th></tr>");
+                    displayGrid.append(displayGridHeader);
+                    var columnMap = [];
+                    _.each(groupedByColor, function (productGroup) {
+                        var headerItem = ("<th class=\"productGridHeaderItem\"><span>" + productGroup[0].section + "</span></th>");
+                        displayGridHeader.append(headerItem);
+                        columnMap.push(productGroup[0].section);
+                    });
+
+                    _.each(groupedProductObjects, function (productGroup) {
+                        var productRow = $("<tr class=\"productGridRow\"><th class=\"productGridRowHeader text-center\">" + productGroup[0].name + "<img src=\"" + productGroup[0].image + "\" class=\"prodDetailInc1 center-block\" /></th></tr>");
+                        var columnIterator = 0;
+                        displayGrid.append(productRow);
+                        _.each(productGroup, function (productObject) {
+                            while (productObject.section != columnMap[columnIterator]) {
+                                productRow.append("<th class='productGridItem'></th>");
+                                columnIterator++;
+                                columnIterator = columnIterator % columnMap.length;
+                                if (columnIterator == 0) {
+                                    console.log("Something odd happened");
+                                    break;
+                                }
+                            }
+
+                            var productCell = $("<th class='productGridItem' data-section='" + productObject.section + "' data-sku='" + productObject.sku + "'></th>");
+                            productRow.append(productCell);
+                            productCell.append(productObject.dom_checkbox);
+                            productCell.append("<div class='input-group input-group-sm qty' data-sku='" + productObject.sku + "'></div>");
+                            productObject.dom_qty.attr("data-section", productObject.section);
+                            $("[data-sku=" + productObject.sku + "] .qty").append(productObject.dom_qty);
+                            // productCell.append(productObject.dom_qty);
+                            $("[data-sku=" + productObject.sku + "] .qty").append("<span class='input-group-addon'>" + productObject.price + "</span>");
+                            // productCell.append("<span>"+productObject.price+"</span>");
+                            columnIterator++;
+                            columnIterator = columnIterator % columnMap.length;
+                        });
+                    });
+                }
+
+                $("#kitTabs").slideUp();
+                $("#kitTabsContent").slideUp();
+                $(".productDisplayGrid").slideDown();
+                $("#reformatGrid").text("Show Tabs");
+            }
+        }
+
+        function syncValues() {
+
+            var copyFrom, copyTo;
+            if ($(".productDisplayGrid").is(":visible")) {
+                var copyFrom = $(".productDisplayGrid input.quantity");
+                var copyTo = $(".tab-content .item_container .quantity");
+            } else {
+                var copyTo = $(".productDisplayGrid input.quantity");
+                var copyFrom = $(".tab-content .item_container .quantity");
+            }
+
+            var skuLookup = {};
+            _.each(copyFrom, function (domElement) {
+                skuLookup[$(domElement).attr("data-sku")] = $(domElement).val();
+            });
+
+            _.each(copyTo, function (domElement) {
+                $(domElement).val(skuLookup[$(domElement).attr("data-sku")]);
+            });
+        }
+
+        let ratioCounter = 1;
+
+        function saveNewRatio() {
+            const ratioCells = $("#ratio-table .productGridRow .productGridItem .input-group .quantity").toArray();
+            const ratioValues = ratioCells.map(cell => parseInt(cell.value, 10) );
+
+            $("#ratio-selector").append("<option value=" + ratioValues + ">Custom Ratio " + ratioCounter + " </option>");
+            ratioCounter++;
+        }
+
+        function loadRatio() {
+            var selectedText = $("#ratio-selector option:selected").text();
+            let ratio = [
+                3, 4, 6, 6, 4, 2,
+                3, 4, 6, 6, 4, 2,
+                3, 4, 6, 6, 4, 2,
+                3, 4, 6, 6, 4, 2
+            ];
+            switch (selectedText) {
+                case ('US Ratio'):
+                    ratio = [
+                        3, 4, 6, 6, 4, 2,
+                        3, 4, 6, 6, 4, 2,
+                        3, 4, 6, 6, 4, 2,
+                        3, 4, 6, 6, 4, 2
+                    ];
+                    break;
+                case ('UK Ratio'):
+                    ratio = [
+                        1, 4, 5, 7, 5, 3,
+                        1, 4, 5, 7, 5, 3,
+                        1, 4, 5, 7, 5, 3,
+                        1, 4, 5, 7, 5, 3
+                    ];
+                    break;
+                case ('Asia Ratio'):
+                    ratio = [
+                        2, 5, 7, 7, 3, 1,
+                        2, 5, 7, 7, 3, 1,
+                        2, 5, 7, 7, 3, 1,
+                        2, 5, 7, 7, 3, 1
+                    ];
+                    break;
+                default:
+                    ratio = $("#ratio-selector").val().split(",");
+            }
+            const tableCells = $("#ratio-table .productGridRow .productGridItem .input-group .quantity").toArray();
+            const qtyCells = $("#ratio-table .productGridRow .productGridItem .input-group .qty").toArray();
+            const totalQuantity = $("#total-qty-input").val();
+            for (let i = 0; i < tableCells.length; i++) {
+                tableCells[i].value = ratio[i];
+            }
+            for (let a = 0; a < qtyCells.length; a++) {
+                qtyCells[a].value = Math.round(ratio[a] / 100 * totalQuantity);
+            }
+            const tableCellValues = qtyCells.map(cell => cell.value);
+
+            sumPercentage();
+        }
+
+        function calculateQty() {
+            const tableCells = $("#ratio-table .productGridRow .productGridItem .input-group .quantity").toArray();
+            const qtyCells = $("#ratio-table .productGridRow .productGridItem .input-group .qty").toArray();
+            const totalQuantity = $("#total-qty-input").val();
+            for (let i = 0; i < qtyCells.length; i++) {
+                qtyCells[i].value = Math.round(tableCells[i].value / 100 * totalQuantity);
+            }
+        }
+
+        function sumPercentage() {
+            let percentageSum = 0;
+            const tableCells = $("#ratio-table .productGridRow .productGridItem .input-group .quantity").toArray();
+            tableCells.forEach(cell => {percentageSum += parseInt(cell.value, 10);});
+
+            $("#percentage-output").text(`${percentageSum} %`);
+            if (percentageSum !== 100) {
+                $("#percentage-output").attr("style", "color: red;");
+            } else {
+                $("#percentage-output").attr("style", "");
+            }
+            calculateQty();
+        }
+
+        function applyRatio() {
+            const percentageTableCells = $("#ratio-table .productGridRow .productGridItem .input-group .quantity").toArray();
+            const totalQuantity = $("#total-qty-input").val();
+            const quantityTableCells = $("#quantity-table .productGridRow .productGridItem .input-group .quantity").toArray();
+            for (let i = 0; i < quantityTableCells.length; i++) {
+                quantityTableCells[i].value = Math.round(percentageTableCells[i].value / 100 * totalQuantity);
+            }
+            hideRatioModal();
+        }
+
+        Handlebars.registerHelper("math", function (lvalue, operator, rvalue, options) {
+            lvalue = parseFloat(lvalue);
+            rvalue = parseFloat(rvalue);
+
+            return {
+                "+": lvalue + rvalue,
+                "-": lvalue - rvalue,
+                "*": lvalue * rvalue,
+                "/": lvalue / rvalue,
+                "%": lvalue % rvalue
+            }[operator];
+        });
+    </script>
+
+    <apex:form >
+        <apex:actionFunction name="deleteOldLine" action="{!deleteOldLine}"/>
+    </apex:form>
+</apex:component>

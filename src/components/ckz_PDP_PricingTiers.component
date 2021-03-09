@@ -1,0 +1,123 @@
+<!--
+ - Created by brandon.rogers on 1/10/19.
+ -->
+
+<apex:component id="ckz_PDP_PricingTiers">
+    <script id="CC-ProductDetail-ProductPricingTiers-Desktop" type="text/template">
+        {{#if this.pageData.tiersList}}
+            <div class="row cc_prt cc_prt_outer_row">
+                {{#ifDisplay 'pd.tiersassec'}}
+                {{else}}
+                    <div class="col-xs-12 cc_prt_heading_label cc_prt_heading_label_div">
+                        <h3 class="cc_prt_heading_label cc_prt_heading_label_span">{{pageLabelMap 'Head_Tiers'}}</h3>
+                    </div>
+                {{/ifDisplay}}
+
+                {{#if this.pageData.tiersList.primary}}
+                    <div class="cc_prt_div_outer cc_prt_div_outer_primary">
+                        {{#each this.pageData.tiersList.primary}}
+                            {{#if this.max}}
+                                <div class="col-xs-6 cc_prt_tier_box cc_prt_tier_box_outer cc_prt_tier_box_primary">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body cc_prt_tier_box cc_prt_tier_box_primary cc_prt_tier_box_unselected cc_prt_tier_box_text cc_prt_sel_{{this.q}}_{{this.pId}} text-center">
+                                            {{pageLabelMap 'ProductPricingTiers_TierBoxText' this.q (price this.unitPrice) this.p (pageLabelMap this.uoml) this.max}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{else}}
+                                <div class="col-xs-6 cc_prt_tier_box cc_prt_tier_box_primary cc_prt_tier_box_outer">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body cc_prt_tier_box cc_prt_tier_box_primary cc_prt_tier_box_unselected cc_prt_tier_box_text cc_prt_sel_{{this.q}}_{{this.pId}} text-center">
+                                            {{pageLabelMap 'ProductPricingTiers_TierBoxTextMax' this.q (price this.unitPrice) this.p (pageLabelMap this.uoml)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                {{/if}}
+
+                {{#if this.pageData.tiersList.overflow}}
+                    <div id="cc_prt_overflow_collapse" class="collapse cc_prt_div_outer cc_prt_div_overflow_collapse">
+                        {{#each this.pageData.tiersList.overflow}}
+                            {{#if this.max}}
+                                <div class="col-xs-6 cc_prt_tier_box cc_prt_tier_box_outer cc_prt_tier_box_overflow">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body cc_prt_tier_box cc_prt_tier_box_overflow cc_prt_tier_box_unselected cc_prt_tier_box_text cc_prt_sel_{{this.q}}_{{this.pId}} text-center">
+                                            {{pageLabelMap 'ProductPricingTiers_TierBoxText' this.q (price this.unitPrice) this.p (pageLabelMap this.uoml) this.max}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{else}}
+                                <div class="col-xs-6 cc_prt_tier_box cc_prt_tier_box_overflow cc_prt_tier_box_outer">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body cc_prt_tier_box cc_prt_tier_box_overflow cc_prt_tier_box_unselected cc_prt_tier_box_text cc_prt_sel_{{this.q}}_{{this.pId}} text-center">
+                                            {{pageLabelMap 'ProductPricingTiers_TierBoxTextMax' this.q (price this.unitPrice) this.p (pageLabelMap this.uoml)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                {{/if}}
+            </div>
+
+            {{#if this.pageData.tiersList.overflow}}
+                <div class="row cc_prt_button_outer">
+                    <div class="col-xs-12 text-center">
+                        <button type="button" class="btn btn-default btn-sm cc_prt_button cc_prt_overflow_button cc_collapse_button" data-toggle="collapse" data-target="#cc_prt_overflow_collapse" aria-expanded="false">
+                            <span class='text-collapsed'>{{pageLabelMap 'ProductPricingTiers_ShowMoreBtn'}}</span>
+                            <span class='text-expanded'>{{pageLabelMap 'ProductPricingTiers_HideBtn'}}</span>
+                        </button>
+                    </div>
+                </div>
+            {{/if}}
+
+            {{#ifDisplay 'pd.tiersassec'}}
+            {{else}}
+                <!--<hr class="cc_prt_bottomhr"/>-->
+            {{/ifDisplay}}
+        {{/if}}
+    </script>
+
+    <script id="CC-ProductDetail-AggTP-Desktop" type="text/template">
+        {{#if this.tiersList}}
+            <div class="cc_prt_heading_label cc_prt_heading_label_div cc_prt_heading_label_div_agg">
+                <span class="cc_prt_heading_label cc_prt_heading_label_span">{{pageLabelMap 'Head_Tiers'}}</span>
+            </div>
+
+            <div class="cc_prt_div_outer cc_prt_outer_row_agg">
+                {{#each this.tiersList}}
+                    {{#if this.max}}
+                        <div class="col-xs-6 cc_prt_tier_box cc_prt_tier_box_outer cc_prt_tier_box_agg">
+                            <div class="panel panel-default">
+                                <div class="panel-body cc_prt_tier_box cc_prt_tier_box_agg {{this.selClass}} cc_prt_tier_box_text cc_prt_sel cc_prt_sel_{{this.q}} text-center" data-qty="{{this.q}}" data-prc="{{this.unitPrice}}" data-max="{{this.max}}">
+                                    {{pageLabelMap 'ProductPricingTiers_TierBoxText' this.q (price this.unitPrice) this.p (pageLabelMap this.uoml) this.max}}
+                                </div>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="col-xs-6 cc_prt_tier_box cc_prt_tier_box_outer cc_prt_tier_box_agg">
+                            <div class="panel panel-default">
+                                <div class="panel-body cc_prt_tier_box cc_prt_tier_box_agg {{this.selClass}} cc_prt_tier_box_text cc_prt_sel cc_prt_sel_{{this.q}} text-center" data-qty="{{this.q}}" data-prc="{{this.unitPrice}}" data-max="{{this.max}}">
+                                    {{pageLabelMap 'ProductPricingTiers_TierBoxTextMax' this.q (price this.unitPrice) this.p (pageLabelMap this.uoml)}}
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                {{/each}}
+            </div>
+
+            <div class="col-xs-12 cc_prt_agg_hr">
+                <hr/>
+            </div>
+        {{/if}}
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.productTierSectionView.tmpl = 'CC-ProductDetail-ProductPricingTiers-Desktop';
+            CCRZ.uiProperties.aggregateView.desktop.aggTP.tmpl = 'CC-ProductDetail-AggTP-Desktop';
+        });
+    </script>
+</apex:component>

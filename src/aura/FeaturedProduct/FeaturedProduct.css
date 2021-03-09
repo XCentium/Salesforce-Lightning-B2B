@@ -1,0 +1,23 @@
+.THIS {
+    background: #ffffff;
+    width: 75%;
+}
+
+.THIS .pdp-link{
+    color: #393939;
+    font-weight: 600;
+    overflow: hidden;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 15px;
+}
+
+.THIS .pdp-link a{
+    color: #393939 !important;
+}
+
+.THIS .slds-button{
+    padding: 5px 24px;
+    width: 100%;
+}

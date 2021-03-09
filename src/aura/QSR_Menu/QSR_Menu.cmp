@@ -1,0 +1,31 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" controller="QSR_Menu">
+    <aura:attribute name="Categories" type="IDO_Menu_Categories__c[]"/>
+    <aura:attribute name="Items" type="IDO_Menu_Item__c[]"/> 
+    <aura:attribute name="MenuItemTextColor" type="String" default="#333333"/>
+    <aura:attribute name="isFeatured" type="Boolean" default="false"/>
+	<aura:attribute name="hideCatDesc" type="Boolean" default="false"/>    
+    
+	<aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="wrapper">
+        <aura:iteration var="category" items="{!v.Categories}" indexVar="index"> 
+            <div class="center">
+                <h2 class="catheader">{!category.Name}</h2>
+                <aura:if isTrue="{!v.hideCatDesc != true}">
+                	<p class="headerdescription">{!category.Description__c}</p>
+                </aura:if>
+            </div>
+            <div class="container">
+                <aura:iteration var="item" items="{!v.Items}" indexVar="index"> 
+                    <aura:if isTrue="{!item.Menu_Category__c == category.Id}">
+                        <div class="item">
+                            <div class="padding">
+                                <h3 class="itemHeader" style="{!'color:' + v.MenuItemTextColor}">{!item.Name}</h3>
+                                <p>{!item.Description__c}</p>
+                            </div>
+                        </div>            
+                    </aura:if>  
+                </aura:iteration>
+            </div>
+        </aura:iteration>
+    </div>
+</aura:component>

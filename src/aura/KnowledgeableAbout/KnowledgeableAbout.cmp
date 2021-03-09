@@ -1,0 +1,59 @@
+<aura:component controller="knowledgeableUsersController" implements="forceCommunity:availableForAllPageTypes,force:hasRecordId">
+    
+    <aura:attribute name="thisFeedItem" type="String"/>
+    <aura:attribute name="networkName" type="String"/>
+    <aura:attribute name="thisNetworkId" type="String"/>
+    <aura:attribute name="suggestedTopicIds" type="String[]"/>
+    <aura:attribute name="thisTopicIds" type="String[]"/>
+    <aura:attribute name="knowledgeableUsers" type="String[]"/>
+    <aura:attribute name="currentPage" type="Integer" default="1"/>
+    <aura:attribute name="usersPerPage" type="Integer"/>
+    <aura:attribute name="pages" type="Integer" default="1"/>
+    <aura:attribute name="shownUsers" type="User[]"/>
+    <aura:attribute name="finishedLoading" type="Boolean" default="false"/>
+                    
+    <!--Design Attributes-->
+    <aura:attribute name="title" type="String"/>
+    
+    <!--Init-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <div>
+        <h2>{!v.title}</h2>
+        <div class="content-con">
+            <div aura:id="loadingCon" class="loadingIndicator shown">
+                <div class="loadingCon siteforceLoadingBalls">
+                    <span class="loadingBall first"></span>
+                    <span class="loadingBall second"></span>
+                    <span class="loadingBall third"></span>
+                </div>
+            </div>
+            <aura:iteration items="{!v.shownUsers}" var="person">
+                <div class="person forceCommunityKnowledgeablePeopleRow">
+                    <a class="person-photo-container" href="{! '/' + v.networkName +  '/s/profile/' + person.Id}">
+                        <img class="person-photo" src="{!person.SmallPhotoUrl}"/>
+                    </a>
+                    <div class="person-detail-container">
+                        <a class="person-name userName" href="{! '/' + v.networkName + '/s/profile/' + person.Id}">
+                            {!person.Alias}
+                        </a>
+                        <span class="person-type"> ({!person.ContactId != null ? 'Employee' :'Customer'})</span>
+                    </div>
+                </div>
+            </aura:iteration>
+            <aura:if isTrue="{!v.shownUsers.length == 0}">
+                <aura:if isTrue="{!v.finishedLoading}">
+            		<div class="no-users">No results found</div>
+                </aura:if>
+            </aura:if>
+        </div>
+        <div class="buttons-container">
+            <aura:if isTrue="{!v.currentPage > 1}">
+                <ui:button aura:id="prevButton" press="{!c.getPrev}" label="Prev" class="forceCommunityAskCommunity"/>
+            </aura:if>
+            <aura:if isTrue="{!v.pages - 1 > v.currentPage }">
+                <ui:button aura:id="nextButton" press="{!c.getNext}" label="Next" class="forceCommunityAskCommunity"/>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

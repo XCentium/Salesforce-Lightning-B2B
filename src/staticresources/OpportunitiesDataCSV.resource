@@ -1,0 +1,7 @@
+External_Id__c,LeadSource,Amount,Account.External_Id__c,Owner.External_Id__c,Name,Type,StageName,ForecastCategoryName,RecordType.Name,CloseDate,DateTimeCreated__c,LastActivityDate__c,LastModifiedDate__c
+W_Opportunity.127,Reseller,6406,W_Account.6,W_Sales_User.11,CommercePrint 35,Add-On Business,Closed Won,Closed,Simple,2016-11-28,2016-11-04 00:00:00,2016-11-05,2016-11-05 00:00:00
+W_Opportunity.224,Fields Sales,325301,W_Account.7,W_Sales_User.5,ScoreBoard 53,New Business,Closed Lost,Omitted,Simple,2017-01-22,2016-10-26 00:00:00,2016-11-18,2016-11-18 00:00:00
+W_Opportunity.502,Other,15000,W_Account.16,W_Sales_User.6,TechSmart 118,Existing Business,Closed Lost,Omitted,Advanced,2016-08-29,2016-06-02 00:00:00,2016-07-26,2016-07-26 00:00:00
+W_Opportunity.515,Fields Sales,95000,W_Account.16,W_Sales_User.5,TechSmart 121,New Business,Closed Won,Closed,Simple,2016-05-15,2016-01-26 00:00:00,2016-05-01,2016-05-01 00:00:00
+W_Opportunity.569,Reseller,1000,W_Account.18,W_Sales_User.10,Key International 137,Existing Business,Closed Won,Closed,Simple,2016-10-25,2016-10-02 00:00:00,2016-10-24,2016-10-24 00:00:00
+W_Opportunity.689,Reseller,24000,W_Account.19,W_Sales_User.11,Compact Industries Inc 168,Existing Business,Closed Lost,Omitted,Advanced,2017-05-30,2017-02-28 00:00:00,2017-03-22,2017-03-22 00:00:00

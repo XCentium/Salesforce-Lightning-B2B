@@ -1,0 +1,325 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="SearchType" type="String" /> 
+    <aura:attribute name="SearchPhrase" type="String" /> 
+    <aura:attribute name="Features" type="String[]"/>
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="Filter" type="String" default=""/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="setID" type="String" />
+    <aura:attribute name="ComponentTitle" type="String" />
+    <aura:attribute name="MenuOpenClose" type="String" />
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="IndustryName" type="String" /> 
+    <aura:attribute name="OrgName" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.Filter}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.ScreenChoice}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.recid}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.SearchPhrase}" action="{!c.init}"/>
+    
+    <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType != 'All')}">
+        <div class="paddingleftright">
+            <h3 class="searchHeader">Search Results for: {!v.SearchPhrase}</h3>
+        </div>
+    </aura:if>
+    <aura:iteration items="{!v.Settings}" var="setting">
+        <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType != 'All')}">  
+            <div class="sectionOuter">
+                <div class="paddingleftright"> 
+                    <div class="cardWrapper">
+                        <aura:iteration items="{!v.Features}" var="feature">
+                            <c:FIDO_IfContains items="{!feature.name}"  items2="{!feature.description__c}" element="{!v.SearchPhrase}">
+                                <div class="videoCard">
+                                    <div class="paddingsmall"> 
+                                        <button class="slds-button slds-button_neutral cardButton" aura:id="{!feature.id}" id="{!feature.id}" onclick="{!c.setId}" >
+                                            <div class=""> 
+                                                <aura:if isTrue="{!feature.image__c != null}" >        
+                                                    <div class="videoTitle" style="{!'background-image:url(' + feature.image__c + ');'}">
+                                                        <div class="videoBadge" >
+                                                        </div>
+                                                    </div>
+                                                    <aura:set attribute="else">
+                                                        <div class="videoTitle NoImgBg" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);">
+                                                            <div class="videoBadge">
+                                                            </div>
+                                                        </div>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <div class="padding">
+                                                    <div class="videoDescription">
+                                                        <h3>
+                                                            <div class="headingleft">
+                                                                <ui:outputRichText value="{!feature.name}"/>
+                                                            </div>
+                                                        </h3>
+                                                        <div class="paddingtopbottom desc">
+                                                            <ui:outputRichText value="{!feature.description__c }"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </c:FIDO_IfContains>
+                        </aura:iteration>
+                    </div>
+                </div>
+            </div>
+            <aura:set attribute="else">
+                <aura:if  isTrue="{!or(v.recid == '', v.recid == null)}" >
+                    <div class="slds-card"> 
+                        <div class="sectionOuter">
+                            <lightning:tabset >
+                                <lightning:tab label="General Feature" id="1">
+                                    <div class="center">
+                                        <h3 class="h3light">Click any item to learn more</h3>
+                                    </div>
+                                    <div class="paddingleftright"> 
+                                        <div class="cardWrapper">
+                                            <aura:iteration items="{!v.Features}" var="feature">
+                                                <aura:if isTrue="{!feature.type__c == 'General Feature'}">
+                                                    <div class="videoCard">
+                                                        <div class="paddingsmall"> 
+                                                            <button class="slds-button slds-button_neutral cardButton" aura:id="{!feature.id}" id="{!feature.id}" onclick="{!c.setId}" >
+                                                                <div class=""> 
+                                                                    <aura:if isTrue="{!feature.image__c != null}" >        
+                                                                        <div class="videoTitle" style="{!'background-image:url(' + feature.image__c + ');'}">
+                                                                            <div class="videoBadge" >
+                                                                            </div>
+                                                                        </div>
+                                                                        <aura:set attribute="else">
+                                                                            <div class="videoTitle NoImgBg" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);">
+                                                                                <div class="videoBadge">
+                                                                                </div>
+                                                                            </div>
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                                    <div class="padding">
+                                                                        <div class="videoDescription">
+                                                                            <h3>
+                                                                                <div class="headingleft">
+                                                                                    <ui:outputRichText value="{!feature.name}"/>
+                                                                                </div>
+                                                                            </h3>
+                                                                            <div class="paddingtopbottom desc">
+                                                                                <ui:outputRichText value="{!feature.description__c }"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+                                            </aura:iteration>
+                                        </div>
+                                    </div>
+                                </lightning:tab>
+                                
+                                <aura:if isTrue="{!setting.show_customizations_lightning_components__c == true}">
+                                    <lightning:tab label="Lightning Components" id="2">
+                                        <div class="center">
+                                            <h3 class="h3light">Click any item to learn more</h3>
+                                        </div>
+                                        <div class="paddingleftright">
+                                            <div class="cardWrapper">
+                                                <aura:iteration items="{!v.Features}" var="feature">
+                                                    <aura:if isTrue="{!feature.type__c == 'Lightning Component'}">
+                                                        <div class="videoCard">
+                                                            <div class="paddingsmall">
+                                                                <button class="slds-button slds-button_neutral cardButton" aura:id="{!feature.id}" id="{!feature.id}" onclick="{!c.setId}" >
+                                                                    <div class="">
+                                                                        <aura:if isTrue="{!feature.image__c != null}" >        
+                                                                            <div class="videoTitle" style="{!'background-image:url(' + feature.image__c + ');'}">
+                                                                                <div class="videoBadge" >
+                                                                                </div>
+                                                                            </div>
+                                                                            <aura:set attribute="else">
+                                                                                <div class="videoTitle NoImgBg" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);">
+                                                                                    <div class="videoBadge">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                        <div class="padding">
+                                                                            <div class="videoDescription">
+                                                                                <h3>
+                                                                                    <div class="headingleft">
+                                                                                        <ui:outputRichText value="{!feature.name}"/>
+                                                                                    </div>
+                                                                                </h3>
+                                                                                <div class="paddingtopbottom desc">
+                                                                                    <ui:outputRichText value="{!feature.description__c }"/>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </aura:if>
+                                                </aura:iteration>
+                                            </div>
+                                        </div>
+                                    </lightning:tab>
+                                </aura:if>
+                                
+                                <aura:if isTrue="{!setting.show_customizations_lightning_flows__c == true}">
+                                    <lightning:tab label="Lightning Flows" id="3">
+                                        <div class="center">
+                                            <h3 class="h3light">Click any item to learn more</h3>
+                                        </div>
+                                        <div class="paddingleftright">
+                                            <div class="cardWrapper">
+                                                <aura:iteration items="{!v.Features}" var="feature">
+                                                    <aura:if isTrue="{!feature.type__c == 'Lightning Flow'}">
+                                                        <div class="videoCard">
+                                                            <div class="paddingsmall">
+                                                                <button class="slds-button slds-button_neutral cardButton" aura:id="{!feature.id}" id="{!feature.id}" onclick="{!c.setId}" >
+                                                                    <div class="">
+                                                                        <aura:if isTrue="{!feature.image__c != null}" >        
+                                                                            <div class="videoTitle" style="{!'background-image:url(' + feature.image__c + ');'}">
+                                                                                <div class="videoBadge" >
+                                                                                </div>
+                                                                            </div>
+                                                                            <aura:set attribute="else">
+                                                                                <div class="videoTitle NoImgBg" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);">
+                                                                                    <div class="videoBadge">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                        <div class="padding">
+                                                                            <div class="videoDescription">
+                                                                                <h3>
+                                                                                    <div class="headingleft">
+                                                                                        <ui:outputRichText value="{!feature.name}"/>
+                                                                                    </div>
+                                                                                </h3>
+                                                                                <div class="paddingtopbottom desc">
+                                                                                    <ui:outputRichText value="{!feature.description__c }"/>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </aura:if>
+                                                </aura:iteration>
+                                            </div>
+                                        </div>
+                                    </lightning:tab>
+                                </aura:if>
+                                
+                                <aura:if isTrue="{!setting.show_customizations_invision__c == true}">
+                                    <lightning:tab label="InVision Apps" id="4">
+                                        <div class="center">
+                                            <h3 class="h3light">Click any item to learn more</h3>
+                                        </div>
+                                        <div class="paddingleftright">
+                                            <div class="cardWrapper">
+                                                <aura:iteration items="{!v.Features}" var="feature">
+                                                    <aura:if isTrue="{!feature.type__c == 'Invision'}">
+                                                        <div class="videoCard">
+                                                            <div class="paddingsmall">
+                                                                <button class="slds-button slds-button_neutral cardButton" aura:id="{!feature.id}" id="{!feature.id}" onclick="{!c.setId}" >
+                                                                    <div class="">
+                                                                        <aura:if isTrue="{!feature.image__c != null}" >        
+                                                                            <div class="videoTitle" style="{!'background-image:url(' + feature.image__c + ');'}">
+                                                                                <div class="videoBadge" >
+                                                                                </div>
+                                                                            </div>
+                                                                            <aura:set attribute="else">
+                                                                                <div class="videoTitle NoImgBg" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);">
+                                                                                    <div class="videoBadge">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                        <div class="padding">
+                                                                            <div class="videoDescription">
+                                                                                <h3>
+                                                                                    <div class="headingleft">
+                                                                                        <ui:outputRichText value="{!feature.name}"/>
+                                                                                    </div>
+                                                                                </h3>
+                                                                                <div class="paddingtopbottom desc">
+                                                                                    <ui:outputRichText value="{!feature.description__c }"/>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </aura:if>
+                                                </aura:iteration>
+                                            </div>
+                                        </div>
+                                    </lightning:tab>
+                                </aura:if>
+                                
+                                <aura:if isTrue="{!setting.show_customizations_visualforce__c == true}">
+                                    <lightning:tab label="Visualforce Pages" id="5">
+                                        <div class="center">
+                                            <h3 class="h3light">Click any item to learn more</h3>
+                                        </div>
+                                        <div class="paddingleftright">
+                                            <div class="cardWrapper">
+                                                <aura:iteration items="{!v.Features}" var="feature">
+                                                    <aura:if isTrue="{!feature.type__c == 'Visualforce Page'}">
+                                                        <div class="videoCard">
+                                                            <div class="paddingsmall">
+                                                                <button class="slds-button slds-button_neutral cardButton" aura:id="{!feature.id}" id="{!feature.id}" onclick="{!c.setId}" >
+                                                                    <div class="">
+                                                                        <aura:if isTrue="{!feature.image__c != null}" >        
+                                                                            <div class="videoTitle" style="{!'background-image:url(' + feature.image__c + ');'}">
+                                                                                <div class="videoBadge" >
+                                                                                </div>
+                                                                            </div>
+                                                                            <aura:set attribute="else">
+                                                                                <div class="videoTitle NoImgBg" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);">
+                                                                                    <div class="videoBadge">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                        <div class="padding">
+                                                                            <div class="videoDescription">
+                                                                                <h3>
+                                                                                    <div class="headingleft">
+                                                                                        <ui:outputRichText value="{!feature.name}"/>
+                                                                                    </div>
+                                                                                </h3>
+                                                                                <div class="paddingtopbottom desc">
+                                                                                    <ui:outputRichText value="{!feature.description__c }"/>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </aura:if>
+                                                </aura:iteration>
+                                            </div>
+                                        </div>
+                                    </lightning:tab>
+                                </aura:if>
+                                
+                            </lightning:tabset>
+                        </div>
+                    </div>
+                    <aura:set attribute="else">
+                        <c:FIDO_SingleRecord OrgName="{!v.OrgName}" IndustryName="{!v.IndustryName}" Industry="{!v.Industry}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}"/>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </aura:iteration>
+</aura:component>

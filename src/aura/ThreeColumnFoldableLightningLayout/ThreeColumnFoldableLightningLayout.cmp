@@ -1,0 +1,82 @@
+<aura:component implements="lightning:recordHomeTemplate"
+                description="A main region and two foldable sidebars with independant scrollers. Lightning Console Only">
+    <lightning:workspaceAPI aura:id="workspace"/>
+    <!-- Page Sections -->
+    <aura:attribute name="left" type="Aura.Component[]" 
+                    description="Left Section (foldable, with indendent scroll)."/>
+    <aura:attribute name="middle" type="Aura.Component[]"
+                    description="Middle Section (not foldable with indendent scroll)." />
+    <aura:attribute name="right" type="Aura.Component[]"
+                    description="Right Section (foldable with indendent scroll)." />
+    
+    
+    <!-- Foldable Section Controls -->
+    <aura:attribute name="isLeftOpen"  type="Boolean" default="true"
+                    description="Open state of left section." />
+    <aura:attribute name="isRightOpen" type="Boolean" default="true"
+                    description="Open state of right section."/>
+    
+    <!-- Console & Tab Controls -->
+    <aura:attribute name="isConsoleApplication" type="Boolean" default="false"
+                    description="disable independant scrolling if not in console application"/>
+    <aura:attribute name="isSubTab" type="Boolean" default="false"
+                    description="is sub tab"/>
+    
+    <!-- automatic fold Controls -->
+    <aura:attribute name="automaticFold" type="Boolean" default="true"
+                    description="automaticFold"/>
+    <aura:attribute name="messagingSubTab" type="Boolean" default="false"
+                    description="record open as a sub-tab of a messaging app such as live message or live agent and assuming a Pinned left side"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"
+                  description="Template Initialisation (e.g. sections default fold states)." />
+    
+    <!-- Component Display -->    
+    <div aura:id="mainContainer" class="{!v.isConsoleApplication ? (v.isSubTab ? 'slds-grid main-container scrollerSizeSecondary' : 'slds-grid main-container scrollerSizePrimary') : 'slds-grid main-container'}">
+        <div class="{! 'slds-container ' + (v.isRightOpen ? 'slds-size_1-of-4 ' : 'slds-size_1-of-3 ')
+                    + (v.isLeftOpen ? 'slds-p-right_x-small': 'hiddenDiv')}">
+            <ui:scrollerWrapper class="slds-scrollable_y">
+                <div class="slds-m-bottom_medium" aura:id="Left">
+                    {!v.left}
+                </div>
+            </ui:scrollerWrapper>
+        </div>
+        <div class="{! 'slds-container ' + 
+						(v.isRightOpen ? (v.isLeftOpen ? 'slds-size_2-of-4' : 'slds-size_2-of-3') : (v.isLeftOpen ? 'slds-size_2-of-3' : 'slds-size_3-of-3'))
+                    }">
+            <div class="slds-is-relative">
+                <div class="{!'slds-theme_shade slds-border-right ' + (v.isLeftOpen ? 'leftButtonContainerSideBarOn': 'leftButtonContainerSideBarOff')}" >
+                    <lightning:buttonStateful class="buttonSize slds-border_left slds-border_right"
+                                              variant="text"
+                                              state="{! v.isLeftOpen }"
+                                              iconNameWhenOff="utility:right"
+                                              iconNameWhenOn="utility:left"
+                                              onclick="{! c.handleOpenClose }"
+                                              aura:id="isLeftOpen" />
+                </div>
+                <div class="{!'slds-theme_shade slds-border-left '+ (v.isRightOpen ? 'rightButtonContainerSideBarOn': 'rightButtonContainerSideBarOff')}">
+                    <lightning:buttonStateful class="buttonSize slds-border_left slds-border_right"
+                                              variant="text"
+                                              state="{! v.isRightOpen }"
+                                              iconNameWhenOff="utility:left"
+                                              iconNameWhenOn="utility:right"
+                                              onclick="{! c.handleOpenClose }"
+                                              aura:id="isRightOpen" />
+                </div>
+            </div>
+            <ui:scrollerWrapper class="slds-scrollable_y">
+                <div class="slds-m-bottom_medium">
+                    {!v.middle}
+                </div>
+            </ui:scrollerWrapper>
+        </div>
+        <div class="{! 'slds-container ' + (v.isLeftOpen ? 'slds-size_1-of-4 ' : 'slds-size_1-of-3 ')
+                    + (v.isRightOpen ? 'slds-p-left_x-small': 'hiddenDiv')}">
+            <ui:scrollerWrapper class="slds-scrollable_y">
+                <div class="slds-m-bottom_medium" aura:id="Right">
+                    {!v.right}
+                </div>
+            </ui:scrollerWrapper>
+        </div>
+    </div>
+</aura:component>

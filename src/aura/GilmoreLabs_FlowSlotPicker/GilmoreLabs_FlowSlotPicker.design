@@ -1,0 +1,6 @@
+<design:component label="GilmoreLabs - Datetime Slot Picker">
+    <design:attribute name="lstDateTimes" label="1: Input DateTime Collection" description="A collection of datetimes to render on the slot picker (simple)" />
+   <design:attribute name="strJSON" label="2: Input Slot JSON" description="Input JSON to render on the slot picker (advanced)" />
+   <design:attribute name="idOutput" label="3: Selected Slot Id" description="Stores the user selected slot Id (valid when using input JSON)" />
+    <design:attribute name="dtOutput" label="4: Selected Datetime" description="Stores the user selected Datetime" />
+</design:component>

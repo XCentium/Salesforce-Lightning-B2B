@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT">
+    <!-- If you’re using a namespace, use myNamespace.Field__c instead. -->
+    <aura:attribute name="record" type="Object"/>
+</aura:event>

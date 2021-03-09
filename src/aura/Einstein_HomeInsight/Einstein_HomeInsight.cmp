@@ -1,0 +1,49 @@
+<aura:component controller="HomeInsightHelper">
+    <aura:attribute name="insight" type="Map"></aura:attribute>
+    
+    <div class="insight neutral regular" aura:id="insight">
+        <lightning:dynamicIcon class="slds-m-horizontal_small" type="trend" option="{!v.insight.trend}"></lightning:dynamicIcon>
+        <div class="title-wrapper" >
+            <span id="insight-text" class="{!v.insight.trend + ' insight-title'}" onclick="{!c.expandInsight}" data-id="3">{!v.insight.title}</span>
+            <div class="insight-subtitle">{!v.insight.record}</div>
+        </div>
+        <div class="why" onclick="{!c.fadeInsight}" data-id="3"></div>
+        <div class="content" aura:id="content" onclick="{!c.navigateToRecord}">
+            <div class="content-body">
+                <div class="content-body-top">
+                    <div class="content-body-top-question">
+                        <lightning:dynamicIcon class="slds-m-horizontal_x-small" type="ellie"></lightning:dynamicIcon>
+                        What supports this insight?
+                    </div>
+                    <div class="content-body-top-answer">
+                        {!v.insight.subtitle}
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.insight.articles.length > 0}">
+                    <hr/>
+                    
+                    <aura:iteration items="{!v.insight.articles}" var="article">
+                        <div class="content-body-bottom">
+                            <div>
+                                <lightning:icon class="icon" iconName="{!'standard:' + article.type}" size="x-small"></lightning:icon>
+                                <div class="{!'content-body-bottom-' + article.type}">
+                                    <a>{!article.subject}</a>
+                                </div>
+                                <div class="{!'content-body-bottom-' + article.type}">
+                                    "{!article.content}"<br/>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                    
+                </aura:if>
+                
+            </div>
+            
+            <div class="content-button" onclick="{!c.navigateToRecord}">
+                View Record
+            </div>
+        </div>
+        
+    </div>  
+</aura:component>

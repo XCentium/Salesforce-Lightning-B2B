@@ -1,0 +1,8 @@
+.THIS .no-underline{
+    text-decoration:none;
+    color: rgb(62, 62, 60);
+}
+.THIS .einstein-icon .slds-icon {    
+    fill: #ffffff;
+    padding: 2px;
+}

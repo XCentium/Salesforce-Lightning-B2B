@@ -1,0 +1,193 @@
+<!--
+Strike by Appiphony
+
+Version: 0.8.0
+Website: http://www.lightningstrike.io
+GitHub: https://github.com/appiphony/Strike-Components
+License: BSD 2-Clause License
+-->
+<aura:component access="global">
+    <!-- Required -->
+    <aura:attribute name="label" type="String" required="true"/>
+
+    <aura:attribute name="helpText" type="String"/>
+    <aura:attribute name="helpTextPlacement" type="String" default="auto top" description="Determines position of the helpText"/>
+    <aura:attribute name="name" type="String"/>
+    <aura:attribute name="class" type="String"/>
+    <aura:attribute name="placeholder" type="String"/>
+    <aura:attribute name="value" type="String"/>
+    <aura:attribute name="valueFormat" type="String" default="yyyy-MM-dd"/>
+    <aura:attribute name="timestamp" type="Long"/>
+
+    <aura:attribute name="errorMessage" type="String"/>
+
+    <aura:attribute name="disabled" type="Boolean"/>
+    <aura:attribute name="required" type="Boolean"/>
+    <aura:attribute name="error" type="Boolean"/>
+
+    <!-- Methods -->
+    <aura:method name="showError" action="{!c.showError}">
+        <aura:attribute name="errorMessage" type="String"/>
+    </aura:method>
+    <aura:method name="hideError" action="{!c.hideError}"/>
+
+    <!-- Internal -->
+    <aura:attribute name="displayDate" type="String" access="private"/>
+
+    <aura:attribute name="dayLabels" type="Map[]" access="private"/>
+    <aura:attribute name="monthLabels" type="Map[]" access="private"/>
+    <aura:attribute name="datePatternMap" type="Map" access="private"/>
+
+    <aura:attribute name="calendarRows" type="Object[]" default="[]" access="private"/>
+    <aura:attribute name="selectYears" type="Integer[]" access="private"/>
+    <aura:attribute name="currentDate" type="Object" access="private"/>
+    <aura:attribute name="dateDebouncer" type="Object" access="private"/>
+    <aura:attribute name="closeDatepickerListener" type="Object" access="private"/>
+
+    <aura:attribute name="clickedValue" type="Integer" access="private"/>
+    <aura:attribute name="selectedYear" type="Integer" access="private"/>
+    <aura:attribute name="selectedMonth" type="Integer" access="private"/>
+    <aura:attribute name="selectedDateColIndex" type="Integer" access="private"/>
+    <aura:attribute name="selectedDateRowIndex" type="Integer" access="private"/>
+
+    <aura:attribute name="selectedMonthText" type="String" access="private"/>
+
+    <aura:attribute name="datePickerOpen" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="readOnly" type="Boolean" default="{!false}" access="private"/>
+    <aura:attribute name="isMobile" type="Boolean" default="{!false}" access="private"/>
+
+    <aura:attribute name="yearsBefore" type="Integer" default="100"/>
+    <aura:attribute name="yearsAfter" type="Integer" default="30"/>
+
+    <!-- Event registration and handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.value}" action="{!c.valueChanged}"/>
+
+    <!-- Strike Datepicker -->
+    <div class="{!'slds-form-element' + if(v.error, ' slds-has-error', '') + if(v.isMobile, ' sd-datepicker--mobile ', '')}">
+        <div class="strike-datepicker-input slds-input-has-icon slds-input-has-icon--right">
+            <aura:if isTrue="{!v.isMobile}">
+                <c:strike_input aura:id="date-input" 
+                    type="date"
+                    label="{!v.label}"
+                    helpText="{!v.helpText}"
+                    helpTextPlacement="{!v.helpTextPlacement}"
+                    name="{!v.name}"
+                    class="{!v.class}"
+                    placeholder="{!v.placeholder}"
+                    value="{!v.displayDate}"
+                    readonly="{!v.readOnly}"
+                    disabled="{!v.disabled}"
+                    required="{!v.required}"
+                    error="{!v.error}"
+                    onchange="{!c.processNewDate}" />
+                <aura:set attribute="else">
+                    <div class="strike-live-area" onclick="{!c.clickedDateInput}">
+                        <c:strike_input aura:id="date-input" 
+                            type="text"
+                            label="{!v.label}"
+                            helpText="{!v.helpText}"
+                            helpTextPlacement="{!v.helpTextPlacement}"
+                            name="{!v.name}"
+                            class="{!v.class}"
+                            placeholder="{!v.placeholder}"
+                            value="{!v.displayDate}"
+                            readonly="{!v.readOnly}"
+                            disabled="{!v.disabled}"
+                            required="{!v.required}"
+                            error="{!v.error}"
+                            onblur="{!c.processNewDate}" />
+                    </div>
+                    <lightning:buttonIcon onclick="{!c.clickedDateIcon}" iconName="utility:event" size="medium" variant="bare" alternativeText="Date Picker" disabled="{!v.disabled}" class="strike-datepicker-input__icon"/>
+                </aura:set>
+            </aura:if>
+        </div>
+        <aura:if isTrue="{!and(v.error, not(empty(v.errorMessage)))}">
+            <div class="slds-form-element__help sd-error-message">{!v.errorMessage}</div>
+        </aura:if>
+        <div class="{!if(v.datePickerOpen, 'slds-datepicker slds-dropdown slds-dropdown--left', 'slds-hide')}" aria-hidden="false" onclick="{!c.preventDatePickerClose}" tabindex="0">
+            <div class="slds-datepicker__filter slds-grid">
+                <div class="slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-grow">
+                    <div class="slds-align-middle">
+                        <a onclick="{!c.clickPrev}" href="javascript:void(0);" class="slds-button slds-button--icon-container">
+                            <lightning:icon iconName="utility:left" size="xx-small" class="slds-button__icon slds-button__icon--small slds-m-top--x-small"/>
+                            <span class="slds-assistive-text">Previous Month</span>
+                        </a>
+                    </div>
+                    <h2 id="month" class="slds-align-middle" aria-live="assertive" aria-atomic="true">{!v.selectedMonthText}</h2>
+                    <div class="slds-align-middle">
+                        <a onclick="{!c.clickNext}" href="javascript:void(0);" class="slds-button slds-button--icon-container">
+                            <lightning:icon iconName="utility:right" size="xx-small" class="slds-button__icon slds-button__icon--small slds-m-top--x-small"/>
+                            <span class="slds-assistive-text">Next Month</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="slds-shrink-none slds-p-left--small">
+                    <div class="sd-select_container">
+                        <ui:inputSelect options="{!v.selectYears}" value="{!v.selectedYear}" change="{!c.yearChanged}" />
+                    </div>
+                </div>
+                <!--<aura:if isTrue="{!v.isMobile}">
+                    <div class="slds-shrink-none">
+                        <lightning:button label="Cancel" variant="neutral" iconPosition="left" class="slds-m-left-|-small" onclick="{!c.closeDatepicker}" />
+                    </div>
+                </aura:if>-->
+            </div>
+            <table class="datepicker__month" role="grid" aria-labelledby="month">
+                <thead>
+                    <tr id="weekdays">
+                        <aura:iteration items="{!v.dayLabels}" var="day">
+                            <th id="{!day.fullName}" scope="col">
+                                <abbr title="{!day.fullName}">{!day.shortName}</abbr>
+                            </th>
+                        </aura:iteration>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.calendarRows}" var="row" indexVar="index">
+                        <tr>
+                            <aura:iteration items="{!row}" var="col">
+                                <aura:if isTrue="{!col.isCurrentMonth}">
+                                    <td
+                                        class="{!if(col.isToday, 'slds-is-today', '') + '' + if(col.isSelected, ' slds-is-selected', '')}"
+                                        headers="{!col.headerText}"
+                                        role="gridcell"
+                                        aria-disabled="false"
+                                        aria-selected="{!col.isSelected}"
+                                        onmousedown="{!c.preventBlur}"
+                                        onclick="{!c.clickDate}"
+                                        data-row_index="{!col.rowIndex}"
+                                        data-col_index="{!col.colIndex}"
+                                        data-day="{!col.value}"
+                                        data-month="{!col.month}">
+                                        <span class='slds-day'>{!col.value}</span>
+                                    </td>
+                                    <aura:set attribute="else">
+                                        <td class="slds-disabled-text ld-cal-cursor-pointer" headers="{!col.headerText}" role="gridcell" aria-disabled="true" aria-selected="{!col.isSelected}">
+                                            <span class='slds-day'>{!col.value}</span>
+                                        </td>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:iteration>
+                        </tr>
+                    </aura:iteration>
+                    <tr>
+                        <td colspan="7" role="gridcell">
+                            <a onclick="{!c.selectToday}" href="javascript:void(0);" class="slds-show--inline-block slds-p-bottom--x-small">Today</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</aura:component>
+<!--
+Copyright 2017 Appiphony, LLC
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->

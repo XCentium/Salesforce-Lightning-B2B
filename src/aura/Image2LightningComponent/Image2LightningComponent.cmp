@@ -1,0 +1,85 @@
+<aura:component implements="force:appHostable,lightning:availableForFlowScreens,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="showGrid" type="Boolean" default="false"/>
+    
+    <aura:attribute name="currentScreen" type="Integer" default="1"/>
+    
+    <!-- Screens (Add as many as needed) -->
+    <aura:attribute name="screen1" type="String" default=""/>
+    <aura:attribute name="screen2" type="String" default=""/>
+    
+    <aura:attribute name="screen3" type="String" default=""/>
+    
+    <aura:attribute name="screen4" type="String" default=""/>
+    
+    <aura:attribute name="screen5" type="String" default=""/>
+    
+    
+    <aura:attribute name="screen6" type="String" default=""/>
+    
+    <aura:attribute name="screen7" type="String" default=""/>
+    
+    
+    <aura:attribute name="screen8" type="String" default=""/>
+    
+    
+    <aura:attribute name="screen9" type="String" default=""/>
+    
+    
+    <aura:attribute name="screen10" type="String" default=""/>
+    
+    <!-- Image and Positioning -->
+    <aura:attribute name="resourceName" type="String" default=""/>
+    <aura:attribute name="fileLoc" type="String" default=""/>
+    <aura:attribute name="pos" type="String" default="1"/>
+    <!-- App Icon -->
+    <aura:attribute name="appIcon" type="String" default=""/>
+    
+    <!-- Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <div class="{!v.showGrid == true ? 'showGrid' : ''}">
+        <aura:if isTrue="{!v.showGrid}">
+            
+            <div id="currentScreen">
+                Screen: {!v.currentScreen-1}
+            </div>
+        </aura:if>
+
+
+        <div class="image-container">
+            <img src="{!'/resource/'+ v.resourceName + v.fileLoc}" id="screen"  ></img>
+            
+            <aura:if isTrue="{!v.showGrid}">
+                <div class="after" id="cqb-grid" >
+                    <div class="grid-item">1</div>
+                    <div class="grid-item">2</div>
+                    <div class="grid-item">3</div>
+                    <div class="grid-item">4</div>
+                    
+                    <div class="grid-item">5</div>
+                    <div class="grid-item">6</div>
+                    <div class="grid-item">7</div>
+                    <div class="grid-item">8</div>
+                    
+                    <div class="grid-item">9</div>
+                    <div class="grid-item">10</div>
+                    <div class="grid-item">11</div>
+                    <div class="grid-item">12</div>
+                    
+                    <div class="grid-item">13</div>
+                    <div class="grid-item">14</div>
+                    <div class="grid-item">15</div>
+                    <div class="grid-item">16</div>
+                </div>
+            </aura:if>
+            <div id="click-container" class="{!'pos-'+v.pos}" onclick="{!c.handleClick}">
+                
+            </div>
+            
+            
+        </div>        
+        
+    </div>
+    
+    
+</aura:component>

@@ -1,0 +1,77 @@
+<template>
+	<c-b2b-checkout-loading-spinner
+		show-loading-spinner={showLoadingSpinner}
+	></c-b2b-checkout-loading-spinner>
+
+	<div class="slds-grid slds-gutters slds-wrap">
+		<div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+			<!-- If the user selects something besides the default, the CartDeliveryGroup is updated. -->
+			<!-- Probably need to handle when the user goes with the default ship to. -->
+			<c-b2b-checkout-ship-to-input
+				effective-account-id={effectiveAccountId}
+				cart-id={cartId}
+				show-delivery-instructions={showDeliveryInstructions}
+				show-shipping-addresses={showShippingAddresses}
+				make-component-read-only={makeComponentReadOnly}
+				shipping-contact-point-address-id={shippingContactPointAddressId}
+				onshippingaddresschange={handleShippingAddressChange}
+				onshippinginstructionschange={handleShippingInstructionsChange}
+			></c-b2b-checkout-ship-to-input>
+
+			<c-b2b-checkout-delivery-method-selection
+				ondeliverymethodchange={handleDeliveryMethodChange}
+			>
+			</c-b2b-checkout-delivery-method-selection>
+
+			<c-b2b-checkout-payment
+				cart-id={cartId}
+				effective-account-id={effectiveAccountId}
+				billing-contact-point-address-id={billingContactPointAddressId}
+				hide-card-expiration-month={hideCardExpirationMonth}
+				hide-card-holder-name={hideCardHolderName}
+				hide-card-type={hideCardType}
+				hide-credit-card-billing-address={hideCreditCardBillingAddress}
+				hide-c-v-v={hideCVV}
+				hide-expiration-year={hideExpirationYear}
+				hide-purchase-order-billing-address={hidePurchaseOrderBillingAddress}
+				payment-gateway-id={paymentGatewayId}
+				purchase-order-number={purchaseOrderNumber}
+				require-card-expiration-month={requireCardExpirationMonth}
+				require-card-expiration-year={requireCardExpirationYear}
+				require-card-type={requireCardType}
+				require-cardholder-name={requireCardholderName}
+				require-credit-card-billing-address={requireCreditCardBillingAddress}
+				require-c-v-v={requireCVV}
+				require-purchase-order-billing-address={requirePurchaseOrderBillingAddress}
+				payment-type={paymentType}
+				onbillingaddresschange={handleBillingAddressChange}
+				onpaymenttypechange={handlePaymentTypeChange}
+				onpochange={handlePoChange}
+				onnameoncardchange={handleNameChange}
+				oncardtypechange={handleCardTypeChange}
+				oncardnumberchange={handleCardNumberChange}
+				oncvvchange={handleCVVChange}
+				onexpirymonthchange={handleExpiryMonthChange}
+				onexpiryyearchange={handleExpiryYearChange}
+			></c-b2b-checkout-payment>
+		</div>
+
+		<div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-var-p-bottom_small columnSummary">
+			<c-b2b-checkout-cart-summary
+				effective-account-id={effectiveAccountId}
+				cart-id={cartId}
+				webstore-id={webstoreId}
+			>
+			</c-b2b-checkout-cart-summary>
+
+			<button
+				title="Next"
+				onclick={handleGoNext}
+				class="slds-button slds-button_brand slds-button_stretch"
+			>
+				Next
+			</button>
+		</div>
+	</div>
+
+</template>

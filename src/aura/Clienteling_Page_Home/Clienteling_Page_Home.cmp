@@ -1,0 +1,42 @@
+<aura:component controller="ClientellingController"> 
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="PageName" type="String" />
+    <aura:attribute name="SelectedContact" type="String" default=""/> 
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+        <aura:if isTrue="{!setting.Setup_Instructions_Read__c != true}">
+    		<c:Clienteling_Setup_Instructions />
+        </aura:if>
+    </aura:iteration>
+    <div class="panelHalf">
+    	<div class="panelHalfPadding">
+    		<c:Clienteling_Page_Home_MyTasks
+    			appSettings="{!v.appSettings}"                                 
+    		/>
+        </div>
+    </div>
+    <div class="panelHalf">
+    	<div class="panelHalfPadding">
+    		<c:Clienteling_Page_Home_MyAppointments
+                appSettings="{!v.appSettings}"                                   
+                PageName="{!v.PageName}"   
+                SelectedContact="{!v.SelectedContact}"                                    
+            />
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="panelHalf">
+    	<div class="panelHalfPadding">
+    		<c:Clienteling_Page_Home_Announcements 
+            	appSettings="{!v.appSettings}"                                              
+            />
+        </div>
+    </div>
+    <div class="panelHalf">
+    	<div class="panelHalfPadding">
+        	<c:Clienteling_Home_Tabs
+            	appSettings="{!v.appSettings}"                               
+            />
+        </div>
+    </div>
+	<div style="clear:both;"></div>
+</aura:component>

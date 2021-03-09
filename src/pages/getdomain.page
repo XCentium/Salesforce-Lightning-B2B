@@ -1,0 +1,156 @@
+<apex:page sidebar="false">
+    <title>Get Domain</title>
+<div class="wrapper">
+
+<img src="{!$resource.workdotcomimage}" /><br /><br /><br />
+<h1>Welcome to the Work.com Setup!</h1><br /><br />
+
+Work.com is a way to align and motivate people for peak performance. Work.com helps your team align around key goals, encourage real-time feedback and coaching, and recognize great work. With Work.com your performance process will be fast, meaningful and deliver business results.  
+
+<br /><br /><br />
+
+<div class="reder">Step 0: Get yourself a Domanifier Account - Do this Once, and Do it Now.</div>
+<br />How does a SE Spin up a work.com org?  They use a Tool called Domainifier.  
+If you do not have an account on <a href="https://demo.ripul.com"> https://demo.ripul.com </a> you will need one so you can demonstrate the integration.  To get a Domanifier account which will allow you to create demo.ripul.com demos, simply add your name and email address, and job function to this <a href="https://docs.google.com/a/salesforce.com/spreadsheet/ccc?key=0Aksbbg55yQ8SdDNkRUstbG5uVzVWR3pQcDVnMlZTOEE#gid=0">spreadsheet</a>.  
+  A new “Domanifier” account will be spun up for you within 48 business hours.
+
+
+<br /><br /><br />
+<div class="stepz">
+Step 1: Spin Up A New SDO
+</div>
+<br />
+If you have a heavily edited Org already, and need to have your existing org mapped instead, you can contact Jager McConnell and Sales Productivity for assistance in getting the proper blacktab access enabled. Alternatively, you can set a link to swap orgs during the demo to demo the Work.com portion, and it’ll probably be a lot cleaner. 
+
+<br /><br /><br />
+<div class="stepz">
+Step 2: Enabling your Domain
+</div>
+<br />
+Once you’ve gotten a Domainifier email (it’ll be automatic, comes from devops@rypple.com), it will provide you with a new GoogleDoc that has information on how to manage your demo domains. Basically: One Demo org - One Domain.
+<ol>
+<li>Log in to the ripul system as the email explains, and change your password.</li><br />
+<li>Click on ‘Create a Domain’, and one will spin up for you. Note the format: x.yourname.acmeprime.com. X will go up every time you spin up a new domain, so you can have a bunch enabled at the same time.</li><br />
+<li>Once you’re up, click Logout. This is important later.</li>
+</ol>
+
+<br />
+<div class="stepz">
+Step 3: Putting It All Together (SDO and Work.com Domain)
+</div>
+<br />
+<ol>
+<li><div class="reder2">COMPLETELY LOG OUT OF DEMO.RIPUL.COM</div>
+</li><br />
+<li>Log into your SDO, and go to Setup>>Customize>>Work.com>>Work.com Thanks.
+</li><br />
+<li>Check ‘Enable’ and click save. You’ll be taken to a Work.com Login Page. If you’re not taken to a Login Page, you didn’t listen to the big red text earlier, and are seeing an SSO confirmation page. That’s bad. Go back to SFDC, and open up a new tab, point to https://demo.ripul.com and log out in every way possible. Then follow Steps 2-3 again.
+</li><br />
+<li>For the login - the credentials are as follows: 
+<br />    Login Name: dperkins@x.yourdomain.acmeprime.com - This is what we created earlier, for your first demo, it’ll probably be 0.yourname.acmeprime.com. Mine was, for example, dperkins@0.cdegour.acmeprime.com.
+<br />    Password: truthfeed  - All lowercase, one word.
+</li><br />
+<li>That should log you in well. If there’ s a problem, this may be outdated. Sorry. Click Allow on the oAuth page, and you’ll be back in SFDC. Go to Chatter and you’ll see the Thanks link. Good to go!
+</li><br />
+</ol>
+
+<br />
+<div class="stepz">
+Step 4: Giving Thanks to Others
+</div>
+<br />
+Some of you may have tried to give thanks, only to have something blow up. That’s because we need to get other users oAuth’d over into Work.com to properly give thanks. 
+<br />
+<ol>
+<li><div class="reder2">COMPLETELY LOG OUT OF DEMO.RIPUL.COM</div>
+</li><br />
+<li>Go to the detail page for Elliot Executive’s user record, and login as him.
+</li><br />
+<li>
+You’ll notice in Chatter, the Thanks panel is still there. Click it and click Connect.
+</li><br />
+<li>
+And we’re back to Work.com. Login credentials are as follows:
+  <br />   Username: ndesilva@x.yourdomain.acmeprime.com 
+  <br />   Password: truthfeed
+ 
+</li><br />
+<li>
+Should see the oAuth allow page again, click Allow, and you’re good to go. Now you can give thanks between these two users
+</li><br />
+</ol>
+
+
+<br />
+<div class="stepz">
+Step 5: Bringing Work.com into Salesforce Chatter profiles
+</div>
+<br />
+<ol>
+<li>
+ Make sure you’re logged in as admin, and then install the package at this <a href="https://login.salesforce.com/services/forceconnectedapps/work_demo/Work_com">link</a>
+<br />NOTE: If you see the error message: Managed Application Installation Error then you should email Jager (jmcconnell@salesforce.com) and ask him to “Blacktab enable my demo org for work.com” and give him the username you’re using to log into salesforce with in your demo.
+<br />
+</li><br />
+<li>
+Go through the approval, etc, and install the package.
+</li><br />
+<li>
+Go to the installed managed package’s page, and click Edit, and change “IP Restrictions” to “Relax IP Restrictions”. Save.
+</li><br />
+<li>
+Go to your Chatter Profile, and click ‘Work.com’ under your picture. Not the Chatter tab, but your actual profile. You’ll see Goals, Tasks, all that glorious Work.com goodness, right in the app.
+</li><br />
+</ol>
+
+
+<h2>Congratulations, you've now integrated salesforce and work.com!</h2>
+
+<br />
+
+<b>For all other inquiries please refer to the Work.com Chatter group.</b> 
+
+</div>
+
+<style type="text/css">
+h1{
+color: #1071B8;
+    font-size: 18px;
+}
+h2{
+color: #1071B8;
+    font-size: 16px;
+}
+.wrapper{
+border: 2px solid #1071B8;
+    border-radius: 15px 15px 15px 15px;
+    padding: 30px;
+}
+.importpad{
+padding-left:42px;
+}
+.reder{
+color:red;
+font-weight:bold;
+font-size:14px;
+}
+.reder2{
+color:red;
+}
+.stepz{
+color:black;
+font-weight:bold;
+font-size:14px;
+}
+</style>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

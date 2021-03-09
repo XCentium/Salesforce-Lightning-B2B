@@ -1,0 +1,37 @@
+<apex:page standardController="Asset" tabStyle="Asset">
+    <apex:slds />
+    <script>
+    //resizes the frame holding the sControl to make up for odd dimensions
+    function resizeFrame() {
+    
+<!-- Remove comment area only if VF pages are served from the same domain as normal salesforce objects.
+     Otherwise Cross site scripting errors will occure
+     
+        var x=parent.document.getElementsByTagName("iframe");
+        for (var i = 0;i < x.length;i++){
+            if (x[i].title == "AccountHierarchyPage"){  // Change this to the name of this page
+                    var sframe = parent.document.getElementById(x[i].id); //get id of iframe from parent
+            }
+        }
+        if (navigator.userAgent.indexOf("Firefox/3.0") != -1) { //if Firefox
+            var nHeight = document.body.scrollHeight; //add ten pixels to height of sControl frame
+        } else if (navigator.userAgent.indexOf("Firefox") != -1) { //if Firefox
+            var nHeight = document.body.scrollHeight+10; //add ten pixels to height of sControl frame
+        } else { //otherwise
+            var nHeight = document.body.scrollHeight; //use the returned height of sControl frame
+        }
+        sframe.style.height = nHeight+"px"; //set the frame height to correspond to the content
+-->
+    }
+    </script>
+
+    
+    <div class="slds" style="background-color:#FFFFFF; height: 200px" onclick="resizeFrame();">
+        <c:DEAssetHierarchy DEcurrentId="{!Asset.id}" />
+
+    <script>
+        resizeFrame(); //calls function from above
+    </script>
+    
+    </div>
+</apex:page>

@@ -12,18 +12,27 @@ global class B2BTaxSample implements sfdc_checkout.CartTaxCalculations {
             Id cartDeliveryGroupId = [SELECT CartDeliveryGroupId FROM CartItem WHERE CartId = :cartId][0].CartDeliveryGroupId;
             CartDeliveryGroup deliveryGroup = [SELECT DeliverToState, DeliverToCountry FROM CartDeliveryGroup WHERE Id = :cartDeliveryGroupId][0];
             
-            // Get all SKUs, the cart item IDs, and the total line amounts from the cart items.
+            // Get all SKUs, the cart item IDs, and the total prices from the cart items.
             Map<String, Id> cartItemIdsBySKU = new Map<String, Id>();
-            Map<String, Decimal> cartItemTotalLineAmountBySKU = new Map<String, Decimal>();
-            for (CartItem cartItem : [SELECT Sku, TotalLineAmount FROM CartItem WHERE CartId = :cartId AND Type = 'Product']) {
-                cartItemIdsBySKU.put(cartItem.Sku, cartItem.Id);
-                cartItemTotalLineAmountBySKU.put(cartItem.Sku, cartItem.TotalLineAmount);
+            Map<String, Decimal> cartItemTotalPriceBySKU = new Map<String, Decimal>();
+            for (CartItem cartItem : [SELECT Sku, TotalPrice, Type FROM CartItem WHERE CartId = :cartId]) {
+                String cartItemSKU = '';
+                if (cartItem.Type == 'Product') {
+                    cartItemSKU = cartItem.Sku;
+                }
+                else if (cartItem.Type == 'Charge') {
+                    // This is an example for a Cart Item of type shipping charge.
+                    // For simplicity and testing purposes, we just assign some SKU to this charge so that the taxation external service returns some value.
+                    cartItemSKU = 'ChargeSKU';
+                }
+                cartItemIdsBySKU.put(cartItemSKU, cartItem.Id);
+                cartItemTotalPriceBySKU.put(cartItemSKU, cartItem.TotalPrice);
             }      
             
             // Get the tax rates and tax amounts from an external service
             // Other parameters will be passed here, like ship_from, bill_to, more details about the ship_to, etc.
             Map<String, TaxDataFromExternalService> rateAndAmountFromExternalServicePerSku = getTaxRatesAndAmountsFromExternalService(
-                cartItemTotalLineAmountBySKU, deliveryGroup.DeliverToState, deliveryGroup.DeliverToCountry
+                cartItemTotalPriceBySKU, deliveryGroup.DeliverToState, deliveryGroup.DeliverToCountry
             );
             
             // If there are taxes from a previously cancelled checkout, delete them.

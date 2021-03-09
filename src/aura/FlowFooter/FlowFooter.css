@@ -1,0 +1,8 @@
+.THIS .actions,.THIS.actions{
+    border: 1px solid #ddd;
+    padding:10px;
+    margin-bottom:10px;
+}
+.THIS.grey,.THIS .grey{
+    background:#f1f1f1;
+}

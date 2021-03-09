@@ -1,0 +1,9 @@
+<aura:component
+	implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:availableForFlowScreens" access="global" >
+<aura:attribute name="Header" type="String"/>
+<aura:attribute name="SubHeader" type="String"/>
+        <div class="slds-box">
+            <div class="slds-text-heading_medium slds-text-align_center">{!v.Header}</div>
+            <div class="slds-text-heading_small slds-text-align_center">{!v.SubHeader}</div>
+        </div> 
+</aura:component>

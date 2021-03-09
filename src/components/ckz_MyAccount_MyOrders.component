@@ -1,0 +1,389 @@
+<!--
+ - Created by brandon.rogers on 1/28/19.
+ -->
+
+<apex:component id="ckz_MyAccount_MyOrders">
+
+    <script id="CKZ-MyAccount-MyOrders" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_myorders m-t-1">
+            <div class="panel-body MyAccount_MyOrders_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_MyOrders'}}</h2>
+                    </div>
+                    <div class="col-sm-4 text-right">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body MyAccount_MyOrders_Search">
+                <div class="messagingSection-orderhistory-Error" role="alert" style="display: none"></div>
+                <div class="messagingSection-orderhistory-Info" role="alert" style="display: none">
+                    <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#215;</span></button>
+                </div>
+
+                {{#ifDisplay 'srch.ord'}}
+                    <form id="searchOrderForm" class="searchOrderForm cc_search_order_form">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group form-group-sm">
+                                    <label for="searchOrderInput" class="">{{pageLabelMap 'MyOrdersInc_SearchOrders'}}</label>
+                                    <input id="searchOrderInput" type="text" class="form-control searchOrderInput input-text cc_search_order_input" name="searchOrderInput" value="{{searchOrder}}" placeholder="{{pageLabelMap 'MyOrdersInc_SearchOrders'}}"/>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-group form-group-sm">
+                                    <label for="searchOrderStatus" class="">{{pageLabelMap 'MyOrdersInc_SearchOrderStatus'}}</label>
+                                    <select id="searchOrderStatus" name="searchOrderStatus" class="form-control cc_search_order_status">
+                                        <option value="">{{pageLabelMap 'MyOrdersInc_AllOrderStatus'}}</option>
+                                        {{#each this.orderStatusOpts}}
+                                        <option value="{{this.value}}" {{#ifEquals ../searchOrderStatus this.value}} selected {{/ifEquals}}>{{this.label}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-group form-group-sm date">
+                                    <label for="fromDateStr" class="cc_from_date_str">{{pageLabelMap 'MyOrdersInc_SearchFrom'}}</label>
+                                    <div class="input-group date">
+                                        <input type="text" id="fromDateStr" name="fromDateStr" value="{{this.fromDateStr}}" class="form-control requestedDate fromDate cc_from_date" readonly="true">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group form-group-sm date">
+                                    <label for="toDateStr" class="cc_to_date_str">{{pageLabelMap 'MyOrdersInc_SearchTo'}}</label>
+                                    <div class="input-group date">
+                                        <input type="text" id="toDateStr" class="form-control requestedDate toDate cc_to_date" name="toDateStr" value="{{this.toDateStr}}" readonly="true">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="cc_order_search_action text-right">
+                        <input type="button" class="btn btn-default btn-sm resetOrder cc_reset_order" value="{{pageLabelMap 'MyOrdersButton_ResetOrders'}}"/>
+                        <input type="button" class="btn btn-primary btn-sm searchOrder cc_search_order" value="{{pageLabelMap 'MyOrdersButton_SearchOrders'}}"/>
+                    </div>
+                {{/ifDisplay}}
+            </div>
+
+            <div class="panel-body MyAccount_MyOrders">
+
+                <!--<div class="row">
+                    <div class="col-xs-12">
+                        <div id="myOrdersContainer" class="orderListContainer m-t-3">
+                            <div class="row orderListHeader hidden-xs">
+                                <div class="col-sm-3">
+                                    <h4 class="m-b-0">{{pageLabelMap 'MyOrdersInc_OrderNumber'}}</h4>
+                                </div>
+                                <div class="col-sm-2">
+                                    <h4 class="m-b-0">{{pageLabelMap 'MyOrdersInc_OrderDate'}}</h4>
+                                </div>
+                                <div class="col-sm-2">
+                                    <h4 class="m-b-0">{{pageLabelMap 'MyOrdersInc_OrderAmount'}}</h4>
+                                </div>
+                                <div class="col-sm-2">
+                                    <h4 class="m-b-0">{{pageLabelMap 'MyOrdersInc_Status'}}</h4>
+                                </div>
+                                <div class="col-sm-3">
+                                    <h4 class="m-b-0">{{pageLabelMap 'MyCartsInc_Actions'}}</h4>
+                                </div>
+                            </div>
+
+                            <hr/>
+
+                            <div class="orderListBody">
+                                {{#each this.orderList}}
+                                    <div class="row orderListItem">
+                                        &lt;!&ndash; OrderNumber &ndash;&gt;
+                                        <div class="col-sm-3 orderNumber">
+                                            <a href="#" data-id="{{encryptedId}}" class="gotoOrderDetails cc_goto_order_detailss">{{name}}</a>
+                                        </div>
+
+                                        &lt;!&ndash; OrderDate &ndash;&gt;
+                                        <div class="col-sm-2 orderDate">
+                                            {{orderDateStr}}
+                                        </div>
+
+                                        &lt;!&ndash; OrderAmount &ndash;&gt;
+                                        <div class="col-sm-2 orderAmount">
+                                            {{price totalAmount currencyIsoCode}}
+                                        </div>
+
+                                        &lt;!&ndash; OrderStatus &ndash;&gt;
+                                        <div class="col-sm-2 orderStatus">
+
+                                            <span class="label label-primary">
+                                                {{pageLabelMap status}}
+                                            </span>
+                                        </div>
+
+                                        &lt;!&ndash; OrderActions &ndash;&gt;
+                                        <div class="col-sm-3 orderActions">
+                                            {{#if this.canReOrder}}
+                                                <div>
+                                                    <button type="button" class="btn btn-link btn-sm reorder cc_col_reorder" data-id="{{sfid}}">
+                                                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                                                        {{pageLabelMap 'MyOrdersInc_Reorder'}}
+                                                    </button>
+                                                </div>
+                                            {{/if}}
+
+                                            {{#if this.canCancel}}
+                                                {{#ifDisplay 'MO.ShAmdBt'}}
+                                                    {{#if this.canAmend}}
+                                                        <div>
+                                                            <button type="button" class="btn btn-link btn-sm promptCancel promptAmend cc_col_prompt_amend" data-id="{{sfid}}" data-mode="Edit">
+                                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                                {{pageLabelMap 'MyOrdersInc_Amend'}}
+                                                            </button>
+                                                        </div>
+                                                    {{/if}}
+                                                {{/ifDisplay}}
+
+                                                {{#ifDisplay 'MO.ShCanBt'}}
+                                                    <div>
+                                                        <button type="button" class="btn btn-link btn-sm promptCancel cc_col_prompt_cancel" data-id="{{sfid}}" data-mode="Cancel">
+                                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                                            {{pageLabelMap 'MyOrdersInc_Cancel'}}
+                                                        </button>
+                                                    </div>
+                                                {{/ifDisplay}}
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                <hr/>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+                <div class="MyAccount_MyOrders_Table">
+                    <div class="orderPaginationSec paginationTop m-t-3"></div>
+
+                    <div class="table-responsive">
+                        <table id="orderTable" class="table shopping_cart cc_table cc_order_search_table">
+                            <thead>
+                                <tr>
+                                    <th class="cc_table_header orderNumber">
+                                        <h4 class="m-b-0">
+                                            {{#ifDisplay 'MO.DsplExtOrderNumber'}}
+                                                {{pageLabelMap 'ExternalOrderID'}}
+                                            {{else}}
+                                                {{pageLabelMap 'MyOrdersInc_OrderNumber'}}
+                                            {{/ifDisplay}}
+                                        </h4>
+                                    </th>
+
+                                    <th class="cc_table_header orderDate">
+                                        <h4 class="m-b-0">{{pageLabelMap 'MyOrdersInc_OrderDate'}}</h4>
+                                    </th>
+
+                                    <th class="cc_table_header orderAmount">
+                                        <h4 class="m-b-0">{{pageLabelMap 'MyOrdersInc_OrderAmount'}}</h4>
+                                    </th>
+
+                                    <th class="cc_table_header orderStatus">
+                                        <h4 class="m-b-0">{{pageLabelMap 'MyOrdersInc_Status'}}</h4>
+                                    </th>
+
+                                    {{#ifDisplay 'MO.ShActOnOrd'}}
+                                    <th class="cc_table_header orderActions">
+                                        <h4 class="m-b-0">{{pageLabelMap 'MyCartsInc_Actions'}}</h4>
+                                    </th>
+                                    {{/ifDisplay}}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            {{#each this.orderList}}
+                            <tr class="myAccOrderRows cc_table_row">
+                                <td class="cc_table_col">
+                                    {{#ifDisplay 'MO.DsplExtOrderNumber'}}
+                                        <div class="cc_col_external_order_id m-t-1">{{externalOrderId}}</div>
+                                    {{else}}
+                                        <div class="cc_col_order_number m-t-1">
+                                            <a href="#" data-id="{{encryptedId}}" class="gotoOrderDetails cc_goto_order_detailss">{{name}}</a>
+                                        </div>
+                                    {{/ifDisplay}}
+                                </td>
+
+                                <td class="cc_table_col">
+                                    <div class="cc_col_order_date m-t-1">{{orderDateStr}}</div>
+                                </td>
+
+                                <td class="cc_table_col">
+                                    <div class="cc_col_order_amount m-t-1">{{price totalAmount currencyIsoCode}}</div>
+                                </td>
+
+                                <td class="cc_table_col">
+                                    <div class="cc_col_order_status m-t-1">
+                                        {{#listFind status 'Cancel Submitted|Cancelled|Return Submitted|Returned|Back Order' true}}
+                                            <span class="label label-red">{{pageLabelMap status}}</span>
+                                        {{/listFind}}
+
+                                        {{#listFind status 'Open|In Process|On Hold' true}}
+                                            <span class="label label-purple">{{pageLabelMap status}}</span>
+                                        {{/listFind}}
+
+                                        {{#listFind status 'Order Submitted|Completed' true}}
+                                            <span class="label label-green">{{pageLabelMap status}}</span>
+                                        {{/listFind}}
+
+
+                                        {{#listFind status 'Partial Shipped|Shipped' true}} <!-- Bill of Material -->
+                                            <span class="label label-blue">{{pageLabelMap status}}</span>
+                                        {{/listFind}}
+
+                                        {{#ifEquals status 'Bill Of Material'}}
+                                            <span class="label label-rainbow">{{pageLabelMap status}}</span>
+                                        {{/ifEquals}}
+                                    </div>
+                                </td>
+
+                                {{#ifDisplay 'MO.ShActOnOrd'}}
+                                    <td class="cc_table_col">
+                                        {{#if this.canReOrder}}
+                                            <div>
+                                                <button type="button" class="btn btn-link btn-sm reorder cc_col_reorder p-x-0" data-id="{{sfid}}">
+                                                    <i class="fa fa-repeat" aria-hidden="true"></i>
+                                                    {{pageLabelMap 'MyOrdersInc_Reorder'}}
+                                                </button>
+                                            </div>
+                                        {{/if}}
+
+                                        {{#if this.canCancel}}
+                                            {{#ifDisplay 'MO.ShAmdBt'}}
+                                                {{#if this.canAmend}}
+                                                    <div>
+                                                        <button type="button" class="btn btn-link btn-sm promptCancel promptAmend cc_col_prompt_amend p-x-0" data-id="{{sfid}}" data-mode="Edit">
+                                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                                            {{pageLabelMap 'MyOrdersInc_Amend'}}
+                                                        </button>
+                                                    </div>
+                                                {{/if}}
+                                            {{/ifDisplay}}
+
+                                            {{#ifDisplay 'MO.ShCanBt'}}
+                                                <div>
+                                                    <button type="button" class="btn btn-link btn-sm promptCancel cc_col_prompt_cancel p-x-0" data-id="{{sfid}}" data-mode="Cancel">
+                                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                                        {{pageLabelMap 'MyOrdersInc_Cancel'}}
+                                                    </button>
+                                                </div>
+                                            {{/ifDisplay}}
+                                        {{/if}}
+
+                                        {{#ifEquals status "Shipped"}}
+                                            <div>
+                                                <a href='/NTOFranchise/s/detail/{{sfid}}' class="btn btn-link btn-sm p-x-0" >
+                                                    <i class="fa fa-reply" aria-hidden="true"></i>
+                                                    Return
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <a href="https://www.fedex.com/en-us/tracking.html" class="btn btn-link btn-sm p-x-0"  target="_blank">
+                                                    <i class="fa fa-truck" aria-hidden="true"></i>
+                                                    Track Shipment
+                                                </a>
+                                            </div>
+                                        {{/ifEquals}}
+
+                                        <!-- msobczak: order returns -->
+                                        {{#ifDisplay 'MO.shorrtnbt'}}
+                                        <div>
+                                            <button type="button" class="btn btn-link btn-sm promptReturn cc_col_prompt_return p-x-0" onclick="doReturn('{{sfid}}'); return false;" data-id="{{sfid}}" data-mode="Return">
+                                                <i class="fa fa-reply" aria-hidden="true"></i>
+                                                {{pageLabelMap 'MyOrdersInc_Return'}}
+                                            </button>
+                                        </div>
+                                        {{/ifDisplay}}
+
+                                    </td>
+                                {{/ifDisplay}}
+                            </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="orderPaginationSec paginationBottom m-b-3"></div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="MyAccount_MyOrders_modalSec"></div>
+    </script>
+
+    <!-- CANCEL ORDER MODAL -->
+    <script id="CKZ-MyAccount-MyOrders-CancelDialog" type="text/template">
+        <div class="modal fade cc_modal cc_myaccount_orders_modal" id="cancelMod_{{sfid}}" tabindex="-1" role="dialog" aria-labelledby="CancelMod">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content cc_modal_content">
+                    <div class="modal-body cc_modal_body">
+                        {{#ifEquals this.mode 'Edit'}}
+                        <p class="cc_edit_prompt">{{pageLabelMap 'Edit_Prompt'}}</p>
+                        {{else}}
+                        <p class="cc_cancel_prompt">{{pageLabelMap 'Cancel_Prompt'}}</p>
+                        {{/ifEquals}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm closeModal" data-id="{{sfid}}">
+                            {{pageLabelMap 'Dialog_No'}}
+                        </button>
+
+                        <button type="button" class="btn btn-danger btn-sm ordercancel" data-id="{{sfid}}" data-mode="{{mode}}">
+                            {{pageLabelMap 'Dialog_Yes'}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.myOrdersView.desktop.tmpl = 'CKZ-MyAccount-MyOrders';
+            CCRZ.uiProperties.myOrdersView.cancelModal.tmpl = 'CKZ-MyAccount-MyOrders-CancelDialog';
+            CCRZ.uiProperties.myOrdersView.cancelModal.selector = '#MyAccount_MyOrders_modalSec';
+
+            CCRZ.pubSub.on('view:myOrdersView:refresh', function (theView) {
+                /*$('#orderTable').DataTable({
+                    "columns": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        { "orderable": false }
+                    ]
+                });*/
+            });
+
+        });
+
+        function doReturn(orderId) {
+            console.log('orderId = ' + orderId);
+
+            var community = CCRZ.pagevars.pageConfig["mo.rtncommunity"];
+
+            if(!community) {
+                community = 'professional';
+            }
+
+            window.open('/' + community + '/s/e-order/' + orderId);
+        }
+
+    </script>
+</apex:component>

@@ -1,0 +1,37 @@
+<aura:component>
+    <aura:attribute name="SelectedContact" type="String" />
+    <aura:attribute name="searchText" type="String" />
+    <aura:if isTrue="{!v.SelectedContact == ''}">
+        <div class="slds-page-header">
+            <div class="slds-media">
+                <div class="profilepicture">
+                    <lightning:icon iconName="standard:customers" size="small" alternativeText="Indicates approval"/> 
+                </div>
+                <div class="slds-media__body">
+                    	<h1 class="slds-page-header__title slds-truncate slds-align-middle" title="">Customers</h1>
+                    	<p class="slds-text-body_small slds-line-height_reset">Lookup and help customers</p>
+                </div>
+            </div>
+        </div>
+        <c:Clienteling_Customer_SearchList 
+        	SelectedContact="{!v.SelectedContact}"
+        	searchText="{!v.searchText}"                                 
+        /> 
+        <aura:set attribute="else">
+          <div class="slds-page-header">
+            <div class="slds-media">
+                <div class="profilepicture">
+                    <lightning:icon iconName="standard:customers" size="small" alternativeText="Indicates approval"/> 
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">Customer Actions</h1>
+                </div>
+                <div class="positiontopright">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.EditContact}">Edit</button>
+                	<button class="slds-button slds-button_neutral" onclick="{!c.resetSelectedContact}">Back</button>
+                </div>
+            </div>
+        </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

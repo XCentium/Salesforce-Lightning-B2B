@@ -1,0 +1,16 @@
+<aura:component>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="Imgmap" type="List" />
+  <aura:attribute name="atKey" type="String" />
+
+  <aura:attribute name="inStoreImgs" type="ContentDocumentLink[]" />
+<!-- Get only 4 images -->
+  <lightning:layout>
+    <aura:iteration items="{!v.inStoreImgs}" var="inStore" end="4">
+      <lightning:fileCard
+        fileId="{!inStore.ContentDocumentId}"
+        hideDescription="true"
+      />
+    </aura:iteration>
+  </lightning:layout>
+</aura:component>

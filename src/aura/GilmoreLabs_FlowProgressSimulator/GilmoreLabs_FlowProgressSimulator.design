@@ -1,0 +1,4 @@
+<design:component label="GilmoreLabs - Progress Simulator">
+   <design:attribute name="strTitle" label="Title" description="Title text for the progress indicator" />
+   <design:attribute name="numSpeed" label="Progress Speed" description="Number between 1 and 10 (10 being fastest) of progress completion" />
+</design:component>

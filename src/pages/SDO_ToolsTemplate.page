@@ -1,0 +1,1207 @@
+<apex:page docType="html-5.0" applyHtmlTag="true" applyBodyTag="false" standardStylesheets="false" showHeader="false" sidebar="false">
+    <head>
+        <apex:includeScript value="{!URLFOR($Resource.jquery1112)}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/css/bootstrap.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.BfFontAwesome, 'font-awesome-4.3.0/css/font-awesome.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/simple-line-icons.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/bootstrap-switch.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/jquery.gritter.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/uniform.default.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/layout.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/components.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/plugins.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/boothforce.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/custom.css')}"/>
+        <link rel="stylesheet" href="/resource/animate"/>
+        <link rel="shortcut icon" href="/resource/qfavicon"/>
+        
+        <!-- Blog Page Assets -->
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'/>
+        
+        <!-- |PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all -- >
+
+
+<!-- 
+<link href="../../assets/global/css/components.css" rel="stylesheet">
+<link href="../../assets/frontend/layout/css/style.css" rel="stylesheet">
+<link href="../../assets/frontend/layout/css/style-responsive.css" rel="stylesheet">
+<link href="../../assets/frontend/layout/css/themes/red.css" rel="stylesheet" id="style-color">
+<link href="../../assets/frontend/layout/css/custom.css" rel="stylesheet">
+
+
+<apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/components.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/style.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/style-responsive.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/red.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/custom.css')}"/>
+-->
+        
+        
+        <style>
+            
+            .higherEdIcon{
+            position: relative;
+            margin: 0px;
+            height: 117px;
+            width: 118px;
+            left: -6px;
+            top: -18px;
+            }
+            .retailIcon{
+            position: relative;
+            margin: 0px;
+            height: 117px;
+            width: 118px;
+            left: -6px;
+            top: -18px;
+            }
+            .publicSectorIcon {
+            position: relative;
+            margin: 0px;
+            height: 117px;
+            width: 118px;
+            left: -6px;
+            top: -18px;
+            }
+            .video-name{
+            top: 5px;
+            }
+            .news-iframe{
+            border: none;
+            }
+            .page-sidebar-wrapper {
+            visibility:hidden;
+            }
+            html{
+            /*background: #F0F1F2;*/
+            }
+            .page-content-wrapper, .page-container {
+            background: #344a5f;
+            }
+            .page-content {
+            /*
+            padding-left:0px !important;
+            padding-right:0px !important;
+            */
+            }
+            
+            .fa-home {
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            line-height: 20px;
+            position: relative;
+            padding: 10px 15px;
+            margin-right: 17px;
+            margin-top: 4px;
+            }
+            .fa-arrow-circle-left{
+            font-size: 30px;
+            color:#293f54;
+            cursor: pointer;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            line-height: 20px;
+            position: relative;
+            display: block;
+            margin-right: 17px;
+            float:left;
+            
+            }
+            
+            #homeicon{
+            margin-bottom: 20px;
+            padding: 0;
+            margin-right: 0px;
+            margin-top: 18px;
+            padding-top: 0px;
+            line-height: 0;
+            }
+            #lastTool{
+            display:none;
+            }
+            #sdo_news_iframe {
+            border:none;
+            margin-bottom:20px;
+            }
+            
+            .nav-header{
+            color:white;
+            letter-spacing: 2px;
+            font-weight: bold;
+            }
+            
+            .nav-sub-header{
+            /*margin-left: 20px !important;*/
+            color:white;
+            }
+            
+            .navTable:hover{
+            background:#293f54;
+            }
+            
+            .navTable .navLink{
+            display: block;
+            /* position: relative; */
+            /* margin: 0; */
+            /* border: 0px; */
+            padding-left: 40px;
+            /* padding-top: 2px; */
+            /* padding-bottom: 2px; */
+            /* text-decoration: none; */
+            /* font-size: 13px; */
+            font-weight: 100;
+            /* color: #d9d9d9; */
+            letter-spacing: 0px;
+            font-family: helvetica;
+            color: #ddd;
+            }
+            
+            h4.panel-title {
+            font-size: 13px;  <!--Controls the size of the chevron text-->
+            }
+            
+            #tool_frame{
+            position: absolute;
+            float: left;
+            width: calc(100% - 236px);
+            height: 100%;
+            }
+            #newsFrame {
+            position: absolute;
+            float: left;
+            width: calc(100% - 236px);
+            height: 100%;
+            border:none;
+            
+            }
+            #newsFrame2 {
+            position: absolute;
+            float: left;
+            width: calc(100% - 236px);
+            height: 100%;
+            border:none;
+            
+            }
+            
+            #newspage .page-content {
+            padding: 0 !important;
+            }
+            
+            @media (max-width: 991px){
+            #tool_frame {
+            width:100%;
+            }
+            #newsWrapper{
+            margin-left:0px !important;
+            }
+            #newsFrame{
+            width:100% !important;
+            }
+            .myWalkthrough{
+            margin-top: 30px;
+            }
+            }
+            /*
+            @media (max-width: 767px){
+            #tool_frame {
+            width:100%;
+            }
+            }
+            @media (max-width: 991px){
+            #tool_frame {
+            width:100%;
+            }
+            }
+            */
+            .page-sidebar .page-sidebar-menu > li > a .title {
+            top: 0px !important;
+            letter-spacing: 0;
+            }
+            
+            
+            .title1{
+            color: white;
+            text-decoration: none;
+            font-size: 32px;
+            }
+            .title2{
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            }
+            .qLogo{
+            margin-left: -10px;
+            height: 50px;
+            margin-top: -2px;
+            }
+            
+            .page-sidebar .page-sidebar-menu .sub-menu, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu {
+            margin:0px;
+            }
+            /* Sidebar styles */
+            .page-sidebar .page-sidebar-menu > li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a{
+            padding-left:0px;
+            } 
+            
+            .page-sidebar .page-sidebar-menu > li > a .title{
+            position: relative;
+            color: white;
+            top: 2px;
+            }
+            
+            .navTable{
+            width:100%;
+            /*border-top: 1px solid #293f54;*/
+            margin-bottom: -1px;
+            }
+            
+            #tool_info_wrapper{
+            margin-top: 10px;
+            /* margin-left: 246px; */
+            }
+            
+            
+            #tool_info_box{
+            margin-top: 10px;
+            display:none;
+            }
+            
+            .portlet-title{
+            
+            }
+            
+            #tool_info_icon {
+            position: relative;
+            top: -2px;
+            }
+            
+            #tool_info_caption, #tool_info_icon{
+            font-size: 24px;
+            }
+            .portlet.box.blue > .portlet-title {
+            background-color: #344a5f;
+            }
+            
+            .fullscreen {
+            margin-left: 10px;
+            }
+            .page-header.navbar .top-menu .navbar-nav > li.dropdown-user .dropdown-toggle {
+            background-color:transparent;
+            }
+            
+            .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+            color: #fff;
+            background-color: #2a94d6;
+            }
+            
+            .page-content-wrapper .page-content{
+            /* padding:0px 20px 10px 20px; */
+            }
+            
+            .nav-pills > li > a {
+            color: #aaa;
+            }
+            .learnMore{
+            font-size: 11px;
+            margin-left: 2px;
+            }
+            .myWalkthrough {
+            display: none;
+            }
+            
+            ul.nav-wizard {
+            margin-bottom:15px;
+            background-color: #f9f9f9;
+            /* border: 1px solid #d4d4d4; */
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            *zoom: 1;
+            position: relative;
+            overflow: hidden;
+            }
+            ul.nav-wizard:before {
+            display: block;
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            top: 46px;
+            height: 47px;
+            border-top: 1px solid #d4d4d4;
+            border-bottom: 1px solid #d4d4d4;
+            z-index: 11;
+            content: " ";
+            }
+            ul.nav-wizard:after {
+            display: block;
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            top: 138px;
+            height: 47px;
+            border-top: 1px solid #d4d4d4;
+            border-bottom: 1px solid #d4d4d4;
+            z-index: 11;
+            content: " ";
+            }
+            ul.nav-wizard li {
+            position: relative;
+            float: left;
+            height: 46px;
+            display: inline-block;
+            text-align: middle;
+            padding: 0 20px 0 30px;
+            margin: 0;
+            font-size: 13px;
+            line-height: 46px;
+            }
+            ul.nav-wizard li a {
+            color: #468847;
+            padding: 0;
+            }
+            ul.nav-wizard li a:hover {
+            background-color: transparent;
+            }
+            ul.nav-wizard li:before {
+            position: absolute;
+            display: block;
+            border: 24px solid transparent;
+            border-left: 16px solid #d4d4d4;
+            border-right: 0;
+            top: -1px;
+            z-index: 10;
+            content: '';
+            right: -16px;
+            }
+            ul.nav-wizard li:after {
+            position: absolute;
+            display: block;
+            border: 24px solid transparent;
+            border-left: 16px solid #f9f9f9;
+            border-right: 0;
+            top: -1px;
+            z-index: 10;
+            content: '';
+            right: -15px;
+            }
+            ul.nav-wizard li.active {
+            color: #3a87ad;
+            background: #d9edf7;
+            }
+            ul.nav-wizard li.active:after {
+            border-left: 16px solid #d9edf7;
+            }
+            ul.nav-wizard li.active a,
+            ul.nav-wizard li.active a:active,
+            ul.nav-wizard li.active a:visited,
+            ul.nav-wizard li.active a:focus {
+            color: #3a87ad;
+            background: rgb(213, 235, 246);
+            }
+            ul.nav-wizard .active ~ li {
+            color: #999999;
+            background: #ededed;
+            }
+            ul.nav-wizard .active ~ li:after {
+            border-left: 16px solid #ededed;
+            }
+            ul.nav-wizard .active ~ li a,
+            ul.nav-wizard .active ~ li a:active,
+            ul.nav-wizard .active ~ li a:visited,
+            ul.nav-wizard .active ~ li a:focus {
+            color: #999999;
+            background: #ededed;
+            }
+            ul.nav-wizard.nav-wizard-backnav li:hover {
+            color: #468847;
+            background: #f6fbfd;
+            }
+            ul.nav-wizard.nav-wizard-backnav li:hover:after {
+            border-left: 16px solid #f6fbfd;
+            }
+            ul.nav-wizard.nav-wizard-backnav li:hover a,
+            ul.nav-wizard.nav-wizard-backnav li:hover a:active,
+            ul.nav-wizard.nav-wizard-backnav li:hover a:visited,
+            ul.nav-wizard.nav-wizard-backnav li:hover a:focus {
+            color: #468847;
+            background: #f6fbfd;
+            }
+            ul.nav-wizard.nav-wizard-backnav .active ~ li {
+            color: #999999;
+            background: #ededed;
+            }
+            ul.nav-wizard.nav-wizard-backnav .active ~ li:after {
+            border-left: 16px solid #ededed;
+            }
+            ul.nav-wizard.nav-wizard-backnav .active ~ li a,
+            ul.nav-wizard.nav-wizard-backnav .active ~ li a:active,
+            ul.nav-wizard.nav-wizard-backnav .active ~ li a:visited,
+            ul.nav-wizard.nav-wizard-backnav .active ~ li a:focus {
+            color: #999999;
+            background: #ededed;
+            }
+            
+            .page-header-fixed{
+            background: #F0F1F2;
+            }
+            .sub-menu li .active {
+            background-color:#2a94d6;
+            color:white;
+            }
+            
+            
+            .cloudLink .cloud{
+            height: 30px;
+            margin-top: -7px;
+            }
+            .cloudLink:hover {
+            background:transparent !important;
+            background-color:transparent !important;
+            opacity:1;
+            }
+            @media (min-width: 768px) {
+            .cloudLink {
+            padding-bottom: 10px;
+            }
+            }
+            .toolIcons{
+            display:none;
+            }
+            .page-sidebar .page-sidebar-menu > li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a{
+            margin-bottom: -1px;
+            }
+            
+            .top-menu .fa-bullhorn{
+            position: relative;
+            color: white;
+            font-size: 24px;
+            top: 14px;
+            margin-left: 5px;
+            margin-right: 5px;
+            }
+            
+            @media (max-width: 480px) {
+            .page-header.navbar .top-menu {
+            width:100% !important;
+            }  
+            }
+            
+            
+            .page-header.navbar.navbar-fixed-top {
+            padding: 0px;
+            }
+            
+            .toolspage{
+            display:none;
+            }
+            .nav-sub-header {
+            
+            }
+            .page-content{
+            /*min-height: 100% !important; */
+            }
+            #toolContentWrapper{
+            padding-left:0px !important;
+            padding-right:0px !important;
+            }
+            .toolIcons {
+            margin-left:10px !important;
+            margin-right:10px !important;
+            }
+            #tool_info_box {
+            margin-left:10px !important;
+            margin-right:10px !important;
+            }
+            .page-footer{
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+            }
+            
+            .btn{
+            }
+            
+            .authenticate{
+            padding-top: 5px;
+            padding-bottom: 5px;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            color: #fff;
+            background-color: #458059;
+            border-color: #458059;
+            /* padding: 10px; */
+            width: 93px;
+            padding-left: 9px;
+            }
+            li .active {
+            background:#293f54;
+            }
+            .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active.open > a, .page-sidebar .page-sidebar-menu > li.active > a, .page-sidebar .page-sidebar-menu > li.active.open > a {
+            background:#d64635;;
+            }
+            .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a:hover, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active.open > a:hover, .page-sidebar .page-sidebar-menu > li.active > a:hover, .page-sidebar .page-sidebar-menu > li.active.open > a:hover {
+            /*background:#F0F1F2;*/
+            }
+            .page-sidebar .page-sidebar-menu > li.active > a > span,.page-sidebar .page-sidebar-menu > li.active > a > i{
+            /*color:#293f54;*/
+            }
+            .wizardFrame{
+            width:100%;
+            height:167px;
+            /*position:absolute;*/
+            border:none;
+            }
+            .scriptCloud{
+            height: 77px;
+            }
+            .tiles .cloud{
+            background-color:white;
+            box-shadow: 1px 1px 1px 1px #ddd;
+            }
+            
+            .cloud img{
+            margin-top: 14px;
+            }
+            
+            .tiles .tile {
+            }
+            
+            .tiles .tile:hover{
+            box-shadow:none !important;
+            }
+            
+            #tool_frame{
+            display:none;
+            }
+            
+            #newspage{
+            display:none; 
+            padding:0px !important;
+            }
+            #newsWrapper{
+            background: #F0F1F2;
+            padding:15px;
+            }
+            .newsImage img{
+            /*
+            display: block;
+            max-width: 100%;
+            height: auto;
+            */
+            }
+            .gold007 {
+            position:absolute;
+            height:20px;
+            right: 0px;
+            }
+            .showcaseIcon{
+            height:50px;
+            }
+            .homenavtab .selected {
+            z-index: 234;
+            display: block;
+            background-image: none;
+            float: right;
+            position: absolute;
+            right: 0px;
+            top: 8px;
+            background: none;
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-right: 12px solid #F0F1F2;
+            
+            }
+            .homenavtab{
+            position: relative;
+            }
+            .sidebar-toggler {
+            display:none !important;
+            }
+            
+            .bigText {
+            font-size: 40px;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            line-height: 48px;
+            
+            }
+            .welcomeText {
+            margin: 20px 0;
+            line-height: 32px;
+            }
+            
+            #walkthroughContent,#toolspage{
+            display:none;
+            }
+            .background{
+            background: #F0F1F2;
+            }
+            
+            .welcomeWrapper{
+            padding-top: 30px;
+            min-height: 735px;
+            
+            }
+            #scriptsPage{
+            min-height: 735px;
+            /*background-color: #F0F1F2; */
+            }
+            #industriesPage {
+            display:none;
+            }
+            
+            .welcomeImg{
+            max-height: 200px;
+            max-width: 200px;
+            
+            }
+            .welcomeImgWrapper{
+            
+            
+            }
+            
+            .welcomeBtn{
+            
+            padding:16px 36px;
+            margin-left:90px;
+            color:#fff;
+            border:none;
+            border-radius:5px;
+            font-size: 32px;
+            
+            
+            animation-name: flash;
+            animation-duration: 1.5s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            
+            //Firefox 1+
+            -webkit-animation-name: flash;
+            -webkit-animation-duration: 1.5s;
+            -webkit-animation-timing-function: linear;
+            -webkit-animation-iteration-count: infinite;
+            
+            //Safari 3-4
+            -moz-animation-name: flash;
+            -moz-animation-duration: 1.5s;
+            -moz-animation-timing-function: linear;
+            -moz-animation-iteration-count: infinite;
+            
+            background-image: -webkit-gradient(
+            linear,
+            left bottom,
+            left top,
+            color-stop(0, rgb(73,132,180)),
+            color-stop(1, rgb(97,155,203))
+            );
+            
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            text-shadow: 0px -1px 0px rgba(0,0,0,.5);
+            -webkit-box-shadow: 0px 6px 0px #cbcfd3, 0px 3px 15px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.3);
+            -moz-box-shadow: 0px 6px 0px #cbcfd3, 0px 3px 15px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.3);
+            box-shadow: 0px 6px 0px #cbcfd3, 0px 3px 15px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.3);
+            }
+            
+            @keyframes flash {  
+            0% { opacity: 1.0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1.0; }
+            }
+            
+            //Firefox 1+
+            @-webkit-keyframes flash {  
+            0% { opacity: 1.0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1.0; }
+            }
+            
+            //Safari 3-4
+            @-moz-keyframes flash {  
+            0% { opacity: 1.0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1.0; }
+            }
+            
+            
+            .bigText{
+            padding-bottom: 12px;
+            font-weight: 500;
+            }
+            
+            .welcomeWrapper img{
+            margin: 0px auto;
+            }
+            
+            @media (max-width: 768px) {
+            .welcomeWrapper img{
+            margin-top:30;
+            margin-left:0px;
+            }
+            }
+            
+            .welcome{
+            <!--  -webkit-box-flex: 1;
+-webkit-flex: 1 1 0.0px;
+-moz-flex: 1 1 0.0px;
+-ms-flex: 1 1 0.0px;
+-o-flex: 1 1 0.0px;
+flex: 1 1 0.0px;-->
+            }
+            #scriptsPage {
+            display:none;
+            }
+            
+            .tiles .tile .tile-object > .name {
+            text-align: center;
+            position: relative !important;
+            bottom: 0;
+            left: 0;
+            margin-bottom: 5px;
+            margin-left: 0px; 
+            margin-right: 0px; 
+            font-weight: 400;
+            font-size: 13px;
+            color: #ffffff;
+            }
+            .fixedwidthwrapper{
+            margin: 0px auto;
+            max-width: 1200px;
+            }
+            .start-here-subnav{
+            margin-left:40px;
+            }
+            .start-here-subnav a{ 
+            color:#d9d9d9;
+            font-weight:100;
+            }
+            .stockpilenav{
+            border-top:1px solid #293f54;
+            margin-top: 5px;
+            }
+            
+        </style>
+        <script>
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-46606102-1']);
+        _gaq.push(['_trackPageview']);
+        
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+        </script>
+    </head>
+    
+    <body>
+        <apex:insert name="_layout"/>
+        <apex:insert name="_layouthome"/>
+        
+        <apex:includeScript value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/js/bootstrap.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/metronic.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/excanvas.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/bootstrap-switch.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.blockui.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.cokie.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.slimscroll.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.uniform.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/layout.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/quick-sidebar.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/respond.min.js')}"/>
+        
+        <script>
+        var previousToolId;
+        
+        var previousToolUrl;
+        
+        var step1Visited = false;
+        var step2Visited = false;
+        var step3Visited = false;
+        var step4Visited = false;
+        
+        //animations when the page loads.
+        //$('.page-header').addClass('animated fadeInDown');
+        //$('.page-sidebar-wrapper').addClass('animated fadeInLeft');
+        
+        $(document).ready(function() {
+            Metronic.init();
+            Layout.init();
+            QuickSidebar.init();
+            initializeSideBar();
+            
+            /* $('#authenticate').click(); */
+            
+            //Select the first tab of the wizard
+            $('.tab-pane').first().addClass('active in');
+            $('.nav-wizard').children().first().addClass('active');
+            
+            //Automatically expand the first of each accordion
+            
+            //$('.1accordionHeader').removeClass('collapsed');
+            //$('.1accordionHeader').addClass('in');
+            //$('.1accordionHeader').attr('aria-expanded','true');
+            
+            //$('.1accordionBody').removeClass('collapsed');
+            //$('.1accordionBody').addClass('in');
+            //$('.1accordionBody').attr('aria-expanded','true');
+            
+            //turn anchor tags from rich text fields into blue buttons
+            $('.accordion').find('.panel-body').find('a').addClass('btn blue');
+            $('.learnMore').removeClass('btn blue');
+            
+            $('.nav-header .arrow').addClass('open');
+            
+            
+        });
+        
+        $('#sidebarSearch').keyup(function(){
+            if($('#sidebarSearch').val() == '') {
+                $('.glyphicon-search').fadeIn('fast');
+                $('.glyphicon-remove').hide();
+                $('.navTable').show();
+                $('.tile').show();
+            } else{
+                $('.glyphicon-search').hide();
+                $('.glyphicon-remove').fadeIn('fast');
+                $('.navTable').hide();
+                $('.tile').hide();
+                $(".tile[data-search*='" + $('#sidebarSearch').val().toLowerCase() + "']").fadeIn('fast');
+                $(".navTable[data-search*='" + $('#sidebarSearch').val().toLowerCase() + "']").fadeIn('fast');
+            }
+            
+        });
+        $('.glyphicon-remove').click(function(){
+            $("#sidebarSearch").val('');
+            $('.navLink').fadeIn('fast');
+            $('.glyphicon-search').fadeIn('fast');
+            $('.glyphicon-remove').hide();
+        });
+        
+        $(".navLink").click( function() {
+            console.log('nav')
+            $('.navLink').parents('li').removeClass('active');
+            $('.navLink').parent().next('td').removeClass('active');
+            $(this).closest('li').addClass('active');
+            $(this).parent().next('td').addClass('active');
+            
+            $(".videocontainer").hide();
+            previousToolId = $(this).attr("id");
+            setActive($(this).attr("id")); 
+            setInstructions($(this).attr("id"));               
+            previousToolUrl = $(this).attr("href");
+            if($(this).attr("data-name").indexOf("Authenticate") > -1) {
+                window.open( $(this).attr("href"),'popUpWindow','height=500,width=1000,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
+            } else {
+                //if($('#SDOToolsHome').is(":visible")) 
+                toggleActive('toolsnav');
+                $('#lastTool').show();
+                $('#SDOToolsHome').fadeOut();
+                $('#newspage').fadeOut();
+                $('#toolspage').fadeOut();
+                $('#scriptsPage').fadeOut();
+                $('#industriesPage').fadeOut();
+                $(".toolIcons").fadeIn();
+                $("#tool_frame").fadeIn();
+                if($(this).data('new-window')){
+                	window.open($(this).attr("href"));
+                }
+                else {
+                    $("#tool_frame").attr("src", $(this).attr("href"));
+                    $("#tool_frame").css("height", $(this).attr("data-name") == "Feedback" ? "550" : "2400");
+                }
+            }
+            //return false;
+            //showTool(this);
+        });
+        
+        // right now this function is only called once, on click of the home icon to show the previous tool. id = null always
+        function showToolById(id) {
+            $(".videocontainer").hide();
+            previousToolId = id;
+            setActive($('#'+id).attr("id")); 
+            setInstructions($('#'+id).attr("id"));               
+            previousToolUrl = $('#'+id).attr("href");
+            var attr = $('#'+id).attr("data-name");
+            //if (typeof attr !== typeof undefined && attr !== false) {
+            if(attr.indexOf("Authenticate") > -1) {
+                window.open( $('#'+id).attr("href"),'popUpWindow','height=500,width=1000,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
+            } else {
+                $('#lastTool').show();
+                $('#SDOToolsHome').fadeOut();
+                $('#newspage').fadeOut();
+                $('#scriptsPage').fadeOut();
+                $('#industriesPage').fadeOut();
+                $('#toolspage').fadeOut();
+                $(".toolIcons").fadeIn();
+                $("#tool_frame").fadeIn();
+                $("#tool_frame").attr("src", $('#'+id).attr("href"));
+                $("#tool_frame").css("height", $('#'+id).attr("data-name") == "Feedback" ? "550" : "2400");                      
+            }
+        }
+        
+        function showTool(url) {
+            if(url == null) url = previousToolUrl;
+            $(".videocontainer").hide();
+            previousToolUrl = url; 
+            setInstructions();               
+            $('#SDOToolsHome').fadeOut();
+            $('#industriesPage').fadeOut();
+            $('#scriptsPage').fadeOut();
+            $('#toolspage').fadeOut();
+            $(".toolIcons").fadeIn();
+            $("#tool_frame").fadeIn();
+            $("#tool_frame").attr("src", url);
+            $("#tool_frame").css("height", $('#'+id).attr("data-name") == "Feedback" ? "550" : "2400");
+            $('#newspage').fadeOut();                      
+            //}
+        }
+        
+        
+        function initializeSideBar() {
+            $('.navLink').each(function(i,v) {
+                $(v).attr('data-search',$(v).attr('data-search').toLowerCase()); 
+            });
+            $('.navTable').each(function(i,v) {
+                $(v).attr('data-search',$(v).attr('data-search').toLowerCase()); 
+            });
+            
+        }
+        
+        function openAuthenticateWindow() {
+            window.open('https://sdo-tools.herokuapp.com/auth/salesforce?returnURL=/auth/successful','popUpWindow','height=500,width=1000,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
+        }
+        
+        function setActive(i) {
+            $(".navLink").each( function() {
+                if($(this).attr("id") == i) {
+                    $(this).parent().addClass("active");
+                } else {
+                    $(this).parent().removeClass("active");
+                }
+            });
+        }
+        
+        function setInstructions(id) {
+            if($('#' + id + '-instructions').val() != '' && $('#' + id + '-instructions').val() != null) {
+                $('#tool_info_box').show();
+                // $('#tool_info_box').fadeIn();
+                $('#tool_info_header').html($('#' + id + '-name').val());
+                $('#tool_info_icon').attr('data-original-title',$('#' + id + '-i').val());
+                $('#tool_info').html($('#' + id + '-instructions').val());
+                id='\'' + id + '\'';
+                $('#tool_info').append('<p><a href="#" data-toggle="modal" data-target="#learnMoreModal" class="learnMore" onclick="showMoreToolInformation('+id+');">Advanced Information</a></p>');
+            }else {
+                // $('#tool_info_box').fadeOut();
+            }
+            
+        }
+        
+        function showMoreToolInformation(id) {
+            console.log(id);
+            var instructions = $('#' + id + '-advanced-instructions').val();
+            console.log(instructions);
+            var code = '{!JSENCODE('+ instructions+')}';
+            showModal($('#' + id).attr('data-name') + ' Information',instructions);
+        }
+        
+        function showModal(title, body){
+            $('#myModalLabel').html(title);
+            $('.modal-body').html(body);
+            $('#learnMoreModal').focus();
+        }
+        
+        function showHome() {
+            if($('#tool_frame').is(":visible") || $('#toolspage').is(":visible")) {
+                $('#tool_info_box').fadeOut();
+                $('#tool_frame').fadeOut();
+                //$('#toolspage').fadeOut();
+                $(".toolIcons").fadeOut(); 
+                $('#toolspage').hide();
+            }
+            $('#newspage').fadeOut();
+            $('#industriesPage').fadeOut();
+            $('#lastTool').hide();
+            $('#scriptsPage').fadeOut();
+            
+            console.log(hideWelcome);
+            $('#SDOToolsHome').fadeIn();
+            if (hideWelcome) {
+                $('.myWalkthrough').fadeOut();
+                /*
+                  $('#toolspage').show();
+                  $('#toolspage').fadeIn();
+                  */
+                }
+                resetWelcome();
+            }
+        function showNews(){
+            if($('#tool_frame').is(":visible") || $('#toolspage').is(":visible")) {
+                $('#tool_info_box').fadeOut();
+                $('#tool_frame').fadeOut();
+                //$('#toolspage').fadeOut();
+                $(".toolIcons").fadeOut(); 
+            }
+            $('#toolspage').fadeOut();
+            $('#industriesPage').fadeOut();
+            $('#SDOToolsHome').fadeOut();
+            //if(previousToolUrl != null) $('#lastTool').show();
+            $('#scriptsPage').fadeOut();
+            $('#newspage').show();
+            $('#newspage').fadeIn();
+            
+        }
+        
+        function showTools() {
+            if($('#tool_frame').is(":visible") || $('#SDOToolsHome').is(":visible")) {
+                $('#tool_info_box').fadeOut();
+                $('#tool_frame').fadeOut();
+                $('#SDOToolsHome').fadeOut();
+                $(".toolIcons").fadeOut(); 
+            }
+            $('#scriptsPage').fadeOut();
+            $('#newspage').fadeOut();
+            $('#scriptsPage').fadeOut();
+            $('#industriesPage').fadeOut();
+            //if(previousToolUrl != null) $('#lastTool').show();
+            $('#toolspage').show();
+            $('#toolspage').fadeIn();
+        }
+        function showScripts() {
+            $('#tool_info_box').fadeOut();
+            $('#tool_frame').fadeOut();
+            $('#SDOToolsHome').fadeOut();
+            $(".toolIcons").fadeOut(); 
+            $('#newspage').fadeOut();
+            $('#toolspage').fadeOut();
+            $('#industriesPage').fadeOut();
+            
+            $('#scriptsPage').fadeIn();
+        }
+        function showIndustries() {
+            $('#tool_info_box').fadeOut();
+            $('#tool_frame').fadeOut();
+            $('#SDOToolsHome').fadeOut();
+            $(".toolIcons").fadeOut(); 
+            $('#newspage').fadeOut();
+            $('#toolspage').fadeOut();
+            
+            $('#scriptsPage').fadeOut();
+            $('#industriesPage').fadeIn();
+        }
+        
+        
+        function showPage(id,id2){
+            $('#tool_info_box').fadeOut();
+            $('#tool_frame').fadeOut();
+            $('#SDOToolsHome').fadeIn();
+            $(".toolIcons").fadeOut(); 
+            $('#scriptsPage').fadeOut();
+            $('#newspage').fadeOut();
+            $('#toolspage').fadeOut();
+            $('#industriesPage').fadeOut();
+            
+            $('#lastTool').hide();
+            if(id == 'StartHere' && previousToolUrl != null) $('#lastTool').show();
+            
+            $('#'+id).fadeIn();
+            if(id2) $('#'+id2).fadeIn();
+        }
+        
+        function toggleActive(c) {
+            
+            $('.homenavtab').removeClass('active');
+            $('.homenavtab').children('.selected').remove();
+            $('.'+c).addClass('active');
+            $('.'+c).prepend( "<span class='selected'></span>" );
+        }
+        
+        var hideWelcome = false;
+        function welcomeButton(pageName){
+            
+            //$('.welcomeWrapper').hide();
+            if(pageName == 'tools'){
+                showTools();
+                toggleActive('toolsnav');
+            }else if(pageName == 'news'){
+                toggleActive('newsnav');
+                showNews();
+            }else {
+                hideWelcome = true;
+                animateWelcome();
+                $('#SDOToolsHome').fadeIn();
+                $('.myWalkthrough').fadeIn();
+                //showHome();
+            }
+        }
+        
+        function animateWelcome() {
+            $('.welcomeWrapper').css('padding-top','30px');
+            $('.welcomeWrapper').css('min-height','80px'); 
+            
+            $('.welcomeImgWrapper').css('width','125px')
+            
+            $('.bigText').css('position','relative')
+            $('.bigText').css('top','0px')
+            
+            $('.welcomeImg').css('height','100px');
+            $('.welcomeImg').css('width','100px');
+            
+            $('.welcomeText').fadeOut('fast');
+            $('.welcomeBtn').fadeOut('fast');
+            $('.fixedwidthwrapper').css('margin','0');
+        }
+        
+        function resetWelcome() {
+            $('.welcomeWrapper').css('padding-top','30px');
+            $('.welcomeWrapper').css('min-height','735px'); 
+            
+            $('.welcomeImgWrapper').css('width','33%')
+            
+            $('.bigText').css('position','relative')
+            $('.bigText').css('top','0px')
+            
+            $('.welcomeImg').css('height','100%');
+            $('.welcomeImg').css('width','100%');
+            
+            $('.welcomeText').fadeIn('slow');
+            $('.welcomeBtn').fadeIn('slow');
+            $('.fixedwidthwrapper').css('margin','0px auto');
+        }
+        function selectChevron(id) {
+            showPage('StartHere','SDOToolsHome');
+            welcomeButton('walkthrough');
+            toggleActive('startHereNav');
+            
+            $('.cloudLi').removeClass('active');
+            $('#'+id).addClass('active');
+        }
+        function trackClick(clickName) {
+            _gaq.push(['_trackEvent','Lead','Reset',clickName]);
+            return false;
+        }
+        
+        
+        
+        
+        //Google Analytics Code
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        
+        ga('create', 'UA-46606102-1', 'salesforce.com');
+        ga('send', 'pageview');
+        
+        
+        
+        </script>
+    </body>
+</apex:page>

@@ -1,0 +1,13 @@
+<design:component label="Customer 360 Activity Timeline">
+    
+    <design:attribute label="Height in Pixels" 
+                      name="heightPixels" 
+                      default="300" 
+                      description="Enter desired height in pixels, default is 300"/>
+    
+    <sfdc:objects>
+    	<sfdc:object>Contact</sfdc:object>
+        <sfdc:object>Account</sfdc:object>
+    </sfdc:objects>
+    
+</design:component>

@@ -1,0 +1,89 @@
+<!--
+ - Created by brandon.rogers on 1/25/19.
+ -->
+
+<apex:component id="ckz_MyAccount_AddressBook">
+
+    <script id="CKZ-MyAccount-AddressBook" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_addressBook m-t-1">
+
+            <div class="panel-body MyAccount_AddressBook_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_AddressBook'}}</h2>
+                    </div>
+
+                    <div class="col-sm-4 text-right">
+                        {{#if preventAddrEdit}}
+                        {{else}}
+                        <button type="button" class="addAddress btn btn-default btn-sm cc_add_address_btn" data-id="">{{pageLabelMap 'AddressBook_Add_New_Address'}}</button>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body MyAccount_AddressBook">
+                <div class="messagingSection-addressBook-Error" style="display: none"></div>
+                <div class="messagingSection-addressBook-Warning" style="display: none"></div>
+                <div class="messagingSection-addressBook-Info" style="display: none"></div>
+
+                <div class="orderPaginationSec paginationTop m-t-3"></div>
+
+                <div class="table-responsive">
+                    <table id="addressListTable" class="table table-condensed table-hover cc_table cc_address_list">
+                        <thead class="cc_table_header_row">
+                        <th class="cc_address_header">
+                            {{pageLabelMap 'Address'}}
+                        </th>
+                        {{#ifDisplay 'addr.shAdrTy'}}
+                        <th class="cc_address_type_header">
+                            {{pageLabelMap 'ProductDetails_DocumentTab_Type'}}
+                        </th>
+                        {{/ifDisplay}}
+
+                        {{#if preventAddrEdit}}
+                        {{else}}
+                        <th class="cc_address_controls"></th>
+                        {{/if}}
+                        </thead>
+                        <tbody>
+                        {{#each this.addressList}}
+                        <tr class="cc_address{{sfid}}">
+                            <td class="cc_address_display">
+                                {{> addressDisplay this.addressBean}}
+                            </td>
+                            {{#ifDisplay 'addr.shAdrTy'}}
+                            <td class="cc_address_type">
+                                {{#each addressTypes}}
+                                <div class="status cc_address_type_value">{{pageLabelMap addressType}}</div>
+                                {{/each}}
+                            </td>
+                            {{/ifDisplay}}
+                            {{#if ../preventAddrEdit}} {{else}}
+                            <td class="cc_address_control">
+                                <button type="button" class="openModalAddr btn btn-default btn-sm cc_open_modal_addr" data-id="{{sfid}}">{{pageLabelMap 'Action_Edit'}}</button>&#160;
+                                {{#if this.addressBean.addrReadOnly}} {{else}}
+                                <button type="button" class="deleteAddress btn btn-default btn-sm cc_delete_addr" data-id="{{sfid}}">{{pageLabelMap 'Action_Delete'}}</button>&#160;
+                                {{/if}}
+                            </td>
+                            {{/if}}
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="orderPaginationSec paginationBottom m-b-3"></div>
+            </div>
+
+            <div id="MyAccount_MyAddressBook_modalSec"></div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.myAddressBookView.desktop.tmpl = 'CKZ-MyAccount-AddressBook';
+            CCRZ.uiProperties.myAddressBookView.addressEditModal.selector = '#MyAccount_MyAddressBook_modalSec';
+        });
+    </script>
+</apex:component>

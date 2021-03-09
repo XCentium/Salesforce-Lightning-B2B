@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
+    <cacheControl>Public</cacheControl>
+    <contentType>text/xml</contentType>
+    <description>This is the Call Center Definition File used to set up your Call Center.  Download this to your desktop, then upload it in Setup | Call Center | Call Centers.</description>
+</StaticResource>

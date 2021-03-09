@@ -1,0 +1,202 @@
+<aura:component description="ckz_OrderFormWishListItem" controller="ckz_OrderItemsProductController">
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <!-- 2019-09-20  msobczak: added -->
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <aura:attribute name="storefront" type="String" required="true"/>
+    <aura:attribute name="locale" type="String" required="true"/>
+    <aura:attribute name="enableTypeahead" type="Boolean" required="true"/>
+
+    <aura:attribute name="userId" type="String" access="global"/>
+    <aura:attribute name="accountId" type="String" access="global"/>
+    <aura:attribute name="currencyCode" type="String" access="global" default="USD"/>
+
+    <aura:attribute name="orderItem" type="Map" required="false"/>
+
+    <aura:handler event="aura:waiting" action="{!c.waiting}" phase="capture"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}" phase="capture"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+
+    <!-- for the typeahead -->
+    <aura:attribute name="sku" type="String" default="{!v.orderItem.sku}"/>
+
+    <!-- used to determine whether the SKU input field should be disabled -->
+    <aura:attribute name="cart_item_sfid" type="String" default="{!v.orderItem.cart_item_sfid}"/>
+
+    <!-- used to determine whether an existing cart item's qty has been changed -->
+    <aura:attribute name="qty" type="String" default="{!v.orderItem.qty}"/>
+
+    <!-- used to determine whether an existing cart item's qty has been changed -->
+    <aura:attribute name="orig_qty" type="Integer" default="{!v.orderItem.orig_qty}"/>
+
+    <!-- 2019-10-17  msobczak: added -->
+    <!-- Storefront sizes include:  140 (cart), 225 (related products), 262 (PLP) -->
+    <aura:attribute name="productImageWidth" type="Integer" default="262"/>
+    <aura:attribute name="productImageHeight" type="Integer" default="262"/>
+
+    <!-- for the typeahead -->
+    <aura:attribute name="productMatches" type="List" default="[]"/>
+
+    <aura:registerEvent name="updateRemoveItems" type="c:ckz_UpdateRemoveItems"/>
+
+    <aura:registerEvent name="updateChangeItems" type="c:ckz_UpdateChangeItems"/>
+
+    <aura:renderIf isTrue="{!v.showSpinner}">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+            <span class="slds-assistive-text">Loading, Please Wait...</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </aura:renderIf>
+
+    <!-- Table View -->
+    <aura:if isTrue="{! $Browser.formFactor == 'DESKTOP' &amp;&amp; (v.useCardLayout == false) }">
+        <tr>
+            <!-- SKU -->
+            <td>
+                <lightning:input name="sku"
+                                 aura:id="orderForm"
+                                 value="{!v.sku}"
+                                 disabled="{!(v.cart_item_sfid != null) &amp;&amp; (v.cart_item_sfid != '')}"
+                                 variant="label-hidden"
+                                 onchange="{!c.getProductSuggestions}"/>
+            </td>
+
+            <!-- Product Name -->
+            <td>
+                <div class="slds-truncate" title="" style="text-align: center;">
+                    <p>{!v.orderItem.productName}</p>
+                </div>
+            </td>
+
+            <!-- Product Image -->
+            <td>
+                <div class="slds-truncate" title="" style="text-align: center;">
+                    <aura:if isTrue="{! v.orderItem.thumbnailImage &amp;&amp; v.orderItem.thumbnailImage.URI &amp;&amp; v.orderItem.thumbnailImage.URI != '' }">
+                        <img src="{! v.orderItem.thumbnailImage.URI}" width="65" height="65" />
+                    </aura:if>
+                </div>
+            </td>
+
+            <!-- Actions -->
+            <td>
+
+                <aura:if isTrue="{!(v.orderItem.cart_item_sfid == null) || (v.orderItem.cart_item_sfid == '')}">
+                    <lightning:button aura:id="clearProduct"
+                                      label="Clear"
+                                      variant="brand"
+                                      onclick="{!c.clearProductFields}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!(v.orderItem.cart_item_sfid != null) &amp;&amp; (v.orderItem.cart_item_sfid != '')}">
+                    <lightning:input type="checkbox" aura:id="removeItem" label="Remove"
+                                     name="removeItem"
+                                     onchange="{!c.removeItemClicked}"/>
+                </aura:if>
+
+            </td>
+
+        </tr>
+
+        <!-- Display the product matches in a separate row.  This avoids the product name being truncated. -->
+        <aura:if isTrue="{!v.productMatches.length > 0}">
+            <tr>
+                <td colspan="5">
+
+                    <ul class="">
+                        <aura:iteration items="{!v.productMatches}" var="product">
+                            <li class="slds-listbox__item">
+                                <a onclick="{!c.setProductFields}"
+                                   data-product_sfid="{!product.sfid}"
+                                   data-productname="{!product.productName}"
+                                   data-sku="{!product.sku}"
+                                   data-price="{!product.price}">{!product.sku} - {!product.productName}</a>
+                            </li>
+                        </aura:iteration>
+                    </ul>
+
+                </td>
+            </tr>
+        </aura:if>
+    </aura:if>
+
+
+    <!-- Card View -->
+    <aura:if isTrue="{! $Browser.formFactor != 'DESKTOP' || (v.useCardLayout == true) }">
+
+        <article class="slds-card slds-card_boundary slds-m-around_small">
+
+            <div class="slds-card__body slds-card__body_inner">
+                <div class="slds-grid slds-wrap slds-gutters">
+
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-medium-size_1-of-3">
+                        <aura:if isTrue="{! v.orderItem.thumbnailImage &amp;&amp; v.orderItem.thumbnailImage.URI &amp;&amp; v.orderItem.thumbnailImage.URI != '' }">
+                            <img src="{!v.orderItem.thumbnailImage.URI}" width="{!v.productImageWidth}" height="{!v.productImageHeight}" style="display: block; margin: 0 auto; width: 100%"/>
+                        </aura:if>
+
+                        <span class="slds-icon_container" title="item">
+                            <span class="slds-assistive-text">{!v.orderItem.productName}</span>
+                        </span>
+                    </div>
+
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-medium-size_2-of-3">
+                        <!-- Product Name -->
+                        <div class="slds-form-element slds-form-element_horizontal" style="text-align: center;">
+                            <div class="slds-form-element__static">{!v.orderItem.productName}</div>
+                        </div>
+
+                        <!-- SKU -->
+                        <div class="slds-form-element slds-form-element_horizontal" style="text-align: center;">
+                            <span>SKU: {!v.sku}</span>
+                        </div>
+
+                        <!-- Short Description -->
+                        <div class="slds-form-element slds-form-element_horizontal" style="text-align: center;">
+                            <span>{!v.orderItem.productData.shortDesc}</span>
+                        </div>
+
+                        <!-- Product Specs -->
+                        <aura:if isTrue="{!(v.orderItem.productData.productSpecIndiciesS)}">
+                            <div class="slds-form-element slds-form-element_horizontal" style="text-align: center;">
+                                <table>
+                                    <aura:iteration items="{!v.orderItem.productData.productSpecIndiciesS}" var="productSpec">
+                                        <tr>
+                                            <aura:if isTrue="{!(productSpec.specR)}">
+                                                <td><span>{!productSpec.specR.displayName}: </span></td>
+                                                <td><span>{!productSpec.specValue}</span></td>
+                                            </aura:if>
+                                        </tr>
+                                    </aura:iteration>
+                                </table>
+                            </div>
+                        </aura:if>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="slds-card__footer">
+                <div class="">
+
+                    <aura:if isTrue="{!(v.orderItem.cart_item_sfid == null) || (v.orderItem.cart_item_sfid == '')}">
+                        <lightning:button aura:id="clearProduct"
+                                          label="Clear"
+                                          class="slds-m-top--medium"
+                                          variant="brand"
+                                          onclick="{!c.clearProductFields}"/>
+                    </aura:if>
+
+                    <aura:if isTrue="{!(v.orderItem.cart_item_sfid != null) &amp;&amp; (v.orderItem.cart_item_sfid != '')}">
+                        <lightning:input type="checkbox" aura:id="removeItem" label="Remove"
+                                         name="removeItem"
+                                         onchange="{!c.removeItemClicked}"/>
+                    </aura:if>
+
+                </div>
+            </footer>
+        </article>
+
+    </aura:if>
+
+</aura:component>

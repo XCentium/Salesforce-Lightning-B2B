@@ -1,0 +1,63 @@
+.THIS ul{
+    list-style-type: none;
+    margin: 5px 0;
+    padding: 10px;
+}
+.THIS.category-panel{
+    margin-bottom: 20px;
+}
+.THIS .category-active{
+	text-decoration: underline;
+}
+.THIS .hidden{
+    display: none;
+}
+.THIS .menu-item-1{
+
+}
+.THIS .menu-item-2{
+    padding-left: 10px;
+}
+.THIS .menu-item-3{
+    padding-left: 20px;
+}
+.THIS .menu-item-4{
+    padding-left: 30px;
+}
+.THIS .menu-item-5{
+    padding-left: 40px;
+}
+
+.THIS .filter-item{
+	display: inline-block;
+    margin-left: 12px;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    float: left;
+}
+.THIS .clear{
+    clear: both;
+}
+.THIS .fa{
+    margin-left: 10px;
+    color: #888;
+}
+.THIS .filter-item-overlay{
+    border-radius: 3px;
+    box-shadow: 0 2px 5px #a0a6ab;
+    background-color: #fff;
+    border: 1px solid #d4dadc;
+    text-align: left;
+    z-index: 9999;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow-y: auto;
+    position: absolute;
+    height: 200px;
+}
+.THIS .filter-item-overlay-child{
+    padding: 0;
+    margin-left: 10px;
+}

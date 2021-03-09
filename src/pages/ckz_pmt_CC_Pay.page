@@ -1,0 +1,178 @@
+<!--
+ - Created by brandon.rogers on 3/29/19.
+ -->
+
+<apex:page id="ckz_pmt_CC_Pay" applyHtmlTag="false" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false">
+    <script id="PaymentCC-Both" type="text/template">
+        <div class="ccPaymentOuterContainer p-y-2">
+            <div class="alert alert-error ccPayment-messagingSection-Error" style="display: none"></div>
+            <form id="newCCForm" action="" class="newCCForm" forceSSL="true">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label for="paymentType" class="control-label">{{pageLabelMap 'Pmt_CC_CardType'}}</label>
+                            <select id="paymentType" name="paymentType" class="form-control">
+                                <option value="Visa">{{pageLabelMap 'Pmt_CC_CardType_Visa'}}</option>
+                                <option value="Mastercard">{{pageLabelMap 'Pmt_CC_CardType_MC'}}</option>
+                                <option value="Amex">{{pageLabelMap 'Pmt_CC_CardType_AMEX'}}</option>
+                                <option value="Discover">{{pageLabelMap 'Pmt_CC_CardType_Discover'}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label for="accountNumber" class="control-label">{{pageLabelMap 'Pmt_CC_CardNumber'}}</label>
+                            <input type="text" id="accountNumber" name="accountNumber" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="control-label">{{pageLabelMap 'Pmt_CC_ExpDate'}}</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <select id="expirationMonth" name="expirationMonth" class="form-control">
+                                <option value="">{{pageLabelMap 'Pmt_CC_ExpMonth'}}</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <select id="expirationYear" name="expirationYear" class="form-control">
+                                <option value="">{{pageLabelMap 'Pmt_CC_ExpYear'}}</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2021">2022</option>
+                                <option value="2021">2023</option>
+                                <option value="2021">2024</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {{#ifDisplay 'WLT.Enabled'}}
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="saveAsStoredPayment" id="saveAsStoredPayment" value="true"/> {{pageLabelMap 'MyWallet_SavePayment'}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group displayName">
+                            <label for="displayName" class="control-label poLabel Name fieldLabel">{{pageLabelMap 'MyWallet_NameOpt'}}</label>
+                            <input type="text" name="displayName" id="displayName" maxlength="50" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                {{/ifDisplay}}
+
+                <div class="two_buttons text-right">
+                    <input type="button" class="btn btn-primary btn-sm makeCCPayment" id="btnMakeCCPayment" data-id="newCCForm" value="{{pageLabelMap 'Payment_MakePayment'}}"/>
+                    <input type="hidden" name="accountType" value="cc"/>
+                </div>
+            </form>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            CCRZ.models.PaymentsCCModel = CCRZ.CloudCrazeModel.extend();
+            CCRZ.views.PaymentsCCView = CCRZ.CloudCrazeView.extend({
+                viewName: "PaymentsCCView",
+                managedSubView: true,
+                templateDesktop: CCRZ.util.template("PaymentCC-Both"),
+                templatePhone: CCRZ.util.template("PaymentCC-Both"),
+                init: function (options) {
+                    this.selector = options.selector;
+                    this.render();
+                    CCRZ.pubSub.trigger('action:paymentViewInit', this);
+                },
+                events: {
+                    "click .makeCCPayment": "makeCCPayment"
+                },
+                validateInfo: function (formName, fieldData) {
+                    $("#" + formName).validate({
+                        invalidHandler: function (event, validator) {
+                            CCRZ.handleValidationErrors(event, validator, 'ccPayment-messagingSection-Error', false);
+                        },
+                        rules: {
+                            accountNumber: {
+                                required: true,
+                                minlength: 4
+                            }
+                        },
+                        messages: {
+                            accountNumber: {
+                                required: 'Card number is required',
+                                minlength: 'Card number is not valid'
+                            }
+                        },
+                        errorPlacement: function (error, element) {
+                        }
+                    });
+                    return $("#" + formName).valid();
+                },
+
+                parentPreRender: function () {
+                    //Look for the instantiated iframe
+                    //Detach it from the DOM
+                    //Re-render the view but don't create the iframe
+                    //Re-attach the iframe as appropriate in the rendered view
+                },
+                renderDesktop: function () {
+                    this.setElement(this.selector);
+                    this.data = {};
+                    this.$el.html(this.templateDesktop(this.data));
+                },
+                renderPhone: function () {
+                    this.setElement(this.selector);
+                    this.data = {};
+                    this.$el.html(this.templatePhone(this.data));
+                },
+                makeCCPayment: function (event) {
+                    var formName = $(event.target).data("id");
+                    var formData = form2js(formName, '.', false, function (node) {
+                    }, false);
+                    if (this.validateInfo(formName, formData)) {
+                        formData.accountNumber = formData.accountNumber.substring(formData.accountNumber.length - 4);
+                        formData.amount = "5.00";
+                        CCRZ.pubSub.trigger('action:processPayment', formData);
+                    }
+                }
+            });
+            CCRZ.pubSub.trigger('action:paymentViewReady', 'cc', function (options) {
+                CCRZ.payment = CCRZ.payment || {
+                    views: {}
+                };
+                CCRZ.payment.views.cc = new CCRZ.views.PaymentsCCView({
+                    model: new CCRZ.models.PaymentsCCModel(),
+                    selector: options.selector
+                });
+            });
+        });
+    </script>
+</apex:page>

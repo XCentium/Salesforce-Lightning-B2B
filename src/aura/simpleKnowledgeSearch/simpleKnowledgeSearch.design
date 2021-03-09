@@ -1,0 +1,6 @@
+<design:component>
+        <design:attribute name="HelpHeader" label="Header Text" />
+	 <design:attribute name="h1Color" label="H1 Color" description="Make sure the text is legible over your background by updating the H1 color."/>
+    <design:attribute name="bgimgURL" label="Background Image URL" />
+    
+</design:component>

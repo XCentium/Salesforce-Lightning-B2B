@@ -1,0 +1,228 @@
+<aura:component
+                implements="force:appHostable,force:hasRecordId,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                access="global"
+                controller="VisitReportController"
+                >
+    <!-- Form factor for cmp report/record  -->
+    <aura:attribute name="reportTab" type="Boolean" default="true"/>
+    <aura:attribute name="recordId" type="String" />
+    
+    <aura:attribute name="retailGroupOptions" type="List" />
+    <aura:attribute name="retailStoreOptions" type="List" />
+    
+    <aura:attribute name="selectedRetailGroup" type="String" default="" />
+    <aura:attribute name="selectedRetailStore" type="String" default="" />
+    
+    <aura:attribute name="startVisit" type="Date" default="" />
+    <aura:attribute name="endVisit" type="Date" default="" />
+    
+    <aura:attribute name="wrapATList" type="object" />
+    <aura:attribute name="atListCount" type="Integer" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <!--aura:handler name="render" value="{!this}" action="{!c.onRender}" /-->
+    
+    <div>
+        <lightning:card
+                        class="header-card"
+                        iconName="action:log_event"
+                        title="Visit Audit"
+                        >
+            <p class="slds-border_top slds-p-horizontal_small">
+                Please select options to generate audit report:
+            </p>
+        </lightning:card>
+        
+ 
+        <div class="report-sel-fields">
+            <div aura:id="report-tab" class="report-Tab-Fields">
+            <!-- Retail Group START -->
+            <lightning:select
+                              name="myRetailGroup"
+                              required="true"
+                              label="Select a Retail Group:"
+                              messageWhenValueMissing="Please select a Retail Group"
+                              aura:id="myRetailGroup"
+                              value="{!v.selectedRetailGroup}"
+                              onchange="{!c.loadRetailStores}"
+                              class="slds-col slds-size_6-of-12"
+                              >
+                <option value="">-- None --</option>
+                <aura:iteration items="{!v.retailGroupOptions}" var="item">
+                    <option
+                            text="{!item.Name}"
+                            value="{!item.Id}"
+                            selected="{!item.selected}"
+                            />
+                </aura:iteration>
+            </lightning:select>
+            <!-- Retail Group END -->
+            
+            <!-- Retail Store START -->
+            <lightning:select
+                              name="myRetailStore"
+                              disabled="true"
+                              label="Select a Retail Store:"
+                              messageWhenValueMissing="Please select a Retail Store"
+                              aura:id="myRetailStore"
+                              value="{!v.selectedRetailStore}"
+                              class="slds-col slds-size_6-of-12"
+                              >
+                <option value="">-- None --</option>
+                <aura:iteration items="{!v.retailStoreOptions}" var="item">
+                    <option
+                            text="{!item.Name}"
+                            value="{!item.Id}"
+                            selected="{!item.selected}"
+                            />
+                </aura:iteration>
+            </lightning:select>
+            <!-- Retail Store END -->
+            </div>
+            <!-- DATE Selection START -->
+            <lightning:layout class="slds-p-top_small slds-col slds-size_6-of-12">
+                <lightning:layoutItem class="slds-p-right_small">
+                    <lightning:input
+                                     aura:id="visitStart"
+                                     type="date"
+                                     name="start"
+                                     label="Visit Start Date"
+                                     required="true"
+                                     dateStyle="medium"
+                                     messageWhenValueMissing="Select Date"
+                                     value="{!v.startVisit}"
+                                     onchange="{!c.checkStart}"
+                                     />
+                </lightning:layoutItem>
+                <lightning:layoutItem class="slds-p-right_small">
+                    <lightning:input
+                                     aura:id="visitEnd"
+                                     type="date"
+                                     name="end"
+                                     label="Visit End Date"
+                                     required="true"
+                                     dateStyle="medium"
+                                     messageWhenValueMissing="Select Date"
+                                     value="{!v.endVisit}"
+                                     onchange="{!c.checkEnd}"
+                                     />
+                </lightning:layoutItem>
+            </lightning:layout>
+            <!-- DATE Selection END -->
+            
+            <!-- BUTTON START -->
+            <lightning:layout
+                              class="slds-p-top_small slds-p-bottom_small slds-col slds-size_6-of-12 "
+                              >
+                <lightning:layoutItem class="slds-p-right_small">
+                    <lightning:button
+                                      label="Cancel"
+                                      type="reset"
+                                      title="Cancel action"
+                                      onclick="{!c.resetForm}"
+                                      />
+                </lightning:layoutItem>
+                <lightning:button
+                                  variant="brand"
+                                  label="Submit"
+                                  type="submit"
+                                  title="Submit action"
+                                  onclick="{! c.getAssessmentTasks }"
+                                  />
+            </lightning:layout>
+            <!-- BUTTON END -->
+        </div>
+        <!-- REPORT RESULT START -->
+        <p style="color:#6ca1e9; padding-left: 12px;">Total Assessment Tasks: {!v.atListCount} </p>
+        <div aura:id="reportResult" class="reportHide">
+            <div class="slds-scrollable reportData">
+                
+                <lightning:layout class="c-container">
+                    <lightning:layoutItem class="slds-size_9-of-12 ">
+                        <!-- REPORT HEADERS  -->
+                        <lightning:layout>
+                            <lightning:layoutItem size="4" class="col-header">
+                                Retail Store
+                            </lightning:layoutItem>
+                            <!-- Visit
+                    <lightning:layoutItem size="2" class="col-header">
+                        Visit
+                    </lightning:layoutItem>
+         -->
+                            <lightning:layoutItem size="3" class="col-header">
+                                Assessment Task
+                            </lightning:layoutItem>
+                            <!-- Retail Store Group 
+                    <lightning:layoutItem size="2" class="col-header">
+                        Retail Store Group
+                    </lightning:layoutItem>
+                    -->
+                            <lightning:layoutItem size="3" class="col-header">
+                                Date of Visit
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="6" class="col-header">
+                                In-Store Display
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                        
+                        <!-- REPORT DATA POPULATED FROM HERE wrapATList atImageMap assessmentList rsgMap atCount-->
+                        <aura:iteration items="{!v.wrapATList.assessmentList}" var="atRec">
+                            <lightning:layout>
+                                <lightning:layoutItem size="4" class="col-data">
+                                    <div class="slds-truncate" title="Retail Store"
+                                         >{!atRec.Parent.Place.Name}</div
+                                        >
+                                </lightning:layoutItem>
+                                
+                                <!-- Visit
+                        <lightning:layoutItem size="2" class="col-data">
+                            <lightning:navigation aura:id="navService"/>
+                            <a href="{!'/'+atRec.ParentId}" onclick="{!c.handleNav}" target='_blank'>{!atRec.Parent.Name}</a>
+                        </lightning:layoutItem>
+            -->
+                                
+                                <lightning:layoutItem size="3" class="col-data">
+                                    <lightning:navigation aura:id="navService" />
+                                    <a
+                                       href="{!'/'+atRec.Id}"
+                                       onclick="{!c.handleNav}"
+                                       target="_blank"
+                                       >{!atRec.Name}</a
+                                        >
+                                </lightning:layoutItem>
+                                
+                                <!-- Retail Store Group 
+                        <lightning:layoutItem size="2" class="col-data">
+                            <c:VisitReportRSG rsgMap="{!v.wrapATList.rsgMap}" atKey="{!atRec.Id}"/>
+                        </lightning:layoutItem>
+                        -->
+                                
+                                <lightning:layoutItem size="3" class="col-data">
+                                    <lightning:formattedDateTime
+                                                                 value="{!atRec.Parent.ActualVisitStartTime}"
+                                                                 year="numeric"
+                                                                 month="numeric"
+                                                                 day="numeric"
+                                                                 hour="2-digit"
+                                                                 minute="2-digit"
+                                                                 timeZoneName="short"
+                                                                 hour12="true"
+                                                                 />
+                                </lightning:layoutItem>
+                                
+                                <lightning:layoutItem size="6" class="slds-scrollable col-data">
+                                    <c:VisitReportImgs
+                                                       Imgmap="{!v.wrapATList.atImageMap}"
+                                                       atKey="{!atRec.Id}"
+                                                       />
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:iteration>
+                        <!-- REPORT DATA POPULATED TILL HERE-->
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </div>
+        </div>
+        <!-- REPORT RESULT END -->
+    </div>
+</aura:component>

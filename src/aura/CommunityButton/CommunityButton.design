@@ -1,0 +1,6 @@
+<design:component>
+    <design:attribute name="ButtonText" label="Button Label" description="Text to be displayed in the button" default="Learn More" />
+    <design:attribute name="ButtonLink" label="Button Link URL" description="URL to go to on button click" default="#" />
+    <design:attribute name="alignment" label="Button Alignment" description="URL to go to on button click" default="Center" datasource="Left,Center,Right"/>
+    
+</design:component>

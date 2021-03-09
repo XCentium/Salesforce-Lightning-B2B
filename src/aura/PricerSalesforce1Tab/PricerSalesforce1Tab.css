@@ -1,0 +1,36 @@
+.THIS {
+}
+
+.THIS .scrollerSize{
+    height:100vh;
+}
+
+.THIS .stepOuterClass{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    width: 100%;
+    background-color:white;
+}
+
+.THIS .stepContent {
+    position: relative;
+    transform: translate(0, 0);
+    transition: transform .1s linear,opacity .1s linear;
+    display: flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+    margin: 0 2rem;
+    height: 100%;
+    padding: 3rem 0;
+    padding-top:50px;
+    border-radius: .25rem;
+}
+
+.THIS .step2Button {
+    width: 100%;
+    font-size: 30px;
+    line-height: 5rem; 
+}

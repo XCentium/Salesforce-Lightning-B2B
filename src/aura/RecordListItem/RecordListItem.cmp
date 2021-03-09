@@ -1,0 +1,98 @@
+<aura:component >
+    <!--  Author : Raj Rao, Principal Solution Engineer, Salesforce.com
+          Date Released : May 12, 2016--> 
+    <aura:attribute name="record" type="Object[]" />
+    <aura:attribute name="fieldName" type="String" />
+    <aura:attribute name="fieldLabels" type="String[]" />
+    <aura:attribute name="fieldTypes" type="String[]" /><!--new-->
+    
+    <aura:attribute name="fieldLabel" type="String" />
+    <aura:attribute name="fieldValue" type="String" />
+    <aura:attribute name="fieldType" type="String" /><!--new-->
+    
+    <aura:attribute name="index" type="Integer" />
+    <aura:attribute name="usrSelection" type="String"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="updateRecord" type="c:updateRecordItem"/>
+
+    <aura:if isTrue="{!v.usrSelection == 'leadInbox'}">
+    	<aura:if isTrue="{!v.index==0}"><!--Link to record detail page-->
+            <td class="{!'slds-size--1-of-'+(v.fieldLabels.length+1)}" data-label="{!v.fieldLabel}">
+                <a href="javascript:void(0);" data-id="{!v.record.Id}" onclick="{!c.recordDetail}">
+                    <ui:outputText value="{!v.fieldValue}"/>
+                </a>
+            </td>
+    	<aura:set attribute="else">
+        	<aura:if isTrue="{!v.fieldLabel == 'Priority'}">
+		        <td class="{!'slds-size--1-of-'+(v.fieldLabels.length+1)}" data-label="Priority">
+        			<i class="fa fa-fire fa-lg" style="{!v.fieldValue}"></i>
+        		</td>
+        	<aura:set attribute="else">
+        		<td class="{!'slds-size--1-of-'+(v.fieldLabels.length+1)}" data-label="{!v.fieldLabel}">
+                    <aura:if isTrue="{!v.fieldType=='Date'}">
+                    	<ui:outputDate value="{!v.fieldValue}"/>
+                    <aura:set attribute="else">
+                    	<aura:if isTrue="{!v.fieldType=='Currency'}">
+                        	<ui:outputCurrency value="{!v.fieldValue}"/>
+                        <aura:set attribute="else">
+                        	<ui:outputText value="{!v.fieldValue}"/>
+                        </aura:set>
+                        </aura:if>
+                    </aura:set>
+                    </aura:if>    
+
+    			</td>
+	        </aura:set>
+        	</aura:if>
+    	</aura:set>
+    	</aura:if>
+     <aura:set attribute="else">
+     	<aura:if isTrue="{!v.index==0}"><!--Link to record detail page-->
+            <td class="{!'slds-size--1-of-'+v.fieldLabels.length}" data-label="{!v.fieldLabel}">
+                <a href="javascript:void(0);" data-id="{!v.record.Id}" onclick="{!c.recordDetail}">
+                    <ui:outputText value="{!v.fieldValue}"/>
+                </a>
+            </td>
+    	<aura:set attribute="else">
+        	<aura:if isTrue="{!v.fieldLabel == 'Priority'}">
+		        <td class="{!'slds-size--1-of-'+v.fieldLabels.length}" data-label="Priority">
+        			<i class="fa fa-fire fa-lg" style="{!v.fieldValue}"></i>
+        		</td>
+        	<aura:set attribute="else">
+        		<aura:if isTrue="{!v.fieldLabel == 'Account' &amp;&amp; v.usrSelection == 'myOpptys'}">
+                    <td class="{!'slds-size--1-of-'+v.fieldLabels.length}" data-label="{!v.fieldLabel}">
+                        <ui:outputText value="{!v.record.Account.Name}"/>
+                    </td>
+                <aura:set attribute="else">
+                <td class="{!'slds-size--1-of-'+v.fieldLabels.length}" data-label="{!v.fieldLabel}">
+                    <aura:if isTrue="{!v.fieldType=='Date'}">
+                    	<ui:outputDate value="{!v.fieldValue}"/>
+                    <aura:set attribute="else">
+                    	<aura:if isTrue="{!v.fieldType=='Currency'}">
+                        	<ui:outputCurrency value="{!v.fieldValue}"/>
+                        <aura:set attribute="else">
+                        	<ui:outputText value="{!v.fieldValue}"/>
+                        </aura:set>
+                        </aura:if>
+                    </aura:set>
+                    </aura:if>    
+    			</td>
+                </aura:set>
+                </aura:if>
+	        </aura:set>
+        	</aura:if>
+    	</aura:set>
+    	</aura:if>
+    </aura:set>
+    </aura:if>
+<!--v.fieldLabels.length-1 since index starts at 0. v.fieldLabels.length+1 to add to the last column-->
+    <aura:if isTrue="{!v.usrSelection == 'leadInbox' &amp;&amp; v.index==(v.fieldLabels.length-1)}">
+        <td class="{!'slds-size--1-of-'+(v.fldLabels.length+1)}" data-label="Accept">
+            <div>
+                <ui:button class="button" press="{!c.update}">Accept</ui:button>
+            </div>
+        </td>
+    </aura:if>
+
+</aura:component>

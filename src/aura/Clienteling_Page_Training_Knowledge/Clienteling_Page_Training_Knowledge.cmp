@@ -1,0 +1,43 @@
+<aura:component controller="ClientellingController" access="global">
+	<aura:attribute name="CurrentKnowledge" type="Knowledge__kav[]"/>
+    <aura:attribute name="Knowledge" type="Knowledge__kav[]"/>
+    <aura:attribute name="TotalResults" type="Integer"/>
+    <aura:attribute name="searchText" type="String" default=""/>
+	<div class="slds-form-element slds-lookup" data-select="single">
+        <div class="slds-form-element__control">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+                <lightning:buttonIcon iconName="utility:search" variant="bare" onclick="{! c.handleClick }" alternativeText="Search" class="slds-input__icon" />
+                <ui:inputText value="{!v.searchText}" class="slds-lookup__search-input slds-input" placeholder="Search" />
+            </div>
+        </div>
+    </div>
+    <aura:handler name="init" value="{!this}" action="{!c.getKnowledge}"/>
+    	<ul class="knowledgelist">
+            <aura:iteration var="knowledge" items="{!v.Knowledge}" indexVar="index"> 
+            	<li>
+                    <button class="buttonnostyle" onclick="{!c.OpenDialog}" id='{!knowledge.Id}' aura:id="{!knowledge.Id}">{!knowledge.Title}</button><br/>
+                    <p>{!knowledge.Summary}</p>
+                </li>
+            </aura:iteration>
+        </ul>
+    <!--Knowledge Modal -->
+        <section role="dialog" aura:id="KnowledgeModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+            <div class="slds-modal__container">
+            	<aura:iteration var="currentknowledge" items="{!v.CurrentKnowledge}" indexVar="index"> 
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!currentknowledge.Title}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                	<aura:unescapedHtml value="{!currentknowledge.Answer__c}" />
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}">Close</button>
+                </footer>
+                </aura:iteration>
+            </div>
+        </section>
+        <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+</aura:component>

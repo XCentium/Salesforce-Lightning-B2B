@@ -1,0 +1,58 @@
+<aura:component controller="LightningCatalogController" implements="force:appHostable,force:hasRecordId" access="global">
+
+    <aura:attribute name="objectName" type="String"  default="Product2"/>
+    <aura:attribute name="customFilterFields" type="String" default="Family,IsActive"/>
+    <aura:attribute name="searchResultImageField" type="String" default="Image__c"/>
+    <aura:attribute name="searchResultFields" type="String" default="Name,ProductCode,Description"/>
+    <aura:attribute name="pricebookId" type="String" default=""/>
+    <aura:attribute name="showActiveProductsOnly" type="Boolean" default="false"/>
+    
+    <!-- Once a product is selected in the catalog, an event will be fired to return the productId.
+         This event will also include the sendBackData -->
+    
+    <aura:attribute name="orgInfo" type="Map"/>
+    <aura:attribute name="statsImgSrc_load" type="String" default=""/>
+    <aura:attribute name="sendBackData" type="String" />
+
+    
+
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+
+    <div class="CatalogContainer">
+    
+    <lightning:layout multipleRows="true">
+        
+                    <lightning:layoutItem padding="around-small" size="3">
+                        <div class="page-section page-right">
+                            <c:CatalogProductPriceFilter pricebookId="{!v.pricebookId}"
+                                                         activeProductsOnly="{!v.showActiveProductsOnly}"/>
+                        </div>
+                            <c:CatalogCustomFilters fields="{!v.customFilterFields}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="9">
+                        <div class="page-section page-main"> 
+                             <c:CatalogTextFilter fields="Name,ProductCode" label="{!$Label.c.Catalog_search}"/>
+                        </div>
+                        <div class="slds-m-vertical_medium"> </div>
+                        <div class="page-section page-main">
+                            <c:CatalogSearchResults debugMode="false"
+                                                    fields="{!v.searchResultFields}"
+                                                    imageField="{!v.searchResultImageField}"
+                                                    sendBackData="{!v.sendBackData}"
+                                                    pricebookId="{!v.pricebookId}"
+                                                    activeProductsOnly="{!v.showActiveProductsOnly}"
+                                                    />
+                        </div>
+                    </lightning:layoutItem>
+   
+
+        </lightning:layout>
+    </div>
+    
+    <div>
+        <img src="{!v.statsImgSrc_load}" style="height:1px;width:1px;border:0;position:absolute; visibility:hidden;" /> 
+    </div>   
+    
+</aura:component>

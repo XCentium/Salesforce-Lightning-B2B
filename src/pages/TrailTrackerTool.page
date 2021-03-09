@@ -1,0 +1,708 @@
+<apex:page controller="TrailTrackerToolController" title="Trail Tracker Tool" showHeader="false" sidebar="false" standardStylesheets="false">
+    
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"/>
+    <apex:slds ></apex:slds>
+    
+    <script>
+    const MAX_BATCH = 200;
+    const VERBOSE = true;
+    
+    const session = '{!$Api.Session_ID}'
+    const currentUserId = '{!$User.Id}'
+    const _version = 'v45.0'
+    const _base = window.location.origin + '/services/data/' + _version;
+    const _config = {'headers': {"Authorization": "Bearer "+session, "Content-Type": "application/json"}}
+    
+    const apex = TrailTrackerToolController
+    
+    const app = angular.module('TrailTrackerDataLoader', ['ngSanitize'])
+    .controller('MainController',function($scope,$http,$timeout){
+        $scope.badges = []
+        $scope.userBadge = []
+        $scope.toasts = []
+        $scope.advancedIsOpen = false
+        $scope.dateOffset
+        
+        $scope.showToast = function(status,message){
+            if(VERBOSE) console.log('Toast Event',status,message)
+            
+            let toast = {
+                status: status,
+                message: message,
+            }
+            $scope.toasts.push(toast);
+            
+            $timeout(function(){
+                if(VERBOSE) console.log('Toast Pushed',status,message)
+                $scope.toasts.shift();
+            }, 5000)
+        }
+        
+        $scope.installTrailTracker = function(){
+            $scope.showToast('success', 'Starting installation');
+            return new Promise(function(resolve,reject){
+                apex.deployTrailTracker(function(result,event){
+                    if(event.status){
+                        if(VERBOSE) console.log('display installation toast');
+                        $scope.showToast('success', 'Please check Installed Packages and wait for Trail Tracker to show. You should also be notified via email when the installation has completed.');
+                        resolve(result)
+                    } else {
+                        $scope.showToast('success', 'The failed to install. It may already be present in your org.');
+                        reject(result)
+                    }
+                })
+            })
+        }
+        
+        $scope.installUserMetadata = function(){
+            $scope.showToast('success', 'Creating metadata');
+            return new Promise(function(resolve,reject){
+                apex.deployTrailheadUserMetadata(function(result,event){
+                    console.log('installUserMetadata:callback',result,event)
+                    if(event.statusCode == 200){
+                        $scope.showToast('success', 'Deploying Trailhead User field changes.');
+                        resolve(result)
+                    } else {
+                        $scope.showToast('success', 'The failed to install.');
+                        reject(result)
+                    }
+                })
+            })
+        }
+        
+        $scope.getTrailheadData = function(){
+            return new Promise(function(resolve,reject){
+                apex.getTrailheadData(function(result,event){
+                    if(event.status){
+                        resolve(result)
+                    } else {
+                        reject(result)
+                    }
+                })
+            })
+        }
+        
+        $scope.formatBadges = function(badgesCSV){
+            return new Promise(function(resolve,reject){
+                try {
+                    let badges = []
+                    let badgesCSVConverter = document.createElement('textarea');
+                    badgesCSVConverter.innerHTML = badgesCSV;
+                    badgesCSV = badgesCSVConverter.value;
+                    
+                    let rows = badgesCSV.split(/\r?\n/g)
+                    let fields = rows.shift().split(/\t/g)
+                    
+                    rows.map(function(row, index){
+                        let badge = {}
+                        let columns = row.split(/\t/g)
+                        fields.map(function(field,index){
+                            badge[field] = columns[index] ? unescape(columns[index]) : null
+                        })
+                        badge["attributes"] = {"type" : "trailheadapp__Badge__c"}
+                        badges.push(badge)
+                    })
+                    resolve(badges)
+                } catch(err){
+                    reject(err)
+                }
+            })
+        }
+        
+        $scope.formatUserBadges = function(userBadgesCSV){
+            return new Promise(function(resolve,reject){
+                try {
+                    let userBadges = []
+                    let rows = userBadgesCSV.split(/\r\n/g)
+                    let fields = rows.shift().split(/\t/g)
+                    let averageDate = 0
+                    let averageRows = 1;
+                    let averageDateOffset
+                    let mostRecentDate
+                    let mostRecentDateOffset 
+                    
+                    rows.map(function(row){
+                        let userBadge = {}
+                        let columns = row.split(/\t/g)
+                        fields.map(function(field,index){
+                            if(field == 'trailheadapp__Badge__c'){
+                                userBadge["trailheadapp__Badge__r"] = {"trailheadapp__External_Id__c": columns[index]}
+                            } else if(field == 'trailheadapp__User__c'){
+                                userBadge["trailheadapp__User__r"] = {"External_ID__c": columns[index]}
+                            } else if(field == 'trailheadapp__Last_Attempted_Date__c') {
+                                let timestamp = Date.parse(columns[index])
+                                if(timestamp){
+                                    averageDate = (timestamp + averageDate * (averageRows-1))/averageRows
+                                    averageRows++;
+                                }
+                                if((!mostRecentDate || mostRecentDate < timestamp) && timestamp ){
+                                    mostRecentDate = timestamp
+                                }
+                                userBadge[field] = timestamp ? timestamp : null
+                            } else {
+                                userBadge[field] = columns[index] ? columns[index] : null
+                            }
+                            userBadge["attributes"] = {"type" : "trailheadapp__User_Badge__c"}
+                        })
+                        userBadges.push(userBadge)
+                    })
+                    
+                    mostRecentDateOffset = Math.round((Date.now() - mostRecentDate)/2592000000)
+                    averageDateOffset = Math.round((Date.now() - averageDate)/2592000000) // 2592000000 = 1 Month
+                    
+                    userBadges.map(function(userBadge){
+                        if(userBadge.trailheadapp__Due_Date__c){
+                            userBadge.trailheadapp__Due_Date__c = $scope.addMonths(userBadge.trailheadapp__Due_Date__c, mostRecentDateOffset)
+                        }
+                        if(userBadge.trailheadapp__Finished_Date__c){
+                            userBadge.trailheadapp__Finished_Date__c = $scope.addMonths(userBadge.trailheadapp__Finished_Date__c, mostRecentDateOffset)
+                        }
+                        if(userBadge.trailheadapp__First_Attempted_Date__c){
+                            userBadge.trailheadapp__First_Attempted_Date__c = $scope.addMonths(userBadge.trailheadapp__First_Attempted_Date__c, mostRecentDateOffset)
+                        }
+                        if(userBadge.trailheadapp__Last_Attempted_Date__c){
+                            userBadge.trailheadapp__Last_Attempted_Date__c = $scope.addMonths(userBadge.trailheadapp__Last_Attempted_Date__c, mostRecentDateOffset)
+                        }
+                    })
+                    resolve(userBadges)
+                } catch(err){
+                    reject(err)
+                }
+            })
+        }
+        
+        $scope.addMonths = function(date, monthOffset){
+            let startDate = new Date(date)
+            return new Date(startDate.setMonth(startDate.getMonth() + monthOffset))
+        }
+        
+        $scope.batchInsertRequest = function(records){
+            let promises = []
+            let batches = records.length / MAX_BATCH
+            
+            for(let batchCounter = 0; batchCounter < batches; batchCounter++){
+                let batchStart = batchCounter * MAX_BATCH;
+                let batchEnd = (batchCounter + 1) * MAX_BATCH
+                let batch = records.slice(batchStart,batchEnd)
+                promises.push($scope.insertRequest(false,batch))
+            }
+            
+            return Promise.all(promises);
+        }
+        
+        $scope.batchDeleteRequest = function(records){
+            let promises = []
+            let batches = records.length / MAX_BATCH
+            
+            for(let batchCounter = 0; batchCounter < batches; batchCounter++){
+                let batchStart = batchCounter * MAX_BATCH;
+                let batchEnd = (batchCounter + 1) * MAX_BATCH
+                let batch = records.slice(batchStart,batchEnd)
+                promises.push($scope.deleteRequest(false,batch))
+            }
+            
+            return Promise.all(promises);
+        }
+        
+        $scope.insertRequest = function(allOrNone,records){
+            let config = Object.assign({},_config)
+            let route = _base + '/composite/sobjects'
+            return new Promise(function(resolve,reject){
+                let body = {
+                    allOrNone: allOrNone,
+                    records: records
+                };
+                
+                $http.post(route, body, config)
+                .then(
+                    function(res){
+                        if(VERBOSE) console.log({message: 'SUCCESS:SFDC:insert', route: route, res: res})
+                        resolve(res)
+                    },
+                    function(err){
+                        if(VERBOSE) console.log({message: 'ERROR:SFDC:insert', route: route, err:err})
+                        reject(err)
+                    }
+                )
+            })
+        }
+        
+        $scope.deleteRequest = function(allOrNone, recordIds){
+            let config = Object.assign({},_config)
+            let route = _base + '/composite/sobjects'
+            console.log('config', config)
+            return new Promise(function(resolve,reject){
+                config['params'] = {"ids": recordIds.join(',')}
+                console.log('config', config)
+                
+                $http.delete(route, config)
+                .then(
+                    function(res){
+                        if(VERBOSE) console.log({message: 'SUCCESS:delete', route: route, res: res})
+                        resolve(res)
+                    },
+                    function(err){
+                        if(VERBOSE) console.log({message: 'ERROR:delete', route: route, err:err})
+                        reject(err)
+                    }
+                )
+            })
+        }
+        
+        
+        $scope.insertBadgeData = function(){
+            return new Promise(function(resolve,reject){
+                $scope.batchInsertRequest($scope.badges)
+                .then(function(res){
+                    console.log('insertBadgeData',res)
+                    $scope.showToast('success', 'Badge data created!');
+                    return $scope.batchInsertRequest($scope.userBadges)
+                })
+                .then(function(res){
+                    $scope.showToast('success', 'User badge data created!');
+                    console.log('insertUserBadgeData:callback',res)
+                    resolve();
+                })
+                .catch(function(err){
+                    $scope.showToast('error', 'User badge data Couldn\'t be deleted');
+                    reject(err)
+                })
+            })
+        }
+        
+        $scope.deleteBadgeData = function(){
+            return new Promise(function(resolve,reject){
+                let query = 'Select Id From trailheadapp__Badge__c'
+                $scope.query(query)
+                .then(function(res){
+                    let recordIds = []
+                    let records = res.data.records
+                    records.map(function(record){
+                        recordIds.push(record.Id);
+                    })
+                    return $scope.batchDeleteRequest(recordIds)
+                })
+                .then(function(res){
+                    console.log('deleteBadgeData:callback', res)
+                    $scope.showToast('success', 'Badge data deleted!');
+                    resolve();
+                })
+                .catch(function(err){
+                    console.log('deleteBadgeData:error', res)
+                    $scope.showToast('error', 'Badge data couldn\'t be deleted');
+                    reject(err)
+                })
+            })
+        }
+        
+        $scope.resetBadgeData = function(){
+            $scope.deleteBadgeData()
+            .then(function(){
+                return $scope.insertBadgeData()
+            })
+        }
+        
+        $scope.query = function(query){
+            let config = _config;
+            config['params'] = { "q": query};
+            let route = _base + '/query'
+            
+            return $http.get(_base + '/query/',config)
+        }
+        
+        $scope.init = function(){
+            let badges = []
+            let userBadges = []
+            $scope.getTrailheadData()
+            .then(function(res){
+                let promises = [$scope.formatBadges(res.data.badges),$scope.formatUserBadges(res.data.userBadges)];
+                return Promise.all(promises);
+            })
+            .then(function([badges,userBadges]){
+                $scope.badges = badges;
+                $scope.userBadges = userBadges;
+                
+                if(VERBOSE){ 'badges',console.log($scope.badges)}
+                if(VERBOSE){ 'userBadges',console.log($scope.userBadges)}
+            })
+        }()
+    })
+    
+    .controller("SectionController", function($scope){
+        $scope.isOpen = false;
+        
+        $scope.toggleSection = function(){
+            $scope.isOpen = !$scope.isOpen;
+        }
+    })
+    
+    </script>
+    
+    <style>
+        .slds-notify_container {
+        width: 480px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        }
+        
+        .caution {
+        font-weight: bold;
+        color: rgb(191, 2, 1);
+        }
+    </style>
+    
+    <div class="slds" ng-app="TrailTrackerDataLoader" ng-controller="MainController" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        
+        <div class="slds-container_center slds-container_large">
+            
+            <div class="slds-text-heading_large slds-m-top_large">Trail Tracker (myTrailhead) Demo Org Setup Tool</div>
+            <div class="slds-text-heading_small slds-m-bottom_large">Heads up, please give yourself 1-2 hours to setup your demo org</div>
+            
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate" title="Change your email address">Step 1: Update your email address <span class="caution">Read Carefully</span></span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            1. Watch this <a href="https://drive.google.com/file/d/1HisHjHjol1WmpNKkictSeXLUgLWiiyea/view?usp=sharing" target="_blank">12 minute video</a> for a brief overview of setting up myTrailhead in your SDO/IDO.
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            2. In order to avoid merging your Org62 myTrailhead profile with your demo environment you'll need to <b>update the primary user's email address</b>.
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            Tip: Use gmail alias to create unique email addresses that won’t link to your official trailhead profile, 
+                            but will allow you to still receive password reset emails.
+                            For example, you can change your email from <b>mkohn@salesforce.com</b> to <b>mkohn+12345@salesforce.com</b>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate" title="Trail Tracker Package">Step 2: Install Trail Tracker Package</span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            Install Trail Tracker package by going to the
+                            <a href="https://appexchange.salesforce.com/appxSearchKeywordResults?keywords=trail%20tracker" target="_blank">AppExchange</a> listing.
+                            The installation should take around 3-5 minutes.
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            Once you have installed the package you can pre-load the org with badge and user data using the Load Data button in step 4.
+                            You can check if your org has completed installation by going to the 
+                            <a href="/lightning/setup/ImportedPackage/home" target="_blank">Installed Packages</a> page and look for <b>Trail Tracker</b>
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate" title="Trail Tracker Package">Step 3: Assign Permission Set</span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            Go to the 
+                            <a href="/lightning/setup/PermSets/home" target="_blank">Permissions Sets</a> 
+                            and assign the <b>Trailhead Admin</b> permission set to your user and any other user you are planning on using.<br/>
+                            <b>If the permission set does not appear the package has not finished installing.</b>
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate" title="Request a myTrailhead Demo Environment ">Step 4: Request a myTrailhead Demo Environment </span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            MyTrailhead subdomains MUST include “-demo” at the end of your requested subdomain to be provisioned.<br/>
+                            <b class="caution">WARNING</b>: If you are demoing for Adidas (as an example) and choose “adidas” as your subdomain, Adidas will NOT be able to use “adidas.my.trailhead.com” if the deal closes. YOU HAVE BEEN WARNED<br/>
+                            For the Namespace field, please type in <b>"Learn"</b>.
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            <a href="https://salesforce.quip.com/7VCMAmuTr82b" target="_blank">Click here</a> for instructions on Provisioning a myTrailhead subdomain
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate">Step 5: Deactivate Process Builder Rule</span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            Because we are loading a lot of user badge data we need to deactivate the notification process in process builder. Navigate to the
+                            <a href="/lightning/setup/ProcessAutomation/home" target="_blank">Process Builder</a> page and look for <b>Assigned Badge Notification</b>
+                            and deactivate it.
+                        </p>
+                    </div>
+                    <div class="slds-m-around_small">
+                        <a href="/lightning/setup/ProcessAutomation/home" target="_blank" class="slds-button slds-button_brand" >
+                            Process Builder
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!--
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate">Step 5: Create a new Trailhead Account</span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            Create a Trailhead account by following the steps listed in the Quip doc below.
+                        </p>
+                    </div>
+                    <div class="slds-m-around_small">
+                        <a href="https://salesforce.quip.com/7VCMAmuTr82b" target="_blank" class="slds-button slds-button_brand" >
+                            Quip
+                        </a>
+                    </div>
+                </div>
+            </div>
+            -->
+            
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate">Step 6: Setup myTrailhead Sync</span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            This step ensures your org is synced with data that exists in Trailhead and myTrailhead. It retrieves metadata for trails and trailmixes into the org (this allows trailmix assignments and more).
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            Navigate to Trailhead Setup by clicking the button below or go directly to Trailhead Setup by selecting Trail Tracker from the App Launcher.
+                            Enter the <b>Production Username</b> and <b>Production Password</b> fields with your SDO org’s admin user's credentials and select "Standard" for <b>License Types</b> then click <b>Save</b>.
+                        </p>
+                    </div>
+                    <div class="slds-m-around_small">
+                        <a href="/lightning/n/trailheadapp__TrailheadSetup" target="_blank" class="slds-button slds-button_brand" >
+                            Trailhead Setup
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate">Step 7: Load Badge Data <span class="caution">READ CAREFULLY</span></span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            <b>Important</b> This steps loads badge data in your demo org. 
+                            This does not load myTrailhead custom content. 
+                            It does give users in your SDO completed badges that helps build the Trailhead Overview Dashboard and allows for detailed storytelling (ie: Cindy Central).
+                            You still need to create and publish custom branded content. Follow the steps in the Quip document to publish custom content.
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            The data is loaded using a tab delimited text file, it's csv that uses tabs instead of commas, to generate the records. 
+                            Click the <b>Load Data</b> button below or download and edit the files and re-upload in 
+                            <a href="/lightning/setup/StaticResources" target="_blank">
+                                Static Resources
+                            </a>.
+                            The zip file containing the badge and user badge data is called <b>trailtrackerdata</b>. Make sure when saving your changes to keep the formatting as a tab delimited .txt file.
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            Go to 
+                            <a href="/lightning/o/trailheadapp__User_Badge__c/list" target="_blank">
+                                User Badges
+                            </a>
+                            list view to see if the data has been loaded properly.
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            If you'd like to wipe the records in your org you can open the advanced settings below and delete all the badges.
+                        </p>
+                    </div>
+                    <div class="slds-m-around_small">
+                        <button class="slds-button slds-button_brand" ng-click="insertBadgeData()">
+                            Load Data
+                        </button>
+                        <a href="/lightning/setup/StaticResources/home" target="_blank" class="slds-button slds-button_brand">
+                            Static Resources
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!--
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate">Step 7: Activate Process Builder Rule</span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            Activate the badge notification process builder rule in
+                            <a href="/lightning/setup/ProcessAutomation/home" target="_blank">Process Builder</a> page and look for <b>Assigned Badge Notification</b>
+                            and activate it.
+                        </p>
+                    </div>
+                    <div class="slds-m-around_small">
+                        <a href="/lightning/setup/ProcessAutomation/home" target="_blank" class="slds-button slds-button_brand" >
+                            Process Builder
+                        </a>
+                    </div>
+                </div>
+            </div>
+            -->
+
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate">Step 8: Setting up your myTrailhead Environment</span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            Please go to the Quip link provided to setup any additional features or get integrated with myTrailhead.
+                            Make sure to open the link in the browser you're authenticated to Aloha in.
+                        </p>
+                    </div>
+                    <div class="slds-m-around_small">
+                        <a href="https://quip.com/7VCMAmuTr82b#UXeACAYm2no" target="_blank" class="slds-button slds-button_brand" >
+                            Quip
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title slds-theme_shade" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate">Step 9: (Optional) Post Installation Trailblazer Points &amp; Ranks</span>
+                    </button>
+                </h3>
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            Installing and setting up this package creates the Trailhead User object that is used to store your points and Trailblazer rank you have obtained in Trailhead (e.g. Mountaineer or Ranger).
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            Install by clicking the install button below and check deployment status by going to <a href="/lightning/setup/DeployStatus/home" target="_blank">Deployment Status</a> page. <b>Estimated time: 2-5 minutes</b>.
+                        </p>
+                        <p class="slds-m-bottom_small">
+                            After the deployment has gone through you can navigate to 
+                            <a href="/lightning/setup/PermSets/home" target="_blank">Permission Sets</a> 
+                            and look for the <b>Trailhead User Object</b> and add your user to the assigned users in order for your users to be able to see the object.
+                        </p>
+                    </div>
+                    <div class="slds-m-around_small">
+                        <button class="slds-button slds-button_brand" ng-click="installUserMetadata()">
+                            Install
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div ng-controller="SectionController" class="slds-section" ng-class="{'slds-is-open': isOpen}">
+                <h3 class="slds-section__title" ng-click="toggleSection()">
+                    <button class="slds-button slds-section__title-action">
+                        <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#switch')}"></use>
+                        </svg>
+                        <span class="slds-truncate" title="Advanced Section">Advanced Section</span>
+                    </button>
+                </h3>
+                
+                <div class="slds-section__content">
+                    <div class="slds-m-around_small">
+                        <p class="slds-m-bottom_small">
+                            Delete all badge and user badge data or click reset to delete and reload all data from the static resources files.
+                        </p>
+                    </div>
+                    <div class="slds-m-around_small">
+                        <button class="slds-button slds-button_brand" ng-click="deleteBadgeData()">
+                            Delete Data
+                        </button>
+                        <button class="slds-button slds-button_brand" ng-click="resetBadgeData()">
+                            Reset &amp; Reload Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        
+        <div class="slds-notify_container toast-container slds-is-fixed">
+            <div ng-repeat="toast in toasts" class="slds-notify slds-notify_toast" ng-class="'slds-theme_' + toast.status" role="status">
+                <span class="slds-assistive-text">{{toast.status}}</span>
+                <div class="slds-notify__content">
+                    {{toast.message}}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</apex:page>

@@ -1,0 +1,181 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="SearchPhrase" type="String"  /> 
+    <aura:attribute name="DemoScripts" type="String[]"/>
+    <aura:attribute name="Partners" type="String[]"/>
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="Resources" type="String[]"/>
+    <aura:attribute name="Customizations" type="String[]"/>
+    <aura:attribute name="setScriptId" type="String" default='' />
+    <aura:attribute name="Videos" type="String[]"/>
+    <aura:attribute name="Personas" type="String[]"/>
+    <aura:attribute name="Announcements" type="String[]"/>
+    <aura:attribute name="FeatureList" type="String[]"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="OrgId" type="String" />
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="UpdateFilter" type="Boolean" />
+    <aura:attribute name="BrandFilter" type="Boolean" />
+    <aura:attribute name="ScriptFilter" type="Boolean" />
+    <aura:attribute name="FeatureFilter" type="Boolean" />
+    <aura:attribute name="CustomizationsFilter" type="Boolean" />
+    <aura:attribute name="PartnerFilter" type="Boolean" />
+    <aura:attribute name="PersonaFilter" type="Boolean" />
+    <aura:attribute name="VideoFilter" type="Boolean" />
+    <aura:attribute name="ResourceFilter" type="Boolean" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.SearchPhrase}" action="{!c.init}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <h3 class="searchHeader">Search Results for: {!v.SearchPhrase}</h3>
+    <aura:if isTrue="{!v.ScriptFilter}">
+        <aura:iteration items="{!v.DemoScripts}" var="script">
+            <c:FIDO_IfContains items="{!script.name}"  items2="{!script.description__c}"  items3="{!script.features__c}" element="{!v.SearchPhrase}"> 
+                <div class="marginbottom">
+                    <div class="textleft">
+                        <button class="slds-button slds-button_neutral fullwidth searchbutton" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.goToScript}">
+                            <div class="paddingsmall relative borderbottom">
+                                <lightning:icon iconName="standard:reward" size="medium" alternativeText=""/> 
+                                <span class="marginleft ">{!script.name}</span>
+                                <span class="slds-badge searchBadge">Demo Script</span>
+                            </div>
+                            <div class="padding searchdesc">
+                                <ui:outputRichText aura:id="outputRT" value="{!script.description__c}" />
+                            </div>
+                        </button>
+                    </div> 
+                </div>
+            </c:FIDO_IfContains>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.PartnerFilter}">
+        <aura:iteration items="{!v.Partners}" var="partner">
+            <c:FIDO_IfContains items="{!partner.name}"  items2="{!partner.description__c}" element="{!v.SearchPhrase}">             
+                <div class="marginbottom">   
+                    <div class="textleft">
+                        <button class="slds-button slds-button_neutral fullwidth searchbutton" aura:id="{!partner.id}" id="{!partner.id}" onclick="{!c.goToPartner}">
+                            <div class="paddingsmall relative borderbottom">
+                                <lightning:icon iconName="standard:partners" size="medium" alternativeText=""/> 
+                                <span class="marginleft ">{!partner.name}</span>
+                                <span class="slds-badge searchBadge">ISV Partner</span>
+                            </div>
+                            <div class="padding searchdesc">
+                                <ui:outputRichText aura:id="outputRT" value="{!partner.description__c}" />
+                            </div>
+                        </button>
+                    </div> 
+                </div>
+            </c:FIDO_IfContains>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.ResourceFilter}">
+        <aura:iteration items="{!v.Resources}" var="resource">
+            <c:FIDO_IfContains items="{!resource.name}"  items2="{!resource.description__c}" element="{!v.SearchPhrase}">             
+                <div class="marginbottom">    
+                    <div class="textleft">
+                        <button class="slds-button slds-button_neutral fullwidth searchbutton" aura:id="{!resource.id}" id="{!resource.id}" onclick="{!c.goToResource}">
+                            <div class="paddingsmall relative borderbottom">
+                                <lightning:icon iconName="standard:resource_capacity" size="medium" alternativeText=""/> 
+                                <span class="marginleft ">{!resource.name}</span>
+                                <span class="slds-badge searchBadge">Resource</span>
+                            </div>
+                            <div class="padding searchdesc">
+                                <ui:outputRichText aura:id="outputRT" value="{!resource.description__c}" />
+                            </div>
+                        </button>
+                    </div> 
+                </div>
+            </c:FIDO_IfContains>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.CustomizationsFilter}">
+        <aura:iteration items="{!v.Customizations}" var="feature">
+            <c:FIDO_IfContains items="{!feature.name}"  items2="{!feature.description__c}" element="{!v.SearchPhrase}">             
+                <div class="marginbottom">
+                    <div class="textleft">
+                        <button class="slds-button slds-button_neutral fullwidth searchbutton" aura:id="{!feature.id}" id="{!feature.id}" onclick="{!c.goToCustomizations}">
+                            <div class="paddingsmall relative borderbottom">
+                                <lightning:icon iconName="standard:code_playground" size="medium" alternativeText=""/> 
+                                <span class="marginleft ">{!feature.name}</span>
+                                <span class="slds-badge searchBadge">Customization</span>
+                            </div>
+                            <div class="padding searchdesc">
+                                <ui:outputRichText aura:id="outputRT" value="{!feature.description__c}" />
+                            </div>
+                        </button>
+                    </div> 
+                </div>
+            </c:FIDO_IfContains>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.VideoFilter}">
+        <aura:iteration items="{!v.Videos}" var="video">
+            <c:FIDO_IfContains items="{!video.name}"  items2="{!video.video_description__c}" element="{!v.SearchPhrase}">             
+                <div class="marginbottom">
+                    <div class="textleft">
+                        <button class="slds-button slds-button_neutral fullwidth searchbutton" aura:id="{!video.id}" id="{!video.id}" onclick="{!c.goToVideo}">
+                            <div class="paddingsmall relative borderbottom">
+                                <lightning:icon iconName="standard:screen" size="medium" alternativeText=""/> 
+                                <span class="marginleft ">{!video.name}</span>
+                                <span class="slds-badge searchBadge">Video</span>
+                            </div>
+                            <div class="padding searchdesc">
+                                <ui:outputRichText aura:id="outputRT" value="{!video.video_description__c}" />
+                            </div>
+                        </button>
+                    </div> 
+                </div>
+            </c:FIDO_IfContains>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.PersonaFilter}">
+        <aura:iteration items="{!v.Personas}" var="persona">
+            <c:FIDO_IfContains items="{!persona.name}"  items2="{!persona.description__c}" element="{!v.SearchPhrase}">             
+                <div class="marginbottom">
+                    <div class="textleft">
+                        <button class="slds-button slds-button_neutral fullwidth searchbutton" aura:id="{!persona.id}" id="{!persona.id}" onclick="{!c.goToPersona}">
+                            <div class="paddingsmall relative borderbottom">
+                                <lightning:icon iconName="standard:team_member" size="medium" alternativeText=""/> 
+                                <span class="marginleft ">{!persona.name}</span>
+                                <span class="slds-badge searchBadge">Persona</span>
+                            </div>
+                            <div class="padding searchdesc">
+                                <ui:outputRichText aura:id="outputRT" value="{!persona.description__c}" />
+                            </div>
+                        </button>
+                    </div> 
+                </div>
+            </c:FIDO_IfContains>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.UpdateFilter}">
+    	<aura:iteration items="{!v.Announcements}" var="ann">
+            <c:FIDO_IfContains items="{!ann.name}"  items2="{!ann.description__c}" element="{!v.SearchPhrase}">             
+                <div class="marginbottom">
+                    <div class="textleft">
+                        <button class="slds-button slds-button_neutral fullwidth searchbutton" aura:id="{!ann.id}" id="{!ann.id}" onclick="{!c.goToAnnouncement}">
+                            <div class="paddingsmall relative borderbottom">
+                                <lightning:icon iconName="standard:announcement" size="medium" alternativeText=""/> 
+                                <span class="marginleft ">{!ann.name}</span>
+                                <span class="slds-badge searchBadge">Update</span>
+                            </div>
+                            <div class="padding searchdesc">
+                                <ui:outputRichText aura:id="outputRT" value="{!ann.description__c}" />
+                            </div>
+                        </button>
+                    </div> 
+                </div>
+            </c:FIDO_IfContains>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

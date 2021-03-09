@@ -1,0 +1,6 @@
+<design:component label="IoT Cooler Simulator(OM)">
+    <design:attribute name="InventoryProduct1Label" label="Name of the First Product in the Inventory Slider" default="Pre - ED1L6-TCCON-622 Units" />
+    <design:attribute name="InventoryProduct2Label" label="Name of the Second Product in the Inventory Slider" default="During - HD1L4-TCPST-625 Units" />
+    <design:attribute name="InventoryProduct3Label" label="Name of the First Third in the Inventory Slider" default="Post - P4-012 Units" />
+    <design:attribute name="showInventorySliders"  label="Show the Inventory Sliders?" default="true" />
+</design:component>

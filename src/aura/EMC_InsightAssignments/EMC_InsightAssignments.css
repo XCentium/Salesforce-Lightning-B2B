@@ -1,0 +1,52 @@
+.THIS {
+    position: relative;
+}
+
+.THIS .insight-name {
+    font-size: 1.5em;
+    font-weight: 300;
+}
+.THIS .insight-type {
+    margin-bottom: 1em;
+}
+
+.THIS .lookup-search-container {
+    display:flex;
+    width: 100%;
+    flex-flow: row wrap;
+}
+
+.THIS .lookup-search {
+    width: calc(100% - 7em);
+}
+
+.THIS .insert-assignment {
+    align-self: flex-end;
+    width: 6em;
+    margin-left: 1em;
+    text-align: center;
+}
+
+.THIS .assignments {
+    
+}
+
+.THIS .no-assignments {
+    
+}
+
+.THIS .hidden {
+    display:none;
+}
+
+.THIS .lookups {
+    position: absolute;
+    background: #fff;
+    z-index: 5;
+    width: calc(100% - 7em);
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0 0 3px 3px;
+    box-shadow: 1px 1px 1px rgba(0,0,0,.1);
+}

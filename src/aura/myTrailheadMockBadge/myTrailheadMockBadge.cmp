@@ -1,0 +1,67 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="ButtonText" type="String" default="Open Trailhead" />
+    <aura:attribute name="HeaderIcon" type="String" default="standard:reward" />
+    <aura:attribute name="TrailheadProfileRank" type="String" default="Mountaineer" />
+    <aura:attribute name="TrailheadProfilePoints" type="String" default="8050" />
+    <aura:attribute name="TrailheadProfileURL" type="String" default="https://trailhead.salesforce.com/en/me/peterarentoftnielsen" />
+    <aura:attribute name="TrailheadBadgeImageURL" type="String" default="https://developer.salesforce.com/resource/images/trailhead/badges/modules/trailhead_modules_advanced_formulas.png" />
+    <aura:attribute name="DescriptionOfBadge" type="String" default="Learn how to write clean, easy-to-understand formulas" />
+    <aura:attribute name="TrailheadBadgeTitle" type="String" default="Advanced Formulas" />
+    <aura:attribute name="PointsAwardedForBadge" type="String" default="500" />
+    
+    <lightning:card footer="View all Badges">
+    	<div class="componentPadding">
+            <lightning:icon iconName="{!v.HeaderIcon}" size="medium" />
+            <h2 class="h2inline">Trailhead</h2>
+            <button class="slds-button slds-button_neutral toprightbutton" onclick="{!c.goToURL}">{!v.ButtonText}</button>
+            <div class="rank">
+                <div class="rank paddingtopbottom">
+                    <div class="rankfloat">
+                        <h3 class="marginbottom">Rank</h3>
+                        <aura:if isTrue="{!v.TrailheadProfileRank == 'Mountaineer'}">
+                            <img class="rankimg" src="https://trailhead.salesforce.com/assets/ranks/mountaineer-121da937d748d9978cc681de9e6d968486ec25ab8a26ddd42a6c5Y00000206Dg.png" />
+                        </aura:if>
+                        <aura:if isTrue="{!v.TrailheadProfileRank == 'Scout'}">
+                            <img class="rankimg" src="https://trailhead.salesforce.com/assets/ranks/scout-08d5a892fdc8141b41f532d89f1c5d50441e986ae5a94fb44c2d9a8780367653.png" />
+                        </aura:if>
+                        <aura:if isTrue="{!v.TrailheadProfileRank == 'Hiker'}">
+                            <img class="rankimg" src="https://trailhead.salesforce.com/assets/ranks/hiker-7b79e02ebdc7b09c5b79c97958c5e554d6609bee9f37598f9deeb5896a9c7105.png" />
+                        </aura:if>
+                        <aura:if isTrue="{!v.TrailheadProfileRank == 'Explorer'}">
+                            <img class="rankimg" src="https://trailhead.salesforce.com/assets/ranks/explorer-e43e2a6fc4d869bf9c2990c5a2c265678c45d1a2fd90e7b89010869d0b63798d.png" />
+                        </aura:if>
+                        <aura:if isTrue="{!v.TrailheadProfileRank == 'Adventurer'}">
+                            <img class="rankimg" src="https://trailhead.salesforce.com/assets/ranks/adventurer-b26177109714fa42d5df7c792e28f39696a6f5ce7ff7464dd27c48bd56e2a94b.png" />
+                        </aura:if>
+                        <aura:if isTrue="{!v.TrailheadProfileRank == 'Expeditioner'}">
+                            <img class="rankimg" src="https://trailhead.salesforce.com/assets/ranks/expeditioner-f2c1a62ba3ce2395efbffdb4df00942a7e55d7da12e73b02805a03c05395bd73.png" />
+                        </aura:if>
+                        <aura:if isTrue="{!v.TrailheadProfileRank == 'Ranger'}">
+                            <img class="rankimg" src="https://trailhead.salesforce.com/assets/ranks/ranger-c52b81631f16e35fe619b58215db59f7be4d8809acd253606ad95Y000000CdhR.png" />
+                        </aura:if>
+                        
+                    </div>
+                    <div class="pointsfloat">
+                        <h3>Points</h3>
+                        <div class="points">{!v.TrailheadProfilePoints}</div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="paddingtopbottom">
+                <h3>Latest Badge</h3>
+                <div class="paddingtopbottom">
+                    <div class="badgeleftimg">
+                        <img src="{!v.TrailheadBadgeImageURL}" />
+                    </div>
+                    <div class="badgecontent">
+                        <div class="badgetitle">{!v.DescriptionOfBadge}</div>
+                        <div><div class="inlinegrey">Title:</div>{!v.TrailheadBadgeTitle}</div>
+                        <div><div class="inlinegrey">Score:</div>{!v.PointsAwardedForBadge +  ' points'}</div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </lightning:card>
+</aura:component>

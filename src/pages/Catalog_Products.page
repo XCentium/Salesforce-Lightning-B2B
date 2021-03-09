@@ -1,0 +1,555 @@
+<apex:page controller="Catalog_Controller" applyBodyTag="false" docType="html-5.0" showHeader="false" standardStylesheets="false" applyHtmlTag="false">
+<html>
+<head>
+<title>Product Catalog</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width = device-width, height = device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<link rel="stylesheet" href="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/revealJS/revealCSS.css')}"/>
+<link rel="stylesheet" href="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/salesforce1/styles.css')}"/>
+
+
+<!-- Inline CSS -->
+<style>
+    @charset "UTF-8";
+    @media (max-height: 200px) {
+        .iFramed {display: block;}
+        .unFramed{display: none;}
+    }
+    @media (min-height: 201px) {
+        .iFramed {display: none;}
+        .unFramed{display: block;}
+    }
+    @media (max-width: 400px) {
+        .contentText {
+            font-size: 15px !important;
+            margin-top: 4px !important;
+        }
+        .CartImg {
+            left: -90px;
+            top: -90px;
+            height: 180px;
+            width: 180px;
+        }
+        .contentItem {font-size: 2em !important;}
+        .ViewMore {
+            width: 80px !important;
+            height: 80px !important;
+            right: calc(50% - 40px) !important;
+            right: -webkit-calc(50% - 40px) !important;
+        }
+    }
+    @media (min-width: 401px) {
+        .contentText {
+            font-size: 12px !important;
+            margin-top: 8px !important;
+        }
+        .CartImg {
+            left: -50px;
+            top: -50px;
+            height: 100px;
+            width: 100px;
+        }
+        .contentItem {font-size: 1.7em !important;}
+    }
+    @font-face {
+        font-family: 'LeagueGothic';
+        src: url("{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/LeagueGothic')}") format('truetype');
+        font-style: normal; 
+    }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+        color: #333;
+        font-family: 'ProximaNova', sans-serif;
+        font-weight: 300;
+        -webkit-font-smoothing: antialiased; 
+        /*background: url("{!backgroundURL}") no-repeat center center fixed;*/ 
+        background: url("{!HTMLENCODE(backgroundURL)}") no-repeat center center fixed;
+        background-size: cover;
+    }
+    h1,h2 {line-height: 1.5em !important;}
+    .reveal {font-size: 12px;}
+    .reveal a {position: initial;}
+
+    /* Navigation Colors */
+    .reveal .controls {bottom: 0px; right: 0px;}
+    .reveal .controls div.navigate-left {border-right-color: #2A94D6 !important;}
+    .reveal .controls div.navigate-right {border-left-color: #2A94D6 !important;}
+    .reveal .controls div.navigate-up  {border-bottom-color: #2A94D6 !important;}
+    .reveal .controls div.navigate-down   {border-top-color: #2A94D6 !important;} 
+
+    /* entire container, keeps perspective */
+    .flip-container { 
+        position: relative; 
+        width: 400px; 
+        height: 400px;
+                perspective: 1000px; 
+        -webkit-perspective: 1000px; 
+    } 
+    /* This is the element that gets flipped */
+    .flipper {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+                transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+                transition:         transform 0.6s;
+        -webkit-transition: -webkit-transform 0.6s;
+    }
+    /* styles to all Card aspects */
+    .flipper .front, .flipper .back {
+        box-shadow: 0 17px 50px 0 rgba(0,0,0,.3);
+        background: rgba(255,255,255,0.83);
+        display: block;
+        position: absolute;
+        top: 10px;
+        padding: 15px !important;
+        width: 100%;
+        height: 360px;
+                backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+    .CardAction {z-index: 19;}
+    /* Use styles here to spruce up the card front and back */
+    .front {}
+    .back {transform: rotateY( 180deg ); -webkit-transform: rotateY( 180deg ); }
+    /* Handle flip action itself */
+    .flipper.flipped {
+                transform: rotateY( 180deg );
+        -webkit-transform: rotateY( 180deg );
+    }
+
+    /*** Here are the custom styles for our slides ***/
+    .CartHeader {
+        font-size: 1.6em !important;
+        color: {!myCatalogTemplate.Header_Left_Text_Color__c};
+        position: absolute;
+        top: -209px;
+        left: -175px;
+        z-index: 25;
+    }
+    .CartLink { 
+        display: inline; 
+        color: {!HTMLENCODE(myCatalogTemplate.Header_Right_Text_Color__c)}; 
+        cursor: pointer;
+    }
+    .CartLink:hover, .CartLink:focus, .CartLink:active {text-decoration:underline}
+    .CartHeader .split {
+        color: #333;
+        opacity: 0.4;
+        padding: 0 8px;
+        font-size: 1.65em !important;
+        vertical-align: middle;
+    }
+    .CartImg { display: none; position: absolute; z-index: 20; }
+    .title {
+        font-weight: normal;
+        color: {!HTMLENCODE(myCatalogTemplate.Title_Text_Color__c)};
+        font-family: LeagueGothic, Impact, sans-serif !important;
+        font-size: {!HTMLENCODE(myCatalogTemplate.Title_Text_Size__c)} !important;
+        line-height: 0.9em !important;
+        letter-spacing: 0.01em;
+        min-height: calc({!HTMLENCODE(myCatalogTemplate.Title_Text_Size__c)} * 0.9);
+    }
+    .subtitle {
+        font-weight: normal;
+        color: {!HTMLENCODE(myCatalogTemplate.Subtitle_Text_Color__c)};
+        font-family: LeagueGothic, Impact, sans-serif !important;
+        font-size: {!HTMLENCODE(myCatalogTemplate.Subtitle_Text_Size__c)} !important;
+        line-height: 1em !important;
+        letter-spacing: 0.02em;
+        text-shadow: 0 0.5px 0 rgba(200,200,200,1), 0 1px 0 rgba(190,190,190,1), 0 1.5px 0 rgba(180,180,180,1), 0 2px 0 rgba(170,170,170,1), 0 2.5px 0 rgba(160,160,160,1), 0 3px 0 rgba(150,150,150,1), 0 3.5px 0 rgba(140,140,140,1);
+        min-height: {!HTMLENCODE(myCatalogTemplate.Subtitle_Text_Size__c)};
+    }
+    .categorySubtitle {color: {!HTMLENCODE(myCatalogTemplate.Category_Text_Color__c)};}
+    .reveal div.tableOfContents {
+        width: 400px;
+        height: 360px;
+        box-shadow: 0 0 12px rgba(0,0,0,.4);
+        background: rgba(255,255,255,0.83);
+        display: block;
+        position: absolute;
+        top: 10px;
+        padding: 15px !important;
+    }
+    .content { width: 370px; }
+    .contentTable {
+        width: 350px !important;
+        margin: 0 auto !important;
+        padding: 0px;
+    }
+    .ViewMore {
+        width: 60px;
+        height: 60px;
+        bottom: 20px;
+        right: calc(50% - 30px);
+        right: -webkit-calc(50% - 30px);
+    }
+    .contentItem {
+        font-family: LeagueGothic, Impact, sans-serif !important;
+        margin: 0 8px !important;
+        padding: 2px 8px !important;
+        background: rgba(255,255,255,.8);
+        display: inline;
+        overflow: visible;
+        line-height: 1.8em !important;
+        letter-spacing: 0.02em;
+    }
+    a .contentItem {color: #2F2F33;}
+    .contentTitle {
+        color: #2F2F33;
+        border-bottom: 2px solid #2F2F33 !important;
+        font-size: 2.5em !important;
+        line-height: 1em !important;
+        font-family: LeagueGothic, Impact, sans-serif !important;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        padding-bottom: 2px !important;
+        margin-bottom: 7px !important;
+    }
+    .contentText { line-height: 135% !important; }
+    .FrontText {
+        text-align: left !important;
+        position: absolute;
+        top: 15px;
+        left: 160px;
+        width: 225px;
+        height: 330px;
+    }
+    .contentScroll {
+        text-align: left !important;
+        position: absolute;
+        width: 370px;
+        height: 330px;
+        left: 15px;
+    }
+    .reveal div.ProductImg {
+        background-position: center center;
+        background-size: cover;
+        background-image: url("{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Images/NoImage.png')}"); 
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 137px;
+        height: 330px;
+        margin-right: 10px;
+    }
+    .reveal div.FrontImg.ProductImg {border: 0.5px solid rgba(0,0,0,0.15);}
+    .reveal div.BackImg.ProductImg {
+        opacity: 0.2;
+        right: 15px;
+        left: initial;
+        margin-right: 0px;
+    }
+    .HomeButton {
+        display: block;
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        z-index: 30;
+        opacity: 0.8;
+        left: 20px;
+        bottom: 20px;
+    }
+    .reveal .controls div {opacity: 0.15;}
+    .reveal .controls div.enabled {opacity: 0.8;}
+    .active {display: block !important;}
+    .inactive {display: none !important;}
+    .op0 {opacity: 0;}
+
+    /* ANIMATED STYLES */
+    .animated {
+      -webkit-animation-duration: 0.333s; animation-duration: 0.333s;
+      -webkit-animation-fill-mode: both; animation-fill-mode: both;
+    }
+    @-webkit-keyframes bounceIn {
+        0% { opacity: 0; -webkit-transform: scale(.3); }
+        50% { opacity: 1; -webkit-transform: scale(1.05); }
+        70% { -webkit-transform: scale(.9); }
+        100% { -webkit-transform: scale(1); }
+    }
+    @keyframes bounceIn {
+        0% { opacity: 0; transform: scale(.3); }
+        50% { opacity: 1; transform: scale(1.05); }
+        70% { transform: scale(.9); }
+        100% { transform: scale(1); }
+    }
+    .bounceIn { -webkit-animation-name: bounceIn; animation-name: bounceIn; }
+    @-webkit-keyframes fadeOut { 0% {opacity: 1;} 100% {opacity: 0;} }
+    @keyframes fadeOut { 0% {opacity: 1;} 100% {opacity: 0;} }
+    .fadeOut { -webkit-animation-name: fadeOut; animation-name: fadeOut; }
+    @-webkit-keyframes fadeInUp { 
+        0% { opacity: 0; -webkit-transform: translateY(4px); }
+        100% { opacity: 1; -webkit-transform: translateY(0); } 
+    }
+    @keyframes fadeInUp { 
+        0% { opacity: 0; transform: translateY(4px); }
+        100% { opacity: 1; transform: translateY(0); } 
+    }
+    .fadeInUp { -webkit-animation: fadeInUp 1.2s ease both; animation: fadeInUp 1.2s ease both; }
+</style>
+</head>
+<!-- Body -->
+<body>
+    <img class="HomeButton" src="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Images/HomeButton.png')}" id="HomeButton"/>
+    <div class="reveal">
+
+        <!-- Beginning Slides -->
+        <div class="slides">
+            <div class="CartHeader startIn op0" id="CartHeader">
+                Double-tap to Add to Cart
+                <span class="split"> | </span>
+                <a onclick="javascriptToCart()">
+                    <span class="CartLink">VIEW CART</span>
+                </a>
+            </div>
+            <img class="CartImg" src="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Images/CartImg.png')}"/>
+            <section>
+                <div class="iFramed">
+                    <!-- mobile cards are standard 200 px height -->
+                    <h2>Product Catalog</h2>
+                    <h3>- Tap to Open -</h3>
+                </div>
+                <div class="unFramed startIn op0">
+                    <div class="caps title">{!HTMLENCODE(myCatalogTemplate.Title_Text__c)}</div>
+                    <div class="caps subtitle">{!HTMLENCODE(myCatalogTemplate.Subtitle_Text__c)}</div>
+                    <div class="NumberOfFamilies" data-families="{!numberOfFamilies}">
+                        <div class="contentText categorySubtitle">Tap on a category to explore our products</div>
+                        <div class="contentTable">
+                            <apex:repeat value="{!familyMap}" var="key">
+                                <a href="#/{!HTMLENCODE(key)}">
+                                    <span class="contentItem caps">
+                                        {!HTMLENCODE(FamilyMap[key])}
+                                    </span>
+                                </a>
+                            </apex:repeat>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <apex:variable var="idxF" value="{!1}"/>
+            <apex:repeat value="{!familyMap}" var="familyKey">
+                <apex:variable var="idx" value="{!1}"/>
+                <section id="{!HTMLENCODE(familyKey)}" >
+                    <!-- THIS IS THE TOC PAGE -->
+                    <section>
+                        <div class="flip-container">
+                            <div class="tableOfContents">
+                                <div class="contentTitle">
+                                    {!HTMLENCODE(familyMap[familyKey])}
+                                </div>
+                                <apex:repeat value="{!productMap[familyKey]}" var="productsList">
+                                    <apex:repeat value="{!productsList}" var="prodItem">
+                                        <a href="#/{!idxF}/{!idx}">
+                                            <div class="contentText">
+                                                {!HTMLENCODE(prodItem.Name)}
+                                            </div>
+                                        </a>
+                                        <apex:variable var="idx" value="{!idx + 1}"/>
+                                    </apex:repeat>
+                                </apex:repeat>
+                            </div>
+                        </div>
+                    </section>
+
+                    <apex:repeat value="{!productMap[familyKey]}" var="products">
+                        <apex:repeat value="{!products}" var="prod">
+                            <section>
+                                <div class="flip-container">
+                                    <div class="flipper">
+                                        <div class="front CardAction">
+                                        <!-- BELOW HERE IS THE FRONT OF THE CARD -->
+                                            <div class="content">
+                                                <div class="ProductImg FrontImg" style="background-image: url('{!HTMLENCODE(prod.VF_Image__c)}')"/>
+                                                
+                                                <div class="FrontText">
+                                                    <div class="contentTitle">
+                                                        {!HTMLENCODE(prod.Name)}
+                                                    </div>
+                                                    <div class="contentText">
+                                                        {!HTMLENCODE(prod.Family)}
+                                                    </div>
+                                                    <div class="contentText">
+                                                        <apex:outputText styleClass="contentText" escape="false" value="{!HTMLENCODE(prod.Blurb__c)}"/>
+                                                    </div>
+                                                    <div class="contentText productID" style="display:none">
+                                                        {!HTMLENCODE(prod.Id)}
+                                                    </div>
+                                                    <img class="ViewMore pos-abs" src="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Images/ViewMore.png')}"/>
+                                                </div>
+                                            </div>
+                                        <!-- END OF THE FRONT OF THE CARD -->
+                                        </div>
+                                        <div class="back CardAction">
+                                        <!-- BELOW HERE IS THE BACK OF THE CARD -->
+                                            <div class="content">
+                                                <div class="ProductImg BackImg" style="background-image: url('{!HTMLENCODE(prod.VF_Image__c)}')"/>
+
+                                                <div class="contentScroll">
+                                                    <div class="contentTitle">
+                                                        {!HTMLENCODE(prod.Name)}
+                                                    </div>
+                                                    <div class="contentText">
+                                                        {!HTMLENCODE(prod.Family)}
+                                                    </div>
+                                                    <div class="contentText">
+                                                        {!HTMLENCODE(prod.Inventory__c)}
+                                                    </div>
+                                                    <div class="contentText">
+                                                        ${!prod.Default_Price__c}
+                                                    </div>
+                                                    <div class="contentText">
+                                                        <apex:outputText styleClass="contentText" escape="false" value="{!HTMLENCODE(prod.Description)}"/>
+                                                    </div>
+                                                    <div class="contentText productID" style="display:none">
+                                                        {!HTMLENCODE(prod.Id)}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <!-- END OF THE BACK OF THE CARD -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </apex:repeat>
+                    </apex:repeat>
+                </section>
+                <apex:variable var="idxF" value="{!idxF + 1}"/>
+            </apex:repeat>
+        </div>
+        <!-- End Slides -->
+    </div>
+    <apex:form >
+        <apex:actionFunction name="toCartJS" action="{!toCart}"/>
+        <apex:actionFunction name="addToCart" action="{!addToCart}" oncomplete="completedJS()"  >
+            <apex:param name="firstParam" assignTo="{!productId}" value=""/>
+        </apex:actionFunction>
+    </apex:form>
+
+<!-- Javascript -->
+<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<!-- RevealJS is distributed under a MIT license, and can be found at the below address -->
+<!-- https://github.com/hakimel/reveal.js/blob/master/LICENSE -->
+<script type="text/javascript" src="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/revealJS/revealJS.js')}" />
+<!-- Handler for our double-tap and add to cart feature -->
+<script type="text/javascript">
+    (function($){
+
+      $.event.special.doubletap = {
+        bindType: 'touchend',
+        delegateType: 'touchend',
+
+        handle: function(event) {
+          var handleObj   = event.handleObj,
+              targetData  = jQuery.data(event.target),
+              now         = new Date().getTime(),
+              delta       = targetData.lastTouch ? now - targetData.lastTouch : 0,
+              delay       = delay == null ? 300 : delay;
+
+          if (delta < delay && delta > 30) {
+            targetData.lastTouch = null;
+            event.type = handleObj.origType;
+            ['clientX', 'clientY', 'pageX', 'pageY'].forEach(function(property) {
+              event[property] = event.originalEvent.changedTouches[0][property];
+            })
+
+            // let jQuery handle the triggering of "doubletap" event handlers
+            handleObj.handler.apply(this, arguments);
+          } else {
+            targetData.lastTouch = now;
+          }
+        }
+      };
+    })(jQuery);
+</script>
+<script type="text/javascript">
+    Reveal.initialize({
+        progress: false,
+        history: true,
+        center: true,
+        width: 400,
+        height: 400,
+        margin: .04,
+        minScale: .7,
+        maxScale: 2.2
+    });
+
+    /* Called on every transition to reset the Cards */
+    Reveal.addEventListener( 'slidechanged', function(event) {
+        $(".flipper").removeClass("flipped");
+    });
+
+    /* If you doubletap an element with the "CardAction" class, it will add it to the order */
+    $(".CardAction").on('doubletap dblclick', function(event) {
+        console.log("DT - Added to Cart");
+        var Product = $( this ).find(".productID").text().trim();
+        console.log("Product " + Product + " is being added to the Cart...");
+        addToCartJS(Product);
+        console.log("Product " + Product + " added to the Cart.");
+        /* Here is where we animate in the Cart IMG */
+        $(".CartImg").addClass("active animated bounceIn");
+        setTimeout(function(){
+            $(".CartImg").removeClass("bounceIn");
+            $(".CartImg").addClass("fadeOut");
+            setTimeout(function(){
+                $(".CartImg").removeClass("active animated fadeOut bounceIn");
+            }, 333);
+        }, 750);
+    });
+
+    /* If you click an element with the "CardAction" class, it will flip the closest Card */
+    $(".CardAction").click(function() {
+        $( this ).closest(".flipper").toggleClass("flipped");
+        console.log("T - Flipped");
+    });
+
+    /* If you click an element with the "HomeButton" class, it navigate to the first slide */
+    $(".HomeButton").click(function() {
+        Reveal.slide(0,0,0);
+        console.log("T - Home");
+    });
+
+    
+    $(document).ready( function() {
+        /* Code to hide frontpage navigation if there are insufficient families  */
+        var families = $(".NumberOfFamilies").attr("data-families");
+        console.log("Number of Families: " + families);
+        if(families > 0) {} else {
+            $(".NumberOfFamilies").addClass("inactive");
+        }
+
+        /* Code to strip and trim table of content of extra whitespace */
+        $( ".contentItem" ).each(function( index ) {
+            var str = $( this ).html();
+            $(this).html( $.trim(str) );
+        });
+
+        /* Code to animate opening Catalog page */
+        setTimeout(function(){
+            $(".startIn").removeClass("op0").addClass("fadeInUp");
+        }, 200);
+        
+        /* Set proper url for desktop */
+        var stateObj = { foo: "bar" };
+        history.replaceState(stateObj, "Product Catalog", "/apex/catalog_products");
+    });
+
+    function javascriptToCart() {
+        console.log("About to call toCartJS()...");
+        toCartJS();
+        console.log("toCart() called.");
+    }
+
+    function addToCartJS(item) {
+        addToCart(item);
+    }
+
+    function completedJS() {
+        console.log("Method completed.")
+    }
+
+</script>
+</body>
+</html>
+</apex:page>

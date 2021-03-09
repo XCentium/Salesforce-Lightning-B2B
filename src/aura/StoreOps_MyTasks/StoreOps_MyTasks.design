@@ -1,0 +1,6 @@
+<design:component>
+	<design:attribute name="Task1" label="Task 1 Label" Placeholder="New Arrivals End Cap Setup" />
+	<design:attribute name="Task2" label="Task 2 Label" Placeholder="Fall Catalog Trail" />
+    <design:attribute name="Task3" label="Task 3 Label" Placeholder="Final Clearance Markdowns" />
+    <design:attribute name="Task4" label="Task 4 Label" Placeholder="Reschedule Jen Taylor Appt" />
+</design:component>

@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION">
+    <aura:attribute name="productId" type="String"/>
+    <aura:attribute name="sendBackData" type="String"/>
+</aura:event>

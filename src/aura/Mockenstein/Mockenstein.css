@@ -1,0 +1,25 @@
+.THIS .red {
+    color:#c23934 !important;
+}
+.THIS .slds-einstein-header{
+    background-image: url(https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Einstein/einstein-header-background.svg)!important;
+}
+.THIS .slds-einstein-header__figure, .THIS .slds-einstein-header__figure:last-child {
+    background-image: url(https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Einstein/einstein-figure.svg)!important;
+}
+.THIS .green {
+    color:#4db53c !important;
+}
+
+.THIS .yellow {
+    color:#F3A83C !important;
+}
+
+.THIS .component-title {
+    padding-left:1rem;
+    font-size:0.9rem;
+}
+
+.THIS .slds-card__body {
+    margin-bottom:0 !important;
+}

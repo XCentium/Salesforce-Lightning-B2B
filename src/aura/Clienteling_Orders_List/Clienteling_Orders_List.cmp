@@ -1,0 +1,105 @@
+<aura:component controller="ClientellingController">
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="overlayClass" type="String"/>
+	<aura:attribute name="ContactID" type="String"/>
+    <aura:attribute name="selectedOrder" type="String" />
+    <aura:attribute name="Order" type="Order[]"/>
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="Products" type="Product2[]"/>
+    
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index"> 
+    <div class="alignRight">
+            <aura:if isTrue="{!setting.Enable_Order_on_Behalf__c == true}">
+                <c:Clienteling_LaunchShoppingCart url="{!setting.Order_on_Behalf_URL__c}" buttonLabel="{!setting.Order_on_behalf_Button_Label__c}" ContactID="{!v.ContactID}" />
+                <aura:set attribute="else">
+                    <button class="slds-button slds-button_outline-brand" onclick="{!c.NewOrder}">Create New Order</button>
+                </aura:set>
+            </aura:if>
+    </div>
+    <hr/>
+    <aura:iteration var="order" items="{!v.Order}" indexVar="index"> 
+        <div class="order">
+            <div class="slds-media padding">
+                <div class="profilepicture">
+                    <lightning:icon iconName="standard:orders" size="small" alternativeText="Indicates approval"/> 
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">Order {!order.OrderNumber} | {!order.Status}</h1>
+                </div>
+            </div>
+            <div class="padding">
+                <c:Clienteling_Flow_ShowOrderProducts ShowNav="false" OrderId="{!order.Id}" AllowRemove="false" />
+                <button class="slds-button slds-button_brand toprightbutton" aura:id="{!order.Id}" id="{!order.Id}" onclick="{!c.OpenDialog}" style="{!'background-color:' + setting.Primary_Button_Color__c + ';border-color:' + setting.Primary_Button_Color__c + ';'}">View</button>
+            </div>
+        </div>
+    </aura:iteration>
+    <!-- EDIT ORDER MODAL -->
+    <section role="dialog" aura:id="OrderModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit Order</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="paneltwothirds">
+                    <lightning:recordEditForm aura:id="edit" 
+                                              recordId="{!v.selectedOrder}" 
+                                              onsuccess="{!c.handleSuccess}" 
+                                              objectApiName="Order"  >
+                        <div aura:id="msg">
+                            <lightning:messages  />
+                        </div>
+                        <lightning:inputField fieldName="OrderNumber" />
+                        <lightning:inputField fieldName="Status"/>
+                        
+                        <h3 class="h3margin">Shipping</h3>
+                        <lightning:inputField fieldName="ShippingAddress" />
+                        <lightning:inputField fieldName="Shipping_Method__c" />
+                        <lightning:inputField fieldName="Shipping_Status__c" />
+                        <h3 class="h3margin">Order Total</h3>
+                        <lightning:inputField fieldName="TotalAmount" />
+                        <div class="slds-m-top_medium">
+                            <lightning:button disabled="{!v.disabled}" variant="neutral" type="submit" name="save" label="Save" />
+                        </div>
+                     </lightning:recordEditForm>
+                </div>
+                <div class="panelonethird">
+                	<c:Clienteling_Einstein_Sentiment
+                    	Contact="{!v.Contact}"
+                        appSettings="{!v.appSettings}" 
+                        ComponentLabel="Order Sentiment Analysis"
+                        NeutralValue="35"
+                        PositiveValue="60"
+                        NegativeValue="5"                              
+                    />
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_destructive" id="{!v.selectedOrder}" aura:id="{!v.selectedOrder}" onclick="{!c.cancelOrder}">Cancel Order</button>
+                <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}" style="{!'background-color:' + setting.Primary_Button_Color__c + ';border-color:' + setting.Primary_Button_Color__c + ';'}">Close</button>
+            </footer>
+        </div>
+        </section>
+    
+    <!-- NEW ORDER MODAL -->
+    <section role="dialog" aura:id="NewOrderModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Order</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <lightning:flow aura:id="flow" onstatuschange="{!c.statusChange}"/>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick="{!c.CloseNewOrder}">Cancel</button>
+            </footer>
+        </div>
+        </section>
+    </aura:iteration>
+    <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+</aura:component>

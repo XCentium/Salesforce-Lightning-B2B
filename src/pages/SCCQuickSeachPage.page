@@ -1,0 +1,277 @@
+<apex:page showHeader="false" sidebar="false" controller="SCCQuickSearchController">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<apex:includeScript value="/support/console/27.0/integration.js"/> 
+	<style>
+		#mySearchDiv{
+			width:470px;
+		}
+		#headerSearch{
+			width:100%;
+			padding:5px;
+		}
+		.itemHeaderSearch{
+			width:100px;
+			padding:5px;
+			border-radius:5px;
+			border:1px solid #ccc;
+			display:inline-block;
+			cursor:pointer;
+		}
+		.itemHeaderSearch span{
+			background-image:url('/img/sprites/master.png');
+			width:30px;
+			height:30px;
+			display:inline-block;
+			vertical-align: middle;
+		}
+		.itemHeaderSearch h2{
+			width:70px;
+			font-size:16px;
+			display:inline-block;
+			vertical-align: middle;
+			text-align:center;
+		}
+		.active{
+			background:#1797c0;
+			color:white !important;
+		}
+		.itemHeaderSearch:hover{
+			background:#15ae2b;
+			color:white !important;
+		}
+		#theSearchDiv{
+			width:400px;
+			padding-left:30px;
+			padding-top:10px;
+			padding-bottom:10px;
+		}
+		#theSearchDiv input{
+			font-size: 14px;
+			width: 100%;
+			padding-top: 5px;
+			padding-bottom: 5px;
+			padding-left: 10px;
+			border-radius: 3px;
+			box-shadow: 2px 2px 2px #ccc;
+			border: 1px solid #ccc;
+		}
+		#theResultDiv{
+			width:100%;
+			height:300px;
+			overflow-y:auto;
+		}
+		.rowResult{
+			width:100%;
+			border-bottom:1px solid #ccc;
+			cursor:pointer;
+		}
+		.rowResult span{
+			width:30px;
+			height:30px;
+			background-image:url('/img/sprites/master.png');
+			margin:10px;
+			display:inline-block;
+			vertical-align:middle;
+		}
+		.rowResult .leadRight{
+			display:inline-block;
+			vertical-align:middle;
+			width:405px;
+		}
+		.leadRight p{
+			font-size:14px;
+			width:100%;
+			display:block;
+			margin:0;
+			padding:0;
+			padding-top:5px;
+			padding-bottom:5px;
+			background:white;
+			text-indent:20px;
+			text-align:center;
+			color:black !important;
+		}
+		.leadRight h2{
+			font-size:14px;
+			text-align:left;
+			width:400px;
+			margin-top:5px;
+			display:inline-block;
+			margin-bottom: 10px;
+		}
+		.rowResult:hover{
+			background:#1797c0;
+			color:white !important;
+		}
+	</style>
+    <script>
+    function addClickHandler(elemId){
+    	$("#"+elemId).click(function(){
+    		var theId = $(this).attr("Id");
+    		console.log('The id : '+theId);
+    		//window.parent.navigateToUrl('/'+theId);
+    		sforce.console.openPrimaryTab(null, '/'+theId, true);
+    		/*
+    		if (typeof(srcUp) == 'function') {
+    			srcUp('/'+theId);
+    		}
+    		else{
+    			window.open('/'+theId, '_blank');
+    		}*/
+    	});
+    }
+
+    $(document).ready(function(){
+    	var flag = false;
+		var selectedTab = 'Lead';
+		var inputString = '';
+		$("#mySearchInput").on('keyup',function() {
+			inputString = $(this).val();
+	        if(!flag){
+	        	setTimeout(function(){
+		        	flag = true;
+		        	switch(selectedTab){
+		        		case 'Lead':SCCQuickSearchController.getLeads(inputString, function(result, event){
+						        		if(event.status){
+						        			$("#theResultDiv").html('');
+						        			for(var i=0; i<result.length; i++){
+							        			var newRow = '<div class="rowResult" id="'+result[i].Id+'">'
+							        				+'<span style="background-position:0 -1166px;"/>'
+							        				+'<div class="leadRight">'
+							        				+'<p>'+result[i].Name+'</p>'
+							        				+'<h2>Phone : '+result[i].Phone+'</h2>'
+							        				+'<h2>Email : '+result[i].Email+'</h2>'
+							        				+'</div>'
+							        				+'</div>';
+							        			$("#theResultDiv").append($(newRow));
+							        			addClickHandler(result[i].Id);
+						        			}
+						        			flag = false;
+						        		}
+						        		else if(event.type === 'Exception'){
+						        			console.log('Exception '+result);
+						        		}
+						        		else{
+						        			console.log('Other '+result);
+						        		}
+						        	},{escape:true});
+		        		break;
+		        		case 'Contact':SCCQuickSearchController.getContacts(inputString, function(result, event){
+						        		if(event.status){						        			$("#theResultDiv").html('');
+						        			for(var i=0; i<result.length; i++){
+							        			var newRow = '<div class="rowResult" id="'+result[i].Id+'">'
+							        				+'<span style="background-position:0 -1024px;"/>'
+							        				+'<div class="leadRight">'
+							        				+'<p>'+result[i].Name+'</p>'
+							        				+'<h2>Phone : '+result[i].Phone+'</h2>'
+							        				+'<h2>Email : '+result[i].Email+'</h2>'
+							        				+'</div>'
+							        				+'</div>';
+							        			$("#theResultDiv").append($(newRow));
+							        			addClickHandler(result[i].Id);
+						        			}
+						        			flag = false;
+						        		}
+						        		else if(event.type === 'Exception'){
+						        			console.log('Exception '+result);
+						        		}
+						        		else{
+						        			console.log('Other '+result);
+						        		}
+						        	},{escape:true});
+		        		break;
+		        		case 'Account':SCCQuickSearchController.getAccounts(inputString, function(result, event){
+						        		if(event.status){
+						        			$("#theResultDiv").html('');
+						        			for(var i=0; i<result.length; i++){
+							        			var newRow = '<div class="rowResult" id="'+result[i].Id+'">'
+							        				+'<span style="background-position:0 -950px;"/>'
+							        				+'<div class="leadRight">'
+							        				+'<p>'+result[i].Name+'</p>'
+							        				+'<h2>Phone : '+result[i].Phone+'</h2>'
+							        				+'<h2>Industry : '+result[i].Industry+'</h2>'
+							        				+'</div>'
+							        				+'</div>';
+							        			$("#theResultDiv").append($(newRow));
+							        			addClickHandler(result[i].Id);
+						        			}
+						        			flag = false;
+						        		}
+						        		else if(event.type === 'Exception'){
+						        			console.log('Exception '+result);
+						        		}
+						        		else{
+						        			console.log('Other '+result);
+						        		}
+						        	},{escape:true});
+		        		break;
+		        		case 'Case':SCCQuickSearchController.getCases(inputString, function(result, event){
+						        		if(event.status){
+						        			$("#theResultDiv").html('');
+						        			for(var i=0; i<result.length; i++){
+							        			var newRow = '<div class="rowResult" id="'+result[i].Id+'">'
+							        				+'<span style="background-position:0 -987px;"/>'
+							        				+'<div class="leadRight">'
+							        				+'<p>Case number '+result[i].CaseNumber+'</p>'
+							        				+'<h2>Subject : '+result[i].Subject+'</h2>'
+							        				+'<h2>Status : '+result[i].Status+'</h2>'
+							        				+'</div>'
+							        				+'</div>';
+							        			$("#theResultDiv").append($(newRow));
+							        			addClickHandler(result[i].Id);
+						        			}
+						        			flag = false;
+						        		}
+						        		else if(event.type === 'Exception'){
+						        			console.log('Exception '+result);
+						        		}
+						        		else{
+						        			console.log('Other '+result);
+						        		}
+						        	},{escape:true});
+		        		break;
+		        	}
+		        	addClickHandler();
+		        	
+	        	},300);
+	        }
+	        
+
+		});
+
+		$(".itemHeaderSearch").click(function(){
+			$(".itemHeaderSearch").removeClass('active');
+			$(this).addClass('active');
+			selectedTab = $(this).find('h2').html();
+			$("#mySearchInput").trigger('keyup');
+			console.log('Seleceted Tab :'+selectedTab);
+		});
+
+
+    });
+    </script>
+	<div id="mySearchDiv">
+		<div id="headerSearch">
+			<center>
+				<div class="itemHeaderSearch active">
+					<span style="background-position:0 -1166px;"/><h2>Lead</h2>
+				</div>
+				<div class="itemHeaderSearch">
+					<span style="background-position:0 -1024px;"/><h2>Contact</h2>
+				</div>
+				<div class="itemHeaderSearch">
+					<span style="background-position:0 -987px;"/><h2>Case</h2>
+				</div>
+				<div class="itemHeaderSearch">
+					<span style="background-position:0 -950px;"/><h2>Account</h2>
+				</div>
+			</center>
+		</div>
+		<div id="theSearchDiv">
+			<input type="text" id="mySearchInput" placeholder="Quick search"/>
+		</div>
+		<div id="theResultDiv">
+
+		</div>
+	</div>
+</apex:page>

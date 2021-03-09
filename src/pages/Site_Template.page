@@ -1,0 +1,111 @@
+<apex:page controller="SDOSiteController" standardStylesheets="false" cache="true" expires="{!cacheMaxAge}" >
+    <html>
+    <head>
+        <apex:stylesheet value="{!$Resource.pkb_css_reset}" />
+        <apex:stylesheet value="{!$Page.Site_CSS}" />
+        <apex:includeScript value="{!$Resource.pkb_js_prototype}" />
+        <apex:includeScript value="{!$Resource.pkb_js_base}" />
+        
+        
+        <link type="text/css" rel="stylesheet" media="handheld,print,projection,screen,tty,tv" href="https://na1.salesforce.com/sCSS/17.0/1260407145000/PortalDefault/default/common.css" />
+        <link type="text/css" rel="stylesheet" media="handheld,print,projection,screen,tty,tv" href="https://na1.salesforce.com/sCSS/17.0/1260407145000/PortalDefault/default/extended.css" />
+        <link type="text/css" rel="stylesheet" media="handheld,print,projection,screen,tty,tv" href="{!PortalCSS}/portal.css" />            
+        <link type="text/css" rel="stylesheet" media="handheld,print,projection,screen,tty,tv" href="{!$Page.Site_SSE_Style}" />
+        
+        
+        <title>Sites3 on Force.com</title>
+    </head>
+    <body class="default" onLoad="if (this.bodyOnLoad) bodyOnLoad();" onBeforeUnload="if (this.bodyOnBeforeUnload) bodyOnBeforeUnload();" onUnload="if (this.bodyOnUnload) bodyOnUnload();" onFocus="if (this.bodyOnFocus) bodyOnFocus();" >
+         
+        <apex:outputPanel styleClass="pkbPage" layout="block" >
+            <!--   Uncomment in development mode...
+               <apex:messages styleClass="pkbErrorMessages" />
+            -->
+            
+            <c:Site_SiteHeader />
+            <apex:insert name="siteTop" />
+            
+            <!-- <apex:outputPanel rendered="{!AND(isExternalPage, securityOK='true')}" layout="none">   -->
+            <apex:outputPanel rendered="{!isExternalPage}" layout="none">
+                <apex:outputPanel styleClass="bodyDiv" layout="block" style="position: relative;">
+                    <apex:outputPanel styleClass="pkbFullWidthTop" layout="block" />
+                    <apex:outputPanel styleClass="pkbFullWidthInner" layout="block">
+                        
+                        <div id="sidebarDiv">
+                            <div class="sidebarInner">
+                                <apex:insert name="sidebarDiv" />
+                                <c:Site_Site_Login />
+                                <c:Site_W2L />
+                                <c:Site_W2C />
+                                <c:Site_CPLoginPage />
+                                <c:Site_CPortalSignUp />
+                                <c:Site_PPLoginPage />
+                                <c:Site_PPortalSignUp />
+                                <c:Site_KnowledgeCategories />
+                                <c:Site_MostPopularArticles />
+                                
+                            </div>
+                        </div>
+                        
+                        <table id="bodyTable" class="outer" width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                                <td id="bodyCell" class="oRight">
+                                    <apex:insert name="body" />
+                                </td>
+                            </tr>
+                        </table>
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </apex:outputPanel>
+
+            <!-- <apex:outputPanel rendered="{!AND(!isExternalPage , securityOK='true')}" layout="none"> -->
+            <apex:outputPanel rendered="{!!isExternalPage}" layout="none">
+                
+                <div class="bodyDiv" style="position: relative;">
+                    <div id="sidebarDiv">
+                        <div class="sidebarInner">
+                            <apex:insert name="sidebarDiv" />
+                                <c:Site_Site_Login />
+                                <c:Site_W2L />
+                                <c:Site_W2C />
+                                <c:Site_CPLoginPage />
+                                <c:Site_CPortalSignUp />
+                                <c:Site_PPLoginPage />
+                                <c:Site_PPortalSignUp />
+                                <c:Site_KnowledgeCategories />
+                                <c:Site_MostPopularArticles />
+                        </div>
+                    </div>
+                    <table id="bodyTable" class="outer" width="100%" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                            <td id="bodyCell" class="oRight">
+                                <apex:insert name="content" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </apex:outputPanel>
+    
+            <br class="clear" />
+        </apex:outputPanel>
+
+        <!-- Removed b/c no need for footer
+        
+        <apex:outputPanel styleClass="pkbPageBottom" layout="block">&nbsp;</apex:outputPanel>
+        <c:Site_SiteFooter />
+         -->
+        <!-- <site:googleAnalyticsTracking />  -->
+
+    </body>
+    </html>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

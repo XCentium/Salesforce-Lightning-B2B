@@ -1,0 +1,72 @@
+.THIS .componentPadding{
+    padding:0px 10px;
+    position:relative
+}
+.THIS .h2inline{
+    display:inline-block;
+    position:relative;
+    top:5px;
+}
+.THIS .toprightbutton{
+    position:absolute;
+    top:0;
+    right:10px;
+}
+.THIS h2{
+    font-size:20px;
+}
+.THIS h3{
+    font-size:16px;
+}
+.THIS h2{
+    font-weight:bold;
+    margin-left:10px;
+}
+.THIS .rankfloat{
+    width:33%;
+    float:left;
+    margin-right:10px;
+}
+.THIS .pointsfloat{
+    width:62%;
+    float:left;
+}
+.THIS .marginbottom{
+    margin-bottom:10px;
+}
+.THIS .points{
+    font-size: 72px;
+    color: #00835C;
+}
+.THIS .paddingtop{
+    padding-top:10px;
+}
+.THIS .paddingtopbottom{
+    padding:10px 0;
+}
+.THIS .rankimg{
+    width:70%;
+    height:auto;
+}
+.THIS .badgeleftimg{
+    width:50px;
+    float:left;
+    margin-right:10px;
+}
+.THIS .badgeleftimg img{
+    width:100%;
+    height:auto;
+}
+.THIS .inlinegrey{
+    display:inline-block;
+    color:#808080;
+    margin-right:5px;
+}
+.THIS .badgecontent{
+    width:calc(100% - 70px);
+    float:left;
+}
+.THIS .badgecontent .title{
+    color:#1300FF;
+}
+.THIS .clear{clear:both;float:none;}

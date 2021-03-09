@@ -1,0 +1,67 @@
+<apex:page showheader="false" standardStylesheets="false">
+    <title>SSE Portal Web2Lead clone</title>
+            <apex:pageBlock title="Contact {!$Organization.Name}">
+                    <div id="formwrapper">
+                        <div id="introduction">Please complete this form and one of our representatives will contact you shortly.</div>
+                                                    
+                            
+                        <!-- WEB TO LEAD FORM SHOULD BE PLACED BELOW HERE -->
+                            
+                            
+                        <form action="https://www.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST">
+                            <input type="hidden" name="oid" value="{!$Organization.Id}"></input>
+                            <input type="hidden" name="retURL" id="thanksURL"></input>
+                            <input type="hidden" name="lead_source" id="lead_source" value="Web Direct"></input>
+                            <input type="hidden" name="Campaign_ID" value="7015Y000003GUJA"></input>
+                            <input type="hidden" name="member_status" value="responded"></input>
+                            <div class="labelCol">First Name*</div>
+                            <div class="dataCol"><input id="first_name" maxlength="40" name="first_name" size="20" type="text" value="Tom"></input></div>
+                            <div class="labelCol">Last Name*</div>
+                            <div class="dataCol"><input id="last_name" maxlength="80" name="last_name" size="20" type="text"  value="Samsonite"></input></div>
+                            <div class="labelCol">Title</div>
+                            <div class="dataCol"><input id="title" maxlength="40" name="title" size="20" type="text" value="CEO"></input></div>
+                            <div class="labelCol">Company*</div>
+                            <div class="dataCol"><input id="company" maxlength="40" name="company" size="20" type="text" value="United Partners*"></input></div>
+                            <div class="labelCol">Address*</div>
+                            <div class="dataCol"><textarea name="street">303 Bay Street</textarea></div>
+                            <div class="labelCol">City*</div>
+                            <div class="dataCol"><input id="city" maxlength="40" name="city" size="20" type="text" value="San Francisco"></input></div>
+                            <div class="labelCol">State/Province*</div>
+                            <div class="dataCol"><input id="state" maxlength="20" name="state" size="20" type="text" value="CA"></input></div>
+                            <div class="labelCol">Zip*</div>
+                            <div class="dataCol"><input id="zip" maxlength="20" name="zip" size="20" type="text" value="94133"></input></div>
+                            <div class="labelCol">Phone</div>
+                            <div class="dataCol"><input id="phone" maxlength="40" name="phone" size="20" type="text" value="(415) 901-7000"></input></div>
+                            <div class="labelCol">Email*</div>
+                            <div class="dataCol"><input id="email" maxlength="80" name="email" size="20" type="text" value="{!$User.Email}"></input></div>
+                            <div class="labelCol">What is your product interest?</div>
+                            <div class="dataCol">
+                                <select  id="00N5Y00000CIgbJ" name="00N5Y00000CIgbJ" title="Product Interest">
+                                    <option value="">--None--</option>
+                                    <option value="Products">Products</option>
+                                    <option value="Services">Services</option>
+                                    <option value="Support">Support</option>
+                                    <option value="Consulting">Consulting</option>
+                                    <option value="Compliance">Compliance</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="labelCol">Comments</div>
+                            <div class="dataCol"><textarea name="description">I would like you to contact me.</textarea></div>
+                            <div class="submitCol"><input type="submit" id="submit" name="submit" value="Submit" class="btn"></input></div>
+                         </form>
+                         
+                         
+                     </div>
+            </apex:pageBlock>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

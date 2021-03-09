@@ -1,0 +1,50 @@
+<!--
+ - Created by cxu on 27/06/2017.
+ -->
+
+<aura:component description="PartnerTierFeaturedActivities" implements="forceCommunity:availableForAllPageTypes"
+                controller="PartnerTierCommunityController">
+    <aura:attribute name="activityTypes" type="Partner_Activity_Type__c[]"></aura:attribute>
+
+    <aura:handler value="{!this}" name="init" action="{!c.doInit}"></aura:handler>
+
+    <lightning:card class="transparent-background">
+        <aura:set attribute="title">
+            {!$Label.c.Featured_Activity_Title}
+        </aura:set>
+        <table class="slds-table point-table slds-table--cell-buffer slds-cell-wrap">
+            <thead>
+            <tr class="slds-text-title--caps slds-border--top slds-border--bottom">
+                <th scope="col">
+                    <div class="slds-truncate" title="Type">{!$Label.c.Activity_Type}</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Category">{!$Label.c.Category}</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Points Awarded">{!$Label.c.Points}</div>
+                </th>
+            </tr>
+            </thead>
+            <aura:iteration items="{!v.activityTypes}" var="activityType">
+                <tr class="slds-hint-parent">
+                    <td>
+                        <a href="javascript:void(0);">
+                            <div class="slds-truncate" title="Type">
+                                    {!activityType.Name}
+                            </div>
+                        </a>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="Category">
+                            <img src="{! $SfdcSite.pathPrefix + activityType.Category_Icon_URL__c}" class="table-icon"/>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="Points Awarded"><ui:outputNumber value="{!activityType.Points__c}"/></div>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </table>
+    </lightning:card>
+</aura:component>

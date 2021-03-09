@@ -1,0 +1,35 @@
+<design:component>
+	<design:attribute name="showSecondTrail"  label="Would you like to show the second trail?" default="true" />
+    <design:attribute name="showThirdTrail"  label="Would you like to show the third trail?" default="true" />
+    <design:attribute name="hideCompletionStatus"  label="Do you want to hide the module completion status?" default="false" />
+    <design:attribute name="Heading" default="Assigned To Me" label="Title for this myTrailhead Section" />
+    
+    <design:attribute name="FirstTrailTitle"  default="Key Account Management" label="First Trail Title" />
+    <design:attribute name="FirstTrailDescripton"  default="Learn to plan like Stan the Man." label="First Trail Description"/>
+    <design:attribute name="FirstTrailCompletion"  default="25" label="First Trail Completion Amount. Note: make sure to input a whole number like 25" />
+    <design:attribute name="FirstTrailBorderColor"  default="#7FC5DD" label="First Trail Border Hex: #ffffff is White, #000000 is Black" />
+    <design:attribute name="FirstTrailIcon"  default="standard:iot_orchestrations" label="First Trail Icon" />
+    <design:attribute name="FirstTrailImage"  default="" label="First Trail URL Image For Icon, Please Note - Populating this will remove the Icon" />
+    <design:attribute name="FirstTrailPoints" default="1600" label="First Trail Points Value" />
+    <design:attribute name="FirstTrailLink" default="" label="When the First module is clicked, where do you want to link to? Input a URL" />
+     
+    
+    <design:attribute name="SecondTrailTitle"  default="Secure Identity and Access Management" label="Second Trail Title"/>
+    <design:attribute name="SecondTrailDescripton"  default="Learn to plan like Stan the Man." label="Second Trail Description" />
+    <design:attribute name="SecondTrailCompletion"  default="25" label="Second Trail Completion Amount. Note: make sure to input a whole number like 25"/>
+    <design:attribute name="SecondTrailBorderColor"  default="#7FC5DD" label="Second Trail Border Hex: #ffffff is White, #000000 is Black" />
+    <design:attribute name="SecondTrailIcon"  default="standard:iot_orchestrations" label="Second Trail Icon"/>
+    <design:attribute name="SecondTrailImage" default="" label="Second Trail URL Image For Icon, Please Note - Populating this will remove the Icon"/>
+    <design:attribute name="SecondTrailPoints"  default="2000" label="Second Trail Points Value"/>
+    <design:attribute name="SecondTrailLink" default="" label="When the Second module is clicked, where do you want to link to? Input a URL" />
+    
+    <design:attribute name="ThirdTrailTitle" default="Learn Privacy and Data Protection Law" label="Third Trail Title"/>
+    <design:attribute name="ThirdTrailDescripton"  default="Learn to plan like Stan the Man." label="Third Trail Description"/>
+    <design:attribute name="ThirdTrailCompletion"  default="25" label="Third Trail Completion Amount. Note: make sure to input a whole number like 25"/>
+    <design:attribute name="ThirdTrailBorderColor"  default="#7FC5DD" label="Third Trail Border Hex: #ffffff is White, #000000 is Black" />
+    <design:attribute name="ThirdTrailIcon"  default="standard:iot_orchestrations" />
+    <design:attribute name="ThirdTrailImage"  default="" label="Third Trail URL Image For Icon, Please Note - Populating this will remove the Icon"/>
+    <design:attribute name="ThirdTrailPoints"  default="2500" label="Third Trail Points Value"/>
+    <design:attribute name="ThirdTrailLink" default="" label="When the Third module is clicked, where do you want to link to? Input a URL" />
+    
+</design:component>

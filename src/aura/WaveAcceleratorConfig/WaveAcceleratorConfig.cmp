@@ -1,0 +1,129 @@
+<aura:component implements="force:appHostable" controller="WaveAcceleratorController">
+    <aura:attribute name="regions" type="Object[]"></aura:attribute>
+    <aura:attribute name="countries" type="Object[]"></aura:attribute>
+    <aura:attribute name="selectedCountry" type="Object"></aura:attribute>
+    <aura:attribute name="selectedIndustry" type="Object"></aura:attribute>
+    <aura:attribute name="industries" type="Object"></aura:attribute>
+    <aura:attribute name="defaultSettings" type="Object"></aura:attribute>
+    <aura:attribute name="settings" type="Object"></aura:attribute>
+    <aura:attribute name="accountStructureId" type="String"></aura:attribute>
+    <aura:attribute name="productStructureId" type="String"></aura:attribute>
+    <aura:attribute name="accountStructureFileList" type="Object"></aura:attribute>
+    <aura:attribute name="accountStructureNewFile" type="String"></aura:attribute>
+    <aura:attribute name="accountStructureNewFileName" type="String"></aura:attribute>
+    <aura:attribute name="productStructureFileList" type="Object"></aura:attribute>
+    <aura:attribute name="productStructureNewFile" type="String"></aura:attribute>
+    <aura:attribute name="productStructureNewFileName" type="String"></aura:attribute>
+    <ltng:require scripts="{!$Resource.jqueryjs_ea_accel}"
+                  afterScriptsLoaded="{!c.doInit}"></ltng:require>
+    
+    <lightning:spinner variant="brand" size="large" aura:id="mySpinner" />
+    <article class="slds-card">
+    <c:lightningWizard99 >
+        <c:lightningWizardStep99 name="Select Country" nextButtonAction="{!c.setAvailableIndustries}">
+            <lightning:tabset selectedTabId="APAC" >
+                <aura:iteration items="{!v.regions}" var="region">
+                    <lightning:tab label="{!region.name}" id="{!region.name}">
+                        <aura:iteration items="{!v.countries}" var="country">
+                            <aura:if isTrue="{!country.region == region.name}">
+                                <div class="slds-visual-picker slds-visual-picker_medium">
+                                    <input type="radio" id="{!country.name}" name="country" value="{!country.name}"/>
+                                    <label for="{!country.name}">
+                                        <span class="slds-visual-picker__figure slds-visual-picker__icon slds-align_absolute-center">
+                                            <span class="slds-is-selected">
+                                                <lightning:icon iconName="action:check" size="large"/>
+                                            </span>
+                                            <span class="slds-is-not-selected">
+                                                <img src="{!country.image}"/>
+                                            </span>
+                                        </span>
+                                        <span class="slds-visual-picker__body">{!country.name}</span>
+                                    </label>
+                                </div>
+                            </aura:if>
+                        </aura:iteration>
+                    </lightning:tab>
+                </aura:iteration>
+            </lightning:tabset>
+        </c:lightningWizardStep99>
+        <c:lightningWizardStep99 name="Select Industry" nextButtonAction="{!c.setSelectedIndustry}">
+            <aura:if isTrue="{!and(v.selectedCountry != null, v.selectedCountry.industries.length > 0)}">
+                <aura:iteration items="{!v.selectedCountry.industries}" var="industry">
+                    <div class="slds-visual-picker slds-visual-picker_medium">
+                        <input type="radio" id="{!industry.name}" name="industry" value="{!industry.id}"/>
+                        <label for="{!industry.name}">
+                            <span class="slds-visual-picker__figure slds-visual-picker__icon slds-align_absolute-center">
+                                <span class="slds-is-selected">
+                                    <lightning:icon iconName="action:check" size="large"/>
+                                </span>
+                                <span class="slds-is-not-selected">
+                                    <img src="{!industry.image}"/>
+                                </span>
+                            </span>
+                            <span class="slds-visual-picker__body">{!industry.name}</span>
+                        </label>
+                    </div>
+                </aura:iteration>
+                <aura:set attribute="else">
+					<p>Selected country has no associated industry record. Default account and product structures will be applied.</p>
+                </aura:set>
+            </aura:if>
+        </c:lightningWizardStep99>
+        <c:lightningWizardStep99 name="Your Ready to Go!! (This next bit is Optional)" nextButtonAction="{!c.uploadNewDatasets}">
+            <center>
+                <p class="slds-text-heading_small">You have currently selected {!v.selectedIndustry.name} industry in {!v.selectedCountry.name}, to change this click the Previous button.</p>
+                <p>If you just saw a green box your demo data has loaded succesfully!!! Now head over to Analytics and start your dataflow</p>
+                
+                <p>If you want to customise the data then this is where you get the files to do that, first download both these files.</p>
+                
+                <div class="slds-box filebox">
+                    <h2>Account Structure - To Customise Account Names</h2>
+                    <lightning:layout horizontalAlign="space" verticalAlign="end">
+                        <lightning:layoutItem flexibility="auto" size="6" padding="around-small">
+                            <a href="{!'https://s3-ap-southeast-2.amazonaws.com/analyticsacceleratorconfigfiles/' + v.accountStructureId}">
+                                <lightning:button label="Download" variant="brand" iconName="utility:download"></lightning:button>
+                            </a>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="around-small">
+                            <lightning:input type="file" label=""  files="{!v.accountStructureFileList}"
+                                             name="accountStructure" onchange="{!c.updateAccountStructure }"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <p>{!v.accountStructureNewFileName}</p>
+                </div>
+                
+                
+                
+                <div class="slds-box filebox">
+                    <h2>Product Structure - To Customise Product Names</h2>
+                    <lightning:layout horizontalAlign="space" verticalAlign="end">
+                        <lightning:layoutItem flexibility="auto" size="6" padding="around-small">
+                            <a href="{!'https://s3-ap-southeast-2.amazonaws.com/analyticsacceleratorconfigfiles/' + v.productStructureId}">
+                                <lightning:button label="Download" variant="brand" iconName="utility:download"></lightning:button>
+                            </a>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="around-small">
+                            <lightning:input type="file" label="" files="{!v.productStructureFileList}"
+                                             name="productStructure" onchange="{!c.updateProductStructure }"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <p>{!v.productStructureNewFileName}</p>
+                </div>
+                
+                <div class="warning">
+					<p>To configure your data you need to edit 2 csv files, grab them here to custmise the data,</p>
+                    <p>If you have done this, this is the screen to upload the datasets back, remember to run the dataflow afterwards!</p>
+                    <p>learn more about how to customise, from the Setup Instructions Dashboard in Analytics</p>
+                    
+                </div>
+                
+            </center>
+        </c:lightningWizardStep99>
+        <c:lightningWizardStep99 name="Finalise" >
+            <center>
+                Now you can go to the Analytic Accelerator Dataflow page to kick off your dataflow!
+            </center>
+        </c:lightningWizardStep99>
+    </c:lightningWizard99>
+    </article>
+</aura:component>

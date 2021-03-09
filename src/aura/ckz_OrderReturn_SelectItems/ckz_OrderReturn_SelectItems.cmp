@@ -1,0 +1,95 @@
+<aura:component description="ckz_OrderReturn_SelectItems"
+                implements="lightning:availableForFlowScreens,force:lightningQuickActionWithoutHeader,force:hasRecordId"
+                access="global">
+
+    <!--
+    Needed to remove these in order to be able to pass in a List of objects:
+        forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome
+    -->
+    <ltng:require styles="{!$Resource.ckz_OrderReturn_Theme}" />
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+
+    <aura:attribute name="recordId" type="String" default=""/>
+
+    <aura:attribute name="orderRecords" type="ccrz__E_Order__c[]" />
+    <aura:attribute name="orderObj" type="ccrz__E_Order__c" />
+
+    <aura:attribute name="orderItemRecords" type="ccrz__E_OrderItem__c[]" />
+
+    <!-- Selected items is stored in a String, for use in Flow variable -->
+    <aura:attribute name="selectedItemsString" type="String" default="" />
+
+    <!-- selected items string converted back to original array format -->
+    <aura:attribute name="selectedItemsList" type="List" default="[]" />
+
+    <!-- Selected items List converted to a Map, for use to determine which assets were previously selected -->
+    <aura:attribute name="selectedItemsMap" type="Map" default="{}" />
+
+    <!-- Determine which actions are available -->
+    <aura:attribute name="canPause" type="Boolean" />
+    <aura:attribute name="canBack" type="Boolean"/>
+    <aura:attribute name="canNext" type="Boolean"/>
+    <aura:attribute name="canFinish" type="Boolean" />
+
+    <aura:attribute name="pageMessages" type="List" default="[]"/>
+
+    <aura:if isTrue="{!(v.pageMessages.length > 0)}">
+        <ul>
+            <aura:iteration items="{!v.pageMessages}" var="msg">
+                <li><c:ckz_OrderReturn_MessageDisplay severity="{!msg.severity}" message="{!msg.message}"/></li>
+            </aura:iteration>
+        </ul>
+    </aura:if>
+
+    <c:ckz_OrderReturn_OrderInfo orderObj="{!v.orderObj}" />
+
+    <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout">
+        <thead>
+        <tr class="slds-text-heading_label">
+            <th scope="col" class="productCol"><div title="Name">Order Item</div></th>
+            <th scope="col" class="qtyCol"><div title="Order Quantity">Order Quantity</div></th>
+            <th scope="col" class="selectedCol"><div title="Select">Selected</div></th>
+            <th scope="col" class="qtyCol"><div title="Return Quantity">Return Quantity</div></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <!-- Use the Apex model and controller to fetch server side data -->
+        <aura:iteration items="{!v.orderItemRecords}" var="item">
+            <c:ckz_OrderReturn_OrderItem orderItem="{!item}" />
+        </aura:iteration>
+        </tbody>
+
+    </table>
+
+    <div class="action-footer">
+        <div class="slds-grid slds-grid_align-spread">
+
+            <div class="slds-col">
+                <aura:if isTrue="{!v.canBack}">
+                    <lightning:button
+                            aura:id="BACK"
+                            label="Previous"
+                            variant="neutral"
+                            onclick="{!c.handleNavigatePrev}"
+                    />
+                </aura:if>
+            </div>
+
+            <div class="slds-col">
+                <aura:if isTrue="{!v.canNext}">
+                    <lightning:button
+                            aura:id="NEXT"
+                            label="Next"
+                            variant="brand"
+                            onclick="{!c.handleNavigateNext}"
+                    />
+                </aura:if>
+            </div>
+
+        </div>
+
+    </div>
+
+</aura:component>

@@ -1,0 +1,923 @@
+<!--
+ - Created by brandon.rogers on 4/22/19.
+ -->
+
+<apex:component id="ckz_OrderBuilder" controller="ckz_ctrl_OrderBuilder">
+    <apex:outputPanel layout="none" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">
+
+        <style type="text/css">
+            .cc_QuickOrder,
+            .ckz-wish-template,
+            .cc_mini_cart .btn {
+                display: none !important;
+            }
+
+            .order-builder {
+                padding-right: 2.5641%;
+            }
+
+            .order-builder .italic {
+                font-style: italic;
+            }
+
+            .order-builder-header h2 {
+                font-family: "Gotham", Arial, Helvetica, sans-serif;
+                font-weight: 700;
+                font-size: 30px;
+                text-transform: uppercase;
+                color: #101010;
+                line-height: 1;
+            }
+
+            .order-builder-header p {
+                font-family: "Gotham", Arial, Helvetica, sans-serif;
+                font-size: 12px;
+                color: #101010;
+            }
+
+            .order-builder-data {
+                font: normal 11px/18px "Gotham", Arial, Helvetica, sans-serif;
+            }
+
+            .order-builder-data .expand {
+                height: 107px;
+            }
+
+            .order-builder-data table {
+                border-collapse: collapse;
+                text-align: left;
+                width: 100%;
+            }
+
+            .order-builder-data table td,
+            .order-builder-data table th {
+                padding: 0;
+            }
+
+            .order-builder-data tr.dates {
+                height: 90px;
+            }
+
+            .order-builder-data thead tr.titles {
+                background-color: #989898;
+                color: #ffffff;
+            }
+
+            .order-builder-data thead tr.titles th {
+                font-weight: 700;
+                padding: 10px 0;
+                text-align: left;
+                text-transform: uppercase;
+            }
+
+            .order-builder-data thead tr.titles th:first-child {
+                padding-left: 10px;
+            }
+
+            .order-builder-data thead tr.dates th {
+                background-color: #ffffff;
+                padding: 5px 0 0;
+                position: relative;
+                text-align: center;
+            }
+
+            .order-builder-data thead tr.dates th a {
+                color: #989898;
+                display: block;
+                font-size: 14px;
+            }
+
+            .order-builder-data thead tr.dates th a .mm,
+            .order-builder-data thead tr.dates th a .dd {
+                display: block;
+            }
+
+            .order-builder-data thead tr.dates th a .fa {
+                color: #6dccee;
+            }
+
+            .order-builder-data thead tr.dates th a:hover {
+                color: #097fb3;
+                text-decoration: none;
+            }
+
+            .order-builder-data thead tr.dates .alpha a .fa {
+                color: #6dccee;
+            }
+
+            .order-builder-data thead tr.dates th a:hover .fa {
+                color: inherit;
+            }
+
+            .order-builder-data thead tr.dates th > .arrow {
+                display: block;
+                left: 0;
+                margin: auto;
+                position: absolute;
+                right: 0;
+                top: 100%;
+                width: 100%;
+                max-width: 80px;
+            }
+
+            .order-builder-data thead tr.dates th.alpha {
+                background-color: transparent;
+            }
+
+            .order-builder-data thead tr.dates th.omega {
+                background-color: transparent;
+            }
+
+            .order-builder-data thead tr .alpha {
+                width: 39.6%;
+            }
+
+            .order-builder-data thead tr .omega {
+                width: 19.80%;
+            }
+
+            .order-builder-data .at-top {
+                /*position: fixed;*/
+                /*top: 0;*/
+                /*width: 740px;*/
+                /*z-index: 100;*/
+            }
+
+            .order-builder-data tbody tr {
+                border-bottom: 1px solid #dcdcdc;
+            }
+
+            .order-builder-data tbody td {
+                border-left: 1px solid #dcdcdc;
+                color: #101010;
+                min-width: 30px;
+            }
+
+            .order-builder-data tbody td:first-child {
+                border-left: none;
+                border-top: 1px solid #dcdcdc;
+                width: 39.6%;
+                padding: 5px 0;
+            }
+
+            .order-builder-data tbody td:last-child {
+                border-top: 1px solid #dcdcdc;
+                width: 19.80%;
+                padding: 5px 0;
+            }
+
+            .order-builder-data tfoot td {
+                border-bottom: 3px solid #dcdcdc;
+                border-top: 2px solid #dcdcdc;
+                text-align: right;
+                padding: 20px 0;
+            }
+
+            .order-builder-data tfoot td > div {
+                display: inline-block;
+            }
+
+            .order-builder-data tfoot td p {
+                margin: 12px 0 0;
+            }
+
+            .order-builder-data .popover {
+                -webkit-box-shadow: none;
+                -moz-box-shadow: none;
+                box-shadow: none;
+                border: 1px solid #dcdcdc;
+                font-weight: 400;
+                color: #101010;
+            }
+
+            .order-builder-data .product-details > a {
+                display: inline-block;
+                text-align: center;
+                vertical-align: middle;
+                width: 30%;
+            }
+
+            .order-builder-data .product-details > a img {
+                max-height: 80px;
+            }
+
+            .order-builder-data .product-details .info {
+                display: inline-block;
+                line-height: 18px;
+                margin: 0 0 0 5%;
+                max-width: 60%;
+                vertical-align: middle;
+            }
+
+            .order-builder-data .product-details .info .productName {
+                color: #101010;
+                font-size: 13px;
+                font-weight: 700;
+            }
+
+            .order-builder-data .product-details .info .productName:hover {
+                color: #6dccee;
+            }
+
+            .order-builder-data .product-details p,
+            .order-builder-data .product-details span {
+                font-weight: 300;
+                margin: 0 0 5px;
+            }
+
+            .order-builder-data .counter {
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                color: #c2c2c2;
+                font-size: 20px;
+                font-weight: 700;
+                text-align: center;
+            }
+
+            .order-builder-data .qty {
+                text-align: right;
+            }
+
+            .order-builder-data .qty label {
+                font-weight: 700;
+                margin-right: 10px;
+            }
+
+            .order-builder-data .qty input {
+                font-weight: 700;
+                min-width: inherit;
+                text-align: center;
+                width: 34px;
+            }
+
+            .order-builder-data .qty p {
+                color: #989898;
+                font-weight: 300;
+                margin: 5px 0 0;
+            }
+
+            .order-builder-data .qty .wishFinder {
+                padding-right: 29px;
+            }
+
+            .order-builder-data .qty .wishFinder .wishButtons {
+                float: none;
+                margin-right: 0;
+            }
+
+            .order-builder-data .qty .wishFinder .wishButtons .dropdown-menu {
+                left: -400%;
+            }
+
+            .order-builder-data .btn {
+                -webkit-border-radius: 0;
+                -moz-border-radius: 0;
+                border-radius: 0;
+            }
+
+            @media (max-width: 1199px) {
+                .order-builder-data .at-top {
+                    width: 605px;
+                }
+            }
+
+            /*========== end of order-builder.less ==========*/
+
+            .popOverBox {
+                width: 250px;
+                text-align: center;
+
+            }
+
+            .order-builder-data thead tr.titles th {
+                text-align: center;
+            }
+
+            .order-builder-header h2 {
+                font-size: 25px;
+            }
+
+            .replceprd, .replaceProd:after {
+                content: "\f0da";
+                font-family: FontAwesome;
+                margin-left: 5px;
+            }
+
+            .prodReplace {
+                float: right;
+                margin-right: 30px;
+            }
+
+            .prodReplace .popover {
+                max-width: 150px;
+                text-align: center;
+            }
+
+            .order-builder-data thead tr.dates th > .arrow {
+                position: relative;
+            }
+
+        </style>
+
+        <script type="text/template" id="orderBuilderTemplatePhone">
+
+        </script>
+
+        <script type="text/template" id="orderBuilderTemplate">
+            <div class="row">
+                <div class="col-md-12 order-builder">
+                    <div class="order-builder-header">
+                        <h2>{{pageLabelMap 'OrderBuilder'}}</h2>
+                        <!--<p>{{pageLabelMap 'OrderBuilder_Instructional'}}</p>-->
+                        <!--<p class="italic">{{pageLabelMap 'specials_note'}}</p>-->
+                    </div>
+
+                    {{#if this.orders}}
+                    <div class="order-builder-data">
+                        <div id="tableHeaderSpacer" class="clearfix"></div>
+                        <table id="tableHeaders">
+                            <thead>
+                            <tr class="titles">
+                                <th class="alpha">
+                                    {{pageLabelMap 'OrderBuilder_Table_Products'}}
+                                </th>
+                                <th colspan="{{this.orders.length}}">
+                                    {{pageLabelMap 'OrderBuilder_Table_Last_Deliveries'}}
+                                </th>
+                                <th class="omega">
+                                    {{pageLabelMap 'OrderBuilder_Table_Qty'}}
+                                </th>
+                            </tr>
+                            <tr class="dates">
+                                <th class="alpha form-horizontal">
+                                    <div class="col-sm-10">
+                                        <select class="form-control sortItems" name="hi">
+                                            <!-- <option value="4">Sort items by</option>
+                                            <select value="1" name="expMonth" -->
+                                            <option value="1">{{pageLabelMap 'DSD_SortProducts_BrandName'}}</option>
+                                            <option value="2">{{pageLabelMap 'DSD_SortProducts_ArticleCode'}}</option>
+                                            <!--<option value="3" >{{pageLabelMap 'DSD_SortProducts_PackageType'}}</option>-->
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <a href="javascript:void(0);" class="btn btn-default sortByAlpha ascending">
+                                            <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+
+                                    <!--<select class="sortItems" name="hi" style="height:20px;position:relative;top:-10px;">
+                                        &lt;!&ndash; <option value="4">Sort items by</option>
+                                         <select value="1" name="expMonth" &ndash;&gt;
+                                        <option value="1" >{{pageLabelMap 'DSD_SortProducts_BrandName'}}</option>
+                                        <option value="2" >{{pageLabelMap 'DSD_SortProducts_ArticleCode'}}</option>
+                                        &lt;!&ndash;<option value="3" >{{pageLabelMap 'DSD_SortProducts_PackageType'}}</option>&ndash;&gt;
+                                    </select>-->
+
+                                    <!--<a href="javascript:void(0);" class="sortByAlpha ascending" style="display:inline;color:black;font-weight:bold;font-size: 10px;">
+                                        <span style="position: absolute;top: 18px;">&nbsp; A</span>
+                                        <span style="position: relative;top: -5px;">&nbsp; Z</span>
+                                        <span style="position: absolute;top: 25px; font-family:fontAwsome; font-size:20px;">&#x2193; </span>
+                                    </a>-->
+                                </th>
+
+                                {{#each this.orders}}
+                                <th>
+                                    <a href="javascript:void(0);" class="toggleOrder" id="{{@index}}" rel="tooltip">
+                                        <span class="mm">{{deliveryDateLong}}</span>
+                                        <span class="mm">{{deliveryDateMonth}}</span>
+                                        <span class="dd">{{deliveryDateDay}}</span>
+                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                    </a>
+                                </th>
+                                {{/each}}
+
+                                <th class="omega"></th>
+                            </tr>
+                            </thead>
+                        </table>
+
+                        <table style="position:relative;top:-20px;">
+                            <tbody>
+                            {{#each this.orderBuilderMap}}
+                            {{#if uniqueOrderItem.productblocked}}
+                            <tr>
+                                <td class="product-details">
+                                    <a href="javascript:void(0);" class="productName gotoProductDetail" data-id="{{uniqueOrderItem.productSKU}}" style="opacity:0.5">
+                                        <img src="{{uniqueOrderItem.mediaWrapper.imageFullPath}}" alt="{{uniqueOrderItem.mediaWrapper.altMessage}}"/>
+                                    </a>
+                                    <div class="info" style="opacity:0.5">
+                                        <p class="desc-name">
+                                            <span class="productName" data-id="{{uniqueOrderItem.productSKU}}">{{{uniqueOrderItem.productName}}}</span>
+                                        </p>
+
+                                        <!--<span class="desc-quantity">{{pageLabelPrefixMap 'UOM_' uniqueOrderItem.unitOfMeasureQuantity}}</span>-->
+                                        {{#ifEquals uniqueOrderItem.userLocale 'fr_CA'}}
+                                        <span class="desc-quantity" style="opacity:0.5">
+                                                                {{pageLabelPrefixMap 'UOM_' uniqueOrderItem.unitOfMeasureQuantity}} | {{uniqueOrderItem.quantityPerUnit}} | {{pageLabelPrefixMap 'UOM_' uniqueOrderItem.inventory}}
+                                                            </span>
+                                        {{/ifEquals}}
+
+                                        {{#ifEquals uniqueOrderItem.userLocale 'Eng'}}
+                                        <span class="desc-quantity" style="opacity:0.5">
+                                                                {{uniqueOrderItem.unitOfMeasureQuantity}} | {{uniqueOrderItem.quantityPerUnit}} | {{uniqueOrderItem.inventory}}
+                                                            </span>
+                                        {{/ifEquals}}
+
+                                        <p class="desc-name">{{pageLabelMap 'SKU'}}: {{uniqueOrderItem.productSKU}}</p>
+                                    </div>
+
+                                    <div class="prodReplace">
+                                        <span style="color:red;">{{pageLabelMap 'DSD_BLOCKED_PRODUCT'}}</span>
+                                        <a id="replacecartBlockedText" style="display:none">{{pageLabelMap 'DSD_BLOCKED_PRODUCT_HELP'}}</a>
+                                        <a href="#" id="xyz" class="replceprd" rel="replaceBlocked">&#xf059; </a>
+                                    </div>
+                                </td>
+
+                                {{#each quantities}}
+                                <td>
+                                    {{#if this}}
+                                    <p class="counter valid">{{this}}</p>
+                                    {{/if}}
+                                </td>
+                                {{/each}}
+
+                                <td class="qty">
+                                    <label>{{pageLabelMap 'QuickOrder_QTY'}}</label>
+                                    <input type="text" maxlength="4" class="orderBuilderItems" data-id="{{uniqueOrderItem.productSKU}}" disabled="disabled"/>
+                                    <p>
+                                        <span>{{uniqueOrderItem.quantityInCart}}</span>
+                                        {{pageLabelMap 'OrderBuilder_InCart'}}
+                                    </p>
+                                </td>
+                            </tr>
+                            {{else}}
+                            {{#if uniqueOrderItem.bolQty}}
+                            <tr>
+                                <td class="product-details">
+                                    <a href="javascript:void(0);" class="productName gotoProductDetail" data-id="{{uniqueOrderItem.productSKU}}" style="opacity:0.5">
+                                        <img src="{{uniqueOrderItem.mediaWrapper.imageFullPath}}" alt="{{uniqueOrderItem.mediaWrapper.altMessage}}"/>
+                                    </a>
+                                    <div class="info" style="opacity:0.5">
+                                        <p class="desc-name">
+                                            <a href="javascript:void(0);" class="productName gotoProductDetail" data-id="{{uniqueOrderItem.productSKU}}">{{{uniqueOrderItem.productName}}}</a>
+                                        </p>
+
+                                        <!--<span class="desc-quantity">{{pageLabelPrefixMap 'UOM_' uniqueOrderItem.unitOfMeasureQuantity}}</span>-->
+                                        {{#ifEquals uniqueOrderItem.userLocale 'fr_CA'}}
+                                        <span class="desc-quantity" style="opacity:0.5">
+                                                                    {{pageLabelPrefixMap 'UOM_' uniqueOrderItem.unitOfMeasureQuantity}} | {{uniqueOrderItem.quantityPerUnit}} | {{pageLabelPrefixMap 'UOM_' uniqueOrderItem.inventory}}
+                                                                </span>
+                                        {{/ifEquals}}
+
+                                        {{#ifEquals uniqueOrderItem.userLocale 'Eng'}}
+                                        <span class="desc-quantity" style="opacity:0.5">
+                                                                    {{uniqueOrderItem.unitOfMeasureQuantity}} | {{uniqueOrderItem.quantityPerUnit}} | {{uniqueOrderItem.inventory}}
+                                                                </span>
+                                        {{/ifEquals}}
+
+                                        <p class="desc-name">{{pageLabelMap 'SKU'}}: {{uniqueOrderItem.productSKU}}</p>
+                                    </div>
+
+                                    <div class="prodReplace">
+                                        <a class="replaceProd" onclick="prodSearch(event)" data-name="{{uniqueOrderItem.tradeMark}}" href="#" style="color:red;">{{pageLabelMap 'DSD_REPLACE_PRODUCT'}}</a>
+                                        <a id="replacecartText" style="display:none">{{pageLabelMap 'DSD_PRODUCT_ENDED'}}</a>
+                                        <a href="#" id="xyz" class="replceprd" rel="replace">&#xf059; </a>
+                                    </div>
+                                </td>
+
+                                {{#each quantities}}
+                                <td>
+                                    {{#if this}}
+                                    <p class="counter valid">{{this}}</p>
+                                    {{/if}}
+                                </td>
+                                {{/each}}
+
+                                <td class="qty">
+                                    <label>{{pageLabelMap 'QuickOrder_QTY'}}</label>
+                                    <input type="text" maxlength="4" class="orderBuilderItems" data-id="{{uniqueOrderItem.productSKU}}"/>
+                                    <p>
+                                        <span>{{uniqueOrderItem.quantityInCart}}</span>
+                                        {{pageLabelMap 'OrderBuilder_InCart'}}
+                                    </p>
+                                </td>
+                            </tr>
+                            {{else}}
+                            <tr>
+                                <td class="product-details">
+                                    <a href="javascript:void(0);" class="productName gotoProductDetail" data-id="{{uniqueOrderItem.productSKU}}">
+                                        <img src="{{uniqueOrderItem.mediaWrapper.imageFullPath}}" alt="{{uniqueOrderItem.mediaWrapper.altMessage}}"/>
+                                    </a>
+
+                                    <div class="info">
+                                        <p class="desc-name">
+                                            <a href="javascript:void(0);" class="productName gotoProductDetail" data-id="{{uniqueOrderItem.productSKU}}">{{{uniqueOrderItem.productName}}}</a>
+                                        </p>
+
+                                        <!--<span class="desc-quantity">{{pageLabelPrefixMap 'UOM_' uniqueOrderItem.unitOfMeasureQuantity}}</span>-->
+                                        {{#ifEquals uniqueOrderItem.userLocale 'fr_CA'}}
+                                        <span class="desc-quantity">
+                                                                    {{pageLabelPrefixMap 'UOM_' uniqueOrderItem.unitOfMeasureQuantity}} | {{uniqueOrderItem.quantityPerUnit}} | {{pageLabelPrefixMap 'UOM_' uniqueOrderItem.inventory}}
+                                                                </span>
+                                        {{/ifEquals}}
+
+                                        {{#ifEquals uniqueOrderItem.userLocale 'Eng'}}
+                                        <span class="desc-quantity">
+                                                                    {{uniqueOrderItem.unitOfMeasureQuantity}} | {{uniqueOrderItem.quantityPerUnit}} | {{uniqueOrderItem.inventory}}
+                                                                </span>
+                                        {{/ifEquals}}
+
+                                        <p class="desc-name">{{pageLabelMap 'SKU'}}: {{uniqueOrderItem.productSKU}}</p>
+                                    </div>
+                                </td>
+
+                                {{#each quantities}}
+                                <td>
+                                    {{#if this}}
+                                    <p class="counter invalid">{{this}}</p>
+                                    {{/if}}
+                                </td>
+                                {{/each}}
+
+                                <td class="qty">
+                                    <label>{{pageLabelMap 'QuickOrder_QTY'}}</label>
+                                    <input type="text" maxlength="4" class="orderBuilderItems" data-id="{{uniqueOrderItem.productSKU}}" data-brand="{{uniqueOrderItem.brand}}" data-category="{{uniqueOrderItem.category}}" data-prodname="{{uniqueOrderItem.productName}}"/>
+                                    <p>
+                                        <span>{{uniqueOrderItem.quantityInCart}}</span>
+                                        {{pageLabelMap 'OrderBuilder_InCart'}}
+                                    </p>
+                                </td>
+                            </tr>
+                            {{/if}}
+                            {{/if}}
+                            {{/each}}
+                            </tbody>
+
+                            <tfoot>
+                            <tr>
+                                <td colspan="8">
+                                    <div>
+                                        <button class="btn btn-default addItemsToCart">{{pageLabelMap 'OrderBuilder_AddItemsToCart'}}</button>
+                                        <button class="btn btn-default resetQty">{{pageLabelMap 'Reset'}}</button>
+                                        <a href="javascript:void(0);" class="btn btn-default gotoCart">{{pageLabelMap 'OrderBuilder_ViewCart'}}</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    {{else}}
+                    <div><p><strong>{{pageLabelMap 'LastOrder_NoOrders'}}</strong></p></div>
+                    {{/if}}
+                </div>
+            </div>
+        </script>
+
+        <script type="text/javascript">
+            //function to search product
+            function prodSearch(e) {
+                var objLink = $(e.currentTarget);
+                var name = objLink.data("name");
+                $("#searchText").val(name);
+                $('#doSearch').click();
+            }
+        </script>
+
+        <script>
+
+            var orderBuilderStarted = false;
+
+            window.onbeforeunload = confirmExit;
+
+            function confirmExit() {
+                if (orderBuilderStarted) {
+                    var message = "You have not added anything to your cart. If you leave this page you will lose the order that you built. Are you sure you want to proceed?",
+                        e = e || window.event;
+
+                    // For IE and Firefox
+                    if (e) {
+                        e.returnValue = message;
+                    }
+
+                    disableCheck(true);
+
+                    // For Safari
+                    return message;
+                }
+            }
+
+            function disableCheck(reEnable) {
+                window.onbeforeunload = null;
+                orderBuilderStarted = false;
+
+                if (reEnable) {
+                    setTimeout(enableCheck, 200);
+                }
+            }
+
+            function enableCheck() {
+                orderBuilderStarted = true;
+                window.onbeforeunload = confirmExit;
+            }
+
+            jQuery(function ($) {
+                /*
+                CCRZ.pubSub.on('view:miniCartView:refresh', function(view) {
+                    view['loggedInAction'] = function(event) {
+                        //var objLink = $(event.target);
+                        //var id = objLink.data("id");
+                        cartDetails(CCRZ.pagevars.currentCartID);
+
+                        // if (CCRZ.pagevars.storeSettings.UseGatingCart__c) {
+                            window.location.href = "{--!$Page.ccrz__Cart}?cartID="+CCRZ.pagevars.currentCartID+"&{--!URLENCODE(ccctrl.ipAddressLocationKey)}={--!URLENCODE(ccCtrl.ipAddressLocation)}&" + getCSRQueryString();
+                        // } else {
+                            // window.location.href = "{--!$Page.ccrz__CheckOutNew}?cartID="+CCRZ.pagevars.currentCartID+"&viewState=InfoView&{--!URLENCODE(ccctrl.ipAddressLocationKey)}={--!URLENCODE(ccCtrl.ipAddressLocation)}&" + getCSRQueryString();
+                        // }
+
+                    }
+                    view.delegateEvents();
+                });
+                */
+                CCRZ.views.orderBuilderView = CCRZ.CloudCrazeView.extend({
+                    templateAll: CCRZ.util.template("orderBuilderTemplate"),
+                    className: 'ckz_ctrl_OrderBuilder',
+                    viewName: "orderBuilderView",
+                    events: {
+                        "click .addItemsToCart": "addItemsToCart",
+                        "click .toggleOrder": "toggleOrder",
+                        "click .gotoCart": "gotoCart",
+                        "click .gotoProductDetail": "gotoProductDetail",
+                        "click .resetQty": "resetQty",
+                        "change .sortItems": "sortItems",
+                        "click .sortByAlpha": "sortByAlpha"
+
+                    },
+                    init: function () {
+                        var v = this;
+                        CCRZ.pubSub.on('view:productSearchView:refresh', function (viewData) {
+                            // v.pickerView = new CCRZ.views.wishlistPickerModal();
+                            //v.fetchOrders(v);
+                            v.sortdefault();
+                        });
+
+                        // CCRZ.pubSub.on('view:'+ v.viewName + ':refresh', function(viewData) {
+                        //     v.pickerView.render();
+                        // });
+                    },
+                    renderDesktop: function () {
+                        var storefrontName = CCRZ.pagevars.storefrontName;
+                        this.setElement($("#orderBuilderContainer"));
+                        this.$el.html(this.templateAll(this.dataSet));
+                        this.initToolTips();
+                        this.initReplaceToolTip();
+                        this.initReplaceBlockedToolTip();
+                        this.initDateHeader();
+                        if (storefrontName !== 'DefaultStore') {
+                            jQuery('.product-details .desc-quantity').hide(); //CONA Qunatity per unit removing
+                        }
+                        CCRZ.pubSub.trigger("view:" + this.viewName + ":refresh", this);
+
+                    },
+                    renderPhone: function () {
+                        var storefrontName = CCRZ.pagevars.storefrontName;
+                        this.setElement($(".phone_center_column"));
+                        this.$el.html(this.templateAll(this.dataSet));
+                        this.initToolTips();
+                        this.initDateHeader();
+                        if (storefrontName !== 'DefaultStore') {
+                            jQuery('.product-details .desc-quantity').hide(); //CONA Qunatity per unit removing
+                        }
+                        CCRZ.pubSub.trigger("view:" + this.viewName + ":refresh", this);
+                    },
+                    initToolTips: function () {
+                        $('[rel=tooltip]').popover({
+                            trigger: 'hover',
+                            placement: 'top', //placement of the popover. also can use top, bottom, left or right
+                            html: 'true', //needed to show html of course
+                            content: '<div class="popOverBox">' + CCRZ.processPageLabelMap("DSD_OrderBuilder_PlusIcon", []).toString() + '</div>'
+                        });
+                    },
+
+                    initReplaceToolTip: function () {
+                        $('[rel=replace]').popover({
+                            trigger: 'hover',
+                            placement: 'top', //placement of the popover. also can use top, bottom, left or right
+                            html: 'true', //needed to show html of course
+                            content: function () {
+                                return $('#replacecartText').text();
+                            }
+                        });
+                    },
+                    initReplaceBlockedToolTip: function () {
+                        $('[rel=replaceBlocked]').popover({
+                            trigger: 'hover',
+                            placement: 'top', //placement of the popover. also can use top, bottom, left or right
+                            html: 'true', //needed to show html of course
+                            content: function () {
+                                return $('#replacecartBlockedText').text();
+                            }
+                        });
+                    },
+
+                    initDateHeader: function () {
+                        var $tableHeaders = $('#tableHeaders'),
+                            $tableHeaderSpacer = $('#tableHeaderSpacer'),
+                            initialPos = $tableHeaders.offset().top,
+                            $win = $(window);
+
+                        $win.scroll(function (event) {
+                            var actualScrollTop = $win.scrollTop();
+
+                            if (actualScrollTop >= initialPos) {
+                                $tableHeaders.addClass('at-top');
+                                $tableHeaderSpacer.addClass('expand');
+                            }
+                            if (actualScrollTop <= initialPos) {
+                                $tableHeaders.removeClass('at-top');
+                                $tableHeaderSpacer.removeClass('expand');
+                            }
+                        });
+                    },
+
+
+                    sortItems: function () {
+                        var v = this;
+                        sortAlpha = true;
+                        v.fetchOrders(v);
+                    },
+
+                    sortdefault: function () {
+                        var v = this;
+                        sortAlpha = true;
+                        var sortedText = $(".sortItems").val(1);
+                        //v.fetchOrders(v);
+                        Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.ckz_ctrl_OrderBuilder.retrieveOrders}',
+                            CCRZ.pagevars.remoteContext, sortedText, sortAlpha,
+                            function (response) {
+                                if (response.success) {
+                                    var data = response.data;
+                                    v.dataSet = data;
+                                    if (CCRZ.display.isPhone())
+                                        v.renderPhone();
+                                    else
+                                        v.renderDesktop();
+                                    // $(".sortItems").val(sortedVal);
+                                    // $(".sortItems").val(sortedText);
+                                }
+                            }, {buffer: false});
+                    },
+
+                    sortByAlpha: function () {
+                        var v = this;
+                        if (sortAlpha) {
+                            sortAlpha = false;
+                        } else {
+                            sortAlpha = true;
+                        }
+                        v.fetchOrders(v);
+                    },
+
+                    fetchOrders: function (v) {
+                        console.log("fetchOrders");
+                        //var sortedText = $(".sortItems option:selected").val(1);
+                        var sortedVal = $(".sortItems option:selected").val();
+                        v.dataSet = {};
+                        Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.ckz_ctrl_OrderBuilder.retrieveOrders}',
+                            CCRZ.pagevars.remoteContext, sortedVal, sortAlpha,
+                            function (response) {
+                                if (response.success) {
+                                    var data = response.data;
+                                    v.dataSet = data;
+                                    if (CCRZ.display.isPhone())
+                                        v.renderPhone();
+                                    else
+                                        v.renderDesktop();
+                                    $(".sortItems").val(sortedVal);
+                                    //alert(sortAlpha);
+                                    if (sortAlpha == false) {
+                                        $(".ascending").html('<span><i class="fa fa-sort-alpha-desc" aria-hidden="true"></i></span>');
+                                        // $(".ascending span").eq(0).replaceWith("<span style='position: absolute;top: 18px;'>&nbsp; Z</span>");
+                                        // $(".ascending span").eq(1).replaceWith("<span style='position: relative;top: -5px;'>&nbsp; A</span>");
+                                    }
+                                }
+                            }, {buffer: false});
+                    },
+
+                    toggleOrder: function (event) {
+                        var orderId = event.currentTarget.id;
+                        var orderItems = this.dataSet.orders[orderId].orderItems;
+                        for (var i = 0; i < orderItems.length; i++) {
+                            var currentQty = $(".orderBuilderItems").filter("[data-id='" + orderItems[i].productSKU + "']").val();
+                            currentQty = currentQty == "" ? 0 : currentQty;
+                            var itemQty = orderItems[i].quantity == "" ? 0 : orderItems[i].quantity;
+                            currentQty = parseInt(currentQty);
+                            itemQty = parseInt(itemQty);
+                            $(".orderBuilderItems").filter("[data-id='" + orderItems[i].productSKU + "']").val(currentQty + itemQty).css("border-color", "#FEB547");
+                        }
+                        disableCheck(true);
+                    },
+                    addItemsToCart: function () {
+                        var v = this;
+                        var dataSet = [];
+                        var productList = [];  // For GA
+                        $(".orderBuilderItems").each(function () {
+                            var cartItem = {
+                                qty: $(this).val() > 0 ? $(this).val() : 0,
+                                sku: $(this).data('id')
+                            }
+                            var parent = $(this).parent().parent();
+                            if (($(parent[0]).find('#replacecartText')).length == 0) {
+                                dataSet.push(cartItem);
+
+                            }
+                            // Google Analytics Start
+                            var productData = {
+                                'name': $(this).data('prodname'),
+                                'id': $(this).data('id'),
+                                'price': '',
+                                'brand': $(this).data('brand'),
+                                'category': $(this).data('category'),
+                                'variant': '',
+                                'quantity': 1
+                            }
+                            productList.push(productData);
+                            // Google Analytics END
+
+                        });
+
+
+                        /*this.className = 'cc_RemoteActionController';
+                        this.invokeContainerLoading($('.deskLayout'), 'addBulkToCart', JSON.stringify(dataSet), CCRZ.pagevars.currentCartID, CCRZ.pagevars.storefrontName, CCRZ.pagevars.portalUserId, function(response){
+                                var cartId = response.cartId;
+                                CCRZ.pagevars.currentCartID = cartId;
+                                CCRZ.pubSub.trigger('cartChange', cartId);
+                                v.fetchOrders(v);
+                                disableCheck(false);
+            });*/
+                        /** start --order builder cart issue **/
+                        this.className = 'cc_ctrl_WishlistRD';
+
+                        this.invokeContainerLoading($('.deskLayout'), 'handleAddBulktoCart', CCRZ.pagevars.remoteContext, JSON.stringify(dataSet),
+                            function (response) {
+                                console.log("response is", response);
+                                var cartId = response;
+                                CCRZ.pagevars.currentCartID = cartId;
+                                CCRZ.pubSub.trigger('cartChange', cartId);
+                                //v.fetchOrders(v);
+
+                                disableCheck(false);
+                                window.location.reload();
+                            });
+                        /** end **/
+
+                        /*
+                        Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.ckz_ctrl_OrderBuilder.setProductType}',CCRZ.pagevars.remoteContext, CCRZ.pagevars.currentCartID, function(response){
+                            if(response.success){
+                                CCRZ.console.log('success--Product types added to cart items.');
+                            }
+                            else{
+                                CCRZ.console.log('Failed to add product types on cart items.');
+                            }
+
+                        });*/
+                        // Google Analytics Start
+                        dataLayer.push({
+                            'event': 'addToCart',
+                            'ecommerce': {
+                                'currencyCode': 'DLR',
+                                'add': {
+                                    'products': productList
+                                }
+                            }
+                        });
+                        // Google Analytics END
+                    },
+                    gotoCart: function (event) {
+                        window.location.href = "{!$Page.ccrz__Cart}?cartId=" + CCRZ.pagevars.currentCartID + getCSRQueryString();
+                    },
+                    gotoProductDetail: function (event) {
+                        var objLink = $(event.currentTarget);
+                        var id = objLink.data("id");
+                        productDetails(id);
+                    },
+                    resetQty: function () {
+                        $(".orderBuilderItems").each(function () {
+                            this.value = "";
+                            $(this).css("border-color", "#dcdcdc");
+                        });
+                        disableCheck(false);
+                    }
+                });
+                CCRZ.orderBuilderHomePageView = new CCRZ.views.orderBuilderView();
+            });
+        </script>
+    </apex:outputPanel>
+    <apex:outputPanel layout="none" rendered="{!ISPICKVAL($User.UserType,'Guest')}">
+        <script type="text/javascript">
+            window.location.href = "{!$Page.ccrz__CCSiteLogin}" + getCSRQueryString();
+        </script>
+    </apex:outputPanel>
+</apex:component>

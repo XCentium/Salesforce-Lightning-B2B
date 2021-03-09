@@ -1,0 +1,192 @@
+<!--  -->
+<apex:page id="cc_POC_DataLoader" controller="cc_POC_Dataloader" title="Data Loader" sideBar="false">
+
+    <style>
+
+    .textStyle {
+        width: 200px !important;
+    }
+    ul.listStyle {
+        display: inline !important;
+        /*list-style-type: none;*/
+        padding: 0;
+        margin: 0;
+    }
+
+    ul.listStyle li {
+        margin-left: 1em;
+    }
+
+    .priceStyle {
+        text-align: right;
+    }
+
+    #DataPageBlock {
+        width: 2000px;
+    }
+
+    #dataTable {
+        width: 2000px;
+        border: 1px solid gray;
+        border-collapse: collapse;
+    }
+
+    #dataTable th, #dataTable td {
+        border: 1px solid gray;
+        vertical-align: top;
+    }
+
+    </style>
+
+    <apex:form >
+        <apex:pageBlock >
+
+            <!--rendered="{!IF(errorCounter > 0, true, false)}"-->
+            <!-- rendered="{!hasError}" -->
+            <apex:pageBlock id="errorBlock" rendered="true">
+                <div id="container">
+                    <apex:pageMessages id="showmsg" ></apex:pageMessages>
+                </div>
+            </apex:pageBlock>
+
+            <apex:actionRegion renderRegionOnly="false" >
+                <apex:panelGrid id="userInput" columns="4">
+
+                    <apex:outputLabel value="Select Storefront:" style="text-align: top;"></apex:outputLabel>
+                    <apex:selectList value="{!selectedStorefront}" id="selStorefront" size="1">
+                        <apex:selectOptions value="{!StorefrontOptions}"/>
+                        <apex:actionSupport event="onchange" rerender="priceListSelection1,priceListSelection2,priceListSelection3,stftRootCategoryId"/>
+                    </apex:selectList>
+
+                    <apex:outputLabel value="Storefront Root Category:" style="text-align: top;"></apex:outputLabel>
+                    <apex:outputText id="stftRootCategoryId" value="{!StorefrontRootCategory + If(selectedRootCategoryId != null, ' (' + selectedRootCategoryId + ')', '')}" />
+
+                    <!--
+                    <apex:outputLabel value="Select Root Category:" style="text-align: top;"></apex:outputLabel>
+                    <apex:selectList value="{!selectedRootCategoryId}" id="selRootCat" size="1">
+                        <apex:selectOptions value="{!RootCategoryOptions}"/>
+                    </apex:selectList>
+                    -->
+
+                </apex:panelGrid>
+
+                <apex:panelGrid id="priceListSelections" columns="6">
+
+                    <apex:outputLabel value="Select Price List 1:" style="text-align: top;"></apex:outputLabel>
+                    <apex:selectList id="priceListSelection1" value="{!selectedPriceList1}" size="1">
+                        <apex:selectOptions value="{!PriceListOptions}"/>
+                    </apex:selectList>
+
+
+                    <apex:outputLabel value="Select Price List 2:" style="text-align: top;"></apex:outputLabel>
+                    <apex:selectList id="priceListSelection2" value="{!selectedPriceList2}" size="1">
+                        <apex:selectOptions value="{!PriceListOptions}"/>
+                    </apex:selectList>
+
+                    <apex:outputLabel value="Select Price List 3:" style="text-align: top;"></apex:outputLabel>
+                    <apex:selectList id="priceListSelection3" value="{!selectedPriceList3}" size="1">
+                        <apex:selectOptions value="{!PriceListOptions}"/>
+                    </apex:selectList>
+
+                </apex:panelGrid>
+
+            </apex:actionRegion>
+
+        </apex:pageBlock>
+
+
+
+        <apex:pageBlock id="selectInputFile" title="Select Input File">
+
+            <apex:panelGrid columns="2" >
+                <apex:inputFile value="{!csvData}" style="color:transparent;" filename="{!csvFileName}" onchange="readCsvFile();"/>
+
+                <apex:commandButton value="Save Data" action="{!saveCsvFile}" rendered="{! dataList.size != 0}"/>
+                <apex:outputText value="{!csvFileName}"/>
+            </apex:panelGrid>
+
+        </apex:pageBlock>
+
+        <apex:pageBlock id="DataPageBlock" rendered="{!dataList.size > 0}">
+
+            <table id="dataTable">
+
+                <tr>
+                    <th class="textStyle">SKU</th>
+                    <th class="textStyle">Product Name</th>
+                    <th class="textStyle">Short Desc</th>
+                    <th class="textStyle">Long Desc</th>
+                    <th class="textStyle">SEO Title</th>
+                    <th class="textStyle">Category</th>
+                    <th>Price 1</th>
+                    <th>Price 2</th>
+                    <th>Price 3</th>
+                    <th>Product Specs</th>
+                    <th class="textStyle">Related Products</th>
+                    <th>Media</th>
+                </tr>
+
+                <apex:repeat value="{!dataList}" var="record" >
+
+                    <tr>
+                        <td class="textStyle"><apex:outputText value="{!record.sku}" /></td>
+                        <td class="textStyle"><apex:outputText value="{!record.productName}" /></td>
+
+                        <td class="textStyle"><apex:outputText value="{!record.shortDesc}" /></td>
+                        <td class="textStyle"><apex:outputText value="{!record.longDesc}" /></td>
+                        <td class="textStyle"><apex:outputText value="{!record.seoTitle}" /></td>
+                        <td class="textStyle"><apex:outputText value="{!record.category}" /></td>
+                        <td class="priceStyle"><apex:outputText value="{!record.price1}" /></td>
+                        <td class="priceStyle"><apex:outputText value="{!record.price2}" /></td>
+                        <td class="priceStyle"><apex:outputText value="{!record.price3}" /></td>
+
+                        <td>
+                            <div>
+                                <ul class="listStyle">
+                                    <apex:repeat value="{!record.specList}" var="rp">
+                                        <li>
+                                            <apex:outputText value="{!rp.name + ' / ' + rp.filterType + ' / ' + rp.value}"/>
+                                        </li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </td>
+
+                        <td class="textStyle">
+                            <div>
+                                <ul class="listStyle">
+                                    <apex:repeat value="{!record.relatedProducts}" var="rp">
+                                        <li>
+                                            <apex:outputText value="{!rp.sku + ' / ' + rp.type}"/>
+                                        </li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div>
+                                <ul class="listStyle">
+                                    <apex:repeat value="{!record.productMediaList}" var="media">
+                                        <li>
+                                            <apex:outputText value="{!media.type + ' / ' + media.mediaSource + ' / ' + media.path}"/>
+                                        </li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                </apex:repeat>
+
+            </table>
+
+        </apex:pageBlock>
+
+        <apex:actionfunction name="readCsvFile" action="{!readCsvFile}"/>
+
+
+    </apex:form>
+
+</apex:page>

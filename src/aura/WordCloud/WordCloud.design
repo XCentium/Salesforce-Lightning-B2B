@@ -1,0 +1,5 @@
+<design:component >
+	<design:attribute name="objectName" label="Object Name" description="Name of the Object you'd like to render" />
+    <design:attribute name="fieldName" label="Field Name" description="Text field name to be rendered" />
+  
+</design:component>

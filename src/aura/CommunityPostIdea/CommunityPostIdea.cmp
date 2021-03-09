@@ -1,0 +1,48 @@
+<aura:component controller="CommunityIdeaController" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="isGuestUser" type="boolean" />
+    <aura:attribute name="listingTitle" type="String" default="Post Idea" />
+    <aura:attribute name="zoneIdNames" type="Community[]" />
+    <aura:attribute name="postedIdea" type="Idea" />
+    <aura:attribute name="similarIdeas" type="Idea[]" />
+    <ltng:require scripts='/resource/jquery'/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <div>
+        <div class="pageTitle">
+            <h2>{!v.listingTitle}</h2> 
+        </div>
+        <div class="pageDetails">
+            <div class="flds">
+                <ui:inputSelect aura:id="zone" label="Zone ">
+                    <ui:inputSelectOption text="" label="None"/>
+                    <aura:iteration items="{!v.zoneIdNames}" var="zoneIdName">
+                        <ui:inputSelectOption text="{!zoneIdName.Id}" label="{!zoneIdName.Name}"/>
+                    </aura:iteration>
+                </ui:inputSelect>
+                <div class="zoneError">Please select the Zone</div>
+            </div>
+            <div class="flds">
+                <ui:inputText aura:id="title" label="Title" required="true" blur="{!c.checkForSimilarIdeas}"/>
+                <div class="titleError">You must enter a value</div>
+                <div class="loadingSimilarIdeas">Loading...</div>
+                <aura:if isTrue="{!v.similarIdeas.length > 0}">
+                    <div class="similarIdeasCont">
+                        <div class="similarIdeaTitle"><span>Similar Ideas</span>(Click to open in new window)</div>
+                        <ul>
+                            <aura:iteration items="{!v.similarIdeas}" var="i">
+                                <li><a href="{! 'idea/' + i.Id }" target="_blank">{!i.Title}</a> - {!i.VoteTotal} Points</li>
+                            </aura:iteration>
+                        </ul>
+                    </div>
+                </aura:if> 
+            </div>
+            <div class="flds">
+                <ui:inputRichText aura:id="description" label="Description" />
+            </div>
+            <div class="flds">
+                <ui:button class="btn" label="Post" press="{!c.submitPostIdea}"/>
+                <ui:button class="btn" label="Cancel" press="{!c.cancelPostIdea}"/>
+            </div>
+        </div>
+    </div>
+</aura:component>

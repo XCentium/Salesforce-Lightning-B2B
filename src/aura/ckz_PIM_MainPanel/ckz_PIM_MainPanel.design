@@ -1,0 +1,5 @@
+<design:component label="B2B Commerce Product Wizard">
+    <design:attribute name="recordId" label="Record ID" />
+    <design:attribute name="showHeader" label="Show Header?" default="false"/>
+    <design:attribute name="headerText" label="Header Text" default="Product Wizard"/>
+</design:component>

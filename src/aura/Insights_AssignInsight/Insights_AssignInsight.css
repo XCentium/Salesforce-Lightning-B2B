@@ -1,0 +1,9 @@
+.THIS .lookup {
+    align-items: flex-end
+}
+.THIS .assign-button {
+    margin-left: 0.5rem;
+}
+.THIS .column_3-of-4{
+    width: calc(100% - 81px);
+}

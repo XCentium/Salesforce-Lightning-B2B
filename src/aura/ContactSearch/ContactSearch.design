@@ -1,0 +1,4 @@
+<design:component label="Contact Lookup">
+	<design:attribute name="ContactId" label="Contact Id"/>
+    <design:attribute name="objectAPIName" label="Contact Id"/>
+</design:component>

@@ -1,0 +1,16 @@
+.THIS {
+}
+.THIS .padding{
+    padding:10px;
+}
+.THIS .padding-left{
+    padding-left:10px;
+}
+.THIS .warrantydetails{
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:5px;
+}
+.THIS .warrantydetails li{
+    padding:5px 0;
+}

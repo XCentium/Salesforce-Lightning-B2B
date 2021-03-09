@@ -1,0 +1,11 @@
+.THIS .list {
+    
+    -webkit-justify-content: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.THIS .list_category{
+    padding: 20px 10px;
+    line-height: 2.5em;    
+}

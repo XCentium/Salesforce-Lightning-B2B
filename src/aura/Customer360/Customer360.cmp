@@ -1,0 +1,50 @@
+<aura:component controller="Customer360Controller" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    
+    <aura:attribute name="recordId" type="String"></aura:attribute>
+    <aura:attribute name="account" type="Map"></aura:attribute>
+    <aura:attribute name="addresses" type="Map[]"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="c.init"></aura:handler>
+    
+    <lightning:card title="C360 Global Profile" iconName="utility:people">
+        <lightning:recordViewForm class="form" recordId="{!v.recordId}" objectApiName="Account">
+            <div class="slds-p-horizontal_small">
+                
+                <lightning:outputField fieldName="Name" />
+                
+                <div class="slds-form-element slds-form-element_stacked">
+                    <div class="slds-form-element__label">Email</div>
+                    <aura:iteration items="{!v.addresses}" var="address">
+                        <aura:if isTrue="{!address.Email__c != ''}">
+                            <div>{!address.Email__c}</div>
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <div class="slds-form-element__label">Phone</div>
+                    <aura:iteration items="{!v.addresses}" var="address">
+                        <aura:if isTrue="{!address.Phone__c != ''}">
+                            <div>
+                                <div class="slds-form-element__label">{!address.Phone_Type__c}</div>
+                                <div>{!address.Phone__c}</div>
+                            </div>
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <div class="slds-form-element__label">Address</div>
+                    <aura:iteration items="{!v.addresses}" var="address">
+                        <div>
+                            <div class="slds-form-element__label">{!address.Address_Type__c}</div>
+                            <lightning:formattedAddress street="{!address.Street__c}"
+                                                        city="{!address.City__c}"
+                                                        province="{!address.State__c}"
+                                                        country="{!address.Country__c}"
+                                                        postalCode="{!address.Postal_Code__c}"
+                                                        />
+                        </div>
+                    </aura:iteration>
+                </div>
+            </div>
+        </lightning:recordViewForm>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,254 @@
+<apex:page standardController="Lead" extensions="DE_LeadPinnedList" recordSetvar="leads">
+
+    <apex:stylesheet value="{!URLFOR($Resource.demoStylesZip, 'demoStyles.css')}"/>
+    <apex:includeScript value="/support/console/28.0/integration.js"/>    
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" />
+    
+    <script type="text/javascript">
+            var demoLeadSelect = '#demoLeads .demoQueueView';
+            var openTab = function(url, tabTitle) {
+                //Open a new primary tab with the salesforce.com home page in it
+                sforce.console.openPrimaryTab(null, url, true, tabTitle, setIcon, tabTitle);
+            }
+            var setIcon = function(result) {
+                if (result.success) {
+                    sforce.console.setTabIcon('/resource/lead_TabIcon',result.id);
+                }
+            };
+            var setIconSuccess = function(result) {                
+                if (result.success == true) {
+                    alert('Tab Icon successfully set');
+                } else {
+                    alert('Tab Icon cannot be set');
+                }
+                console.log(result.success);
+            };
+
+            var demoUpdateHeader = function() {
+                var val = $(demoLeadSelect).find('option:selected').text();
+                var txt = '';
+                if (val && val != '') {
+                    txt = val;
+                } else {
+                    txt = 'Leads';
+                }
+                $('#demoLeads form h2').text(txt);
+            };
+            var demoUpdateHeaderTO = setTimeout(demoUpdateHeader, 50);
+            $('.demoTab').live('click', function() {
+                var sel = 'demoSelected';
+                $('#demoLeads').find('.'+sel).removeClass(sel);
+                $(this).addClass(sel);
+            });
+            $('.demoDropDownBtn').live('click', function() {
+                var $this = $(this);
+                var sel = '.demoDropDownMenu';
+                var $menu = $this.next('.demoDropDownMenu');
+                
+                var hideMenu = function(e) {
+                    var $targ = $(e.target);
+                    if ($targ.nodeName != 'SELECT' && !$targ.closest(sel).get(0)) {
+                        $(document).unbind('click.demoMenu');
+                        $(sel).hide();
+                    }
+                }
+                var showMenu = function() {
+                    $(document).bind('click.demoMenu', hideMenu);
+                    $menu.show();
+                    $menu.css({top: $this.offset().top+$this.outerHeight()-1, left: $this.offset().left+$this.outerWidth()-$menu.outerWidth()});
+                }
+                
+                if ($menu.is(':visible')) {
+                    hideMenu(e);
+                } else {
+                    showMenu();
+                }
+                return false;
+            });
+            $(demoLeadSelect).live('change', function() {
+                demoUpdateHeader();
+                $('.demoDropDownMenu').hide();
+            });
+            $('.demoDropDownMenu a').live('click', function() {
+                return false;
+            });
+            
+            $(window).keydown(function (e) {
+                var meta = (e.ctrlKey || e.metaKey) ? true : false;
+                var ck = e.keyCode;
+                
+                var $queueTable = $('.demoQueue table');
+                var $focused = $('.demoTab:focus').closest('tr');
+                var focusIdx = $focused.index();
+                
+                if (ck == 38) {// up
+                    if (focusIdx == 0 || focusIdx == -1) {
+                        $queueTable.find('tr:last-child').find('.demoTab').focus();
+                    } else {
+                        $focused.prev('tr').find('.demoTab').focus();
+                    }
+                    e.preventDefault();
+                }
+                
+                if (ck == 40) {// down
+                    if (focusIdx == $('.demoTab').length-1 || focusIdx == -1) {
+                        $queueTable.find('tr:first-child').find('.demoTab').focus();
+                    } else {
+                        $focused.next('tr').find('.demoTab').focus();
+                    }
+                    e.preventDefault();
+                }
+            });
+            /* This is not yet supported in navigator tab
+            sforce.console.onFocusedPrimaryTab(function(result) {
+                alert('hit');
+                $('.demoTab:focus').blur();
+                alert($('#'+result.id).closest('li').index());
+            });*/
+    </script>
+
+    <style>
+
+        .phoneMinWidth {
+        }   
+        .leadsourceMinWidth {
+        }   
+        .leadRTMinWidth {
+        }   
+        .hpRound {
+            padding:3px 8px;
+            font-size:12px;
+            font-weight:normal;
+            margin-bottom:3px;
+            border-radius: 12px;
+        }
+        .leadLead {
+            border:2px solid #1797C0;
+            background:#F5F5F5;
+        }
+        .leadDeal_Registration {
+            border:2px solid #B22222;
+            background:#F5F5F5;
+        }
+        .contactSidebar {
+            font-size:16px;
+            font-weight: bold;
+            color: #3C3D3E;
+        }
+        <!--.leadSocialMedia {
+            border:2px solid grey;
+            background:#F5F5F5;
+        }-->
+
+        /* Media Queries */
+        @media screen and (max-width: 140px) {
+          .leadStatusMinWidth {
+            display: none
+          } 
+        }
+        @media screen and (max-width: 160px) {
+          .phoneMinWidth {
+            display: none
+          } 
+        }
+        @media screen and (max-width: 230px) {
+          .originMinWidth {
+            display: none
+          } 
+        }
+        @media screen and (max-width: 285px) {
+          .leadRTMinWidth {
+            display: none
+          } 
+        }
+        /* Added by Venkatesh Budi */
+        .leadCompanyMinWidth{
+            font-size: 14px;
+            color: #3C3D3E;
+            padding: 5px 0;
+        }
+        .demoQueueMeta, .originMinWidth, .leadStatusMinWidth{
+            font-size: 14px;
+            color: #696E71;
+        }
+        .demoHigh{
+            background: url('{!URLFOR($Resource.DF13SalesCloudAssets, 'list/flame-small.png')}');
+            background-repeat: no-repeat;
+            color: #696E71 !important;
+            padding-left: 20px !important;
+        }
+        .demoMedium{
+            background: url('{!URLFOR($Resource.DF13SalesCloudAssets, 'list/thumb-small.png')}');
+            background-repeat: no-repeat;
+            color: #696E71 !important;
+            padding-left: 20px !important;
+        }
+        .demoLow{
+            background: url('{!URLFOR($Resource.DF13SalesCloudAssets, 'list/snowflake-small.png')}');
+            background-repeat: no-repeat;
+            color: #696E71 !important;
+            padding-left: 20px !important;
+        }
+        .demoQueue .demoQueueItem{
+            border-bottom: 2px solid #D4DADC;
+            background: #FAFAFA !important;
+        }
+    </style>
+    
+    <div id="demoLeads" class="demoPane">
+        <apex:form styleClass="demoPaneHeader">
+            <h2></h2>
+          <!--   <a class="demoDropDownBtn" href="#"><span>&nbsp;</span></a>
+           <div class="demoDropDownMenu">
+                <apex:selectList value="{!filterId}" size="1" styleClass="demoQueueView">
+                    <apex:actionSupport event="onchange" rerender="leadlist"/>
+                    <apex:selectOptions value="{!listviewoptions}"/>
+                </apex:selectList>
+                <a href="#">Edit View</a>
+                <a href="#">New View</a>
+                <span class="demoDropDownHr"></span>
+                <a href="#">New Lead</a>
+                <a href="#">Filter</a>
+            </div>
+            -->
+        </apex:form>
+        
+
+        
+        <div class="demoQueue">
+            <apex:dataTable value="{!DE_LeadPinnedList}" var="c" id="leadlist" width="100%" >
+                    <apex:column styleClass="demoQueueItem">
+                        <a class="demoTab" href="#" onclick="openTab('/{!c.id}','{!c.Name}');">
+                            <!-- do not put block level elements here, it will break apex -->
+                            <span class="demoQueueItemHeader">
+                                <span class="contactSidebar"><apex:outputField value="{!c.Name}" /></span>
+                                <!-- <span class="nameMinWidth">
+                                    <span class="phoneSidebar"> &nbsp; &nbsp; <apex:outputField value="{!c.Phone}" /></span>
+                                </span> -->
+                                <!--
+                                <span class="leadRTMinWidth">
+                                    <span class="hpRound lead{!lead.RecordType.DeveloperName}"><apex:outputField value="{!c.RecordType.Name}" /></span>
+                                </span>
+                                -->
+                            </span>
+                            <div class="leadCompanyMinWidth">
+                                <apex:outputField value="{!c.Company}" />
+                            </div>
+                            <span class="demoQueueMeta demoPriority demo{!c.Lead_Quality__c}"><apex:outputField value="{!c.Lead_Quality__c}" />
+                            </span>
+                            <span class="originMinWidth">
+                                <span class="demoQueueMeta"><span class="statusSidebar"> &nbsp; | &nbsp; </span></span>
+                                <span class="demoQueueMeta"><span class="sourceSidebar"><apex:outputField value="{!c.LeadSource}" /></span></span>
+                            </span>
+                            <span class="leadStatusMinWidth">
+                                <span class="demoQueueMeta"><span class="statusSidebar"> &nbsp; | &nbsp; </span></span>
+                                <span class="demoQueueMeta"><span class="statusSidebar"><apex:outputField value="{!c.Status}" /></span></span>
+                            </span>
+                        </a>
+                    </apex:column>
+            </apex:dataTable>
+        </div>
+
+    </div>
+
+</apex:page>

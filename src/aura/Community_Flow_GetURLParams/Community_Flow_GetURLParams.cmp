@@ -1,0 +1,6 @@
+<aura:component implements="lightning:availableForFlowScreens,forceCommunity:availableForAllPageTypes" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="Flow_Name" type="String" default="" access="global" />
+    <aura:attribute name="Variable1" type="String" default="" access="global" />
+	<lightning:flow aura:id="flowData" />
+</aura:component>

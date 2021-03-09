@@ -1,0 +1,99 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" controller="MLM_Community">
+	<aura:attribute name="selectedTask" type="String" default=""/>
+    <aura:attribute name="task1done" type="Boolean" default="false"/> 
+    <aura:attribute name="task2done" type="Boolean" default="false"/> 
+    <aura:attribute name="task3done" type="Boolean" default="false"/> 
+    <aura:attribute name="recordId" type="String" /> 
+    <aura:attribute name="SetCId" type="String" /> 
+    <aura:attribute name="TaskDescription" type="String" default="Your customer predicted engagement score has fallen below 60. Schedule time to check in."/> 
+    <aura:handler name="init" value="{!this}" action="{!c.getList}"/>
+    <aura:attribute name="ToDos" type="Contact[]"/>
+    
+        <aura:iteration var="contact" items="{!v.ToDos}" indexVar="index">
+            <div class="slds-grid slds-gutters listview padding">
+                <div class="slds-col slds-size--1-of-4"> 
+                  <span><a href="{!'/directselling/s/contact/' + contact.Id + '/' + contact.Name}">{!contact.Name}</a></span>
+              </div>
+              <div class="slds-col slds-size--1-of-4">
+                <span>{!contact.Tier__c}</span>
+              </div>
+              <div class="slds-col slds-size--1-of-4">
+                <span>1 Due</span>
+              </div>
+              <div class="slds-col slds-size--1-of-4">
+                <span><button class="slds-button slds-button_brand toprightbutton" id="{!contact.Id}" onclick="{!c.OpenDialog}">View</button></span>
+              </div> 
+            </div>
+        </aura:iteration>
+    <section role="dialog" aura:id="TaskModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Manage Task</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                  <div class="slds-grid slds-gutters listview padding">
+                      <aura:iteration var="contact" items="{!v.ToDos}" indexVar="index">
+                          <aura:if isTrue="{!v.SetCId == contact.Id}">
+                              <div class="slds-col">
+                                <span>
+                                    <h3><a href="{!'/directselling/s/contact/' + contact.Id + '/' + contact.Name}">{!contact.Name}</a></h3>
+                                    <strong>{!contact.Tier__c}</strong><br/>
+                                    {!contact.MailingAddress}
+                                </span>
+                              </div>
+                              <div class="slds-col">
+                                  <a href="javascript:void(0)">{!contact.Email}</a><br/>
+                                  <a href="javascript:void(0)">{!contact.Phone}</a><br/>
+                                  <a href="javascript:void(0)">+ Add Follow-Up</a><br/>
+                              </div>
+                              <div class="slds-col">
+                                  <a href="javascript:void(0)">Send Text Message</a><br/>
+                                  <a href="javascript:void(0)">Add Notes</a><br/>
+                                  <a href="javascript:void(0)">Messenger</a><br/>
+                              </div> 
+                          </aura:if>
+                      </aura:iteration>
+                      
+                    </div>
+                    <hr/>
+                    <div class="slds-grid slds-gutters listview padding">
+                       <div class="slds-col center"> 
+                        <div class="slds-form-element">
+                          <div class="slds-form-element__control">
+                            <span class="slds-checkbox">
+                              <input type="checkbox" name="options" id="checkbox-2" value="checkbox-2" />
+                              <label class="slds-checkbox__label" for="checkbox-2">
+                                <span class="slds-checkbox_faux"></span><br/>
+                                <span class="slds-form-element__label">Done</span>
+                              </label>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="slds-col">
+                        <span>
+                            <strong>Overdue</strong><br/>
+                            {!v.TaskDescription}
+                        </span><br/>
+                        <a href="javascript:void(0)" class="tasklink">Email Template</a>  
+                        <a href="javascript:void(0)" class="tasklink">Message Template</a>  
+                      </div>
+                      <div class="slds-col">
+                      	<button class="nostylebutton" onclick="{!c.CloseDialog}"><img src="{!$Resource.edit_icon}" /></button>
+                      </div>
+                      <div class="slds-col">
+                		  <button class="nostylebutton" onclick="{!c.CloseDialog}" ><img src="{!$Resource.trash_icon}" /></button>
+                      </div> 
+                    </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick="{!c.CloseDialog}">Cancel</button>
+                <button class="slds-button slds-button_brand" onclick="{!c.CompleteTask}" >Mark As Done</button>
+            </footer>
+        </div>
+        </section>
+        <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+</aura:component>

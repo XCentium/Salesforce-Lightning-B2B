@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="ckz_UpdateRemoveItems" access="global">
+    <aura:attribute name="cart_item_sfid" type="String" />
+    <aura:attribute name="sku" type="String" />
+    <aura:attribute name="checked" type="Boolean" />
+</aura:event>

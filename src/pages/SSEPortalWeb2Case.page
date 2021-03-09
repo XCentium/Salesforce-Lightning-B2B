@@ -1,0 +1,56 @@
+<apex:page showheader="false" standardStylesheets="false">
+    <title>SSE Portal Web2Case</title>
+    <apex:composition template="SSEPortalTemplate">
+        <apex:define name="title">
+            Contact {!$Organization.Name}
+        </apex:define>
+        <apex:define name="script">
+            $j(document).ready(function() {
+                  document.getElementById("thanksURL").value = "https://" + window.location.host + "/apex/SSEPortalWebThank";
+            });
+        </apex:define>
+        <apex:define name="body">
+                <apex:pageBlock title="Contact {!$Organization.Name}">
+                        <div id="formwrapper">
+                            <div id="introduction">Please submit your support request with a short description of your issue. One of our support representatives will contact you shortly.</div>
+                            
+                            
+                            <!-- WEB TO CASE FORM SHOULD BE PLACED BELOW HERE -->
+                            
+                            
+                            <form action="https://www.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST">
+                                <input type="hidden" name="orgid" value="{!$Organization.Id}"></input>
+                                <input type="hidden" name="origin" value="Website" />
+                                <input type="hidden" name="retURL" id="thanksURL"></input>
+                                <input type="hidden"  id="external" name="external" value="1" />
+                                <div class="labelCol">Contact Name*</div>
+                                <div class="dataCol"><input id="name" maxlength="80" name="name" size="20" type="text" value="Lauren Boyle*"></input></div>
+                                <div class="labelCol">Email*</div>
+                                <div class="dataCol"><input id="email" maxlength="80" name="email" size="20" type="text" value="lboyle@example.com"></input></div>
+                                <div class="labelCol">Phone</div>
+                                <div class="dataCol"><input id="phone" maxlength="40" name="phone" size="20" type="text" value="528-757-6012"></input></div>
+                                <div class="labelCol">Company</div>
+                                <div class="dataCol"><input id="company" maxlength="80" name="company" size="20" type="text" value="United Partners*"></input></div>
+                                <div class="labelCol">Subject*</div>
+                                <div class="dataCol"><input id="company" maxlength="80" name="subject" size="20" type="text" value="Can't understand installation instructions"></input></div>
+                                <div class="labelCol">Description*</div>
+                                <div class="dataCol"><textarea name="description">I am having trouble understanding the installation instructions. Can you help me get started?</textarea></div>
+                                <div class="submitCol"><input type="submit" id="submit" name="submit" value="Submit" class="btn"></input></div>
+                             </form>
+                             
+                                      
+                         </div>
+                </apex:pageBlock>
+            </apex:define>
+    </apex:composition>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

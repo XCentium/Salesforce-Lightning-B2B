@@ -1,0 +1,24 @@
+<!--
+ - Created by brandon.rogers on 2020-08-17.
+ -->
+
+ <apex:page id="ckz_Wishlists_incl" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false" applyHtmlTag="false">
+    <!-- Sidebar -->
+    <div class="wrapper">
+        <div id="sidebar">
+
+            <div id="dismiss">
+                <i class="fal fa-times fa-2x"></i>
+            </div>
+
+            <div class="sidebarMiniCart hide">
+                <apex:insert name="MiniCartBox" />
+            </div>
+
+        </div>
+    </div>
+
+    <div class="cart-template"></div>
+
+    <c:ckz_OrderTemplates />
+</apex:page>

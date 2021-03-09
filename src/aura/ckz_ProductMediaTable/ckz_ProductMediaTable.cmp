@@ -1,0 +1,71 @@
+<aura:component description="ckz_ProductMediaTable" controller="ckz_ProductMediaAdminCtrl">
+
+    <aura:attribute name="productId" type="String" required="true"/>
+
+    <!-- for the product media record in the table -->
+    <aura:attribute name="recordId" type="String" required="false"/>
+
+    <aura:attribute name="reloadData" type="Boolean" required="false" />
+
+    <aura:handler event="aura:waiting" action="{!c.waiting}" phase="capture"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}" phase="capture"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+
+    <aura:handler name="change" value="{!v.reloadData}" action="{!c.handleReloadData}"/>
+
+    <aura:attribute type="ccrz__E_ProductMedia__c[]" name="data"/>
+    <aura:attribute name="columns" type="List"/>
+
+    <aura:attribute name="selectedRows" type="List" access="private" />
+
+    <aura:attribute name="showDialog" type="Boolean" default="false" />
+
+    <aura:renderIf isTrue="{!v.showSpinner}">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+            <span class="slds-assistive-text">Loading, Please Wait...</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </aura:renderIf>
+
+    <lightning:layout class="slds-page-header slds-page-header_object-home slds-p-around_xxx-small slds-grid_vertical-align-center">
+
+        <lightning:layoutItem size="1" class="slds-p-around_medium">
+            <div><lightning:icon iconName="utility:cart" alternativeText="Product Media"/></div>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem size="7">
+            <div class="page-section page-header">
+                <h1 class="slds-text-heading_medium">Product Media</h1>
+            </div>
+
+        </lightning:layoutItem>
+
+        <lightning:layoutItem size="4" class="slds-p-around_xxx-small">
+            <lightning:button label="Delete Selected" onclick="{!c.handleDeleteSelected}" />
+            <lightning:button label="Delete All" onclick="{!c.handleDeleteAll}" />
+            <lightning:button name="new" label="New" title="New" onclick="{! c.handleShowDialog}" />
+        </lightning:layoutItem>
+
+    </lightning:layout>
+
+    <!-- the container element determine the height of the datatable -->
+    <div style="height: 300px">
+        <lightning:datatable
+                aura:id="mediaTable" 
+                keyField="Id"
+                data="{! v.data }"
+                columns="{! v.columns }"
+                hideCheckboxColumn="false"
+                selectedRows="{! v.selectedRows }"
+                onrowaction="{! c.handleRowAction }" 
+                onsave="{! c.handleUpdateRecords }"/>
+    </div>
+
+
+
+    <c:ckz_ProductMediaDialog isOpen="{!v.showDialog}" productId="{!v.productId}" recordId="{!v.recordId}"/>
+
+</aura:component>

@@ -1,0 +1,8 @@
+<design:component label="CG Cloud Visit Alerts (Custom)">
+	<design:attribute name="AlertTitle1" label="Alert 1 Title" default="Product AC-2234 Out of Stock" />
+    <design:attribute name="AlertDescription1" label="Alert 1 Title" default="Currently Accepting No new orders at this time." />
+    <design:attribute name="Alert1Icon"  label="Alert 1 Icon" default="standard:announcement" />
+    <design:attribute name="AlertTitle2"  label="Alert 2 Title" default="New Product Launch" />
+    <design:attribute name="AlertDescription2" label="Alert 2 Description"  default="Schedule a Visit before upcoming product promotions." />
+    <design:attribute name="Alert2Icon"  label="Alert 2 Icon" default="standard:product" />
+</design:component>

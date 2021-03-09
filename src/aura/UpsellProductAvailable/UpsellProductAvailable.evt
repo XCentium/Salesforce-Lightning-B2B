@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="Event template">
+    <aura:attribute name="productList" type="IDO_upsell_product__c[]"/>
+</aura:event>

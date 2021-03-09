@@ -1,0 +1,42 @@
+.THIS .captionWrapper{
+    position: relative;
+    height:100%;
+}
+.THIS .cardImg,.THIS .wrapper,.THIS.wrapper{
+    background-size:cover; 
+    background-repeat:no-repeat;
+    background-position:center center;
+}
+.THIS .captionbottom{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    width:100%;
+}
+.THIS .captionMiddle{
+    width:100%;
+}
+.THIS .captionPosition,.THIS .centertopbottom {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+    width:100%;
+}
+.THIS .paddingleftright{
+    padding:0px 15px;
+}
+.THIS .padding{
+    padding:15px;
+}
+.THIS h2{
+    font-weight:300;
+    line-height:1.25;
+    margin-bottom:10px;
+}
+.THIS p{
+    font-size:0.8125rem;
+    margin-bottom:15px;
+}

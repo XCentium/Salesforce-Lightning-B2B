@@ -1,0 +1,772 @@
+<apex:page title="CPQ Demo Setup" applyBodyTag="False" applyHtmlTag="False" showHeader="false" standardStylesheets="false" sidebar="false" docType="html-5.0" tabStyle="SBQQ__Quote__c" controller="Q2C_Demo_Settings_Controller">
+    <html>
+        <head>
+            <apex:slds />
+        </head>
+        <body>
+            <div class="slds-scope">
+                <apex:form >
+                    <div class="slds-page-header">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-has-flexi-truncate">
+                                <div class="slds-media slds-no-space slds-grow">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container slds-icon-standard-opportunity" title="Description of icon when needed">
+                                            <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../assets/icons/standard-sprite/svg/symbols.svg#opportunity" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="slds-media__body">
+                                        <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Quote to Cash Demo Setup">CPQ Demo Setup</h1>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                                <div class="slds-button-group" role="group">
+                                    <!--  <apex:commandButton action="{!ClearProds}" value="Clear Products" styleClass="slds-button slds-button_neutral"/>﻿
+<apex:commandButton action="{!Clear}" value="Clear Sales Records" styleClass="slds-button slds-button_neutral"/>﻿-->
+                                    <apex:commandButton action="{!CloseRedirect}" value="Close" styleClass="slds-button slds-button_neutral"/>﻿
+                                    <apex:commandButton onclick="window.open('https://brick-rest.steelbrick.com/oauth/auth');" value="Reauthorize Calculator" styleClass="slds-button slds-button_neutral"/>
+                                    <apex:commandButton onclick="window.open('/0DM/o?setupid=CustomDomain&retURL=%2Fui%2Fsetup%2FSetup%3Fsetupid%3DDevToolsIntegratex');" value="Site Settings" styleClass="slds-button slds-button_neutral"/>
+                                    <apex:commandButton action="{!initBill}" disabled="{!settings.InitBill__c=true}" value="Refresh Billing" styleClass="slds-button slds-button_neutral"/>﻿
+                                    <apex:commandButton action="{!SaveSettings}" value="Save Settings" styleClass="slds-button slds-button_neutral"/>                                                                                           
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-text-body_regular">&nbsp;</div>
+                    
+                    <article class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__body">
+                                <h2 class="slds-text-heading_small">
+                                    <span>Org Information</span>
+                                    <br/>
+                                </h2>
+                            </div>
+                        </header>
+                    </div>
+
+
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-grid">
+                            
+                            <!-- SBQQ expiration -->                       
+                            <div class="slds-col">
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="CPQ Expiration:" />
+                                    <div class="slds-form-element__control">
+                                        <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                                            <apex:param value="{!sbqqInfo.ExpirationDate}" />
+                                        </apex:outputText>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- sbaa expiration -->                       
+                            <div class="slds-col">
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="Adv Approvals Expiration:" />
+                                    <div class="slds-form-element__control">
+                                        <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                                            <apex:param value="{!sbaaInfo.ExpirationDate}" />
+                                        </apex:outputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- blng expiration -->                       
+                            <div class="slds-col">
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="Billing Expiration:" />
+                                    <div class="slds-form-element__control">
+                                        <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                                            <apex:param value="{!blngInfo.ExpirationDate}" />
+                                        </apex:outputText>
+                                    </div>
+                                </div>
+                            </div>                            
+
+                            <!-- Org expiration -->                       
+                            <div class="slds-col">
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="Org Expiration:" />
+                                    <div class="slds-form-element__control">
+                                        <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                                            <apex:param value="{!org.TrialExpirationDate}" />
+                                        </apex:outputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Org Created Date -->                       
+                            <div class="slds-col">
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="Org Creation Date:" />
+                                    <div class="slds-form-element__control">
+                                        <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                                            <apex:param value="{!org.CreatedDate}" />
+                                        </apex:outputText>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Org ID -->                       
+                            <div class="slds-col">
+                                <div class="slds-form-element">
+                                <apex:outputLabel styleClass="slds-form-element__label" value="Org Id:" />
+                                    <div class="slds-form-element__control">
+                                        <apex:outputText value="{!org.Id}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Org Type -->                       
+                            <div class="slds-col">
+                                <div class="slds-form-element">
+                                <apex:outputLabel styleClass="slds-form-element__label" value="Org Edition:" />
+                                    <div class="slds-form-element__control">
+                                        <apex:outputText value="{!org.OrganizationType}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Org Name -->                       
+                            <div class="slds-col">
+                                <div class="slds-form-element">
+                                <apex:outputLabel styleClass="slds-form-element__label" value="Org Name:" />
+                                    <div class="slds-form-element__control">
+                                        <apex:outputText value="{!org.Name}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Org Instance-->                       
+                            <div class="slds-col">
+                                <div class="slds-form-element">
+                                <apex:outputLabel styleClass="slds-form-element__label" value="Instance:" />
+                                    <div class="slds-form-element__control">
+                                        <apex:outputText value="{!org.InstanceName}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </article>
+                    
+                    
+                    
+                    
+                    <article class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2 class="slds-text-heading_small">
+                                        <span>Company Information</span><br></br>
+                                    <apex:commandButton action="{!updateOrgInfo}" value="Set Defaults" styleClass="slds-button slds-button_neutral"/>
+                                </h2>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-grid">
+                            <div class="slds-col">
+                                <!-- Compnay Name Form -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Name__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_Name__c}" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Compnay Slogan -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Slogan__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_Slogan__c}" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Compnay Email -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Email__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_Email__c}" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Compnay Phone -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Phone__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_Phone__c}" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Compnay Fax -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Fax__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_Fax__c}" />
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="slds-col">
+                                <!-- Compnay Street -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Street__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_Street__c}" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Compnay City -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_City__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_City__c}" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Compnay State -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_State__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_State__c}" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Compnay State -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Postal_Code__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_Postal_Code__c}" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Compnay State -->
+                                <div class="slds-form-element">
+                                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Country__c.Label}" />
+                                    <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputText styleClass="slds-input" value="{!settings.Company_Country__c}" />
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="slds-text-align_center">
+                        <div class="slds-button-group slds-align_absolute-center" role="group">
+                            <apex:commandButton action="{!SaveSettings}" value="Save Settings" styleClass="slds-button slds-button_neutral"/>
+                        </div>
+                    </div>
+                    <br></br>
+                
+                
+            </article>
+            
+            <div class="slds-text-body_regular">&nbsp;</div>
+            
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-text-heading_small">
+                                <span>Style Information</span>
+                            </h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-grid">
+                        <div class="slds-col">
+                            <!-- Compnay image Form -->
+                            <div class="slds-form-element">
+                                <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Image_URL__c.Label}" />
+                                <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                    <apex:inputText styleClass="slds-input" value="{!settings.Company_Image_URL__c}" />
+                                </div>
+                            </div>
+                            
+                            <!-- Compnay image height -->
+                            <div class="slds-form-element">
+                                <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Image_Height__c.Label}" />
+                                <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                    <apex:inputText styleClass="slds-input" value="{!settings.Company_Image_Height__c}" />
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="slds-col">
+                            <!-- Compnay Primary Color -->
+                            <div class="slds-form-element">
+                                <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Primary_Color__c.Label}" />
+                                <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                    <apex:inputText styleClass="slds-input" value="{!settings.Company_Primary_Color__c}" />
+                                </div>
+                            </div>
+                            
+                            <!-- Compnay Image width -->
+                            <div class="slds-form-element">
+                                <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Company_Image_Width__c.Label}" />
+                                <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                    <apex:inputText styleClass="slds-input" value="{!settings.Company_Image_Width__c}" />
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-text-align_center">
+                    <div class="slds-button-group slds-align_absolute-center" role="group">
+                        <apex:commandButton action="{!SaveSettings}" value="Save Settings" styleClass="slds-button slds-button_neutral"/>
+                    </div>
+                </div>
+                <br></br>
+        </article>
+        
+        
+        
+        <div class="slds-text-body_regular">&nbsp;</div>
+        
+        
+    <div class="slds-text-body_regular">&nbsp;</div>
+
+    <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                        <h2 class="slds-text-heading_small">
+                            <span>Deactivated Custom Actions</span>
+                        </h2>
+                    </div>
+                </header>
+            </div>
+            
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <thead>
+                            <tr class="slds-text-title_caps">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Quantity">Active</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Quantity">Name</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Quantity">Page</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Quantity">Location</div>
+                                </th>
+                             </tr>
+                        </thead>
+                              
+                        <tbody>
+                            <apex:repeat value="{!CustomActions}" var="b">
+                            <tr>
+                                <td>
+                                    <apex:inputCheckBox value="{!b.SBQQ__Active__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!b.Name}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!b.SBQQ__Page__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!b.SBQQ__Location__c}"/>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        
+                    </tbody>
+            </table>
+
+            <br/>
+
+            <div class="slds-text-align_center">
+                <div class="slds-button-group slds-align_absolute-center" role="group">
+                    <apex:commandButton action="{!SaveSettings}" value="Save Settings" styleClass="slds-button slds-button_neutral"/>
+                </div>
+            </div>
+            <br></br>
+    </article>
+    
+    <div class="slds-text-body_regular">&nbsp;</div>
+    
+    
+
+<!-- Data Cannon -->
+<div class="slds-text-body_regular">&nbsp;</div>
+
+<article class="slds-card">
+    <div class="slds-card__header slds-grid" align="center">
+        <div class="slds-col">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <h2 class="slds-text-heading_small">
+                        <span>MACHO DATA CANNON</span>
+                    </h2>
+                    <i>Reports too hot to handle, too cold to hold!</i>
+                </div>
+            </header>
+        </div>
+    </div>
+    <div class="slds-card__header slds-grid slds-border_top">
+        <div class="slds-col">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <h2 class="slds-text-heading_small">
+                        <span>QUOTE CANNON</span>
+                    </h2>
+                    <div id="machosaying">
+                        <i>Create a Quote. Clone it. BAM! Reports in Space and Space is the Place!</i>
+
+                    </div>
+                </div>
+            </header>
+        </div>
+        
+        <div class="slds-col">
+            <div class="slds-form-element">
+                <div class="slds-form-element__control" align="left">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Randomize_Discounts__c.Label}" />
+                    <apex:inputCheckbox styleClass="slds-input" value="{!settings.Randomize_Discounts__c}" style="slds-checkbox_faux"></apex:inputCheckbox>
+                    
+                </div>
+                
+            </div>
+        </div>
+        <div class="slds-col">
+            <div class="slds-form-element">
+                <div class="slds-form-element__control" align="left">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Randomize_Quantity__c.Label}" />
+                    <apex:inputCheckbox styleClass="slds-input" value="{!settings.Randomize_Quantity__c}" style="slds-checkbox_faux"></apex:inputCheckbox>
+                    
+                </div>
+                
+            </div>
+        </div>
+        <div class="slds-col">
+            <div class="slds-form-element">
+                <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Randomize_Term__c.Label}" />
+                <div class="slds-form-element__control">
+                    <apex:inputCheckbox styleClass="slds-input" value="{!settings.Randomize_Term__c}"/> 
+                </div>
+            </div>       
+        </div>
+    </div>
+    
+    <div class="slds-card__body slds-card__body_inner">
+        <div class="slds-grid">
+            <div class="slds-col">
+                <div class="slds-form-element">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="Reporting Start Date (Earliest Close Date)" />
+                    <div class="slds-form-element__control">
+                        <apex:inputField styleClass="slds-input" value="{!settings.Reporting_Start_Date__c}" />
+                    </div>
+                </div>
+                
+                <div class="slds-form-element">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="Reporting End Date (Latest Close Date)" />
+                    <div class="slds-form-element__control">
+                        <apex:inputField styleClass="slds-input" value="{!settings.Reporting_End_Date__c}" />
+                    </div>
+                </div>
+                
+            </div>
+            <div class="slds-col">
+                
+                <!-- Master Quote -->
+                <div class="slds-form-element">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Master_Quote__c.Label}" />
+                    <div class="slds-form-element__control">
+                        <apex:inputField styleClass="slds-input" value="{!settings.Master_Quote__c}" />
+                    </div>
+                </div>
+                <br></br>
+            
+            <div class="slds-form-element">
+                <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Number_of_Records__c.Label}" />
+                <div class="slds-form-element__control">
+                    <apex:inputText styleClass="slds-input" value="{!settings.Number_of_Records__c}" />
+                </div>
+            </div>
+            
+            <br></br>
+    </div>
+</div>
+</div>
+<div class="slds-text-align_center">
+    <div class="slds-button-group slds-align_absolute-center" role="group">
+        <div id="blastbutton">
+            <apex:commandButton action="{!Blast}" value="BLAST" styleClass="slds-button slds-button_neutral" onClick="startUpdate()" onComplete="setTimeout(function(){finishUpdate()},2000)"/>
+        </div>
+        
+        <!-- STATUS SPINNER -->
+        <div id="spinner" class="slds-spinner_container slds-is-relative slds-hide" >
+            <div role="status" class="slds-spinner slds-spinner--large slds-spinner--brand">
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+        <div id="machostatus">
+            <img src="" alt="Macho Man" id="machoimage" class="slds-hide"/>
+        </div>
+
+    </div>
+</div>
+<br></br>
+</article>
+<article class="slds-card">
+    <div class="slds-card__header slds-grid">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__body">
+                <h2 class="slds-text-heading_small">
+                    <span>Data Tools</span>
+                </h2>
+            </div>
+        </header>
+    </div>
+    <div class="slds-card__body slds-card__body_inner">
+        <div class="slds-grid">
+            <div class="slds-col">
+                <!-- 1 -->
+                <div class="slds-form-element">
+                    
+                    <div class="slds-form-element__control">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="This will insert the default terms that come with the Custom Demo Template."/>
+                    <div class="slds-form-element__control">
+                        <apex:commandButton action="{!DefaultTerms}" value="Insert Default Quote Terms" styleClass="slds-button slds-button_neutral"/>﻿
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- 2 -->
+                <div class="slds-form-element">
+                    
+                    <div class="slds-form-element__control">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="Warning this will clear all products and approval thresholds in the Org! Note: Products May not be in Opportunities or Orders"/>
+                    <div class="slds-form-element__control">
+                        <apex:commandButton action="{!ClearProds}" value="Clear Products" styleClass="slds-button slds-button_neutral"/>﻿
+                    </div>
+                    </div>
+                </div>
+                 <!-- 3 -->
+                <div class="slds-form-element">
+                    
+                    <div class="slds-form-element__control">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="This will insert common Professional Service Products.  CLICK ONCE"/>
+                    <div class="slds-form-element__control">
+                        <apex:commandButton action="{!profServ}" value="Insert Professional Service Products" styleClass="slds-button slds-button_neutral"/>﻿
+                    </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="slds-col">
+                <!-- 1 -->
+                <div class="slds-form-element">
+                    
+                    <div class="slds-form-element__control">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="Warning this will clear all quote terms in the org!"/>
+                    <div class="slds-form-element__control">
+                        <apex:commandButton action="{!DeleteTerms}" value="Clear Quote Terms" styleClass="slds-button slds-button_neutral"/>
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- 2 -->
+                <div class="slds-form-element">
+                    
+                    <div class="slds-form-element__control">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="This will Clear all Opportunities, Quotes, Quote Lines, Contracts, Subscriptions, and Assets."/>
+                    <div class="slds-form-element__control">
+                        <apex:commandButton action="{!Clear}" value="Clear Sales Records" styleClass="slds-button slds-button_neutral"/>﻿
+                    </div>
+                    </div>
+                </div>
+                <!-- 3 -->
+                 <div class="slds-form-element">
+                    
+                    <div class="slds-form-element__control">
+                    <apex:outputLabel styleClass="slds-form-element__label" value="This will insert the main bundle from HT3"/>
+                    <div class="slds-form-element__control">
+                        <apex:commandButton action="{!HT3}" value="Insert Time and Expense SaaS Bundle" styleClass="slds-button slds-button_neutral"/>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-text-align_center">
+        <div class="slds-button-group slds-align_absolute-center" role="group">
+            
+        </div>
+    </div>
+    <br></br>
+</article>
+<div class="slds-text-body_regular">&nbsp;</div>
+    
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <h2 class="slds-text-heading_small">
+                        <span>My User Setup</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid">
+                
+                <div class="slds-col">
+                   
+                    <div class="slds-form-element">
+                        <apex:outputLabel styleClass="slds-form-element__label" value="Time Zone" />
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleClass="slds-input" value="{!myUser.TimeZoneSidKey}" />
+                            
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <apex:outputLabel styleClass="slds-form-element__label" value="Email" />
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleClass="slds-input" value="{!myUser.Email}" />
+                            
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+        <div class="slds-text-align_center">
+            <div class="slds-button-group slds-align_absolute-center" role="group">
+                <apex:commandButton action="{!SaveMyUser}" value="Update User" styleClass="slds-button slds-button_neutral"/>
+            </div>
+        </div>
+        <br></br>
+</article>
+</apex:form>
+<apex:pageBlock title="">
+    <div class="slds-media__body">
+        <h2 class="slds-text-heading_small">
+            <span>Preview</span>
+        </h2>
+    </div>
+    <div style="font-size:.7em; margin-left:auto; margin-right:auto; height:704px; width:544px; border-color:#000; border-width:1px; border-style:solid; background-color:#fff;">
+        <div style="margin-top:32px; margin-left:32px; margin-right:32px; margin-bottom:48px; height:624px; width:480px; border-bottom:#{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c} solid 1px;">
+            
+            <table style="width:100%;">
+                <tr style="width:100%;">
+                    <td style="width:100%; border-bottom:#{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c} solid 1px;">
+                        <table style="width:100%;">
+                            <tr style="width:100%;">
+                                <td style="width:50%"> 
+                                    <img src="{!$Setup.Q2C_Demo_Settings__c.Company_Image_URL__c}" height="{!$Setup.Q2C_Demo_Settings__c.Company_Image_Height__c}" width="{!$Setup.Q2C_Demo_Settings__c.Company_Image_Width__c}" /><br></br><br></br>
+                        <p style="line-height:0; font-weight:bold;">{!$Setup.Q2C_Demo_Settings__c.Company_Slogan__c}</p> <br></br>
+                <p style="line-height:0;">{!$Setup.Q2C_Demo_Settings__c.Company_Street__c}</p><br></br>
+            <p style="line-height:0;">{!$Setup.Q2C_Demo_Settings__c.Company_City__c} {!$Setup.Q2C_Demo_Settings__c.Company_State__c}, {!$Setup.Q2C_Demo_Settings__c.Company_Postal_Code__c}</p><br></br>
+        <p style="line-height:0;">{!$Setup.Q2C_Demo_Settings__c.Company_Country__c}</p><br></br>
+    <p style="line-height:0;">{!$Setup.Q2C_Demo_Settings__c.Company_Phone__c}</p><br></br>
+<p style="line-height:0;">{!$Setup.Q2C_Demo_Settings__c.Company_Email__c}</p><br></br>
+
+
+</td>
+<td style="width:50%; text-align:right;"> 
+    <p style="font-size:1.5em; font-weight:bold; color:#{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c};">Proposal Q-00035-1</p><br></br>
+<p style="line-height:0;">
+    <apex:outputText value="Proposal Date: {0, date, MMMM d','  yyyy}">
+        <apex:param value="{!TODAY()}" /> 
+    </apex:outputText>
+</p><br></br>
+<p style="line-height:0;">
+    <apex:outputText value="Expiration Date: {0, date, MMMM d','  yyyy}">
+        <apex:param value="{!TODAY()+10}" /> 
+    </apex:outputText>
+</p>
+<br></br><br></br><br></br><br></br>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<table style="width:100%;">
+    <tr style="width:100%;">
+        <td style="width:80%;">
+            <p>&#160;</p>
+            <p>&#160;</p>
+            <p>Greetings Illinois Acme ,</p>
+            <p>Enclosed is the proposal I promised you.</p>
+            <p>I also want to take this opportunity to thank you for all your help. Designing a suitable solution required that I become familiar with your products and your industry. As a result, your help and guidance proved to be invaluable and ultimately resulted in a better, more cost effective solution for your organization.</p>
+            <p>I will call you next week to discuss this proposal. As always, please don’t hesitate to call me if you have questions or if I can be of further assistance.</p>
+            <p>I hope we can continue working together into the future.</p>
+            <p>With best regards,</p>
+            <p></p>
+            <p>Admin User</p>
+            <p>steelbrick_demo@salesforce.com</p>
+        </td>
+        <td style="width:20%;"></td>
+    </tr>
+</table>
+</div>
+</div>
+</apex:pageBlock>
+</div>
+</body>
+
+<!-- SCRIPTS FOR DATA CANNON STATUS -->
+<apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/jsforce/1.7.0/jsforce.min.js " />
+<script>
+var machoGifs = [
+    'https://i.imgur.com/JMo31nB.gif',
+    'https://i.imgur.com/lDnlbQ7.gif',
+    'https://i.imgur.com/SUKOgA3.gif',
+    'https://i.imgur.com/L0vh0BS.gif',
+    'https://i.imgur.com/ZpRT0sl.gif',
+    'https://i.imgur.com/obatkxN.gif',
+    'https://i.imgur.com/kwTUpPO.gif'
+    ];
+
+var d = new Date();
+var gifInt = d.getDay();
+
+function startUpdate()
+{
+    document.getElementById('spinner').className = ' slds-spinner_container slds-is-relative';
+    document.getElementById('blastbutton').className = 'slds-hide';
+    document.getElementById('machoimage').className = 'slds-is-relative';
+    document.getElementById('machoimage').src = machoGifs[gifInt];
+    if(gifInt < 6)
+    {
+        gifInt ++;
+    } else
+    {
+        gitInt = 0;
+    }
+    
+}
+
+function finishUpdate()
+{
+    document.getElementById('spinner').className = 'slds-spinner_container slds-is-relative slds-hide';
+    document.getElementById('blastbutton').className ='slds-is-relative';
+    document.getElementById('machoimage').className = 'slds-hide';
+    document.getElementById('machoimage').src = '';
+
+    setTimeout(function() { alert('OOHHH YEAH! Your data was created ... but... the QuoteCalculator still needs to run. This takes between 30 seconds and 7 minutes, depending on batch size.'); }, 3);
+}
+</script>
+</html>
+</apex:page>

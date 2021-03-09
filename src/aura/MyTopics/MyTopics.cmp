@@ -1,0 +1,25 @@
+<aura:component controller="MyTopicsController" implements="forceCommunity:availableForAllPageTypes">
+    <aura:attribute name="TWF" type="TopicWithFollower" />
+    <aura:attribute name="MyTopics" type="String" default="My Topics"/>
+    <aura:attribute name="isFollowing" type="Boolean" />
+    
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:if isTrue="{!v.isFollowing}">  
+      
+  <div class="content">
+    <h2 class="rec-cardHeader"> {!v.MyTopics} </h2>
+      <aura:iteration items="{!v.TWF}" var="item">
+
+        <tr >
+            <div id="foll">
+                <p class="betaTokenActionColorBG">{!item.followers}</p>
+                <p id="follower"> followers </p>
+            </div>
+            <td id="top"  data-label="Title"><p  ><a href="{!'topic/'+item.myTopic.Id+'/'+item.myTopic.Name}">{!item.myTopic.Name}</a></p></td>
+        </tr>
+      </aura:iteration>
+    </div>
+    </aura:if>
+
+
+</aura:component>

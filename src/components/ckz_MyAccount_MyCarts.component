@@ -1,0 +1,102 @@
+<!--
+ - Created by brandon.rogers on 1/28/19.
+ -->
+
+<apex:component id="ckz_MyAccount_MyCarts">
+
+    <script id="CKZ-MyAccount-MyCarts" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_mycart m-t-1">
+            <div class="panel-body MyAccount_MyCarts_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_MyCarts'}}</h2>
+                    </div>
+                    <div class="col-sm-4 text-right">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body MyAccount_MyCarts">
+                <div class="table-responsive">
+                    <table id="cartTable" class="table table-condensed table-hover cc_table cc_shopping_cart_table">
+                        <thead>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_name">{{pageLabelMap 'MyCartsInc_CartName'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_date">{{pageLabelMap 'MyCartsInc_LastUpdate'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_subtotal">{{pageLabelMap 'MyCartsInc_SubAmount'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_actions">{{pageLabelMap 'MyCartsInc_Actions'}}</span>
+                        </th>
+                        </thead>
+                        <tbody>
+                        {{#each this}}
+                        <tr class="cc_table_row">
+                            <td class="cc_table_col">
+                                <span class="cc_col_name"><a href="#" data-id="{{encryptedId}}" class="gotoCartDetails cc_goto_cart_details">{{name}}</a></span>
+                            </td>
+                            <td class="cc_table_col">
+                                <span class="cc_col_date">{{lastModifiedDateStr}}</span>
+                            </td>
+                            <td class="cc_table_col">
+                                <span class="cc_col_subtotal">{{price subtotal}}</span>
+                            </td>
+                            <td class="cc_table_col" nowrap="true">
+                                <div class="button-group cc_button_group">
+
+                                    <button type="button" class="clone btn btn-default btn-sm cc_clone" data-id="{{sfid}}">
+                                        {{pageLabelMap 'Action_Clone'}}
+                                    </button>
+
+                                    <button type="button" class="btn btn-default btn-sm cc_rename" data-toggle="modal" data-target="#renameMod_{{sfid}}">
+                                        {{pageLabelMap 'Action_Rename'}}
+                                    </button>
+
+                                    <button type="button" class="deleteCart btn btn-default btn-sm cc_delet_cart" data-id="{{sfid}}">
+                                        {{pageLabelMap 'Action_Delete'}}
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+
+                    </table>
+
+                    {{#each this}}
+                    <div id="renameMod_{{sfid}}" class="modal fade cc_modal cc_mycart_modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content cc_modal_content">
+                                <div class="modal-header cc_modal_header">
+                                    <button type="button" class="close cc_close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&#215;</span></button>
+                                    <h4 class="modal-title cc_modal_title">{{pageLabelMap 'Title_ModifyCart' name }}</h4>
+                                </div>
+                                <div class="modal-body cc_modal_body">
+                                    <form class="renameForm cc_rename_form">
+                                        <input type="text" value="{{name}}" name="rename_{{sfid}}" class="rename_{{sfid}} form-control cc_rename_input">
+                                    </form>
+                                </div>
+                                <div class="modal-footer cc_modal_footer">
+                                    <input type="button" class="btn btn-default btn-sm renameCart cc_rename_cart" data-id="{{sfid}}" value="{{pageLabelMap 'Save'}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function(){
+            CCRZ.uiProperties.myCartsView.desktop.tmpl = 'CKZ-MyAccount-MyCarts';
+        });
+    </script>
+</apex:component>

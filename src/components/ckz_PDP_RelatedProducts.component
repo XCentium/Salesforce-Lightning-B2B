@@ -1,0 +1,321 @@
+<!--
+ - Created by brandon.rogers on 1/11/19.
+ -->
+
+<apex:component id="ckz_PDP_RelatedProducts">
+    <script id="CKZ-ProductDetail-WidgetContainer-Desktop" type="text/template">
+        <div class="container widgetContainer">
+            <div class="ckz_heading_embellished">
+                <h3>{{pageLabelMap this.sectionLabel}}</h3>
+            </div>
+
+            <div class="widget_column cc_widget_column">
+                <div class="{{this.sectionID}} cc_{{this.sectionID}}"></div>
+            </div>
+
+            <!-- SUPERSESSION MODAL -->
+            {{#ifEquals sectionFilter "Superseded"}}
+                <div class="modal fade" id="supercededModal" tabindex="-1" role="dialog" aria-labelledby="supercededModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="supercededModalLabel">{{pageLabelMap 'SupersessionTitle'}}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="{{this.sectionID}} cc_{{this.sectionID}}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/ifEquals}}
+        </div>
+    </script>
+
+    <script id="CKZ-ProductDetail-ProductsSection-Desktop" type="text/template">
+        <div class="quick_wishlist cc_quick_wishlist cc_addon_tab">
+            <div class="row">
+
+                {{#ifEquals this.pageSection.displayStyle '2-Column Grid'}}
+                    {{#each this.pageData}}
+                        <div class="col-xs-6">
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <div class="row">
+                                        <div class="col-xs-4 col-md-12 quick_wishlist_item cc_quick_wishlist_item">
+                                            <div class="relatedProdImage m-t-1">
+                                                {{productLink this.prodBean 'cc_cart_item' image=(displayImage this.mediaWrapper 'prodDetRel img-responsive center-block' alt=this.prodBean.name dataId=this.prodBean.sku)}}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-8 col-md-12">
+                                            <div class="relatedProdName m-t-1">
+                                                {{productLink this.prodBean 'productName cc_data_link'}}
+                                            </div>
+
+                                            <div class="relatedProdSku m-t-1">
+                                                {{this.prodBean.sku}}
+                                            </div>
+
+                                            <div class="relatedProdPrice m-t-1">
+                                                <input type="hidden" name="qtyIncrement" value="{{this.qtySingleIncrement}}" class="item_qtyIncrement"/>
+                                                <input type="hidden" name="qtySkipIncrement" value="{{this.qtySkipIncrement}}" class="item_qtySkipIncrement"/>
+
+                                                {{#ifDisplay 'PD.DsplPrc' }}
+                                                {{#if this.prodBean.primaryAttr}}
+                                                <span class="cc_attr_message">{{pageLabelMap 'ProductAttributes_PriceMessage'}}</span>
+                                                {{else}}
+                                                {{#if this.showNewSubscriptionSelection}}
+                                                <p class="price priceSubscription cc_price_subscription">
+                                                    <strong>{{pageLabelMap 'Prod_SubsAlternatePrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}</strong>
+                                                </p>
+                                                {{else}}
+                                                {{#if this.displayPrice}}
+                                                <p class="price displayPrice cc_display_price">
+                                                    {{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}
+                                                </p>
+                                                {{else}}
+                                                {{#if this.showPricing}}
+                                                {{#if this.price}}
+                                                <div class="cc_pricing">
+                                                    <p class="price cc_price">{{price this.price}}</p>
+                                                </div>
+                                                {{/if}}
+                                                {{/if}}
+                                                {{/if}}
+
+                                                {{#if this.isTierPriced}}
+                                                <div class="cc_prt_tool_tip_div cc_prt_tool_tip_div_pdp">
+                                                                <span class="cc_prt_tool_tip_text cc_prt_tool_tip_text_pdp" data-toggle="tooltip" title="{{pageLabelMap 'ProductPricingTiers_VolumeHover'}}">
+                                                                    {{pageLabelMap 'ProductPricingTiers_VolumePricing'}}
+                                                                </span>
+                                                </div>
+                                                {{/if}}
+                                                {{/if}}
+                                                {{/if}}
+                                                {{/ifDisplay}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#ifEquals this.pageSection.displayStyle '3-Column Grid'}}
+                        {{#each this.pageData}}
+                            <div class="col-xs-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-body text-center">
+                                        <div class="row">
+                                            <div class="col-xs-4 col-md-12 quick_wishlist_item cc_quick_wishlist_item">
+                                                <div class="relatedProdImage m-t-1">
+                                                    {{productLink this.prodBean 'cc_cart_item' image=(displayImage this.mediaWrapper 'prodDetRel img-responsive center-block' alt=this.prodBean.name dataId=this.prodBean.sku)}}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-8 col-md-12">
+                                                <div class="relatedProdName m-t-1">
+                                                    {{productLink this.prodBean 'productName cc_data_link'}}
+                                                </div>
+
+                                                <div class="relatedProdSku m-t-1">
+                                                    {{this.prodBean.sku}}
+                                                </div>
+
+                                                <div class="relatedProdPrice m-t-1">
+                                                    <input type="hidden" name="qtyIncrement" value="{{this.qtySingleIncrement}}" class="item_qtyIncrement"/>
+                                                    <input type="hidden" name="qtySkipIncrement" value="{{this.qtySkipIncrement}}" class="item_qtySkipIncrement"/>
+
+                                                    {{#ifDisplay 'PD.DsplPrc' }}
+                                                    {{#if this.prodBean.primaryAttr}}
+                                                    <span class="cc_attr_message">{{pageLabelMap 'ProductAttributes_PriceMessage'}}</span>
+                                                    {{else}}
+                                                    {{#if this.showNewSubscriptionSelection}}
+                                                    <p class="price priceSubscription cc_price_subscription">
+                                                        <strong>{{pageLabelMap 'Prod_SubsAlternatePrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}</strong>
+                                                    </p>
+                                                    {{else}}
+                                                    {{#if this.displayPrice}}
+                                                    <p class="price displayPrice cc_display_price">
+                                                        {{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}
+                                                    </p>
+                                                    {{else}}
+                                                    {{#if this.showPricing}}
+                                                    {{#if this.price}}
+                                                    <div class="cc_pricing">
+                                                        <p class="price cc_price">{{price this.price}}</p>
+                                                    </div>
+                                                    {{/if}}
+                                                    {{/if}}
+                                                    {{/if}}
+
+                                                    {{#if this.isTierPriced}}
+                                                    <div class="cc_prt_tool_tip_div cc_prt_tool_tip_div_pdp">
+                                                                            <span class="cc_prt_tool_tip_text cc_prt_tool_tip_text_pdp" data-toggle="tooltip" title="{{pageLabelMap 'ProductPricingTiers_VolumeHover'}}">
+                                                                                {{pageLabelMap 'ProductPricingTiers_VolumePricing'}}
+                                                                            </span>
+                                                    </div>
+                                                    {{/if}}
+                                                    {{/if}}
+                                                    {{/if}}
+                                                    {{/ifDisplay}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
+                    {{else}}
+                        {{#ifEquals this.pageSection.displayStyle '4-Column Grid'}}
+                            {{#each this.pageData}}
+                                <div class="col-sm-3">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body text-center">
+                                            <div class="row">
+                                                <div class="col-xs-4 col-sm-12 quick_wishlist_item cc_quick_wishlist_item">
+                                                    <div class="relatedProdImage m-t-1">
+                                                        {{productLink this.prodBean 'cc_cart_item' image=(displayImage this.mediaWrapper 'prodDetRel img-responsive center-block' alt=this.prodBean.name dataId=this.prodBean.sku)}}
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-8 col-sm-12">
+                                                    <div class="relatedProdName m-t-1">
+                                                        {{productLink this.prodBean 'productName cc_data_link'}}
+                                                    </div>
+
+                                                    <div class="relatedProdSku m-t-1">
+                                                        {{this.prodBean.sku}}
+                                                    </div>
+
+                                                    <div class="relatedProdPrice m-t-1">
+                                                        <input type="hidden" name="qtyIncrement" value="{{this.qtySingleIncrement}}" class="item_qtyIncrement"/>
+                                                        <input type="hidden" name="qtySkipIncrement" value="{{this.qtySkipIncrement}}" class="item_qtySkipIncrement"/>
+
+                                                        {{#ifDisplay 'PD.DsplPrc' }}
+                                                        {{#if this.prodBean.primaryAttr}}
+                                                        <span class="cc_attr_message">{{pageLabelMap 'ProductAttributes_PriceMessage'}}</span>
+                                                        {{else}}
+                                                        {{#if this.showNewSubscriptionSelection}}
+                                                        <p class="price priceSubscription cc_price_subscription">
+                                                            <strong>{{pageLabelMap 'Prod_SubsAlternatePrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}</strong>
+                                                        </p>
+                                                        {{else}}
+                                                        {{#if this.displayPrice}}
+                                                        <p class="price displayPrice cc_display_price">
+                                                            {{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}
+                                                        </p>
+                                                        {{else}}
+                                                        {{#if this.showPricing}}
+                                                        {{#if this.price}}
+                                                        <div class="cc_pricing">
+                                                            <p class="price cc_price">{{price this.price}}</p>
+                                                        </div>
+                                                        {{/if}}
+                                                        {{/if}}
+                                                        {{/if}}
+
+                                                        {{#if this.isTierPriced}}
+                                                        <div class="cc_prt_tool_tip_div cc_prt_tool_tip_div_pdp">
+                                                                                            <span class="cc_prt_tool_tip_text cc_prt_tool_tip_text_pdp" data-toggle="tooltip" title="{{pageLabelMap 'ProductPricingTiers_VolumeHover'}}">
+                                                                                                {{pageLabelMap 'ProductPricingTiers_VolumePricing'}}
+                                                                                            </span>
+                                                        </div>
+                                                        {{/if}}
+                                                        {{/if}}
+                                                        {{/if}}
+                                                        {{/ifDisplay}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        {{else}}
+                            {{#ifEquals this.pageSection.displayStyle 'List'}}
+                                {{#each this.pageData}}
+                                    <div class="col-xs-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-xs-4 col-sm-3 quick_wishlist_item cc_quick_wishlist_item">
+                                                        <div class="relatedProdImage m-t-1">
+                                                            {{productLink this.prodBean 'cc_cart_item' image=(displayImage this.mediaWrapper 'prodDetRel img-responsive center-block' alt=this.prodBean.name dataId=this.prodBean.sku)}}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-8 col-sm-9">
+                                                        <div class="relatedProdName m-t-1">
+                                                            {{productLink this.prodBean 'productName cc_data_link'}}
+                                                        </div>
+
+                                                        <div class="relatedProdSku m-t-1">
+                                                            {{this.prodBean.sku}}
+                                                        </div>
+
+                                                        <div class="relatedProdPrice m-t-1">
+                                                            <input type="hidden" name="qtyIncrement" value="{{this.qtySingleIncrement}}" class="item_qtyIncrement"/>
+                                                            <input type="hidden" name="qtySkipIncrement" value="{{this.qtySkipIncrement}}" class="item_qtySkipIncrement"/>
+
+                                                            {{#ifDisplay 'PD.DsplPrc' }}
+                                                            {{#if this.prodBean.primaryAttr}}
+                                                            <span class="cc_attr_message">{{pageLabelMap 'ProductAttributes_PriceMessage'}}</span>
+                                                            {{else}}
+                                                            {{#if this.showNewSubscriptionSelection}}
+                                                            <p class="price priceSubscription cc_price_subscription">
+                                                                <strong>{{pageLabelMap 'Prod_SubsAlternatePrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}</strong>
+                                                            </p>
+                                                            {{else}}
+                                                            {{#if this.displayPrice}}
+                                                            <p class="price displayPrice cc_display_price">
+                                                                {{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}
+                                                            </p>
+                                                            {{else}}
+                                                            {{#if this.showPricing}}
+                                                            {{#if this.price}}
+                                                            <div class="cc_pricing">
+                                                                <p class="price cc_price">{{price this.price}}</p>
+                                                            </div>
+                                                            {{/if}}
+                                                            {{/if}}
+                                                            {{/if}}
+
+                                                            {{#if this.isTierPriced}}
+                                                            <div class="cc_prt_tool_tip_div cc_prt_tool_tip_div_pdp">
+                                                                                    <span class="cc_prt_tool_tip_text cc_prt_tool_tip_text_pdp" data-toggle="tooltip" title="{{pageLabelMap 'ProductPricingTiers_VolumeHover'}}">
+                                                                                        {{pageLabelMap 'ProductPricingTiers_VolumePricing'}}
+                                                                                    </span>
+                                                            </div>
+                                                            {{/if}}
+                                                            {{/if}}
+                                                            {{/if}}
+                                                            {{/ifDisplay}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/ifEquals}}
+                        {{/ifEquals}}
+                    {{/ifEquals}}
+                {{/ifEquals}}
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.widgetSectionView.desktop.tmpl = 'CKZ-ProductDetail-WidgetContainer-Desktop';
+            CCRZ.uiProperties.prodSectionView.desktop.main.tmpl = 'CKZ-ProductDetail-ProductsSection-Desktop';
+
+            CCRZ.pubSub.on('view:widgetSectionView:refresh', function(theView) {
+                //SUPERSESSION MODAL
+                $('#supercededModal').modal('show');
+            });
+        });
+    </script>
+</apex:component>

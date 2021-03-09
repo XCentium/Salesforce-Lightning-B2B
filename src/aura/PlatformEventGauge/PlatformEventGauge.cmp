@@ -1,0 +1,32 @@
+<aura:component controller="PlatformEventsChartController"
+                extends="c:PlatformEventListener"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                access="global" >
+    
+    <!-- Payload is an attribute on the extended listener component. Event name is set in init-->
+    <aura:handler name="change" value="{!v.payload}" action="{!c.receivePayload}"/>
+    
+    
+    <aura:attribute name="chart" type="Map"/>
+
+    <aura:attribute name="customColors" type="String"/>
+    <aura:attribute name="colorBreaks" type="String"/>
+    <aura:attribute name="max" type="String"/>
+    <aura:attribute name="defaultColorOrder" type="String"/>
+    
+
+    <aura:handler name="change" value="{!v.selectedFieldValue}" action="{!c.loadChart}"/>
+    <!--<aura:handler name="change" value="{!v.selectedField}" action="{!c.setFieldLabel}"/>  -->  
+    
+  <ltng:require scripts="{!join(',', $Resource.d3517,  $Resource.c3 )}"
+                  styles="{!$Resource.c3css}"
+                  afterScriptsLoaded="{!c.scriptsLoaded }" /> 
+<!-- <lightning:button variant="brand" label="Submit" onclick="{!c.loadChart }" /> 
+    <hr/>  
+ <div id="chart"></div>
+ -->
+        <div id="{!v.chartId}"></div>
+   	  
+  
+    
+</aura:component>

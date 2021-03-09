@@ -1,0 +1,16 @@
+.THIS {
+}
+
+.THIS .dirButton{
+    background:white;
+	position: absolute;
+    right: 0;
+    bottom: 0px;
+    z-index: 2;
+	} 
+
+.THIS .string { color: green; }
+.THIS .number { color: darkorange; }
+.THIS .boolean { color: blue; }
+.THIS .null { color: magenta; }
+.THIS .key { color: red; }

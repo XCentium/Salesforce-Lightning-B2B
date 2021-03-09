@@ -1,0 +1,4 @@
+<design:component label="Twitter Timeline">
+    <design:attribute name="title" label="Title" />
+    <design:attribute name="username" label="Twitter Handle" />
+</design:component>

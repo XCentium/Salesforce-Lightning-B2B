@@ -1,0 +1,69 @@
+<apex:page showHeader="false" sidebar="false" cache="false" controller="SDOSiteController">
+<title>Site Answers</title>
+    <apex:composition template="{!$Site.Template}">
+    
+        <apex:define name="body">
+           
+
+
+<div id='outerdiv'>
+     <iframe frameborder="1"
+                    border="4"
+                    
+                    src="/Customers/answers/answersHome.apexp"
+                    name="thumbframe"
+                    id="inneriframe"
+                    scrolling="no"
+                    MARGINWIDTH="5"
+                    MARGINHEIGHT="5"
+                    align="middle";
+                    background-color="transparent"
+                    allowtransparency="true"
+                    style="filter:chroma (color=CCCCCC)">
+                </iframe>
+</div> 
+           
+        </apex:define>
+    
+    </apex:composition>
+    
+ <style type="text/css">
+
+#outerdiv
+{
+height:1633px;
+overflow:hidden;
+position:relative;
+width:980px;
+background-color:#FFF !important;
+}
+
+#inneriframe 
+{
+height:1596px;
+left:-11px;
+position:absolute;
+top:-130px;
+width:1003px;
+}
+
+#sidebarDiv{
+display:none;
+}
+
+.outer td.oRight{
+padding-left:1px;
+padding-right:1px;
+}
+ </style>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

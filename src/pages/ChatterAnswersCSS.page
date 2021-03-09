@@ -1,0 +1,74 @@
+<apex:page contentType="text/CSS">
+    <title>Chatter Answers CSS </title>
+     body{
+        
+    }
+    
+    
+    .headerdiv{
+        /*The width of the headerdiv should be consistent with the width of ChatterAnswers-div */
+        width: 790px;
+        margin: 0px auto;        
+        height: 100px;        
+    }
+    
+    .headerdiv img{
+        max-width: 790px;
+        
+    }
+    
+    .mychatteranswers{
+
+    }
+    
+    .footerdiv{
+        height: 693px;
+        /*The width of the footerdiv should be consistent with the width of ChatterAnswers-div */
+        width: 790px;
+        margin: 0px auto;
+        position:relative;
+        /* The 'top' measure should be changed to precisely align the footer below the ChatterAnswers content */
+        top:0px;
+    }
+    
+    .footerdiv img{
+        float: right;
+    }
+    
+    #cs:searchAskInput{
+        height: 20px;
+    }
+    /* Only required if you need to modify the standard styling of the ChatterAnswers content
+    .csMini .threecolumn{
+        width: 850px;
+    }
+    
+    .threecolumn .leftContent{
+        padding-left: 20px;
+        width: 218px;
+    }
+    
+    .threecolumn .mainContent{
+        margin-left: 263px;
+    }
+    
+    .csMini .threecolumn .mainContent, .csMini .mainContent .lowerMainContent {
+        width: 587px;
+    }
+   
+    
+    .leftContent .feedcriterialinks li.selected a, #cs\:profile li.selected a {
+
+    }
+    */
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

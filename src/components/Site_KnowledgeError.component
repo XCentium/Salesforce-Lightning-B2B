@@ -1,0 +1,21 @@
+<apex:component controller="SDOSiteController">
+
+    <apex:variable var="currentCategoryVar" value="{!currentCategory}" />
+    <apex:variable var="categoryGroupNameVar" value="{!categoryGroupName}" />
+    
+    <apex:variable var="securityOK" value="false" />
+
+    <apex:outputPanel styleClass="pkbPage" layout="block" rendered="{!canUserSeeKnowledge}"  >
+        <knowledge:categoryList categoryGroup="{!categoryGroupName}" ancestorsOf="{!currentCategoryVar}" rootCategory="{!rootCategoryName}" categoryVar="ancestor" >
+            <apex:variable var="securityOK" value="true" rendered="{!ancestor.name = rootCategoryName}" />
+        </knowledge:categoryList>
+
+        <apex:outputPanel styleClass="pkbPage" layout="block" rendered="{!securityOK!='true'}" style="text-align:center;" >
+            <span style="color:red; font-size:16px; font-weight:bold" >Error: The PKB Site Setup is not configured correctly. Please verify that the category group name is correct and that the group is active.</span>
+        </apex:outputPanel>
+    </apex:outputPanel>
+
+    <apex:outputPanel styleClass="pkbPage" layout="block" rendered="{!!canUserSeeKnowledge}" style="text-align:center;" >
+        <span style="color:red; font-size:16px; font-weight:bold" >Configuration ERROR<br />Your user is not allowed to view knowledge</span>
+    </apex:outputPanel>
+</apex:component>

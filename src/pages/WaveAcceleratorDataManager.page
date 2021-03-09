@@ -1,0 +1,161 @@
+<apex:page controller="WaveAcceleratorController">
+   <apex:stylesheet value="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+    <apex:slds />
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <span class="slds-text-heading_small">Current Dataset</span>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Label">Country:</dt>
+            <dd class="slds-item_detail slds-truncate" title="Description for first label">{!existingSettings.Country__c}</dd>
+            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Second Label">Industry:</dt>
+            <dd class="slds-item_detail slds-truncate" title="Description for second label">{!existingSettings.Industry__c}</dd>
+        </div>
+    </article>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <span class="slds-text-heading_small">Analytics Accelerator Dataflow</span>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <button class="slds-button slds-button_brand" onclick="startAcceleratorDataflow();">Start Dataflow</button>
+        </div>
+    </article>
+    
+    <article class="slds-card"  ng-app="myApp" ng-controller="myCtrl">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <span class="slds-text-heading_small">Analytics Accelerator Datasets</span>
+            </header>
+            <div class="slds-no-flex">
+                <button class="slds-button slds-button_neutral" ng-click="overrideAllXMDs()">Override All XMDs</button>
+            </div>
+        </div>
+        <div class="slds-card__body">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover">
+                <thead>
+                    <tr class="slds-text-title_caps">
+                        <th scope="col" class="">
+                            <div class="slds-truncate">Dataset Name</div>
+                        </th>
+                        <th scope="col" class="">
+                            <div class="slds-truncate">Status</div>
+                        </th>
+                        <th scope="col" class="">
+                            <div class="slds-truncate">Actions</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="dataset in datasets">
+                        <th scope="row" data-label="" class="">
+                            <div class="slds-truncate" >{{dataset.name}}</div>
+                        </th>
+                        <td data-label="" class="">
+                            <div class="slds-truncate" >
+                                <p ng-show="{{dataset.currentVersionId != null}}" style="color: #028048">Dataset Created</p>
+                                <p ng-show="{{dataset.currentVersionId == null}}" style="color: #c23934;">Dataset Has Not Yet Been Created</p>
+                            </div>
+                        </td>
+                        <td data-label="" class="">
+                            <button class="slds-button slds-button_neutral" ng-disabled="{{dataset.currentVersionId == null}}" ng-click="updateXMDOverrides(dataset.name, dataset.currentVersionId)">
+                                Override XMD Settings
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-resource.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    
+    <script type="text/javascript">
+    
+    function startAcceleratorDataflow() {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.WaveAcceleratorController.startAcceleratorDataflow}',
+            function(result, event){
+                if (event.status) {
+                    console.log(result);
+                    if (result == 'success') {
+                        toastr["success"]("Accelerator dataflow has been started successfully.");
+                    } else {
+                        toastr["error"](result);
+                    }
+                } else {
+                    console.log(event.message);
+                    toastr["error"](event.message);
+                }
+            }, 
+            {escape: true}
+        );
+    }
+    
+    var app = angular.module('myApp', []);
+    
+    app.factory('datasetInfo', function($http){
+        return {
+            get : function(datasetName){
+                return $http.get('/services/data/v40.0/wave/datasets/' + datasetName,
+                                 {
+                                     headers: {'Authorization': 'Bearer {!$Api.Session_ID}'}
+                                 });
+            },
+            post : function () {
+            }
+        }
+    });
+    
+    app.controller('myCtrl',  ['$scope', 'datasetInfo', function($scope, datasetInfo) {
+        $scope.datasetIds = ['Sales_Data', 'Budget_Data', 'Activity_Data1'];
+        $scope.datasets = [];
+        
+        $scope.datasetIds.forEach(function (datasetId) {
+            datasetInfo.get(datasetId).then(function(response) {
+                var dataset = response.data;
+                dataset.found = true;
+                $scope.datasets.push(dataset);
+            }, function(error) {
+                $scope.datasets.push({"name": datasetId, "found": false});
+            });
+        });
+
+        $scope.overrideAllXMDs = function() {
+            $scope.datasets.forEach(function (dataset) {
+                if (dataset.found) {
+                    $scope.updateXMDOverrides(dataset.name, dataset.currentVersionId);
+                }
+            });
+        };
+        
+		$scope.updateXMDOverrides = function(datasetName, versionId) {
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.WaveAcceleratorController.overrideXMD}',
+                datasetName,
+                versionId,
+                function(result, event){
+                    if (event.status) {
+                        console.log(result);
+                        if (result.includes("errorCode")) {
+                            toastr["error"]("Failed to override XMD for dataset " + datasetName + ". " + result);
+                        } else {
+                            toastr["success"]("Dataset " + datasetName + "'s XMD has been overriden successfully.");
+                        }
+                    } else {
+                        console.log(event.message);
+                        toastr["error"](event.message);
+                    }
+                }, 
+                {escape: true}
+            );
+        };
+    }]);
+    </script>
+    
+</apex:page>

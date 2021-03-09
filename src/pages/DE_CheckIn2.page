@@ -1,0 +1,308 @@
+<!-- Responsive Checkin -->
+<apex:page controller="DE_CheckIn" docType="html-5.0" standardStylesheets="false" sidebar="false" cache="false">
+    <head> 
+        <title>DE Check-In v2</title>
+        <apex:includeScript value="{!URLFOR($Resource.SDO_jqueryui192, '/js/jquery-1.8.3.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.MobileSample_Resources_jQueryMobile, 'ForceTk.js')}"/>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>       
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css"/>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        
+        <script type="text/javascript">
+            function InitializeMap(position) {               
+                var mapOptions = {
+                    zoom: 15,
+                    center: new google.maps.LatLng(-34.398, 150.644),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                geocoder = new google.maps.Geocoder();
+            }
+            
+            function captureLocation() {
+                deleteOverlays();
+                if(navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                        addMarkerWithIcon(pos, '{!u.SmallPhotoURL}', true, null, false);                        
+                        map.setCenter(pos);
+                        google.maps.event.trigger(map, "resize");
+                    });
+                }
+            }
+            
+            function findNearbyAccounts() {
+                var soql = "Select Id, Name From Account Where Show_on_Checkin_Map__c = true Limit 5";
+                client.query(soql, function(data) {
+                    if(data.totalSize > 0) {
+                        nearbyAccounts = data.records;
+                        setTimeout('placeAccountsOnMap()',200);
+                    }
+                });
+            }
+                       
+            function placeAccountsOnMap() {
+                var request = {
+                    location: pos,
+                    radius: 300,
+                    types: ['store']
+                };
+                   
+                var service = new google.maps.places.PlacesService(map);
+                service.nearbySearch(request, accountcallback);
+            }
+            
+            function accountcallback(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    for (var i = 0; i < nearbyAccounts.length && i < results.length; i++) {
+                        console.log(nearbyAccounts[i]);
+                        addAccountWithIcon(results[i].geometry.location, null, false, nearbyAccounts[i]);
+                    }
+                }
+            }
+             
+            function findNearbyUsers() {
+                var soql = "Select Id, Name, SmallPhotoURL, Phone From User Where Show_on_Checkin_Map__c = true Limit 5";
+                client.query(soql, function(data) {
+                    if(data.totalSize > 0) {
+                        nearbyUsers = data.records;
+                        setTimeout('placeUsersOnMap()',200);
+                    }
+                });
+            }
+            
+            function placeUsersOnMap() {
+                var request = {
+                    location: pos,
+                    radius: 300,
+                    types: ['atm']
+                };
+                   
+                var service = new google.maps.places.PlacesService(map);
+                service.nearbySearch(request, usercallback);
+            }
+            
+            function usercallback(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    for (var i = 0; i < nearbyUsers.length && i < results.length; i++) {
+                        addMarkerWithIcon(results[i].geometry.location, nearbyUsers[i].SmallPhotoUrl, false, nearbyUsers[i], true);
+                    }
+                }
+            }
+            
+            function addMarkerToMap(location) {
+                var marker = new google.maps.Marker({ 
+                    map: map, 
+                    position: location,
+                    animation: google.maps.Animation.DROP
+                });
+                markers.push(marker);
+            }
+            
+            function addAccountWithIcon(point, imgURL, drag, v) {
+                if(v) {
+                    var contentString = '<div id="content">' +
+                            '<table>' +
+                                '<tbody>' +
+                                    '<tr><td><b>' + v.Name + '</b></td></tr>' +
+                                '</tbody>' +
+                            '</table>' +
+                        '</div>';
+                }
+                
+                var img = '/resource/map_account';
+                       
+                var marker = new google.maps.Marker({
+                    position: point,
+                    animation: google.maps.Animation.DROP,
+                    map: map,
+                    draggable: drag,
+                    icon: img
+                });
+                markers.push(marker);
+                
+                if(v) {
+                    var infowindow = new google.maps.InfoWindow({ 
+                        content: contentString 
+                    });          
+                    google.maps.event.addListener(marker, 'click', function() { 
+                        infowindow.open(map,marker); 
+                    });
+                }
+            }
+            
+            function addMarkerWithIcon(point, imgURL, drag, v, ic) {
+                if(v) {
+                    var contentString = '<div id="mcontent">' +
+                            '<table>' +
+                                '<tbody>' +
+                                    '<tr><td><img src="' + v.SmallPhotoUrl + '" alt=""/></td>' +
+                                    '<td><b>' + v.Name + '</b><br/>' + v.Phone + '<br/>4 minutes ago</td></tr>' +
+                                    '<tr><td colspan="2">Onsite at the customer.</td></tr>' +
+                                '</tbody>' +
+                            '</table>' +
+                        '</div>';
+                }
+                
+                var marker;
+                
+                if(ic) {    
+                    var img = '/resource/map_coworker';
+                   
+                    marker = new google.maps.Marker({
+                        position: point,
+                        animation: google.maps.Animation.DROP,
+                        map: map,
+                        draggable: drag,
+                        icon: img
+                    });
+                } else {
+                    var img = '/resource/map_me';
+                    
+                    marker = new google.maps.Marker({
+                        position: point,
+                        animation: google.maps.Animation.DROP,
+                        map: map,
+                        draggable: drag,
+                        icon: img
+                    });
+                }
+                markers.push(marker);
+                
+                if(v) {
+                    var infowindow = new google.maps.InfoWindow({ 
+                        content: contentString 
+                    });          
+                    google.maps.event.addListener(marker, 'click', function() { 
+                        infowindow.open(map,marker); 
+                    });
+                }
+            }
+            
+            function setMarkerMap(map) {
+                for (var i = 0; i < markers.length; i++)
+                    markers[i].setMap(map);
+            }
+    
+            function clearOverlays() {
+                setMarkerMap(null);
+            }
+            
+            function deleteOverlays() {
+                clearOverlays();
+                markers = [];
+            }
+            
+            $(document).ready(function() {  
+                console.log("CheckIn Ready...");
+                client = new forcetk.Client();
+                client.setSessionToken('{!$API.Session_ID}'); 
+                InitializeMap();
+                setTimeout('captureLocation()',300);
+            });
+            
+            var client, map, pos;
+            var nearbyUsers, nearbyAccounts;
+            var markers = [];
+        </script>
+        
+        <style type="text/css">
+            .mapArea {
+                width: 100%;
+            }
+            
+            #map-canvas {
+                margin: 5px;
+                padding: 0;
+                min-height: 250px;
+            }
+            
+            @media (min-width: 400px) { 
+                #map-canvas {
+                    margin: 5px;
+                    padding: 0;
+                    min-height: 350px;
+                    height: 100%;
+                }
+            }          
+            
+            #wrap {
+              min-height: 100%;
+              height: auto !important;
+              height: 100%;
+              margin: 0 auto -60px;
+              padding: 0 0 60px;
+            }
+            
+            .btnA {
+                width: 100%;
+                border-radius: 0px;
+            } 
+            
+            body {
+                padding-left: 15px;
+                padding-right: 15px;
+            } 
+            
+            .col-xs-4, .col-lg-12, .col-xs-12 {
+                padding-left: 0px;
+                padding-right: 0px;
+            }         
+        </style>
+    </head>
+    
+    <body>
+        <apex:form >
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-xs-12">           
+                    <div class="form-group">
+                        <label class="control-label">Account Name</label><br/>
+                        <apex:inputfield value="{!Hi.name}" id="memNam" styleclass="form-control ">
+                            <c:autoComplete autocomplete_textbox="{!$Component.memNam}" objectname="Account"/>
+                        </apex:inputfield>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-lg-12">
+                    <div class="mapArea">
+                        <div id="map-canvas"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <button type="button" class="btnA btn-default" onClick="javascript:findNearbyAccounts()">Accounts</button>
+                </div>
+                <div class="col-xs-4">
+                    <button type="button" class="btnA btn-default" onClick="javascript:findNearbyUsers()">Co-Workers</button>
+                </div>
+                <div class="col-xs-4">
+                    <button type="button" class="btnA btn-default" onClick="javascript:captureLocation()">Me</button>
+                </div> 
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <apex:commandButton styleClass="btnA btn-default" action="{!savecheckin}" value="Check In" oncomplete="javascript:parent.window.location.reload(true)"/>
+                </div>
+            </div>
+        </div>
+        </apex:form>
+    </body>
+    
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

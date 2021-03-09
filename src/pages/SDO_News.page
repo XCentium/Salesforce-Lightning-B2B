@@ -1,0 +1,47 @@
+<apex:page controller="SDO_Tools" docType="html-5.0"  standardStylesheets="false" showHeader="false" sidebar="false">
+  <style>
+
+
+  </style>
+  <div class="page-content" data-tab="home" style="min-height:1486px">
+  <div id="newsWrapper">
+    
+
+    <div id="newestFeatures">
+      <h3>Newest Features</h3>
+      <apex:repeat value="{!news}" var="n">
+        <div class="media">
+          <div class="media-left">
+            <a href="#">
+              <span class="newsImage">
+                <apex:outputText value="{!n.News_Item_Image__c}" escape="false"/>
+              </span>
+            </a>
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading">{!n.name}</h4>
+            {!n.News_Content__c}
+            <apex:outputPanel rendered="{!n.Showcase_Link__c != null}" layout="block">
+              <a href="{!n.Showcase_Link__c}">
+                Learn more<apex:Image styleclass="showcaseIcon img-responsive" value="{!$Resource.showcaseIcon}"/>
+              </a>
+            </apex:outputPanel>
+          </div>
+            
+        </div>
+      </apex:repeat>
+    </div>
+  </div>
+  </div>
+    
+
+    <!--
+    <div id="featuredTools">
+      <h3>Featured Tools</h3>
+      <apex:repeat>
+      </apex:repeat>
+    </div>
+    </div>
+    -->
+    <!-- end news wrapper -->
+</apex:page>

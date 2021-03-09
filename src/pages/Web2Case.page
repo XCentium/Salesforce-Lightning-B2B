@@ -1,0 +1,233 @@
+<apex:page showheader="false">
+
+<head>
+    <title>Web2Case</title>
+    
+    <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8">
+    
+    <style type="text/css">
+    
+        table {
+            margin-left:20px;
+            font: 12px Verdana, Arial, sans-serif;
+        }
+        
+        table caption {
+            text-align:left;
+        }
+        
+        body {
+            background-color:#fff;
+            border:0;
+            margin:0;
+        }
+        
+        h1 {
+            font: 22px verdana, arial, sans-serif normal;
+            margin-bottom:5px;
+        }
+        
+        form input {
+            font: 12px Verdana, Arial, sans-serif;
+            width:275px;
+            height:16px;
+            _height:20px;
+            color: #000;
+            border:1px solid #A7A6AA;
+            float:left;
+            padding:3px 1px 2px 1px;
+            _padding:0;
+            margin:0;
+        }
+        
+        form label {
+            font: 12px Verdana, Arial, sans-serif;
+        }
+        
+        form select {
+            font: 12px Verdana, Arial, sans-serif;
+            width:275px;
+            height:20px;
+            _height:24px;
+            color: #000;
+            border:1px solid #A7A6AA;
+            float:right;
+            padding:2px 1px 3px 0px;
+            margin:0 4px 0 0;
+        }
+        
+        .multiselectpl {
+            height:75px;
+        }
+        
+        form #submit {
+            font: 12px Verdana, Arial, sans-serif;
+            padding-bottom:5px;
+            padding-left:0;
+            padding-right:0;
+            padding-top:1px;
+            height:20px;
+            width:75px;
+            float:left;
+        }
+        
+        form textarea {
+            font: 12px Verdana, Arial, sans-serif;
+            width:275px;
+            color: #000;
+            padding:3px 1px 2px 1px;
+            border:1px solid #A7A6AA;
+            height:100px;
+        }
+    
+    </style>
+
+</head>
+
+    <script type="text/javascript">
+        function initFormURL(){
+        document.getElementById("thanksURL").value = "https://" + window.location.host + "/apex/W2LW2C_Landing_Page";
+        }
+    </script>
+    
+<body onload="initFormURL();">
+
+
+
+    <table border="0" align="center" style="margin-left:auto;margin-right:auto;">
+        <tbody>
+            <tr>
+                <td colspan="3"><img src="{!$Resource.UCIBanner}"/></td>
+            </tr>
+            <tr>
+                <td align="left" valign="top">
+                
+                <!-- if the company's web site has content in its left column, paste that content here -->
+                <!-- make sure the left column content ends here -->
+    
+                </td>
+                <td valign="top">
+                
+                    <!-- if the company's web site has content in its middle column above the Web2Case form, paste that content here -->
+                    
+                    <h1>Contact {!$Organization.Name}</h1>
+                    
+                    Please submit your support request with a short description of your issue. One of our support representatives will contact you shortly.
+                    <br/><br/><br/>
+                    <sup style="color:#ff0000;">*</sup> indicates a required field.</span>
+                    <br/><br/>
+        
+                    <!-- make sure the middle column content ends here -->
+                    
+                    <!-- BEGIN WEB-2-CASE FORM -->
+                    
+                    <form action="https://www.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST">
+                    
+                        <input type="hidden"  id="external" name="external" value="1" />
+                        <input type=hidden name="orgid" value="{!$Organization.Id}">
+                        <input type=hidden name="retURL" id="thanksURL">
+                        
+                        <table>
+                        
+                            <tr>
+                                <td align="right" valign="top" style="padding:2px 5px 0 0;">
+                                    <label for="name"><sup style="color:#ff0000;">*</sup>Contact Name</label>
+                                </td>
+                                <td>
+                                    <input id="name" maxlength="80" name="name" size="20" type="text" value="Lauren Boyle" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" valign="top" style="padding:2px 5px 0 0;">
+                                    <label for="email"><sup style="color:#ff0000;">*</sup>Email</label>
+                                </td>
+                                <td>
+                                    <input id="email" maxlength="80" name="email" size="20" type="text" value="lb@mailinator.com" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" valign="top" style="padding:2px 5px 0 0;">
+                                    <label for="phone">Phone</label>
+                                </td>
+                                <td>
+                                    <input id="phone" maxlength="40" name="phone" size="20" type="text" value="528-757-6012" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" valign="top" style="padding:2px 5px 0 0;">
+                                    <label for="company"><sup style="color:#ff0000;">*</sup>Company</label>
+                                </td>
+                                <td>
+                                    <input id="company" maxlength="80" name="company" size="20" type="text" value="United Partners*" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" valign="top" style="padding:2px 5px 0 0;">
+                                    <label for="subject"><sup style="color:#ff0000;">*</sup>Subject</label>
+                                </td>
+                                <td>
+                                    <input id="company" maxlength="80" name="subject" size="20" type="text" value="Can't understand installation instructions" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" valign="top" style="padding:2px 5px 0 0;">
+                                    <label for="description">Description</label>
+                                </td>
+                                <td>
+                                    <textarea name="description">I'm having trouble understanding the installation instructions. Can you help me get started?</textarea>
+                                </td>
+                            </tr>                           
+                            <tr>
+                                <td align="right" valign="top"></td>
+                                <td align="left">
+                                    <input type="submit" id="submit" name="submit" value="Submit">
+                                </td>
+                            </tr>
+        
+                        </table>
+                    </form>
+        
+                    <!-- END WEB-2-CASE FORM -->
+    
+                </td>
+                <td align="right" valign="top">
+                    
+                    <!-- if the company's web site has content in its right column, paste that content here -->         
+                    <!-- make sure the right column content ends here -->
+                    
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" align="center">
+        
+                    <!-- paste the company's footer starting here -->
+                    
+                    <hr style="color:#999;height:1px;background-color:#999;border:0;margin:15px 0 10px 0;padding:0;" />
+                    
+                    &copy; 2011 {!$Organization.Name}
+                    
+                    <!-- make sure the footer content ends here -->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+
+
+</apex:page>

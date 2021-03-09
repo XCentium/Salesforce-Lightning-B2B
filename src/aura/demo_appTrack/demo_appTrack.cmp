@@ -1,0 +1,12 @@
+<aura:component
+  implements="force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+  access="global"
+>
+    <aura:attribute name="Description" type="String" default="This component helps Q Branch understand how demos are used so we can better invest our resources.  No personal information is used." />
+  <aura:attribute name="page" type="String" default="Sales" />
+  <ltng:require
+                scripts="/resource/ga/"
+    afterScriptsLoaded="{!c.loadGoogleAnalytics}"
+  />
+  
+</aura:component>

@@ -1,0 +1,18 @@
+<design:component label="Community Text Section">
+	<design:attribute name="Title" label="Section Title" description="Enter the title text you want to appear in the block" default="Example Heading"/>
+    <design:attribute name="titleSize" label="Title Size" description="Enter a Numberic value for font size. Default is 18" default="18" />
+    <design:attribute name="titlemarginbottom" label="Title Margin Bottom" description="Enter a Numberic value for bottom margin size. Default is 10" default="10" />
+    <design:attribute name="titleWeight" label="Title Weight" description="Choose a font weight. Default is Bold" datasource="Normal,Bold,Bolder" default="Bold" />
+    
+    <design:attribute name="borderbottomsize" label="Title Border Height" description="Enter a Numberic value for bottom margin size. Default is 2" default="2"/>
+    <design:attribute name="borderbottomwidth" label="Title Border Width" description="Enter a Percentage value for bottom margin size. Default is 50%" default="50"/>
+    <design:attribute name="borderbottomcolor" label="Title Border Color" description="Hex Color Value for Title Border" default="#58BB62"/>
+    
+    <design:attribute name="Content" label="Content" description="Enter the text you'd like to display in the block." default="Example Content Here" />
+    <design:attribute name="contentSize" label="Content Size" description="Enter a Numberic value for font size. Default is 14" default="14" />
+    <design:attribute name="contentlineheight" label="Content Spacing" description="Enter a Numberic value for font spacing. Default is 16" default="16" />
+    
+    <design:attribute name="componentPaddingTopBottom" label="Component Padding Top/Bottom" description="Enter a Numberic value for padding size. Default is 0" default="0" />
+    <design:attribute name="componentPaddingLeftRight" label="Component Padding Left/Right" description="Enter a Numberic value for padding size. Default is 0" default="0" />
+    
+</design:component>

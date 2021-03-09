@@ -1,0 +1,88 @@
+<apex:page showheader="false" standardStylesheets="false" doctype="html-5.0">
+    <head>    
+        <apex:stylesheet value="{!URLFOR($Resource.SDO_bootstrap, '/css/bootstrap.css')}"/>
+        <script type="text/javascript">
+            function initFormURL(){
+            document.getElementById("thanksURL").value = "https://" + window.location.host + "/consumers/apex/W2LW2C_Landing_Page";
+            }
+        </script>
+        <style>
+            @media (max-width: 600px) {
+              .fbookBtn {
+                display: none;
+              }
+            }
+            .page-header{
+                color: #ffffff;
+                font-size: 40px;
+                font-weight: 400;
+                text-align: center;
+                line-height: 40px;
+                letter-spacing: 3px;
+                margin-left: 15px;
+                text-shadow: 1px 1px 1px #000;
+            }
+            body {
+                font-weight: bold;
+                color: white;
+                text-shadow: 1px 1px #000;
+                background:url('{!URLFOR($Resource.headerImg)}');
+            }
+            #formwrapper {
+                padding: 10px;
+                background: rgba(0, 0, 0, 0.5);
+                border-radius: 5px;
+            }
+            .myBtn {
+                background-color:#428bca !important;
+                background:#428bca !important;
+                color:white !important;
+            }
+        </style>
+    </head>
+    <body onload="initFormURL();">
+        <div style="width:800px;margin:0px auto;"> 
+            <div class="page-header"><h2>Contact {!$Organization.Name}</h2></div>
+            <div id="formwrapper">
+                <div id="introduction">Please submit your support request with a short description of your issue. One of our support representatives will contact you shortly.</div>
+                <br/>
+                <!-- WEB TO CASE FORM SHOULD BE PLACED BELOW HERE -->
+                <form role="form" action="https://www.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                            <input type="hidden" name="orgid" value="{!$Organization.Id}"></input>
+                            <input type="hidden" name="origin" value="Website" />
+                            <input type="hidden" name="retURL" id="thanksURL"></input>
+                            <input type="hidden"  id="external" name="external" value="1" />
+                            <div class="form-group">
+                                <div class="labelCol">Contact Name*</div>
+                                <div class="dataCol"><input class="form-control" id="name"  name="name" size="20" type="text" value="{!$User.firstname} {!$User.lastname}"></input></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="labelCol">Email*</div>
+                                <div class="dataCol"><input class="form-control" id="email"  name="email" size="20" type="text" value="{!$User.email}"></input></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="labelCol">Phone</div>
+                                <div class="dataCol"><input class="form-control" id="phone"  name="phone" size="20" type="text" value="{!$User.phone}"></input></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="labelCol">Company</div>
+                                <div class="dataCol"><input class="form-control" id="company" name="company" size="20" type="text" value=""></input></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="labelCol">Subject*</div>
+                                <div class="dataCol"><input class="form-control" id="company" name="subject" size="20" type="text" value=""></input></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="labelCol">Description*</div>
+                                <div class="dataCol"><textarea class="form-control" name="description"></textarea></div>
+                            </div>
+                            <div class="submitCol"><input type="submit" id="submit" name="submit" value="Submit" class="btn btn-primary myBtn form-control"></input></div>
+                      </div>
+                    </div><!-- end panel -->
+                 </form>       
+             </div>
+        </div>
+    </body>
+</apex:page>

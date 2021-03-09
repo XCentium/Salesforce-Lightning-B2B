@@ -1,0 +1,92 @@
+<aura:component description="ckz_OrderForm_ProductCardLayout">
+
+    <aura:registerEvent name="productSelectChange" type="c:ckz_OrderForm_ProductSelectEvent"/>
+
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <aura:attribute name="product" type="Map" default="{}" required="true"/>
+
+    <aura:attribute name="productSelected" type="Boolean" default="false"/>
+
+    <!-- 2019-10-17  msobczak: added -->
+    <!-- Storefront sizes include:  65 (thumbnail), 140 (cart), 225 (related products), 262 (PLP) -->
+    <aura:attribute name="productImageWidth" type="Integer" default="65"/>
+    <aura:attribute name="productImageHeight" type="Integer" default="65"/>
+
+
+    <div class="slds-col slds-small-size_12-of-12 slds-large-size_6-of-12">
+
+        <article class="slds-card slds-card_boundary slds-m-around_small">
+            <!--<div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        &lt;!&ndash; put icon here &ndash;&gt;
+                        <lightning:icon iconName="standard:product" alternativeText="Product"/>
+
+                        <span class="slds-icon_container" title="product">
+                            <span class="slds-assistive-text">Product</span>
+                        </span>
+                    </div>
+
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Product">
+                                <span>{!v.product.sfdcName} | {!v.product.SKU}</span>
+                            </a>
+                        </h2>
+                    </div>
+                </header>
+            </div>-->
+
+            <div class="slds-card__body slds-card__body_inner">
+
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-3">
+                        <aura:if isTrue="{! v.product.searchImage &amp;&amp; v.product.searchImage.URI &amp;&amp; v.product.searchImage.URI != '' }">
+                            <img src="{!v.product.searchImage.URI}" width="{!v.productImageWidth}" height="{!v.productImageHeight}"/>
+                        </aura:if>
+                    </div>
+
+                    <div class="slds-col slds-size_2-of-3">
+                        <!-- NAME -->
+                        <div class="slds-form-element__static">
+                            <div><span>{!v.product.sfdcName}</span></div>
+                        </div>
+
+                        <!-- SKU -->
+
+                        <div class="slds-form-element__static">
+                            <span>{!v.product.SKU}</span>
+                        </div>
+
+
+                        <div class="slds-form-element__static">
+                            <span><lightning:formattedNumber value="{!v.product.price}" style="currency"/></span>
+                        </div>
+
+                        <!--<div class="slds-form-element slds-form-element_horizontal">
+                            &lt;!&ndash;<label class="">Quantity:</label>&ndash;&gt;
+                            <div class="">
+                                <lightning:input aura:id="productSelect" type="checkbox-button" label="Input One" variant="label-hidden" name="input1" value="{!v.product.sfid}"
+                                        checked="{!v.productSelected}"
+                                        onchange="{!c.handleProductSelect}"/>
+                            </div>
+                        </div>-->
+
+                        <div class="slds-clearfix">
+                            <div class="slds-float_right">
+                                <lightning:input aura:id="productSelect" type="checkbox-button" label="Input One" variant="label-hidden" name="input1" value="{!v.product.sfid}"
+                                        checked="{!v.productSelected}"
+                                        onchange="{!c.handleProductSelect}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </article>
+    </div>
+
+</aura:component>

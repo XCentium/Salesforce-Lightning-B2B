@@ -1,0 +1,3 @@
+<design:component >
+    <design:attribute name="recordId" label="Record Id" description="This is the Id of the record the Appointment booking is related to." />
+</design:component>

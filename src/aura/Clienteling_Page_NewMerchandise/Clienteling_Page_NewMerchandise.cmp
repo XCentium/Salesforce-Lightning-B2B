@@ -1,0 +1,42 @@
+<aura:component controller="ClientellingController">
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="Products" type="Product2[]"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+        <div class="slds-page-header">
+            <div class="slds-media">
+                <div class="profilepicture">
+                    <lightning:icon iconName="standard:shipment" size="small" alternativeText="Indicates approval"/> 
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">{!setting.New_Merchandise_Page_Label__c}</h1>
+                    <p class="slds-text-body_small slds-line-height_reset">Stay up to date with new merchandise</p>
+                </div>
+            </div>
+        </div>
+        <aura:iteration var="product" items="{!v.Products}" indexVar="index"> 
+            <div class="panelthird ">
+                    <div class="slds-card">
+                        <div class="slds-media padding">
+                                <div class="profilepicture">
+                                    <lightning:icon iconName="standard:product" size="small" alternativeText="Indicates approval"/> 
+                                </div>
+                                <div class="slds-media__body">
+                                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">{!product.Name}</h1>
+                                </div>
+                                <div class="slds-no-flex">
+                                    <ui:outputCurrency aura:id="curr" value="{!product.MSRP__c}" format="$##,##,###,###.00"/>
+                                </div>
+                        </div>
+                        <div class="padding newproductheight">
+                            <div class="centertext">SKU: {!product.ProductCode} </div>
+                            <img src="{!product.purl__c}"/>
+                            <p>{!product.Description}</p>
+                            
+                        </div>
+                    </div>
+        	</div>
+    	</aura:iteration>
+    	<div class="clear"></div>
+    </aura:iteration>
+</aura:component>

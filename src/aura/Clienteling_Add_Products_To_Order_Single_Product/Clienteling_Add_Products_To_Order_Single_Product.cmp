@@ -1,0 +1,38 @@
+<aura:component controller="Clienteling_Add_Products_To_Order">
+    <aura:attribute name="OrderId" type="String"/>
+    <aura:attribute name="ProductId" type="String" />
+    <aura:attribute name="entryId" type="String" />
+    <aura:attribute name="Products" type="PriceBookEntry[]"/>
+    <aura:attribute name="Quantity" type="Integer" default="0" />
+	<aura:handler name="change" value="{!v.Quantity}" action="{!c.handleQuantityChange}" />
+    <aura:iteration items="{!v.Products}" var="prod">
+        <aura:if isTrue="{!v.entryId == prod.Id}">
+            <div class="border margin">
+                <div class="slds-grid slds-gutters padding "> 
+                    <div class="slds-col slds-size_1-of-6 center">
+                        <span>
+                            <img src="{!prod.Product2.purl__c}" class="prodimg"/><br/>
+                            <span class="slds-text-title--caps slds-line-height--reset"><ui:outputCurrency aura:id="curr" value="{!prod.UnitPrice}" format="$##,##,###,###.00"/></span>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_4-of-6">
+                        <span>
+                            <h3>{!prod.Product2.Name}</h3>
+                            <div class="slds-card__body slds-card__body_inner">
+                                <span class="slds-text-title--caps slds-line-height--reset"><ui:outputText value="{!prod.Product2.Description}" class="noSpace" /></span><br/>
+                                <span class="slds-text-title--caps slds-line-height--reset">ProductCode:<ui:outputText value="{!prod.ProductCode}" class="noSpace" /></span>
+                                
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-6">
+                        <label class="slds-form-element__label" for="text-input-id-1">Quantity</label>
+                        <div class="slds-form-element__control">
+                            <lightning:input type="number" value="{!v.Quantity}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+    	</aura:if>      
+    </aura:iteration>
+</aura:component>

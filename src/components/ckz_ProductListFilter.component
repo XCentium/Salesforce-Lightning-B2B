@@ -1,0 +1,70 @@
+<!--
+ - Created by brandon.rogers on 2019-06-03.
+ -->
+
+<apex:component id="ckz_ProductListFilter">
+    <script id="CKZ-Product-List-Filter" type="text/template">
+        <div class="center-block cc_filter_container">
+            <div class="specGroupContent cc_filter_options"></div>
+        </div>
+    </script>
+
+    <script id="CKZ-Spec-Group-View" type="text/template">
+        <div class="panel panel-default cc_spec_grouping">
+            <div class="panel-body">
+                <h5 class="cc_title cc_spec_header">
+                    <a href="javascript:void(0)" class="cc_collapse_group"  data-target="#collapse{{sfid}}" aria-expanded="true" aria-controls="collapse{{sfid}}">
+                        {{this.name}}
+                    </a>
+                </h5>
+                <div id="collapse{{sfid}}" class="collapse {{#ifEquals collapsed false}} in {{/ifEquals}} cc_spec_values_container">
+                    {{#ifEquals this.filterType 'Checkbox'}}
+                        <ul class="list-group">
+                            {{#each_upto specValues.models renderCount}}
+                                {{#with this.attributes}}
+                                    <li class="cc_spec_filter_option {{#ifEquals enabled false}} disabled {{/ifEquals}}">
+                                        <div class="checkbox {{#ifEquals enabled false}}disabled{{/ifEquals}}">
+                                            <label class="center-block">
+                                                <input type="checkbox" class="cc_filter_checkbox cc_checkbox" {{#ifEquals enabled false}} disabled {{/ifEquals}} data-specid="{{../../this.sfid}}" data-spec="{{../../this.name}}" data-value="{{value}}" {{#if selected}} checked {{/if}} />
+                                                {{#ifDisplay 'FF.ShowValueCount'}}
+                                                <span class="badge pull-right cc_product_count">{{count}}</span>
+                                                {{/ifDisplay}}
+                                                <span class="cc_filter_value" data-spec="" data-id="">{{value}}</span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                {{/with}}
+                            {{/each_upto}}
+
+                            {{#if viewMoreBtn}}
+                                <li class="list-group-item text-center cc_filter_buttons">
+                                    <button type="button" class="btn btn-default btn-sm cc_show_more">{{pageLabelMap 'ProductList_ViewMoreFilters' this.listSize}}</button>
+                                    <button type="button" class="btn btn-default btn-sm cc_show_all">{{pageLabelMap 'ProductList_ViewAllFilters' this.listSize}}</button>
+                                </li>
+                            {{/if}}
+                        </ul>
+                    {{/ifEquals}}
+
+                    {{#ifEquals this.filterType 'Slider'}}
+                        <div class="spec spec_slider_container col-md-12">
+                            <!--<p class="slider_{{this.sfid}} cc_slider"></p>
+                            <p class="lowerDisp lower_{{this.sfid}} cc_lower_disp"></p>
+                            <p class="upperDisp higher_{{this.sfid}} cc_upper_disp"></p>-->
+                            <div id="slider_{{this.sfid}}" class="slider_{{this.sfid}} cc_slider" data-spec="{{this.name}}"></div>
+                            <span id="lower_{{this.sfid}}" class="lowerDisp lower_{{this.sfid}} cc_lower_disp"></span>
+                            <span id="higher_{{this.sfid}}" class="upperDisp higher_{{this.sfid}} cc_upper_disp"></span>
+                        </div>
+                        <div class="clearfix"></div>
+                    {{/ifEquals}}
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function(){
+            CCRZ.uiProperties.productListFilterView.desktop.tmpl = 'CKZ-Product-List-Filter';
+            CCRZ.uiProperties.productListFilterView.ItemView.tmpl = 'CKZ-Spec-Group-View';
+        });
+    </script>
+</apex:component>

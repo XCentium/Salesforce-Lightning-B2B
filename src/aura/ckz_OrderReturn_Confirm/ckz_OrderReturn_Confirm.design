@@ -1,0 +1,6 @@
+<design:component label="B2B Order Return - Confirm">
+    <design:attribute name="selectedItemsString" label="Selected Items string" />
+    <design:attribute name="newCaseSubject" label="New Case subject" />
+    <design:attribute name="newCaseDesc" label="New Case Description" />
+    
+</design:component>

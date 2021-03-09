@@ -1,0 +1,246 @@
+<apex:page controller="CatalogConfiguration" applyBodyTag="false" docType="html-5.0" showHeader="true" standardStylesheets="false">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Catalog Brander</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/colorpicker/css/bootstrap-colorpicker.min.css')}"/>
+    
+    <style>
+        .form-group{
+            border: 1px solid;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #mainform{
+            width:30%;
+            float:left;
+            position:relative;
+            margin-left:1em;
+            margin-right:1em;
+        }
+        #mainpreview{
+            margin-top: 50px;
+            width:65%;
+            float:left;
+            position:relative;
+            border:1px solid #efefef;
+            border-radius:5px;
+            min-height:600px;
+            border-color: rgba(0, 0, 0, 0.1); 
+            box-shadow: 0px 0px 4px 0px rgba(50, 50, 50, 0.1);
+            padding: 75px;
+        }
+
+        #phonepic{
+            z-index: 0;
+        }
+
+        #phonecontainer{
+            margin: 0 auto;
+            width: 373px;
+            display: block;
+            position: relative;
+        }
+
+        #iphone{
+            width:100%;
+            position: relative;
+        }
+
+        #TitleBox{
+            position: relative;
+            left: 311px;
+            top: 331px;
+            width: 250px;
+            height: 46px;
+        }
+
+        label {color: #444;}
+        .input-group-addon{background-color: #F8F8F8;}
+        .input-group {margin: 8px 0;}
+        .form-group {
+            border-color: rgba(0, 0, 0, 0.1); 
+            box-shadow: 0px 0px 4px 0px rgba(50, 50, 50, 0.1);
+        }
+        h {
+            color: #333;
+            margin: 10px;
+            font-size: 17px;
+            font-weight: bold;
+            line-height: 3em;
+            text-align: center;
+        }
+
+        /*** HOVER AND ACTIVE ***/
+        .highlight {box-shadow: 0px 0px 15px 0px rgba(0, 0, 255, 0.4);}
+        .example.highlight {box-shadow: 0px 0px 15px 0px rgba(266, 255, 255, 0.9); }
+        .example{
+            position: absolute; 
+            box-sizing: border-box; 
+            border-radius: 5px;  
+            z-index: 2;
+        }
+        .PrimarySection.example {
+            top: 335px;
+            left: 70px;
+            height: 44px;
+            width: 230px;
+        }
+        .SubSection.example {
+            top: 379px;
+            left: 73px;
+            height: 29px;
+            width: 223px;
+        }
+        .CategorySection.example {
+            top: 410px;
+            left: 75px;
+            height: 17px;
+            width: 221px;
+        }
+        .HeaderLeftSection.example {
+            top: 270px;
+            left: 46px;
+            height: 20px;
+            width: 174px;
+        }
+        .HeaderRightSection.example {
+            top: 270px;
+            left: 238px;
+            height: 20px;
+            width: 84px;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id = "mainform">
+        <h style=""> Brand Your Product Catalog Here </h>
+        <apex:form >
+            <div class="form-group PrimarySection">
+
+                <label>Primary Text</label><br/>
+                <apex:inputField value="{!myCatalogTemplate.Title_Text__c}" styleclass="form-control"/> 
+
+                <label>Primary Color</label>
+                <div class="input-group colorPickMe">
+                    <apex:inputField value="{!myCatalogTemplate.Title_Text_Color__c}" styleclass="color form-control"/>
+                    <span class="input-group-addon"><i></i></span>
+                </div>
+
+                <label>Primary Size</label>
+                <apex:inputField value="{!myCatalogTemplate.Title_Text_Size__c}" styleclass="form-control"/> 
+
+            </div>
+            <div class="form-group SubSection">
+
+                <label>Sub Text</label><br/>
+                <apex:inputField value="{!myCatalogTemplate.Subtitle_Text__c}" styleclass="form-control"/>   
+
+                <label>Sub Text Color</label>
+                <div class="input-group colorPickMe">
+                    <apex:inputField value="{!myCatalogTemplate.Subtitle_Text_Color__c}" styleclass="color form-control"/>
+                    <span class="input-group-addon"><i></i></span>
+                </div>
+
+                <label>Sub Text Size</label>
+                <apex:inputField value="{!myCatalogTemplate.Subtitle_Text_Size__c}" styleclass="form-control"/>
+
+            </div>
+            <div class="form-group">
+
+                <div class="CategorySection">
+                    <label>Category Text Color</label><br/>
+                    <div class="input-group colorPickMe">
+                        <apex:inputField value="{!myCatalogTemplate.Category_Text_Color__c}" styleclass="color form-control"/>
+                        <span class="input-group-addon"><i></i></span>
+                    </div>
+                </div>
+
+                <div class="HeaderLeftSection">
+                    <label>Left Header Text Color</label><br/>
+                    <div class="input-group colorPickMe">
+                        <apex:inputField value="{!myCatalogTemplate.Header_Left_Text_Color__c}" styleclass="color form-control"/>
+                        <span class="input-group-addon"><i></i></span>
+                    </div>
+                </div>
+
+                <div class="HeaderRightSection">
+                    <label>Right Header Text</label><br/>
+                    <div class="input-group colorPickMe">
+                        <apex:inputField value="{!myCatalogTemplate.Header_Right_Text_Color__c}" styleclass="color form-control"/>
+                        <span class="input-group-addon"><i></i></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group BackgroundSection">
+
+                <label for="exampleInputFile">Upload Background Image:</label>
+                <span>Catalog_BG</span>
+                <apex:inputFile value="{!b}" fileSize="{!bSize}" id="exampleInputFile" />
+                <apex:commandButton styleclass="btn btn-default" value="Update File" action="{!saveFile}"/> 
+                <div style="margin-top: 8px; font-size: 10px; color: #999;">Uploads your background image file to the Salesforce document named &quot;Catalog_BG&quot;.</div>
+            </div>
+            <div class="form-group">
+                <a href="/01t/o">Update your Products to Display in the Catalog</a>
+                <div style="font-size: 12px;">To make a Product display in the Catalog, you&apos;ll need to enable &quot;Mobile Ready?&quot; on chosen records.</div>
+            </div>
+            <apex:commandButton styleclass="btn btn-default" value="Save" action="{!saveTemplate}"/>      
+        </apex:form>
+    </div>
+    <div id ="mainpreview">
+        <div id ="iphone">
+            <div id="phonecontainer">
+                <img id ="phonepic" src ="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Images/iphoneCatalogPic.png')}"/>
+                <div class="PrimarySection example"></div>
+                <div class="SubSection example"></div>
+                <div class="CategorySection example"></div>
+                <div class="HeaderLeftSection example"></div>
+                <div class="HeaderRightSection example"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"/>
+    <script type="text/javascript" src ="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/colorpicker/js/bootstrap-colorpicker.js')}"/>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $('.colorPickMe').colorpicker({
+                format : false
+            });
+        });
+
+        $(".PrimarySection").hover(function() { $(".PrimarySection").addClass("highlight"); },
+            function() { $(".PrimarySection").removeClass("highlight"); });
+        $(".PrimarySection").focusin(function() { $(".PrimarySection").addClass("highlight"); });
+        $(".PrimarySection").focusout(function() { $(".PrimarySection").removeClass("highlight"); });
+
+        $(".SubSection").hover(function() { $(".SubSection").addClass("highlight"); },
+            function() { $(".SubSection").removeClass("highlight"); });
+        $(".SubSection").focusin(function() { $(".SubSection").addClass("highlight"); });
+        $(".SubSection").focusout(function() { $(".SubSection").removeClass("highlight"); });
+        
+        $(".CategorySection").hover(function() { $(".CategorySection").addClass("highlight"); },
+            function() { $(".CategorySection").removeClass("highlight"); });
+        $(".CategorySection").focusin(function() { $(".CategorySection").addClass("highlight"); });
+        $(".CategorySection").focusout(function() { $(".CategorySection").removeClass("highlight"); });
+        
+        $(".HeaderLeftSection").hover(function() { $(".HeaderLeftSection").addClass("highlight"); },
+            function() { $(".HeaderLeftSection").removeClass("highlight"); });
+        $(".HeaderLeftSection").focusin(function() { $(".HeaderLeftSection").addClass("highlight"); });
+        $(".HeaderLeftSection").focusout(function() { $(".HeaderLeftSection").removeClass("highlight"); });
+        
+        $(".HeaderRightSection").hover(function() { $(".HeaderRightSection").addClass("highlight"); },
+            function() { $(".HeaderRightSection").removeClass("highlight"); });
+        $(".HeaderRightSection").focusin(function() { $(".HeaderRightSection").addClass("highlight"); });
+        $(".HeaderRightSection").focusout(function() { $(".HeaderRightSection").removeClass("highlight"); });
+
+
+    </script>
+</body> 
+</apex:page>

@@ -1,0 +1,312 @@
+<apex:page showHeader="false" sidebar="false" controller="similarCasesWidgetController">
+    <apex:includeScript value="/support/console/33.0/integration.js"/>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.responsiveListZIP, 'jquery.mobile-1.4.1.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.responsiveListZIP, 'listview-grid.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.responsiveListZIP, 'jquery.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.responsiveListZIP, 'jquery.mobile-1.4.1.min.js')}"/>
+    
+    
+    <style>
+
+        /* A bit custom styling */
+        .my-page .ui-listview li .ui-btn p {
+            color: #a1adb7;
+        }
+        .my-page .ui-listview li .ui-btn .ui-li-aside {
+            color: #eee;
+        }
+        /* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
+        @media ( min-width: 48em ) {
+            .my-page .ui-content {
+                padding: .5625em; /* 9px */
+            }
+            .my-page .ui-listview li {
+                float: left;
+                width: 30.9333%; /* 33.3333% incl. 2 x 1.2% margin */
+                height: 14.5em; /* 232p */
+                margin: .5625em 1.2%;
+            }
+            .my-page .ui-listview li > .ui-btn {
+                -webkit-box-sizing: border-box; /* include padding and border in height so we can set it to 100% */
+                -moz-box-sizing: border-box;
+                -ms-box-sizing: border-box;
+                box-sizing: border-box;
+                height: 100%;
+            }
+            
+            .my-page .ui-listview li.ui-li-has-thumb .ui-li-thumb {
+                height: auto; /* To keep aspect ratio. */
+                max-width: 100%;
+                max-height: none;
+            }
+            /* Make all list items and anchors inherit the border-radius from the UL. */
+            .my-page .ui-listview li,
+            .my-page .ui-listview li .ui-btn,
+            .my-page .ui-listview .ui-li-thumb {
+                -webkit-border-radius: inherit;
+                border-radius: inherit;
+            }
+            /* Hide the icon */
+            .my-page .ui-listview .ui-btn-icon-right:after {
+                display: none;
+            }
+            /* Make text wrap. */
+            .my-page .ui-listview h2,
+            .my-page .ui-listview p {
+                white-space: normal;
+                overflow: visible;
+                position: absolute;
+                left: 0;
+                right: 0;
+            }
+            /* Text position */
+            .my-page .ui-listview h2 {
+                font-size: 12px;
+                margin: 0;
+                padding: .125em 1em;
+                bottom: 50%;
+            }
+            .my-page .ui-listview p {
+                font-size: 12px;
+                margin: 0;
+                padding: 0 1.25em;
+                min-height: 50%;
+                bottom: 0;
+            }
+            /* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we dont need to set border-radius. */
+            .ui-listview .ui-li-has-thumb h2,
+            .ui-listview .ui-li-has-thumb p {
+                background: none;
+                background: rgba(0,0,0,.8);
+            }
+            .ui-listview .ui-li-has-thumb h2 {
+                bottom: 35%;
+            }
+            .ui-listview .ui-li-has-thumb p {
+                min-height: 35%;
+            }
+            /*
+            ui-li-aside has class .ui-li-desc as well so we have to override some things.
+            */
+            .my-page .ui-listview .ui-li-aside {
+                padding: .125em .625em;
+                width: auto;
+                min-height: 0;
+                top: 0;
+                left: auto;
+                bottom: auto;
+                /* Custom styling. */
+                background: #2A94D6;
+                
+                -webkit-border-top-right-radius: inherit;
+                border-top-right-radius: inherit;
+                -webkit-border-bottom-left-radius: inherit;
+                border-bottom-left-radius: inherit;
+                -webkit-border-bottom-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        
+            /* If you want to add shadow, dont kill the focus style. */
+            .my-page .ui-listview li {
+                -moz-box-shadow: 0px 0px 9px #111;
+                -webkit-box-shadow: 0px 0px 9px #111;
+                box-shadow: 0px 0px 0px #111;
+            }
+            /* Images mask the hover bg color so we give desktop users feedback by applying the focus style on hover as well. */
+            .my-page .ui-listview li > .ui-btn:hover {
+                -moz-box-shadow: 0px 0px 12px #33ccff;
+                -webkit-box-shadow: 0px 0px 12px #33ccff;
+                box-shadow: 0px 0px 12px #33ccff;
+            }
+            /* Animate focus and hover style, and resizing. */
+            .my-page .ui-listview li,
+            .my-page .ui-listview .ui-btn {
+                -webkit-transition: all 500ms ease;
+                -moz-transition: all 500ms ease;
+                -o-transition: all 500ms ease;
+                -ms-transition: all 500ms ease;
+                transition: all 500ms ease;
+            }
+        }
+        /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
+        @media ( min-width: 63.75em ) {
+            .my-page .ui-content {
+                padding: .625em; /* 10px */
+            }
+            /* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
+            By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
+            .my-page .ui-listview {
+                max-width: 62.5em; /* 1000px */
+                margin: 0 auto;
+            }
+            /* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
+            but we stick to percentage values for demo purposes. */
+            .my-page .ui-listview li {
+                width: 23%;
+                height: 230px;
+                margin: .625em 1%;
+            }
+        }
+        
+        /* For this demo we used images with a size of 310x310 pixels. Just before the second breakpoint the images reach their max width: 1019px - 2 x 9px padding = 1001px x 30.9333% = ~310px */
+        .ui-overlay-b, .ui-page-theme-b, .ui-page-theme-b .ui-panel-wrapper {
+            background: none;
+            border-color: #454545;
+            color: #fff;
+            text-shadow: 0 0px 0 #111;
+        }
+        
+        
+        .ui-page-theme-b .ui-btn, html .ui-bar-b .ui-btn, html .ui-body-b .ui-btn, html body .ui-group-theme-b .ui-btn, html head+body .ui-btn.ui-btn-b, .ui-page-theme-b .ui-btn:visited, html .ui-bar-b .ui-btn:visited, html .ui-body-b .ui-btn:visited, html body .ui-group-theme-b .ui-btn:visited, html head+body .ui-btn.ui-btn-b:visited {
+            background: #F9F9F9;
+            /* border-color: #1f1f1f; */
+            border-color: #dedfe7;
+            color: #111;
+            text-shadow: 0 0px 0 #111;
+        }
+        
+        .ui-page-theme-b a, html .ui-bar-b a, html .ui-body-b a, html body .ui-group-theme-b a {
+            font-weight: 300;
+        }
+        .widgetTitle {
+            font-size: 14px;
+            color: #393f49;
+            font-weight: bold;
+        }
+        .ui-btn {
+            font-size: 12px;
+        }
+        .ui-listview h2{
+            font-size: 12px;
+        }
+        
+        
+        body .ui-content {
+            width:100%;
+            padding:0;
+            font-family:'Arial','Helvetica',sans-serif;
+        }
+        
+        
+        .my-page .widgetTitle {
+            font-size:12px;
+            font-family:'Arial','Helvetica',sans-serif;
+        }
+        
+        .ss-action {
+            display:none;          
+        }
+        
+        .my-page .ui-page-theme-b .ui-btn {
+            background:#fff;
+            border:0;             
+            border-color:none;
+        }
+        
+        .ui-listview>li.ui-first-child, .ui-listview>li.ui-first-child>a.ui-btn {
+            border:0;
+            background: #fff;                 
+            border-radius:0;
+            text-shadow: none;
+            color: #111;
+        }
+        
+        .ui-listview>li h1, .ui-listview>li h2, .ui-listview>li h3, .ui-listview>li h4, .ui-listview>li h5, .ui-listview>li h62 {
+            color:#2891d4; 
+            font-weight:normal;
+            font-size:13px;
+        }
+        
+        body .my-page .ui-listview li .ui-btn p {                  
+            color:#333;
+            font-size:1em;
+        }
+        
+        .ui-page-theme-b .ui-btn:focus, html .ui-bar-b .ui-btn:focus, html .ui-body-b .ui-btn:focus, html body .ui-group-theme-b .ui-btn:focus, html head+body .ui-btn.ui-btn-b:focus, .ui-page-theme-b .ui-focus, html .ui-bar-b .ui-focus, html .ui-body-b .ui-focus, html body .ui-group-theme-b .ui-focus, html head+body .ui-btn-b.ui-focus, html head+body .ui-body-b.ui-focus 
+        {
+            webkit-box-shadow: none;
+            -moz-box-shadow:none;
+            box-shadow:none;              
+        }
+        
+        body .ui-page-theme-b a {
+            font-weight:normal; 
+        }
+        
+        body .ui-page-theme-b a.ui-btn {
+            border:0;
+            background: #fff;                 
+            border-radius:0;
+            text-shadow: none;
+            color: #111; 
+            border-color:none;
+        }        
+        body .ui-page-theme-b a.ui-btn:hover                
+        {
+            background: #f4f4f4; 
+            color:#333;
+            text-shadow: none;
+            border-color:none;
+        }
+        body .my-page .ui-listview li .ui-btn .ui-li-aside {
+            color:#888;
+            font-size:11px;
+        }
+        body .ui-listview>li.ui-last-child, .ui-listview>li.ui-last-child>a.ui-btn {
+            border-radius:0; 
+            border-color:none;
+            text-shadow:none;
+        }
+        body .ui-shadow {
+            box-shadow:none;                  
+        }
+        
+        body .ui-page-theme-b {
+            text-shadow:none; 
+        }
+        
+        .ui-listview>li h1, .ui-listview>li h2, .ui-listview>li h3, .ui-listview>li h4, .ui-listview>li h5, .ui-listview>li h6 {
+            text-overflow: inherit;
+            overflow: auto;
+            white-space: normal;
+        }
+    </style>
+    
+    <script type="text/javascript">
+        function openSubtabs(url,tabTitle) {
+            var openSubtabsFunction=
+            function openSubtabsFunction(result) {
+                sforce.console.openSubtab(result.id,url,true,tabTitle,null,openSuccess,tabTitle);
+            }
+            sforce.console.getEnclosingPrimaryTabId(openSubtabsFunction);
+        }
+        var openSuccess = function openSuccess(result) {
+            //Report whether we succeeded in opening the subtab
+            if (result.success == false)
+                alert('Unable to open subtab');
+        };
+    </script>
+
+    <div data-role="page" data-theme="b" id="demo-page" class="my-page" data-url="demo-page">
+        <div class="widgetTitle">
+            Similar Cases
+            <span class="ss-action" style="color:#393f49;font-size:125%;vertical-align:text-top;text-align:right" onclick="openSubtabs('/apex/SimilarCasesResponsiveListView?id={!caseID}','Similar Cases');"></span>
+        </div>
+        <div role="main" class="ui-content">
+            <ul data-role="listview" data-inset="true">
+                <apex:repeat value="{!oSimilarCases}" var="cases" id="theRepeat">
+                    <li data-icon="false">
+                        <a href="javascript:openSubtabs('/{!cases.Id}','{!cases.CaseNumber}');">
+                            <div class="ui-li-thumb">{!cases.casenumber}</div>
+                            <h2>{!cases.subject}</h2>
+                            <p>{!cases.description}</p>
+                            <p class="ui-li-aside">{!cases.status}</p>
+                        </a>
+                    </li>
+                </apex:repeat>
+            </ul>
+        </div><!-- /content -->
+    </div>
+
+</apex:page>

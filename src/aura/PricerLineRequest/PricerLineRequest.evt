@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="Event template" >
+    <aura:attribute name="section" type="Object" required="true" />
+                    </aura:event>

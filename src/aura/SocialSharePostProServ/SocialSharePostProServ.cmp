@@ -1,0 +1,27 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes">
+    <ltng:require styles="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+<h3>Share</h3>
+    <hr/>
+<div class="btn-container">
+<!-- Twitter (url, text) -->
+<a href="javascript:void(0);" onclick="{!c.twitterShare}" class="share-btn twitter">
+    <i class="fa fa-twitter"></i>
+</a>
+
+<!-- Facebook (url) -->
+<a href="javascript:void(0);" onclick="{!c.fbShare}" class="share-btn facebook">
+    <i class="fa fa-facebook"></i>
+</a>
+    
+<!-- LinkedIn -->
+<a href="javascript:void(0);" onclick="{!c.linkedinShare}" target="_blank" class="share-btn linkedin">
+    <i class="fa fa-linkedin"></i>
+</a>
+    
+<!-- Google Plus -->
+<a href="javascript:void(0);" onclick="{!c.gplusShare}" target="_blank" class="share-btn google-plus">
+    <i class="fa fa-google-plus"></i>
+</a>
+    </div>
+</aura:component>

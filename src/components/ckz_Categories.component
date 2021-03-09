@@ -1,0 +1,157 @@
+<!--
+ - Created by brandon.rogers on 12/13/18.
+ -->
+
+<apex:component id="ckz_Categories">
+    <script id="cc-category-container-template" type="text/template">
+
+        <div class="ckz_topCategories categories_side_container">
+            <div class="ckz_heading_embellished">
+                <h3>{{pageLabelMap 'Component_TopCategories_Title'}}</h3>
+            </div>
+
+            <div class="row">
+                {{#each this}}
+                {{#if this.children}}
+                <!-- HAS CHILDREN, PARENT LEVEL -->
+                {{#if this.topCategory}}
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    {{#each this.categoryMediasS}}
+                                    {{#ifEquals this.mediaType 'Category Image Thumbnail'}}
+                                    <img src="{{this.URI}}" class="img-responsive"/>
+                                    {{/ifEquals}}
+                                    {{/each}}
+                                </div>
+
+                                <div class="col-xs-8">
+                                    <h3 class="cc_title">{{topCategoryName}}</h3>
+                                    <p>
+                                        <small>{{productCount}} {{pageLabelMap 'Component_TopCategories_ProductCount'}}</small>
+                                    </p>
+                                    <a href="#{{sfid}}" role="button" class="cc_cat_name">
+                                        {{pageLabelMap 'Component_TopCategories_ShopNow'}}
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+
+                {{#each this.children}}
+                <!-- HAS CHILDREN, CHILD LEVEL 1 -->
+                {{#if this.topCategory}}
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    {{#each this.categoryMediasS}}
+                                    {{#ifEquals this.mediaType 'Category Image Thumbnail'}}
+                                    <img src="{{this.URI}}" class="img-responsive"/>
+                                    {{/ifEquals}}
+                                    {{/each}}
+                                </div>
+
+                                <div class="col-xs-8">
+                                    <h3 class="cc_title">{{topCategoryName}}</h3>
+                                    <p>
+                                        <small>{{productCount}} {{pageLabelMap 'Component_TopCategories_ProductCount'}}</small>
+                                    </p>
+                                    <a href="#{{sfid}}" role="button" class="cc_cat_name">
+                                        {{pageLabelMap 'Component_TopCategories_ShopNow'}}
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+
+                {{#if this.children}}
+                {{#each this.children}}
+                <!-- HAS CHILDREN, CHILD LEVEL 2 -->
+                {{#if this.topCategory}}
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    {{#each this.categoryMediasS}}
+                                    {{#ifEquals this.mediaType 'Category Image Thumbnail'}}
+                                    <img src="{{this.URI}}" class="img-responsive"/>
+                                    {{/ifEquals}}
+                                    {{/each}}
+                                </div>
+
+                                <div class="col-xs-8">
+                                    <h3 class="cc_title">{{topCategoryName}}</h3>
+                                    <p>
+                                        <small>{{productCount}} {{pageLabelMap 'Component_TopCategories_ProductCount'}}</small>
+                                    </p>
+                                    <a href="#{{sfid}}" role="button" class="cc_cat_name">
+                                        {{pageLabelMap 'Component_TopCategories_ShopNow'}}
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                {{/each}}
+                {{/if}}
+                {{/each}}
+                {{else}}
+                <!-- NO CHILDREN -->
+                {{#if this.topCategory}}
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    {{#each this.categoryMediasS}}
+                                    {{#ifEquals this.mediaType 'Category Image Thumbnail'}}
+                                    <img src="{{this.URI}}" class="img-responsive"/>
+                                    {{/ifEquals}}
+                                    {{/each}}
+                                </div>
+
+                                <div class="col-xs-8">
+                                    <h3 class="cc_title">{{topCategoryName}}</h3>
+                                    <p>
+                                        <small>{{productCount}} {{pageLabelMap 'Component_TopCategories_ProductCount'}}</small>
+                                    </p>
+                                    <a href="#{{sfid}}" role="button" class="cc_cat_name">
+                                        {{pageLabelMap 'Component_TopCategories_ShopNow'}}
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                {{/if}}
+                {{/each}}
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.CategoryTree.tmpl = 'cc-category-container-template';
+
+            CCRZ.uiProperties.CategoryTree.desktop.left.selector = '#top-categories';
+            CCRZ.uiProperties.CategoryTree.desktop.right.selector = '#top-categories';
+            CCRZ.uiProperties.CategoryTree.tablet.selector = '#top-categories';
+            CCRZ.uiProperties.CategoryTree.phone.selector = '#top-categories';
+        });
+    </script>
+</apex:component>

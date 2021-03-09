@@ -1,0 +1,22 @@
+.THIS .product-catalog-padding {
+	padding: 2rem calc((2rem - 0.75rem) / 2);
+}
+.THIS .product-catalog-padding:first-child {
+	padding-left: 1.75rem;
+}
+.THIS .product-catalog-padding:last-child {
+	padding-right: 1.75rem;
+}
+
+@media (max-width: 48em) {
+	.THIS .product-catalog-padding {
+		padding: 1rem 1rem 0;
+	}
+	.THIS .product-catalog-padding:first-child {
+		padding-left: 1rem;
+	}
+	.THIS .product-catalog-padding:last-child {
+		padding-right: 1rem;
+		padding-bottom: 1rem;
+	}
+}

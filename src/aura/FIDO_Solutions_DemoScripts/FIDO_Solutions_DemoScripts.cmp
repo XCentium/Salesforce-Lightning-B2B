@@ -1,0 +1,89 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="SolutionId" type="String" />
+    <aura:attribute name="SearchType" type="String" /> 
+    <aura:attribute name="SearchPhrase" type="String" /> 
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="DemoScripts" type="String[]"/>
+    <aura:attribute name="setScriptId" type="String" />
+    <aura:attribute name="Filter" type="String" />
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="recid" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.Filter}" action="{!c.init}"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:handler name="change" value="{!v.SearchPhrase}" action="{!c.init}"/>
+
+        <aura:iteration items="{!v.DemoScripts}" var="script">
+            <aura:if isTrue="{!script.demo_industry__c == v.Industry}">
+            	<aura:if isTrue="{!script.demo_solution__c == v.SolutionId}">
+                <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType != 'All')}">   
+                    <c:FIDO_IfContains items="{!script.name}"  items2="{!script.description__c}" element="{!v.SearchPhrase}">
+                        <button class="slds-button ScriptCard relative" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.OpenDialog}">
+                            <div class="padding textleft">
+                                <strong>{!script.name}</strong>
+                                <p><ui:outputRichText value="{!script.excerpt__c}"/> </p>
+                            </div>
+                        </button>
+                    </c:FIDO_IfContains>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.Filter != ''}">  
+                            <aura:if isTrue="{!script.cloud_product__c != null}">
+                                <c:FIDO_IfContains items="{!script.cloud_product__c }"   element="{!v.Filter}"> 
+                                    <button class="slds-button ScriptCard relative" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.OpenDialog}">
+                                        <div class="padding textleft">
+                                            <strong>{!script.name}</strong>
+                                            <p><ui:outputRichText value="{!script.excerpt__c}"/> </p>
+                                        </div>
+                                    </button>
+                                </c:FIDO_IfContains>
+                            </aura:if>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!or(script.new_script__c == true,script.updated_script__c == true)}">
+                                    <aura:if isTrue="{!script.new_script__c == true}">
+                                        <button class="slds-button ScriptCard relative" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.OpenDialog}">
+                                            <div class="padding">
+                                                <strong>{!script.name}</strong>
+                                                <p><ui:outputRichText value="{!script.excerpt__c}"/> </p>
+                                            </div>
+                                            <div class="newicon">
+                                                <span class="newscript">NEW</span><lightning:icon iconName="utility:favorite" size="x-small" alternativeText="New" class="marginleft marginright scriptstatusicon" />   
+                                            </div>
+                                        </button>
+                                    </aura:if>
+                                    <aura:if isTrue="{!script.updated_script__c == true}">
+                                        <button class="slds-button ScriptCard relative " aura:id="{!script.id}" id="{!script.id}" onclick="{!c.OpenDialog}">
+                                            <div class="padding textleft">
+                                                <strong>{!script.name}</strong>
+                                                <p><ui:outputRichText value="{!script.excerpt__c}"/> </p>
+                                            </div>
+                                            <div class="newicon">
+                                                <span class="newscript">UPDATED</span><lightning:icon iconName="utility:alert" size="x-small" alternativeText="Updated" class="marginleft marginright scriptstatusicon" />   
+                                            </div>
+                                        </button>
+                                    </aura:if>
+                                    <aura:set attribute="else">
+                                        <button class="slds-button ScriptCard relative" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.OpenDialog}">
+                                            <div class="padding textleft">
+                                                <strong>{!script.name}</strong>
+                                                <p><ui:outputRichText value="{!script.excerpt__c}"/> </p>
+                                            </div>
+                                        </button>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                	</aura:set>
+                </aura:if>
+            </aura:if>
+            </aura:if>
+        </aura:iteration>
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

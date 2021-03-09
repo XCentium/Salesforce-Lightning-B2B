@@ -1,0 +1,1 @@
+<apex:page standardController="Account"> <wave:dashboard developerName="Account_Summary1" height="300px" showTitle="true" filter="{'datasets': { 'opportunity': [ {'fields': ['AccountId'] ,'filter': { 'operator': 'in', 'values': ['{!Account.Id}'] } } ]}  }" /></apex:page>

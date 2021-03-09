@@ -1,0 +1,28 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="global" controller="ctiApexController">
+
+    <lightning:omniToolkitAPI aura:id="omniToolkit" />
+    <aura:handler event="lightning:omniChannelStatusChanged" action="{! c.onStatusChanged }"/>
+    <aura:handler event="lightning:omniChannelLoginSuccess" action="{! c.omniLoggedIn }"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+    <ltng:require scripts="{!$Resource.cti_cometd}" afterScriptsLoaded="{!c.onCometdLoaded}"/>
+    <aura:attribute name="sessionId" type="String"/>
+    <aura:attribute name="cometd" type="Object"/>
+    <aura:attribute name="cometdSubscriptions" type="Object[]"/>
+
+    <aura:attribute name="notifications" type="Object[]"/>
+    <aura:attribute name="isMuted" type="Boolean" default="false"/>
+    <aura:registerEvent name="toastEvent" type="force:showToast"/>
+
+    <aura:attribute name="availableStatusId" type="String"/>
+    <aura:attribute name="busyStatusId" type="String"/>
+
+    <div class="slds-box">
+        <p>
+            This component is here to sync the status' of the CTI Phone and Omnichannel components.<br/>
+            <br/>
+            Removing this from the page won't break anything, but CTI and Ominchannel will stop being in sync with eachother.
+        </p>
+    </div>
+
+</aura:component>

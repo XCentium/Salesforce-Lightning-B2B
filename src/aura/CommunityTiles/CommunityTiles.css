@@ -1,0 +1,91 @@
+.THIS .blockcontent:hover{
+    background:black;
+}
+.THIS .block {
+    border:1px solid white;
+    height:250px;
+    text-align:center;
+    color:white;
+    font-size:2em;
+    background:white;
+}
+.THIS .blocklink{
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.THIS .blockcontent{
+    background-color: rgba(0,0,0,.4);
+    -webkit-transition: background .8s ease;
+    transition: background .8s ease;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+.THIS .blocktitle{
+    color: #ffffff;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 1rem;
+    vertical-align: middle;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display:table-cell;
+}
+.THIS .backgroundimage{
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+.THIS  a:hover {
+    text-decoration: none;
+}
+
+.THIS ul{
+    width:100%;
+}
+.THIS li{
+    display:inline-block;
+}
+
+
+
+@media only screen and (min-aspect-ratio: 4/3) and (min-width: 48em), only screen and (min-width: 64.0625em){
+.THIS .block {
+    height: 250px;
+}
+    .THIS li{
+        display:inline-block;
+    }
+}
+
+
+@media only screen and (max-width: 768px){
+   
+    .THIS .block{
+        height:250px;
+    }
+    .THIS li{
+        display:inline-block;
+    }
+}
+@media only screen and (max-width: 480px){
+    .THIS #last .block{
+        width:100%;
+    }
+    .THIS li{
+        display:inline-block;
+    }
+}

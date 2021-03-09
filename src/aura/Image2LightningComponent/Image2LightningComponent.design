@@ -1,0 +1,21 @@
+<design:component>
+    
+    <design:attribute name="appIcon" label="App Icon" description="Icon to display on mobile devices"  />
+    
+    <design:attribute name="showGrid" label="Show Grid" description="Display hotspot grid"  />
+    
+    <design:attribute name="screen1" label="1st Screen" default="appImages1|/pg1.jpg|1" description="format: staticResource|/filename|gridPosition " />
+    <design:attribute name="screen2" label="2nd Screen" />
+    <design:attribute name="screen3" label="3rd Screen" />
+    <design:attribute name="screen4" label="4th Screen" />
+    <design:attribute name="screen5" label="5th Screen" />
+    <design:attribute name="screen6" label="6th Screen" />
+    <design:attribute name="screen7" label="7th Screen" />
+    <design:attribute name="screen8" label="8th Screen" />
+    <design:attribute name="screen9" label="9th Screen" />
+    <design:attribute name="screen10" label="10th Screen" />
+    
+    
+
+    
+</design:component>

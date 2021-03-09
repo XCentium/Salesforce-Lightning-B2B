@@ -1,0 +1,47 @@
+<aura:component controller="LightningCatalogController">
+	
+    <aura:attribute name="objectName" type="String" default="Product2"/> 
+    <aura:attribute name="fields" type="String" default="Name,Family,IsActive,Epaisseur_mm__c"/>
+    
+    <aura:attribute name="fieldsDesc" type="List"/>
+    <aura:attribute name="debugMode" type="Boolean" default="false"/>
+    <aura:attribute name="errorMsg" type="String"/>
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    
+    <aura:iteration items="{!v.fieldsDesc}" var="field">
+       <div style="margin-bottom:10px" class="page-section page-right">
+      	<aura:if isTrue="{!field.fieldType=='picklist'}">
+            <c:CatalogPicklistFilter objectName="{!v.objectName}" fieldName="{!field.fieldName}"
+                                     picklistLabel="{!field.label}"/>
+		</aura:if>
+       <aura:if isTrue="{!field.fieldType=='text'}">
+            <c:CatalogTextFilter fields="{!field.fieldName}"
+                                     label="{!field.label}"/> 
+		</aura:if>
+        
+         <aura:if isTrue="{!field.fieldType=='boolean'}">
+            <c:CatalogBooleanFilter fieldName="{!field.fieldName}"
+                                     label="{!field.label}"/>
+		</aura:if>
+        
+        <aura:if isTrue="{!field.fieldType=='double'}">
+            <c:CatalogNumberFilter fieldName="{!field.fieldName}"
+                                     label="{!field.label}"/>
+		</aura:if>
+    
+    <aura:if isTrue="{!v.debugMode}">    
+	<p>{!field.fieldName}</p>
+   	<p>{!field.label}</p>
+    <p>{!field.fieldType}</p> 
+    </aura:if>
+    </div>        
+ 	</aura:iteration>
+    
+    
+    <div aura:id="errorDiv" class="slds-hide">
+    <p>{!v.errorMsg}</p>
+    </div>
+    
+</aura:component>

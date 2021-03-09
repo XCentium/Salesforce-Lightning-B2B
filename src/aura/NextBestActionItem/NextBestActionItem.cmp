@@ -1,0 +1,77 @@
+<aura:component >
+    <aura:attribute name="icon" type="String" default="" access="global" />
+    <aura:attribute name="strength" type="String" default="3" access="global" />
+    <aura:attribute name="title" type="String" default="" access="global" />
+    <aura:attribute name="message" type="String" default="" access="global" />
+    <aura:attribute name="action" type="String" default="Accept" access="global" />
+    <aura:attribute name="action2" type="String" default="Reject" access="global" />
+    <aura:attribute name="footer" type="String" default="Never Offered" access="global" />
+    <aura:attribute name="offered" type="Boolean" default="false" access="global" />
+    <aura:attribute name="accepted" type="Boolean" default="" access="global" />
+    <aura:attribute name="offeredIcon" type="Boolean" default="false" access="global" />
+
+    <aura:handler event="c:acceptAllEvent" action="{!c.offerAccept}" />
+
+    
+
+		<div class="slds-card slds-card_boundary action-card">
+        
+    		<div class="slds-p-around_medium">
+                <div class="slds-media slds-media_center slds-p-bottom_medium">
+                    <div class="slds-media_figure">
+                    	<lightning:dynamicIcon type="strength" option="{!v.strength}"></lightning:dynamicIcon>                        
+                    </div>
+                    <div class="slds-media_body">
+                    	<span class=" slds-m-left_x-small slds-truncate" style="font-weight:700">{!v.title}</span>
+                    </div>
+                    
+                </div>
+                
+                
+                
+                <div class="nbamessage">
+                    {!v.message}
+                </div>
+                
+                <lightning:buttonGroup class="slds-m-top_medium slds-has-flexi-truncate">
+                	<lightning:button variant="neutral" label="{!v.action}" class="slds-truncate left-button" onclick="{!c.offerAccept}" ></lightning:button>                   
+                    <lightning:button variant="neutral" label="{!v.action2}" class="slds-truncate right-button" onclick="{!c.offerReject}" ></lightning:button>
+                </lightning:buttonGroup>
+                
+                
+                
+            </div> 
+            
+            <div class=" slds-border_top slds-theme_shade recommendation-footer slds-p-around_x-small">
+                <aura:if isTrue="{!v.offered}">
+                    
+                    <div class="nbafooter slds-media slds-media_center  ">
+                        <div class="slds-media_figure slds-p-bottom_xx-small slds-m-left_x-small" aura:id="actionIcon">
+                            <lightning:icon iconName="{!v.offeredIcon}" size="x-small" ></lightning:icon>
+                        </div>
+                        <div class="slds-media_body slds-m-left_x-small">
+                            <span class="slds-text-color_weak">{!v.footer}</span> 
+                        </div>
+                            
+                    </div>                    
+                
+                    <aura:set attribute="else">
+                        
+                    	<div class="nbafooter slds-media slds-media_center ">
+                            <div class="slds-media_figure slds-p-top_xx-small" >
+                                
+                            </div>
+                            <div class="slds-media_body slds-m-left_x-small">
+                            	<span class="slds-text-color_weak">{!v.footer}</span>
+                            </div>
+                                 
+                        </div>
+                        
+                    </aura:set>
+                
+                </aura:if>
+            </div>
+            
+    	</div>
+	
+</aura:component>

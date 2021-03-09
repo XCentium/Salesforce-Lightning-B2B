@@ -1,0 +1,243 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" controller="QSR_DailyPlannerController" access="global">
+<aura:attribute name="monthDate" type="Integer"/>
+    <aura:attribute name="currentDate" type="Date" />
+    <aura:attribute name="allFMSArrived" type="Boolean" default="false"/>
+    <aura:attribute name="deploymentChartsPosted" type="Boolean" default="false"/>
+    <aura:attribute name="coForShift" type="Decimal" />
+    <aura:attribute name="emailChecked" type="Boolean" default="false"/>
+    <aura:attribute name="shift" type="String"/>
+    <aura:attribute name="weather" type="String"/>
+    <aura:attribute name="transactionActual" type="Decimal"/>
+    <aura:attribute name="transactionGoal" type="Decimal" />
+    <aura:attribute name="weatherNotes" type="String"/>
+    <aura:attribute name="dailyNotes" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div class="slds-size_1-of-1 slds-grid slds-wrap">
+        <div class="slds-size_1-of-1 slds-grid slds-wrap slds-m-top_medium ">
+            <div class="slds-size_1-of-1 slds-align_absolute-center">
+                <h1>DAILY PLANNER</h1>
+            </div>
+            <div class="slds-size_1-of-1  slds-m-top_medium">
+                <div class="slds-clearfix">
+                    <h3 class="slds-float_right"> Business Date: <lightning:formattedDateTime value="{!v.currentDate}" year="numeric" month="long" day="2-digit"/></h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slds-size_1-of-1 slds-m-top_medium slds-grid">
+            <div class="slds-size_5-of-12 slds-col borderBlack slds-grid">
+                <div class="slds-size_3-of-12 slds-col black slds-grid slds-grid_vertical-align-center">
+                    <div class="slds-align_absolute-center">
+                        <span>{!v.monthDate}</span>
+                    </div>
+                </div>
+                <div class="slds-size_9-of-12 slds-col slds-grid slds-wrap ">
+                    <div class="slds-size_1-of-1 slds-col slds-p-around_small">
+                        <lightning:select label="Shift:" value="{!v.shift}">
+                            <option value="">choose one...</option>
+                            <option value="EVENING">Evening</option>
+                            <option value="EARLY BIRD">Early Bird</option>
+                            <option value="DAY">Day</option>
+                        </lightning:select>
+                    </div>
+                    <div class="slds-size_1-of-1 slds-col black slds-text-align_center">
+                        <p><lightning:formattedDateTime value="{!v.currentDate}" year="numeric" month="long" day="2-digit" weekday="long"/></p>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size_7-of-12 slds-col borderBlack slds-p-around_small">
+                <lightning:input type="text" label="PIC Name:"/>
+            </div>
+        </div>
+
+        <div class="slds-size_1-of-1 slds-grid slds-gutters slds-m-top_medium">
+            <div class="slds-size_1-of-3 slds-col">
+                <h3>Know Where To Be</h3>
+            </div>
+            <div class="slds-size_1-of-3 slds-col">
+                <lightning:select  label="All FMs Arrived?" value="{!v.allFMSArrived}">
+                    <option value="">choose one...</option>
+                    <option value="True">Yes</option>
+                    <option value="False">No</option>
+                </lightning:select>
+            </div>
+            <div class="slds-size_1-of-3 slds-col">
+                <lightning:select  label="Deployment Chart Posted?" value="{!v.deploymentChartsPosted}">
+                    <option value="">choose one...</option>
+                    <option value="True">Yes</option>
+                    <option value="False">No</option>
+                </lightning:select>
+            </div>
+        </div>
+
+        <div class="slds-size_1-of-1 slds-m-top_medium">
+            <table class="tableBorder">
+                <tr>
+                    <th>PY Transactions</th>
+                    <th>Transaction Goal</th>
+                    <th>Transaction Actual</th>
+                    <th>PY Check Avg.</th>
+                    <th>Check Avg. Actual</th>
+                    <th>SOS Attainment Goal</th>
+                    <th>SOS Attainment Actual</th>
+                </tr>
+                <tr>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        <lightning:input label="" type="number" formatter="currency" step="0.01" value="{!v.transactionGoal}"/>
+                    </td>
+                    <td>
+                        <lightning:input  label="" type="number" formatter="currency" step="0.01" value="{!v.transactionActual}"/>
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+                
+
+        <!-- task list -->
+        <div class="slds-size_1-of-1 slds-m-top_medium">
+            <div class="slds-text-align_center">
+                <h2>To Accomplish on Shift(move over tasks not completed from previous shift):</h2>
+            </div>
+
+            <div class="slds-size_1-of-1">
+                <table class="taskTable slds-m-top_medium">
+                    <thead>
+                        <tr>
+                            <th width="20%">Priority</th>
+                                <th width="50%">Task</th>
+                                <th width="30%">Responsible</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <lightning:select label="" >
+                                <option value="">choose one...</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </lightning:select>
+                        </td>
+                        <td>
+                            <lightning:select label="" >
+                                <option value="">choose one...</option>
+                                <option value="Clean bathroom">Clean bathroom</option>
+                                <option value="Re-stock bathrooms">Re-stock bathrooms</option>
+                                <option value="Sweep and mop dining room">Sweep and mop dining room</option>
+                                <option value="Re-fill sauces">Re-fill sauces</option>
+                                <option value="Check soda machine nozzles">Check soda machine nozzles</option>
+                            </lightning:select>
+                        </td>
+                        <td>
+                            <lightning:input type="text"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <lightning:select label="">
+                                <option value="">choose one...</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </lightning:select>
+                        </td>
+                        <td>
+                            <lightning:select label="" >
+                                <option value="">choose one...</option>
+                                <option value="Clean bathroom">Clean bathroom</option>
+                                <option value="Re-stock bathrooms">Re-stock bathrooms</option>
+                                <option value="Sweep and mop dining room">Sweep and mop dining room</option>
+                                <option value="Re-fill sauces">Re-fill sauces</option>
+                                <option value="Check soda machine nozzles">Check soda machine nozzles</option>
+                            </lightning:select>
+                        </td>
+                        <td>
+                            <lightning:input type="text"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <lightning:select label="" >
+                                <option value="">choose one...</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </lightning:select>
+                        </td>
+                        <td>
+                            <lightning:select label="" >
+                                <option value="">choose one...</option>
+                                <option value="Clean bathroom">Clean bathroom</option>
+                                <option value="Re-stock bathrooms">Re-stock bathrooms</option>
+                                <option value="Sweep and mop dining room">Sweep and mop dining room</option>
+                                <option value="Re-fill sauces">Re-fill sauces</option>
+                                <option value="Check soda machine nozzles">Check soda machine nozzles</option>
+                            </lightning:select>
+                        </td>
+                        <td>
+                            <lightning:input type="text"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="slds-size_1-of-1 slds-grid slds-gutters slds-m-top_medium">
+            <div class="slds-size_1-of-3 slds-col">
+                <lightning:select label="Weather" value="{!v.weather}">
+                    <option value="">choose one...</option>
+                    <option value="Sunny">Sunny</option>
+                    <option value="Cloudy">Cloudy</option>
+                    <option value="Windy">Windy</option>
+                    <option value="Rain">Rain</option>
+                    <option value="Snow">Snow</option>
+                </lightning:select>
+            </div>
+            <div class="slds-size_1-of-3 slds-col">
+                <lightning:input type="number"  label="C/O for shift" value="{!v.coForShift}" formatter="currency" step="0.01"/>
+            </div>
+            <div class="slds-size_1-of-3 slds-col">
+                <lightning:input type="checkbox" label="Email Checked?" value="{!v.emailChecked}"/>
+
+            </div>
+        </div>
+
+        <!-- notes -->
+        <div class="slds-size_1-of-1 slds-grid slds-gutters slds-m-top_medium">
+            <div class="slds-size_1-of-2 slds-col">
+                <lightning:textarea label="Weather Notes:" value="{!v.weatherNotes}"/>
+            </div>
+            <div class="slds-size_1-of-2 slds-col">
+                <lightning:textarea  label="Daily Notes:" value="{!v.dailyNotes}"/>
+            </div>
+        </div>
+
+        <div class="slds-size_1-of-1 slds-grid slds-gutters slds-m-top_medium ">
+            <div class="slds-size_5-of-6">
+
+            </div>
+            <div class="slds-size_1-of-6">
+                <lightning:button label="submit" onclick="{!c.doSubmitDailyPlanner}"/>
+            </div>
+            
+        </div>
+
+    </div>
+</aura:component>

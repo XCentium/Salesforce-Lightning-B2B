@@ -1,0 +1,123 @@
+<aura:component implements="force:appHostable">
+    <aura:attribute name="overlayClass" type="String" default="slds-backdrop_closed"/>
+    <aura:attribute name="Contact" type="Contact[]"/>
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+		<div class="slds">
+     		<div class="slds-tabs--scoped">
+                <ul class="slds-tabs--scoped__nav" role="tablist">
+                   <li aura:id="t1" class="slds-tabs--scoped__item slds-text-title--caps slds-active" title="your tab 1" role="presentation" onclick="{! c.tabOneAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" id="tab-scoped-1__item">Overview</a></li>
+                   <li aura:id="t2" class="slds-tabs--scoped__item slds-text-title--caps"  role="presentation" onclick="{! c.tabTwoAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-2" id="tab-scoped-2__item">Orders</a></li>
+                   <aura:if isTrue="{!setting.Enable_Customer_Cases__c  == true}">
+                   		<li aura:id="t6" class="slds-tabs--scoped__item slds-text-title--caps" role="presentation" onclick="{! c.tabSixAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-6" id="tab-scoped-6__item">Cases</a></li>
+                   </aura:if>
+                   <aura:if isTrue="{!setting.Enable_Customer_Profile__c   == true}">
+                   		<li aura:id="t3" class="slds-tabs--scoped__item slds-text-title--caps"  role="presentation" onclick="{! c.tabThreeAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-3" id="tab-scoped-3__item">Profile</a></li>
+                   </aura:if>
+                   <aura:if isTrue="{!setting.Enable_Customer_Insights__c  == true}">
+                  		<li aura:id="t4" class="slds-tabs--scoped__item slds-text-title--caps"  role="presentation" onclick="{! c.tabFourAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-4" id="tab-scoped-4__item">Insight</a></li>
+                   </aura:if>
+                   <aura:if isTrue="{!setting.Enable_Customer_Timeline__c   == true}">
+                        <li aura:id="t5" class="slds-tabs--scoped__item slds-text-title--caps" role="presentation" onclick="{! c.tabFiveAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-5" id="tab-scoped-5__item">Timeline</a></li>
+                   </aura:if>
+                   <aura:if isTrue="{!setting.Enable_Customer_Feed__c  == true}">
+                   		<li aura:id="t7" class="slds-tabs--scoped__item slds-text-title--caps" role="presentation" onclick="{! c.tabSevenAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-7" id="tab-scoped-7__item">Feed</a></li>
+                   </aura:if>
+                   <aura:if isTrue="{!setting.Enable_Customer_Discussions__c  == true}">
+                       <li aura:id="t9" class="slds-tabs--scoped__item slds-text-title--caps" role="presentation" onclick="{! c.tabNineAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-8" id="tab-scoped-8__item">Discussions</a></li>
+                   </aura:if>
+                   <aura:if isTrue="{!setting.Enable_Wishlist__c == true}">
+                   		<li aura:id="t8" class="slds-tabs--scoped__item slds-text-title--caps" role="presentation" onclick="{! c.tabEightAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-8" id="tab-scoped-8__item">Wishlist</a></li>
+                   </aura:if>
+                </ul>
+                <div aura:id="tab1" class="slds-tabs--scoped__content slds-show" role="tabpanel" aria-labelledby="tab-scoped-1__item">
+                    <div class="paneltwothirds">
+                    	<c:Clienteling_Customer_Tab_Overview 
+                        	Contact="{!v.Contact}"
+                        />
+                    </div>
+                    <div class="panelonethird">
+                        <aura:iteration var="contact" items="{!v.Contact}" indexVar="index"> 
+                            <c:EinsteinMockNextBestAction
+                               recId="{!contact.Id}"
+                               ObjectChoice="Contact"
+                               DefaultTitle1="{!setting.Next_Best_Action_Recommendation_Title_1__c}"  
+                               DefaultDescription1="{!setting.NBA_Description_1__c}"                           
+                               ButtonLink1="#"                           
+                               DefaultTitle2="{!setting.Next_Best_Action_Recommendation_Title_2__c}"                           
+                               DefaultDescription2="{!setting.NBA_Description_2__c}"                           
+                               ButtonLink2="#"
+                               ButtonText1="View Offer"
+                               ButtonText2="View Offer"                           
+                            />
+                        </aura:iteration>
+                    </div>
+                </div>      
+                <div aura:id="tab2" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-2__item">
+                	<aura:iteration var="contact" items="{!v.Contact}" indexVar="index"> 
+                    	<c:Clienteling_Orders_List 
+                                ContactID="{!contact.Id}"
+                                appSettings="{!v.appSettings}" 
+                                overlayClass="{!v.overlayClass}"                       
+                        />
+                 	</aura:iteration>
+             	</div>
+                <div aura:id="tab3" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-3__item">
+                	<c:Clienteling_Customer_Tab_Profile Contact="{!v.Contact}"/>
+                </div>
+                <aura:if isTrue="{!setting.Enable_Customer_Insights__c  == true}">
+                    <div aura:id="tab4" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-4__item">
+                        <c:Clienteling_Customer_Tab_Insight 
+                            appSettings="{!v.appSettings}"                                
+                            Contact="{!v.Contact}"                                   
+                        />
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!setting.Enable_Customer_Timeline__c   == true}">
+                    <div aura:id="tab5" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-5__item">
+                        <c:Clienteling_Customer_Tab_Timeline Contact="{!v.Contact}"/>
+                    </div> 
+                </aura:if>
+                <aura:if isTrue="{!setting.Enable_Customer_Cases__c  == true}">
+                    <div aura:id="tab6" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-6__item">
+                        <aura:iteration var="contact" items="{!v.Contact}" indexVar="index">
+                                <c:Clienteling_Customer_Tab_Cases 
+                                    ContactId="{!contact.Id}"
+                                    appSettings="{!v.appSettings}"
+                                    overlayClass="{!v.overlayClass}"                             
+                                />
+                        </aura:iteration>
+                    </div> 
+                </aura:if>
+                <aura:if isTrue="{!setting.Enable_Customer_Feed__c  == true}">
+                    <div aura:id="tab7" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-7__item">
+                        <aura:iteration var="contact" items="{!v.Contact}" indexVar="index"> 
+                            <forceChatter:feed type="Record" subjectId="{!contact.Id}"/> 
+                        </aura:iteration>
+                    </div> 
+                </aura:if>
+                <aura:if isTrue="{!setting.Enable_Wishlist__c == true}">
+                    <div aura:id="tab8" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-8__item">
+                        <aura:iteration var="contact" items="{!v.Contact}" indexVar="index"> 
+                            <c:Clienteling_Customer_Wishlist
+                                ContactID="{!contact.Id}"                          
+                            />
+                        </aura:iteration>
+                    </div> 
+                </aura:if>
+                <aura:if isTrue="{!setting.Enable_Customer_Discussions__c  == true}">
+                <div aura:id="tab9" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-9__item">
+                	<aura:iteration var="contact" items="{!v.Contact}" indexVar="index"> 
+                        <c:Clienteling_Customer_Discussions 
+                            ContactID="{!contact.Id}"
+                            appSettings="{!v.appSettings}" 
+                            overlayClass="{!v.overlayClass}"                                 
+                        /> 
+                    </aura:iteration>
+                </div>
+                </aura:if>
+  			</div>
+    	</div>
+    </aura:iteration> 
+    <div aura:id="overlay" class="{! 'slds-backdrop ' + v.overlayClass}"></div>
+</aura:component>

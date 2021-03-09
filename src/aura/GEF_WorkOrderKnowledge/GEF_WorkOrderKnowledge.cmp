@@ -1,0 +1,70 @@
+<aura:component controller="GEF_KnowledgeClass" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName,forceCommunity:availableForAllPageTypes" access="global" description="Display Article on Work Order">
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="nbResult" type="String" default="5"/>
+    <aura:attribute name="searchLanguage" type="String" default="User Language"/>
+    <aura:attribute name="knowledgeArticles" type="GEF_KnowledgeContainer"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <lightning:card variant="narrow" iconName="standard:article">
+        <aura:set attribute="title">{!$Label.c.WorkOrderKnowledge_Title}</aura:set>
+        
+        <div class="slds-card__body--inner">
+            <div class="slds-grid">
+                <div class="slds-col slds-align-bottom slds-size--5-of-8">
+                    <lightning:input aura:id="search" type="search" label="{!$Label.c.WorkOrderKnowledge_Search}" name="search" onchange="{!c.handleChange}" onblur="{!c.handleBlur}"/>
+                </div>
+                <div class="slds-col slds-col--padded slds-align-bottom slds-size--3-of-8">
+                    <lightning:button aura:id="submit" type="submit" label="Submit" onclick="{!c.searchArticles}"/>
+                </div>
+            </div>
+            <div id="ErrorMessage" class="slds-hide" style="color: red;">
+                {!$Label.c.WorkOrderKnowledge_BadInput}
+            </div>
+            <br/>
+            
+            <div class="{!v.knowledgeArticles[0].KnowledgeArticle ? 'slds-show' : 'slds-hide'}">
+                <aura:iteration items="{!v.knowledgeArticles}" var="article">
+                    <div class="slds-tile">
+                        <div class="slds-grid">
+                            <div class="slds-truncate slds-has-flexi-truncate slds-col slds-size--7-of-8">
+                                <div class=" slds-grid">
+                                    <lightning:icon iconName="utility:link" size="x-small" alternativeText="Article Attached" class="{!article.attached ? 'slds-show' : 'slds-hide'}"/>
+                                    <h3 class="slds-truncate">
+                                        <a href="javascript:void(0)" onclick="{!c.openArticle}" id="{!article.KnowledgeArticle.Id}">{!article.KnowledgeArticle.Title}</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            
+                            <div class="slds-col slds-size--1-of-8">
+                                <lightning:buttonGroup >
+                                    <lightning:buttonMenu value="{!article.KnowledgeArticle.Id}" onselect="{!c.attach}" class="{!article.attached ? 'slds-hide' : 'slds-show'}" menuAlignment="right" iconSize="x-small">
+                                        <lightning:menuItem label="{!$Label.c.WorkOrderKnowledge_AttachArticle}"/>
+                                    </lightning:buttonMenu>
+                                    <lightning:buttonMenu value="{!article.KnowledgeArticle.Id}" onselect="{!c.detach}" class="{!article.attached ? 'slds-show' : 'slds-hide'}" menuAlignment="right" iconSize="x-small">
+                                        <lightning:menuItem label="{!$Label.c.WorkOrderKnowledge_DetachArticle}" />
+                                    </lightning:buttonMenu>
+                                </lightning:buttonGroup>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-tile__detail slds-text-body--small">
+                            
+                            <div class="KB-overview">
+                                {!article.KnowledgeArticle.ArticleNumber}
+                                <br/>
+                                {!$Label.c.WorkOrderKnowledge_LastPublished}&nbsp;<lightning:formattedDateTime value="{!article.KnowledgeArticle.LastPublishedDate}" day="numeric" month="short" year="numeric" hour="2-digit" minute="2-digit"/><br/>
+                            </div>
+                            <div class="KB-Summary">
+                                {!article.KnowledgeArticle.Summary}
+                            </div>
+                        </div>
+                    </div>
+                </aura:iteration>
+            </div>
+            <div class="{!v.knowledgeArticles[0] ? 'slds-hide' : 'slds-show'}">
+                {!$Label.c.WorkOrderKnowledge_NoArticle}
+            </div>
+        </div>
+    </lightning:card>
+</aura:component>

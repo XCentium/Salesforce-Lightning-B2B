@@ -1,0 +1,16 @@
+<apex:page standardController="SBQQ__Quote__c" extensions="QuoteExtController"  action="{!onRecall}">
+<apex:pageMessages />
+<script>
+// Mobile only
+function redirect(){
+urlstring = '{!quoteUrl}';
+urlstring = urlstring.replace(/[\[\]\ ]/g,"");
+urls = urlstring.split(",");
+sforce.one.navigateToSObject(urls[0]);
+sforce.one.navigateToSObject(urls[1]);
+}
+var previousOnload = window.onload;
+window.onload = function() { if (previousOnload) { previousOnload(); }
+redirect(); }
+</script>
+</apex:page>

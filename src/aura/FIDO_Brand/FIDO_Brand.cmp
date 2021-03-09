@@ -1,0 +1,110 @@
+<aura:component controller="FIDO" extends="c:Mixpanel" implements="c:MixpanelInterface">
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="Filter" type="String" />
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="OrgId" type="String" />
+    <aura:attribute name="SearchPhrase" type="String" default='' /> 
+    <aura:attribute name="SearchType" type="String" default='This Page' /> 
+    <aura:attribute name="ComponentTitle" type="String" />
+    <aura:attribute name="ModalSelection" type="String" />
+    <aura:attribute name="Brands" type="String[]"/>
+    <aura:attribute name="IndustryName" type="String" />
+    
+    <aura:attribute name="MenuOpenClose" type="String" default='close'/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.ScreenChoice}" action="{!c.init}"/>
+    
+    <aura:iteration items="{!v.Brands}" var="brand">
+        <div class="paddingtop20">
+            <div class="owner">
+                <div class="center">
+                    <div class="padding">
+                        <img src="{!brand.logo__c}" class="brandlogo"/><br/>
+                        <ui:outputRichText value="{!brand.description__c}"/>
+                    </div>
+                    <aura:if isTrue="{!brand.brand_guidelines_url__c != ''}">
+                        <div class="padding">
+                            <button class="slds-button slds-button_neutral" aura:id="{!brand.brand_guidelines_url__c}" id="{!brand.brand_guidelines_url__c}" onclick="{!c.toURL}">
+                                Brand Guidelines
+                            </button>
+                        </div>
+                    </aura:if>
+                </div>
+            </div>
+            <div class="owner">
+                <aura:iteration items="{!v.Settings}" var="setting">
+                    <div class="center">
+                        <h3 class="center relatedh3 paddingtop5">Related Brand Records and Assets</h3>
+                        <lightning:tabset selectedTabId="1">
+                            <lightning:tab label="Personas" id="1">
+                                <div class="paddingleftright">
+                                    <c:FIDO_Filters OrgName="{!v.OrgName}" recid="{!v.recid}" Industry="{!v.Industry}" ScreenChoice="{!v.ScreenChoice}" Filter="{!v.Filter}" />
+                                    <c:FIDO_Personas SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" Filter="{!v.Filter}" recid="{!v.recid}" MenuOpenClose="{!v.MenuOpenClose}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" Settings="{!v.Settings}"/>
+                                </div>
+                            </lightning:tab>
+                            <aura:if isTrue="{!setting.show_brand_accounts__c == true}">
+                                <lightning:tab label="Accounts" id="2">
+                                    <div class="paddingleftright">
+                                        <c:FIDO_Brand_Accounts Industry="{!v.Industry}" />
+                                    </div>
+                                </lightning:tab>
+                            </aura:if>
+                            <aura:if isTrue="{!setting.show_brand_pricebook__c == true}">
+                                <lightning:tab label="Pricebooks and Products" id="3">
+                                    <div class="paddingleftright">
+                                        <c:FIDO_Brand_Pricebooks Industry="{!v.Industry}" BrandName="{!brand.name}" Settings="{!v.Settings}"/>
+                                    </div>
+                                </lightning:tab>
+                            </aura:if>
+                            <aura:if isTrue="{!setting.show_brand_apps__c == true}">
+                                <lightning:tab label="Apps" id="4">
+                                    <div class="paddingleftright">
+                                        <c:FIDO_Brand_Apps Industry="{!v.Industry}" />
+                                    </div>
+                                </lightning:tab>
+                            </aura:if>
+                            <aura:if isTrue="{!setting.show_brand_communities__c == true}">
+                                <lightning:tab label="Communities" id="5">
+                                    <div class="paddingleftright">
+                                        <c:FIDO_Brand_Communities Industry="{!v.Industry}" />
+                                    </div>
+                                </lightning:tab>
+                            </aura:if>
+                            <aura:if isTrue="{!setting.show_brand_leads__c == true}">
+                                <lightning:tab label="Leads" id="6">
+                                    <div class="paddingleftright">
+                                        <c:FIDO_Brand_Leads Industry="{!v.Industry}" />
+                                    </div>
+                                </lightning:tab>
+                            </aura:if>
+                            <aura:if isTrue="{!setting.show_brand_opportunities__c == true}">
+                                <lightning:tab label="Leads" id="7">
+                                    <div class="paddingleftright">
+                                        <c:FIDO_Brand_Opportunities Industry="{!v.Industry}" />
+                                    </div>
+                                </lightning:tab>
+                            </aura:if>
+                            <aura:if isTrue="{!setting.show_brand_cases__c == true}">
+                                <lightning:tab label="Leads" id="8">
+                                    <div class="paddingleftright">
+                                        <c:FIDO_Brand_Cases Industry="{!v.Industry}" />
+                                    </div>
+                                </lightning:tab>
+                            </aura:if>
+                            <aura:if isTrue="{!setting.show_brand_action_plans__c == true}">
+                                <lightning:tab label="Leads" id="9">
+                                    <div class="paddingleftright">
+                                        <c:FIDO_Brand_ActionPlans Industry="{!v.Industry}" />
+                                    </div>
+                                </lightning:tab>
+                            </aura:if>
+                        </lightning:tabset>
+                    </div>
+                </aura:iteration>
+            </div>
+        </div>
+    </aura:iteration>
+</aura:component>

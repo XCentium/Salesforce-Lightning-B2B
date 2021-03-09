@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>49.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+        
+        <property name="myCardTitle" label="Add Title"  default="card title" type="String" description="Add Title of your card"></property>
+        <property name="addressFieldHelp" label="Field Help"  default="Address Help" type="String" description="Help Info"></property>
+        <property name="addressLabel" label="Address Label"  default="Store Address" type="String" description="Enter the Label for Adress"></property>
+        <property name="myState" label="State"  default="myState" type="String" description="Captured State/Province"></property>
+        <property name="myCity" label="City"  default="myCity" type="String" description="Captured City"></property>
+        <property name="myCountry" label="Country"  default="myCountry" type="String" description="Captured Country"></property>
+        <property name="myStreet" label="Street"  default="myStreet" type="String" description="Captured Street"></property>
+        <property name="myPostalCode" label="Postal Code"  default="myPostalCode" type="String" description="Captured Zip/Postal Code"></property>
+       
+ 
+        
+        
+        
+        </targetConfig>
+        
+     
+        
+        </targetConfigs>
+</LightningComponentBundle>

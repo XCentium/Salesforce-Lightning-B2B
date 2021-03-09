@@ -1,0 +1,5 @@
+<design:component label="Knowledgeable (Conversation)">
+    <design:attribute name="thisFeedItem" label="Feed Item ID" default="{!feedItemId}"/>
+    <design:attribute name="title" label="Title"  default="People who may know"/>
+    <design:attribute name="usersPerPage" label="Users Per Page" default="3"/>
+</design:component>

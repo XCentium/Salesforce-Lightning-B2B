@@ -1,0 +1,30 @@
+.THIS .share-btn {
+    display: inline-block;
+    color: #ffffff;
+    border: none;
+    padding: 0.5em;
+    width: 4em;
+    box-shadow: 0 2px 0 0 rgba(0,0,0,0.2);
+    outline: none;
+    text-align: center;
+}
+
+.THIS .share-btn:hover {
+  color: #eeeeee;
+}
+
+.THIS .share-btn:active {
+  position: relative;
+  top: 2px;
+  box-shadow: none;
+  color: #e2e2e2;
+  outline: none;
+}
+
+.THIS .share-btn.facebook    { background: #3B5998; }
+
+.THIS .share-btn.twitter     { background: #55acee; }
+
+.THIS .share-btn.linkedin    { background: #4875B4; }
+
+.THIS .share-btn.google-plus { background: #dd4b39; }

@@ -1,0 +1,4 @@
+<design:component>
+	<design:attribute name="redirectURL" label="Redirect URL"/>
+    <design:attribute name="recordId" label="Record Id to be included in URL" />
+</design:component>

@@ -1,0 +1,22 @@
+.THIS .slds-image--card{
+    width: 150px;
+    margin: 20px;
+}
+
+.THIS .product-image {
+    border-radius: 5px;
+    border: 1px solid #eee;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 10px;
+    padding: 6px;
+    background: white;
+}
+
+.THIS .product-image:hover {
+    border: 1px solid #1589EE;
+}
+
+.THIS h1 {
+    font-size: 35px;
+}

@@ -1,0 +1,140 @@
+<aura:component implements="flexipage:availableForRecordHome,flexipage:availableForAllPageTypes,force:hasRecordId" controller="AgentOmniChannelStatusController" access="global" >
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="userStatus" type="UserServicePresence" access="global"/>
+    <aura:attribute name="user" type="User" access="global"/>
+    <aura:attribute name="statusIndicator" type="string" access="global"/>
+    <aura:attribute name="cases" type="Case[]" access="global"/>
+    <aura:attribute name="configuredCapacity" type="integer" access="global"/>
+    <aura:attribute name="currentWorkload" type="integer" access="global"/>
+    <aura:attribute name="capacityPercent" type="integer" access="global"/>
+    <aura:attribute name="omniStatusList" type="ServicePresenceStatus[]" access="global"/>
+    <aura:attribute name="omniBusyStatusList" type="ServicePresenceStatus[]" access="global"/>
+    <aura:attribute name="toast" type="boolean" access="global"/>
+    <aura:attribute name="animatedIcon" type="boolean" access="global"/>
+    
+    <lightning:omniToolkitAPI aura:id="omniToolkit" />  
+    <aura:handler event="lightning:omniChannelStatusChanged" action="{! c.refreshStatus }"/>
+    <aura:handler event="lightning:omniChannelLogout" action="{! c.refreshStatus }"/>
+    <aura:handler event="lightning:omniChannelWorkloadChanged" action="{! c.refreshStatus }"/>
+    <aura:handler event="lightning:omniChannelWorkAssigned" action="{! c.showWorkToast }"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <lightning:card >
+        
+        <aura:set attribute="title" >
+            <div class = "slds-text-heading_small" style="font-weight: 700;">
+                <span>
+                    <aura:if isTrue="{!v.animatedIcon}">
+                    		<lightning:dynamicIcon type="eq" class="eq" option="play" />
+                        <aura:set attribute="else">
+                        	<lightning:dynamicIcon type="eq" class="eq" option="stop" />
+                        </aura:set>                        
+                    </aura:if>    
+                </span>
+                <span class="slds-m-left_small">My Status </span>
+                
+            </div>
+            
+        </aura:set>
+        
+        <aura:set attribute="actions">
+        	<lightning:buttonGroup >
+                <lightning:buttonMenu alternativeText="Action" onselect="{!c.setStatus}" menuAlignment="right" iconSize="small">
+                    <aura:iteration var="status" items="{!v.omniStatusList}">                      
+                        <lightning:menuItem aura:id="actionMenuItems" label="{!status.MasterLabel}" value="{!status.Id}" class="omni-status-item-available" iconName="custom:custom12" ></lightning:menuItem>                        
+                    </aura:iteration>
+					<aura:iteration var="status" items="{!v.omniBusyStatusList}">
+                        <lightning:menuItem aura:id="actionMenuItems" label="{!status.MasterLabel}" value="{!status.Id}" class="omni-status-item-busy" iconName="custom:custom12"></lightning:menuItem>
+                    </aura:iteration>                     
+                </lightning:buttonMenu>
+                <lightning:buttonIcon size="small" iconName="utility:logout" onclick="{!c.logout}"/>
+        	</lightning:buttonGroup>
+        </aura:set>
+        
+            <div class = "slds-grid  slds-grid_pull-padded-medium  slds-grid_vertical-align-center slds-m-horizontal_medium slds-m-top_medium slds-m-bottom_large" >
+                
+                <div class = "slds-col slds-size_3-of-7 slds-p-horizontal_small slds-m-right_medium">
+                    
+                    <div class="slds-grid slds-grid_vertical-align-center">
+                        <div class ="slds-col slds-size_1-of-2 image-container">
+                            <aura:if isTrue="{!v.user.IsProfilePhotoActive}">
+                                <img src="{!v.user.MediumPhotoUrl}" class="user-avatar"></img>
+                                <aura:set attribute="else">
+                                    <img src="/profilephoto/005/M/1" class="user-avatar"></img>
+                                </aura:set>
+                            </aura:if>                 
+                            
+                            <aura:if isTrue="{! v.statusIndicator == 'Available'}" >
+                                <div class = "status-indicator" style = "background-color: #4bca81;" ></div>
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{! v.statusIndicator == 'Busy'}">
+                                        <div class = "status-indicator" style = "background-color: #ffb75d;" ></div>
+                                        <aura:set attribute="else">
+                                            <div class = "status-indicator" style = "background-color: #c23934;" ></div>
+                                        </aura:set>
+                                        
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>
+                            
+                        </div>
+                        
+                        <div class ="slds-col slds-size_1-of-2 slds-m-left_large ">
+                            <aura:if isTrue="{! (v.userStatus.IsCurrentState) == false }">
+                                
+                                Offline
+                                <div class="slds-text-color_weak">since <ui:outputDateTime value="{!v.userStatus.StatusEndDate}" format="MMM d h:mm a"/></div>
+                                
+                                <aura:set attribute="else">
+                                    {!v.userStatus.ServicePresenceStatus.MasterLabel}
+                                    <div class="slds-text-color_weak">since <ui:outputDateTime value="{!v.userStatus.StatusStartDate}" format="h:mm a"/></div>  
+                                </aura:set> 
+                                
+                            </aura:if>
+                        </div>    
+                        
+                    </div>    
+                    
+                    
+               </div>
+            
+               <div class = "slds-col slds-size_2-of-7 slds-p-horizontal_small">
+                   <div class ="slds-grid">
+                       <div class="slds-text-heading_large" style="font-weight: 450;"> {!v.currentWorkload}</div> 
+                       <aura:if isTrue="{!v.currentWorkload == 1}">
+                           <div class="slds-m-left_small slds-align-middle">open item</div>
+                           <aura:set attribute="else">
+                               <div class="slds-m-left_small slds-align-middle">open items</div>
+                           </aura:set>
+                       </aura:if>                       
+                   </div>
+                   
+               </div>
+                
+               <div class = "slds-col slds-size_2-of-7 slds-p-horizontal_small">
+                   <div class ="slds-grid">
+                       
+                       <aura:if isTrue = "{!v.capacityPercent >= 100}">
+                       		<div class="slds-text-heading_medium slds-align-middle" style="font-weight: 450;">{!v.capacityPercent}</div>     
+                       		<div class="slds-m-left_x-small slds-align-middle  ">% capacity</div>
+                       <aura:set attribute="else">
+                       		<div class="slds-text-heading_large slds-align-middle" style="font-weight: 450;">{!v.capacityPercent}</div>     
+                       		<div class="slds-m-left_small slds-align-middle ">% capacity</div>
+                       </aura:set>    
+                       </aura:if>
+                       
+                       
+                       
+                       
+                       
+                   </div>
+               </div>        
+                
+                
+
+        	</div>
+        
+    </lightning:card> 
+    
+	
+</aura:component>

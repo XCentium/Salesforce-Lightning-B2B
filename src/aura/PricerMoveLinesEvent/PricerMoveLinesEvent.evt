@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="sourceSection" type="Integer"/>
+    <aura:attribute name="destSection" type="Integer"/>
+    <aura:attribute name="scope" type="String" default="selection"/>
+    <aura:attribute name="action" type="String" default="openModal"/>
+</aura:event>

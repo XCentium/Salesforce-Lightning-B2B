@@ -1,0 +1,75 @@
+<!--
+ - Created by brandon.rogers on 1/10/19.
+ -->
+
+<apex:component id="ckz_PDP_Wishlist">
+    <script id="CKZ-AddtoWishlist-Desktop" type="text/template">
+
+        <div class="wishPickerDropdown form-group dropdown">
+            <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-plus"></i>
+                {{pageLabelMap 'AddtoWishlist'}}
+                <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="dropWish">
+                {{#each this}}
+                <li><a href="javascript:void(0);" class="pickWish" data-id="{{sfid}}">{{{name}}}</a></li>
+                {{/each}}
+                <li role="separator" class="divider"></li>
+                <li class="m-a-1">
+                    <div class="input-group input-group-sm">
+                        <label for="newWishList" class="sr-only">{{pageLabelMap 'Wishlist_EnterName'}}</label>
+                        <input id="newWishList" type="text" class="newListName form-control" placeholder="{{pageLabelMap 'MyAccount_Name'}}"/>
+                        <span class="input-group-btn">
+                            <a href="javascript:void(0);" class="btn btn-default pickWish" data-id="-1">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </script>
+
+    <!--<script id="CKZ-AddtoWishlist-Desktop" type="text/template">
+
+        <div class="btn-group wishPickerDropdown dropdown form-group m-a-0">
+            <a href="javascript:void(0);" id="dropWish" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa-stack">
+                    <i class="fal fa-circle fa-stack-2x"></i>
+                    <i class="fal fa-plus fa-stack-1x"></i>
+                </span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropWish">
+                {{#each this}}
+                <li><a href="javascript:void(0);" class="pickWish" data-id="{{sfid}}">{{{name}}}</a></li>
+                {{/each}}
+                <li role="separator" class="divider"></li>
+                <li>
+                    <div class="row center-block">
+                        <div class="col-xs-12">
+                            <label for="newWishList" class="sr-only">{{pageLabelMap 'Wishlist_EnterName'}}</label>
+                            <input id="newWishList" type="text" class="newListName form-control" placeholder="{{pageLabelMap 'MyAccount_Name'}}"/>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" class="pickWish" data-id="-1">{{pageLabelMap 'Action_CreateWishlist'}}</a>
+                </li>
+            </ul>
+        </div>
+    </script>-->
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.wishlistPickerModal.desktop.tmpl = 'CKZ-AddtoWishlist-Desktop';
+            CCRZ.uiProperties.wishlistPickerModal.nameSelector = '.wishPickerDropdown';
+
+            CCRZ.pubSub.on('view:wishlistPickerModal:refresh', function (theView) {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        });
+    </script>
+</apex:component>

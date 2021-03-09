@@ -1,0 +1,6 @@
+<!--
+ - Created by msobczak on 11/1/2018.
+ -->
+
+<aura:event type="COMPONENT" description="ckz_AddMoreOrderItems" access="global">
+</aura:event>

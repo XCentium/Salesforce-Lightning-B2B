@@ -1,0 +1,58 @@
+<apex:component controller="SDOSiteController">
+
+<div class = "kbSearch">
+	    <apex:variable var="securityOK" value="false" />
+	    <apex:variable var="currentCategoryVar" value="{!currentCategory}" />
+	    <apex:variable var="categoryGroupNameVar" value="{!categoryGroupName}" />
+
+	    <!-- ERROR CHECK FOR securityOK -->
+	    <apex:outputPanel styleClass="pkbPage" layout="block" rendered="{!canUserSeeKnowledge}"  >
+	        <knowledge:categoryList categoryGroup="{!categoryGroupName}" ancestorsOf="{!currentCategoryVar}" rootCategory="{!rootCategoryName}" categoryVar="ancestor" >
+	            <apex:variable var="securityOK" value="true" rendered="{!ancestor.name = rootCategoryName}" />
+	        </knowledge:categoryList>
+	    </apex:outputPanel>
+	    
+	    
+	    <apex:outputPanel styleClass="pkbSearchBox" layout="block" rendered="{!!isExternalPage}" >
+	            <apex:outputPanel styleClass="pkbSearchBoxText" layout="block">
+	                <apex:form id="searchBox">
+	                <apex:inputText value="{!currentCategory}" styleClass="categoryHiddenInputField"/>
+	                Search Support&nbsp;
+	                <select id="categorySelect" name="searchCategory"  size="1"  >
+	                <apex:outputPanel layout="none" rendered="{!securityOK}" >
+	                    <apex:outputPanel layout="none" rendered="{!currentCategoryVar=rootCategoryName}" >
+	                        <option value="{!rootCategoryName}" selected="selected">-- No filter --</option>
+	                    </apex:outputPanel>
+	                    <apex:outputPanel layout="none" rendered="{!currentCategoryVar!=rootCategoryName}" >
+	                        <option value="{!rootCategoryName}">-- No filter --</option>
+	                    </apex:outputPanel>
+	                    <knowledge:categoryList categoryGroup="{!categoryGroupNameVar}" rootCategory="{!rootCategoryName}" categoryVar="category" level="-1" >
+	                        <apex:outputPanel layout="none" rendered="{!currentCategoryVar=category.name}" >
+	                            <option value="{!category.name}" selected="selected">
+	                                <apex:outputText escape="false" value="{!IF(category.depth=1, '', IF(category.depth=2, '&nbsp;&nbsp;', IF(category.depth=3, '&nbsp;&nbsp;&nbsp;&nbsp;', IF(category.depth=4, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))))}" />
+	                                {!category.label}
+	                            </option>
+	                        </apex:outputPanel>
+	                        <apex:outputPanel layout="none" rendered="{!currentCategoryVar!=category.name}">
+	                            <option value="{!category.name}">
+	                                <apex:outputText escape="false" value="{!IF(category.depth=1, '', IF(category.depth=2, '&nbsp;&nbsp;', IF(category.depth=3, '&nbsp;&nbsp;&nbsp;&nbsp;', IF(category.depth=4, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))))}" />
+	                                {!category.label}
+	                            </option>
+	                        </apex:outputPanel>
+	                    </knowledge:categoryList>
+	                    </apex:outputPanel>
+	                </select>
+	                &nbsp;
+	                <apex:actionFunction name="searchJs" action="{!doSearch}" />
+	                <apex:inputText styleClass="keywordField" value="{!currentKeyword}" size="25" onkeypress="return submitEnter(event)" />
+	                <!--
+	                &nbsp;
+	                <apex:commandButton action="{!cleanKeyword}" value="Clean" onclick="clearKeyword()" id="cleanButton" />
+	                -->
+	                &nbsp;
+	                <apex:commandButton action="{!doSearch}" value="Search" onclick="return updateCategoryField()" id="searchButton" />
+	                </apex:form>
+	            </apex:outputPanel>
+ 		</apex:outputPanel>
+</div>
+</apex:component>

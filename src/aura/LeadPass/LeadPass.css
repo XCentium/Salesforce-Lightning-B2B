@@ -1,0 +1,78 @@
+.THIS.topHeaderRegion {
+    height: 36px;
+}
+.THIS.topHeaderRegion:before, .THIS.topHeaderRegion:after {
+    display:block;
+	clear:both;
+    content: "";
+}
+.THIS .topLeftHeaderRegion {
+    display: inline-block;
+    float: left;
+}
+.THIS .topRightHeaderRegion {
+    display: inline-block;
+    float: right;
+}
+
+.THIS.bottomHeaderRegion .button {
+    margin-right: 5px;
+}
+
+.THIS .button {
+    display: inline-block;
+    border: 1px solid #f4f4f4;
+    background-color: rgb(255, 255, 255);
+    font-weight: 400;
+    font-size: 1rem;
+    position: relative;
+    color: #2574a9;
+    display: table-cell;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 370px;
+    line-height: 2.125rem;
+    border-radius: .25rem;
+    padding: 0 1rem;
+}
+
+.THIS .button:not(.active):hover {
+    background-color: rgba(107, 76, 176, 0.1);
+}
+
+.THIS .button.active {
+    background-color: #2574a9;
+    color: #fff;
+}
+
+.THIS .button:focus{
+}
+
+.THIS table {
+    border-bottom-color: #d8dde6 !important;
+}
+.THIS .slds-card {
+    border: none;
+}
+.THIS .slds-card__body {
+    padding: 0px;
+}
+
+.THIS .no-records {
+	text-align: center;
+	color: #ccc;
+    padding: 15px;
+}
+
+.THIS .slds-dropdown-trigger--click .slds-dropdown.slds-is-open  {
+    display: block;
+}
+
+@media (max-width: 48em){
+    .THIS .slds-max-medium-table--stacked-horizontal tr {
+        display: block;
+        border-bottom: 10px solid #d8dde6;
+        border-top: none;
+    }
+}

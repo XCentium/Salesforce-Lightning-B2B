@@ -1,0 +1,14 @@
+<apex:component layout="none">
+    <apex:attribute name="headerTitle" type="String" description="title text for the home page"/>
+    <apex:attribute name="headerSubtitle" type="String" description="Subtitle."/>
+    <apex:attribute name="headerImage" type="String" description="URL for the background image. Size it small!"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Fonts,'fonts.css')}"/>
+    <apex:stylesheet value="{!$Resource.AppHome}"/>
+
+    <div id="apphome" style="background: url({!headerImage}) no-repeat;">
+        <span>{!headerTitle}<br/>
+            {!headerSubtitle}
+        </span>        
+    </div>
+    <apex:componentBody />
+</apex:component>

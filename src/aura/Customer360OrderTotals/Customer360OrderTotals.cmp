@@ -1,0 +1,43 @@
+<aura:component  controller="Customer360Controller" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    <aura:attribute name="order" type="Map"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="c.init"></aura:handler>
+    
+    <lightning:card title="Totals" iconName="standard:orders">
+    	<div class="slds-p-horizontal_medium">
+            <div class="subtotal">
+                <div class="item">
+                    <p class="item-label">Subtotal</p>
+                    <p class="item-amount">
+                        <ui:outputCurrency value="{!v.order.TotalAmount}"/>
+                    </p>
+                </div>
+                <div class="item">
+                    <p class="item-label">Order Adjustments</p>
+                    <p class="item-amount">
+                        <ui:outputCurrency value="{!v.order.adjustments ? v.order.adjustments : 0.00}"/>
+                    </p>
+                </div>
+                <div class="item">
+                    <p class="item-label">Shipping</p>
+                    <p class="item-amount">
+                        <ui:outputCurrency value="{!v.order.Shipping__c ? v.order.Shipping__c : 8.99}"/>
+                    </p>
+                </div>
+                <div class="item underline">
+                    <p class="item-label">Tax</p>
+                    <p class="item-amount">
+                        <ui:outputCurrency value="{!v.order.TotalAmount * (v.order.Tax__c ? v.order.Tax__c : 0.085)}"/>
+                    </p>
+                </div>
+            </div>
+            <div class="grand-total">
+                <div class="item bold">
+                    <p class="item-label">Total</p>
+                    <p class="item-amount">
+                        <ui:outputCurrency value="{!v.order.TotalAmount * (1 + (v.order.Tax__c ? v.order.tax__c : 0.085)) }"/>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,41 @@
+<aura:component extensible="true" abstract="true">
+    <aura:handler event="aura:doneRendering" action="{!c.onInit}"/>
+    <aura:handler name="change" value="{!v.score}" action="{!c.onScoreSet}"/>
+    
+    <aura:attribute name="isDoneRendering" type="Boolean" default="false"/>
+    <aura:attribute name="canvasLoaded" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="cardLabel" type="String"></aura:attribute>
+    <aura:attribute name="score" type="Integer" default="0"></aura:attribute>
+    <aura:attribute name="hasData" type="Boolean" default="true"></aura:attribute>
+    
+    <div class="slds-card insightsContainer runtime_sales_insightsInsightsContainer SFX_HOME">
+        <div class="slds-card__header slds-grid">
+            <h2 class="einstein-logo-hdr slds-text-heading_small">
+                <span class="einstein-logo">
+                    <div class="einstein-header-wrapper runtime_sales_insightsEinsteinHeader">
+                        <canvas height="50" width="50" aura:id="scoreSpan" class="einstein-score slds-p-left_small"></canvas>
+                        <span class="einstein-label">{!v.cardLabel}</span>
+                        <span class="uiImage">
+                            <img class="einstein-header-icon" src="/resource/einstein_images/einstein_header_icon.svg"></img>
+                        </span>
+                    </div>
+                </span>
+            </h2>
+        </div>
+        
+        <div class="slds-card__body slds-card__body_inner">
+            <aura:if isTrue="{!v.hasData}">
+                <div  class="insightsCardsContainer runtime_sales_insightsInsightsCards">
+                    {!v.body}
+                </div>
+                <aura:set attribute="else">
+                    <div class="einstein-message-container">
+                        <p class="einstein-message">
+                            Einstein's in the lab crunching numbers. Stay tuned for a breakthrough...
+                        </p>
+                    </div>
+                </aura:set>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

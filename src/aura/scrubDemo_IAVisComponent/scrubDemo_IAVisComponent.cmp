@@ -1,0 +1,35 @@
+<aura:component controller="scrubDemo_IAVisController" access="global">
+
+    <aura:attribute name="iaRecords" type="List" />
+    <aura:attribute name="gotRecord" type="String" default="NOPE!" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+
+    <lightning:card class="cSentCard">
+        <aura:set attribute="title">
+            <img src="{!$Resource.einsteinlogo}" class="cSentLogo"/> Customer Sentiment Analysis
+        </aura:set>
+        <aura:iteration items="{!v.iaRecords}" var="ia">
+            <lightning:tile class="iaItem" label="{!ia.CreatedDate}">
+                <dl class="slds-dl--horizontal slds-wrap">
+                    <dt class="slds-dl--horizontal__label">
+                         <p class="slds-truncate" title="Source">Source</p>
+                    </dt>
+                    <dd class="slds-dl--horizontal__detail slds-tile__meta">
+                        <p class="slds-truncate" title="{!ia.Analyzed_Object__c}">
+							{!ia.Prediction_Value__c > 0 ? 'Positive ' + ia.Analyzed_Object__c : 'Negative ' + ia.Analyzed_Object__c}
+                        </p>
+                    </dd>
+
+                    <dt class="slds-dl--horizontal__label">
+                        <p class="slds-truncate" title="Sentiment">Sentiment: </p>
+                    </dt>
+                    <dd class="slds-dl--horizontal__detail slds-tile__meta">
+                        <p class="slds-truncate" title="{!ia.Prediction_Value__c}"><span class="{!ia.Prediction_Value__c > 0 ? 'greenText' : 'redText'}">{!ia.Prediction_Value__c}</span></p>
+                    </dd>
+                </dl>
+            </lightning:tile>
+        </aura:iteration>
+    </lightning:card>
+</aura:component>

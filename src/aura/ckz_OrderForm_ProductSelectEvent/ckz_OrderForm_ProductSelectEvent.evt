@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT" description="ckz_OrderForm_ProductSelectEvent">
+    <aura:attribute name="productName" type="String" required="true"/>
+    <aura:attribute name="productSfid" type="String" required="true"/>
+    <aura:attribute name="productSelectValue" type="Boolean" required="true"/>
+    <aura:attribute name="productSKU" type="String" required="true"/>
+</aura:event>

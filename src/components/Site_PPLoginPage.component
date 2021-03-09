@@ -1,0 +1,45 @@
+<apex:component controller="SDOSiteController">
+<div class="PPLogin">
+    <div class="sidebarModule">
+       <form name="login" action="https://{!Pod}.salesforce.com/secur/login_portal.jsp" method="post" base_target="_top">
+            <input name="startURL" value="" type="hidden"> 
+            <input name="loginURL" value="" type="hidden">
+            <input name="useSecure" value="true" type="hidden"> 
+            <input name="orgId" value="{!OrgID}" type="hidden"> 
+            <input name="portalId" value="{!PPortalID}" type="hidden"> 
+            <input name="loginType" value="2" type="hidden"> 
+            <input name="action" value="loginAction" type="hidden">
+        <div class="sidebarModuleHeader">
+        
+                Partner Portal Login <br/>
+        
+        </div>
+        <div class="sidebarModuleBody">
+            
+             <table cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                    <tr>
+                        <td><label for="username"><b>User Name:</b></label></td>
+                    </tr>
+                    <tr>    
+                        <td><input style="width: 162px;"type="text" class="username" value="" maxlength="80" size="25" name="un" autocomplete="on"/></td> <br/>
+                  </tr>
+                  <tr>
+                    <td scope="row"><label for="password"><b>Password:</b></label></td>
+                  </tr>
+                  <tr>
+                     <td><input style="width: 162px;" autocomplete="on" id="password" name="pw" size="25" maxlength="80" class="pw" type="password"></td>
+                  </tr>
+                  <tr>
+                  	<td><a id="forgotPassword" href="https://{!Pod}.salesforce.com/secur/forgotpasswordp.jsp?orgId={!OrgID}&amp;portalId={!PPortalID}&amp;pLu=%2Fsecur%2Flogin_portal.jsp">Forgot your password?</a></td>
+                  </tr>
+                  <tr>
+                  	<td class="pbButtonb" align="right" style="padding-top: 6px;"><input type="submit" value="Login" class="btn"/></td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+        </form>
+     </div>
+</div>
+</apex:component>

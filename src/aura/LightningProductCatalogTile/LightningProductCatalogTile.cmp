@@ -1,0 +1,46 @@
+<aura:component >
+<aura:attribute name="data" type="Map"/>
+<aura:attribute name="sendBackData" type="String"/>    
+<aura:registerEvent name="appEvent" type="c:CatalogSelectProductEvent"/>    
+
+<div class="box slds-p-horizontal_small">
+    <div class="mainContainer">
+        <div class="image-container slds-m-top_small" style="height:170px">
+                <img src="{!v.data.Image}"/>
+        </div>    
+        
+            
+        <p class="slds-text-heading_small slds-m-vertical_small firstField">{!v.data.F1.value}</p>  
+        <p class="slds-text-body_regular slds-m-vertical_small">{!v.data.F2.value}</p> 
+        
+        <div class="moreSection" style="position:relative;">
+            <span>{!$Label.c.Catalog_More}</span>
+        <section class="detailPopup slds-popover slds-nubbin_top-left" style="max-width: 15rem;" role="dialog" aria-labelledby="dialog-heading-id-18" aria-describedby="dialog-body-id-18">
+          <header class="slds-popover__header">
+            <h2 id="dialog-heading-id-18" class="slds-text-heading_small">{!$Label.c.Catalog_Detail}</h2>
+          </header>
+          <div class="slds-popover__body" id="dialog-body-id-18">
+            <p>
+              <pre style="word-break: break-word; white-space: pre-line;">{!v.data.F3.value}</pre>
+            </p>
+          </div>
+        </section> 
+        </div>    
+            
+        <p class="slds-m-vertical_small">{!v.data.F4.value}</p>
+            
+          
+            
+        <div >
+            <span class="price">
+                <ui:outputCurrency value="{!v.data.Price.value}" currencyCode="{!v.data.Price.desc.typeAttributes.currencyCode}"/>
+            </span>
+        </div>
+    
+        <div class="selectArea">
+            <lightning:button variant="brand" label="{!$Label.c.Catalog_Select}" title="Select" onclick="{! c.select }" class="selectButton"/>
+        </div>    
+    </div> 
+</div>
+    
+</aura:component>

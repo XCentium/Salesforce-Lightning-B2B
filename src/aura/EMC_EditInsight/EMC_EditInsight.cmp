@@ -1,0 +1,10 @@
+<aura:component controller="EMC_InsightsCtrl">
+    <aura:attribute name="insight" type="Object"></aura:attribute>
+    <aura:attribute name="supportingDataFields" type="Object"></aura:attribute>
+    
+    <div>
+        <aura:iteration items="{!v.supportingDataFields}" var="supportingDataField">
+            <c:EMC_InsightField field="{!supportingDataField}" lookupField="{!supportingDataField.lookupField}"></c:EMC_InsightField>
+        </aura:iteration>
+    </div>
+</aura:component>

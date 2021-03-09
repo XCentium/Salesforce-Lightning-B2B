@@ -1,0 +1,23 @@
+<template>
+    <lightning-card title={myCardTitle}>
+        <div class="slds-p-around_medium">
+            <lightning-input-address
+                address-label={addressLabel}
+                street-label="Street"
+                city-label="City"
+                country-label="Country"
+                province-label="State/Provice"
+                postal-code-label="Zip/PostalCode"
+                street=""
+                city=""
+                country=""
+                province=""
+                postal-code=""
+                required
+                field-level-help={addressFieldHelp}
+                show-address-lookup
+                onchange={handleChange}>
+            </lightning-input-address>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,205 @@
+.THIS .infoTip{
+ display:none;
+}
+
+.THIS .infoIcon:hover .infoTip{
+  display:inline-block;
+}
+
+.THIS.paddingForTD td {
+    padding: .25rem .25rem !important;
+}
+
+.THIS .qtyField {
+    min-width:55px;
+}
+
+.THIS .lightInputPadding {
+   padding: 0 0.3rem 0 .20rem !important;
+}
+
+
+.THIS .leftSide{
+  right:-15px;
+}
+
+.THIS .rightSide{
+  left:1px;
+}
+
+.THIS .maxWidth100{
+    max-width:100px;
+}
+
+
+.THIS .circle_green
+    {
+
+        padding: 10px 11px;
+        background: #1fcaa0;
+        width: 2px;
+        border-radius: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        width: 1%;
+    }
+
+.THIS .circle_orange
+    {
+
+        padding: 10px 11px;
+        background: #f39e58;
+        width: 2px;
+        border-radius: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        width: 1%;
+    }
+
+.THIS .circle_red
+    {
+
+        padding: 10px 11px;
+        background: #ef6e64;
+        width: 2px;
+        border-radius: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        width: 1%;
+    }
+
+.THIS .percentageField{
+    width: 85px;
+    padding:4px;
+    text-align: center;
+
+}
+
+.THIS .discFieldMobileTile{
+    padding:4px;
+    text-align: center;
+
+}
+
+.THIS .amountField{
+    width: 120px;
+
+}
+
+.THIS .strikethrough{
+    text-decoration: line-through;
+}
+
+.THIS .smallerPadding{
+    padding-left:5px !important;
+    padding-right:5px !important;
+}
+
+.THIS .noPaddingForCheckbox span {
+    margin-right: -1px !important;
+    margin-left: 1px !important;
+    width: 0.9rem !important;
+    height: 0.9rem !important;
+}
+
+.THIS .cssForDeleteIcon{
+    padding-bottom: 3px;
+    margin-right: 4px;
+    padding-left:0.5rem;
+    padding-right:0.5rem;
+}
+
+.THIS.mobileTileContainer {
+ 	position:relative;
+    overflow-x:hidden;
+    overflow-y: visible;
+    border: solid 1px #ccc;
+}
+
+.THIS .mobileTile {
+    padding: 10px;
+    position:absolute;
+    width: 100%;
+    background:white;
+}
+
+.THIS .mobileTileNonAbsolute {
+    padding: 10px;
+    width: 100%;
+    background:white;
+}
+
+.THIS .mobileTileActionButtons{
+    display:flex;
+    flex-direction:row;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    right:15%;
+    /*left: 50%;*/
+    transform: translate(0%, -50%);
+    /*margin-right: -50%;*/
+    /*transform: translate(-50%, -50%)*/
+}
+
+.THIS .deleteIconMargin {
+    margin-left:30px;
+}
+
+.THIS.editLineModal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9001;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s linear;
+    background:white;
+    transform: translate3d(0,0,0);
+}
+
+.THIS .editLineModalContent {
+    position: relative;
+    transform: translate(0, 0);
+    transition: transform .1s linear,opacity .1s linear;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /*margin: 0 2rem;*/
+    height: 100%;
+    /*padding: 3rem 0;*/
+}
+
+.THIS .editLineIncrementBtn {
+    padding: 0px 10px;
+    padding-top: 15px;
+}
+
+.THIS .width100 {
+    width:100%;
+}
+
+.THIS .width24 {
+    width:24%;
+}
+
+.THIS .width26 {
+    width:26%;
+}
+
+.THIS .centerInputText input{
+  text-align: center;  
+}
+
+.THIS .triangle {
+    border-color: transparent transparent transparent green;
+    border-style: solid;
+    border-width: 0px 15px 15px 15px;
+    height: 0px;
+    width: 0px;
+    position:absolute;
+    top: -10px;
+    left: -10px;
+}

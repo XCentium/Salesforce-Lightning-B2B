@@ -1,0 +1,147 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="Industry" type="String" />
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="SearchType" type="String" /> 
+    <aura:attribute name="hasOldUpdate" type="Boolean" default="false"/>
+    <aura:attribute name="currentDate" type="String" /> 
+    <aura:attribute name="SearchPhrase" type="String" /> 
+    <aura:attribute name="Announcements" type="String[]"/>
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="OrgId" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.OrgId}" action="{!c.LoadAnnouncements}"/>
+    <aura:handler name="change" value="{!v.ScreenChoice}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.hasOldUpdate}" action="{!c.LoadAnnouncements}"/>
+    <aura:if  isTrue="{!or(v.recid == '', v.recid == null)}" >
+        <div class="textleft ">
+            <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType != 'All')}">
+                <div class="paddingleftright">
+                    <h3 class="searchHeader">Search Results for: {!v.SearchPhrase}</h3>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!not(empty(v.Announcements))}"> 
+                <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType != 'All')}"> 
+                    <aura:iteration items="{!v.Announcements}" var="ann">
+                        <c:FIDO_IfContains items="{!ann.name}"  items2="{!ann.description__c}" element="{!v.SearchPhrase}">
+                            <div class="owner">
+                                <h3 class="borderbottom">
+                                    <div class="padding">
+                                        <lightning:icon iconName="standard:announcement" size="medium" alternativeText=""/>   
+                                        <span class="marginleft">{!ann.name}</span>
+                                        <div class="posteddate">
+                                            <lightning:icon iconName="utility:pinned" size="x-small" alternativeText="" class="marginleft marginright" />   
+                                            <span class="slds-badge">Posted <lightning:formattedDateTime value="{!ann.createddate}"  month="short" day="2-digit" /></span>
+                                        </div>
+                                    </div>
+                                </h3>
+                                <div class="padding">
+                                    <ui:outputRichText value="{!ann.excerpt__c}"/>
+                                </div>
+                                <div class="padding center">
+                                    <button class="slds-button slds-button_neutral" aura:id="{!ann.id}" id="{!ann.id}" onclick="{!c.goToSingle}">
+                                        Learn More
+                                    </button>
+                                </div>
+                            </div>  
+                        </c:FIDO_IfContains>
+                    </aura:iteration>
+                    <aura:set attribute="else">
+                        <aura:iteration items="{!v.Announcements}" var="ann">
+                            <aura:if isTrue="{!ann.pinned__c == true}">
+                                <div class="owner">
+                                    <h3 class="borderbottom">
+                                        <div class="padding">
+                                            <lightning:icon iconName="standard:announcement" size="medium" alternativeText=""/>   
+                                            <span class="marginleft">{!ann.name}</span>
+                                            <div class="posteddate">
+                                                <lightning:icon iconName="utility:pinned" size="x-small" alternativeText="" class="marginleft marginright" />   
+                                                <span class="slds-badge">Posted <lightning:formattedDateTime value="{!ann.createddate}"  month="short" day="2-digit" /></span>
+                                            </div>
+                                        </div>
+                                    </h3>
+                                    <div class="padding">
+                                        <ui:outputRichText value="{!ann.excerpt__c}"/>
+                                    </div>
+                                    <div class="padding">
+                                        <button class="slds-button slds-button_neutral" aura:id="{!ann.id}" id="{!ann.id}" onclick="{!c.goToSingle}">
+                                            Learn More
+                                        </button>
+                                    </div>
+                                </div>  
+                            </aura:if>
+                        </aura:iteration>
+                        <aura:iteration items="{!v.Announcements}" var="ann">
+                            <aura:if isTrue="{!ann.pinned__c != true}">
+                                <aura:if isTrue="{!greaterthan(ann.createddate,v.currentDate)}">
+                                    <div class="owner">
+                                        <h3 class="borderbottom">
+                                            <div class="padding">
+                                                <lightning:icon iconName="standard:announcement" size="medium" alternativeText=""/>   
+                                                <span class="marginleft">{!ann.name}</span>
+                                                <div class="posteddate">
+                                                    <span class="slds-badge">Posted <lightning:formattedDateTime value="{!ann.createddate}"  month="short" day="2-digit" /></span>
+                                                </div>
+                                            </div>
+                                        </h3>
+                                        <div class="padding">
+                                            <ui:outputRichText value="{!ann.excerpt__c}"/>
+                                        </div>
+                                        <div class="padding">
+                                            <button class="slds-button slds-button_neutral" aura:id="{!ann.id}" id="{!ann.id}" onclick="{!c.goToSingle}">
+                                                Learn More
+                                            </button>
+                                        </div>
+                                    </div>  
+                                </aura:if>
+                            </aura:if>
+                        </aura:iteration>
+                        <aura:if isTrue="{!v.hasOldUpdate}">
+                            <h2 class="hrtext"><span>Earlier Posts</span></h2>
+                        </aura:if>
+                        <aura:if isTrue="{!v.hasOldUpdate}">
+                            <aura:iteration items="{!v.Announcements}" var="ann">
+                                <aura:if isTrue="{!ann.pinned__c != true}">
+                                    <aura:if isTrue="{!lessthan(ann.createddate,v.currentDate)}">
+                                        <div class="owner">
+                                            <h3 class="borderbottom">
+                                                <div class="padding">
+                                                    <lightning:icon iconName="standard:announcement" size="medium" alternativeText=""/>   
+                                                    <span class="marginleft">{!ann.name}</span>
+                                                    <div class="posteddate">
+                                                        <span class="slds-badge">Posted <lightning:formattedDateTime value="{!ann.createddate}" year="2-digit" month="short" day="2-digit" /></span>
+                                                    </div>
+                                                </div>
+                                            </h3>
+                                            <div class="padding">
+                                                <ui:outputRichText value="{!ann.excerpt__c}"/>
+                                            </div>
+                                            <div class="padding">
+                                                <button class="slds-button slds-button_neutral" aura:id="{!ann.id}" id="{!ann.id}" onclick="{!c.goToSingle}">
+                                                    Learn More
+                                                </button>
+                                            </div>
+                                        </div>  
+                                    </aura:if>
+                                </aura:if>
+                            </aura:iteration>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+                
+                <aura:set attribute="else">
+                    <div class="center">
+                        <div class="paddinglarge">
+                            <lightning:icon iconName="standard:waits" size="large" alternativeText=""/>  <br/><br/> 
+                            <em>Nothing to report!</em>
+                        </div>
+                    </div>
+                </aura:set>
+            </aura:if>
+        </div>
+        <aura:set attribute="else">
+            <c:FIDO_SingleRecord OrgName="{!v.OrgName}" IndustryName="{!v.IndustryName}" Industry="{!v.Industry}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}"/>
+        </aura:set>
+    </aura:if>
+</aura:component>

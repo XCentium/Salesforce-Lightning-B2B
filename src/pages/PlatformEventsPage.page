@@ -1,0 +1,270 @@
+<apex:page title="Platform Events Launcher" standardController="Platform_Events_Page__c" extensions="PlatformEventsCtrl" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0" >
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"/>
+    <apex:includeScript value="/apex/PlatformEventsRestCtrl"></apex:includeScript>
+    <link rel="stylesheet" href="/apex/PlatformEventsCSS"/>
+    
+    <style>
+    </style>
+    
+    <script>
+    const PlatformEventsPage = {
+        Id: '{!Platform_Events_Page__c.Id}',
+        Name: '{!Platform_Events_Page__c.Name}',
+        Subtitle__c: '{!Platform_Events_Page__c.Subtitle__c}',
+        Background_URL__c: '{!Platform_Events_Page__c.Background_URL__c}',
+        Background_Filter__c: ''
+    }
+    
+    const remote = PlatformEventsCtrl;
+    const VERBOSE = true;
+    const session = '{!$Api.Session_ID}';
+    const currentUserId = '{!$User.Id}';
+    
+    const app = angular.module('PlatformEventsApp', [])
+    .service('SFDC', SFDC_REST)
+    .controller('MainCtrl', function($scope){
+        $scope.PlatformEventsPage = PlatformEventsPage;
+        $scope.status = 'Press to launch platform event';
+        $scope.actions = [];
+        
+        $scope.init = async function(){
+            let buttons = await $scope.setButtons();
+        }
+        
+        $scope.setBackground = function(){
+            let styles = {}, filter;
+            let filterOption = PlatformEventsPage.Background_Filter__c;
+            
+            switch(filterOption) {
+                case 'blur':
+                    filter = 'blur(5px)'
+                    break;
+                default: 
+                    filter = '';
+                    break;
+            }
+            
+            styles['filter'] = filter;
+            styles['background-image'] = `url('${PlatformEventsPage.Background_URL__c}')`;
+            styles['background-color'] = '#999';
+
+            return styles;
+        }
+        
+        $scope.setButtons = function(){
+            return new Promise(function(resolve,reject){
+                remote.getButtons(PlatformEventsPage.Id, function(res,evt){
+                    if(evt.status){
+                        let actions = res;
+                        if(VERBOSE) console.log(actions);
+                        actions.map(function(action){
+                            if(action.Action_Data__c) action.Action_Data__c = JSON.parse(action.Action_Data__c);
+                        })
+                        
+                        $scope.actions = actions;
+                        $scope.$apply();
+                        resolve(res);
+                    } else {
+                        if(VERBOSE) console.log('ERROR:getButtons', evt);
+                        reject(res);
+                    }
+                }, {escape:false})
+            });
+        }
+        
+        if(VERBOSE) console.log($scope.PlatformEventsPage);
+        $scope.init();
+    })
+    .controller('ActionController', function($scope, SFDC){
+        $scope.queue = [];
+        $scope.active = false;
+        
+        $scope.runAction = function(actionEnum, actions){
+            $scope.active = true;
+            if(!$scope.ActionEnums[actionEnum]) if(VERBOSE) console.log('Action Type Does not Exist');
+            if($scope.ActionEnums[actionEnum]) {
+                $scope.ActionEnums[actionEnum](actions)
+            }
+        }
+        
+        $scope.sendData = function(endpoint, payload){
+            if(VERBOSE) console.log('payload', payload);
+            SFDC.upsert(endpoint, payload, [], [])
+            .then(function(res){
+                console.log(res)
+            })
+        }
+        
+        $scope.timeoutPromise = function(action, timeout = 0) {
+            return new Promise(function(resolve, reject) {
+                let timeoutId = setTimeout(async function() {
+                    let res = $scope.sendData(action.endpoint, action.data);
+                    if(VERBOSE) console.log('timeoutPromise', action, timeout);
+                    resolve(true);
+                }, timeout);
+                $scope.queue.push(timeoutId);
+            })
+        }
+
+        $scope.intervalPromise = function(action, interval = 1000) {
+            return new Promise(function(resolve, reject) {
+                let intervalId = setInterval(async function() {
+                    console.log('intervalPromise', action, interval);
+                    let res = $scope.sendData(action.endpoint, action.data);
+                    resolve(res);
+                }, interval);
+                $scope.queue.push(intervalId);
+            })
+        }
+        
+        $scope.sendAction = function(actions) {
+            
+            if(!Array.isArray(actions)){
+                let action = actions;
+                $scope.sendData(action.endpoint, action.data);
+            }
+            
+            actions.map(function(action) {
+                $scope.sendData(action.endpoint, action.data);
+            });
+            $scope.active = false;
+        }
+        
+        $scope.queueActions = function(actions) {
+            let accumulatedTimeout = 0;
+
+            if(!Array.isArray(actions)){
+                let action = actions;
+                accumulatedTimeout = accumulatedTimeout + (action['timeout'] ? action['timeout'] : 1000);
+                (async function() {
+                    let res = await $scope.timeoutPromise(action, accumulatedTimeout);
+                    $scope.active = false;
+                    $scope.$apply();
+                })();
+            	return true;
+            }
+            
+            actions.map(async function(action) {
+                //default to 1000
+                accumulatedTimeout = accumulatedTimeout + (action['timeout'] ? action['timeout'] : 1000);
+                let res = await $scope.timeoutPromise(action, accumulatedTimeout);
+                $scope.active = false;
+                $scope.$apply();
+            });
+        }
+
+        $scope.queueActionsRandom = function(actions) {
+            let accumulatedTimeout = 0;
+            
+            actions.map(async function(action){
+                console.log(action);
+                let min = action['min'] ? parseInt(action['min']) : 0;
+                let max = action['max'] ? parseInt(action['max']) : 1000;
+                let randomTimeout = Math.floor((Math.random() * (max - min)) + min);
+                
+                if(VERBOSE){
+                    console.log(min, max, randomTimeout)
+                }
+
+                accumulatedTimeout = accumulatedTimeout + randomTimeout;
+                console.log('accumulatedTimeout',accumulatedTimeout);
+                let x = await $scope.timeoutPromise(action, accumulatedTimeout);
+                $scope.active = false;
+            });
+        }
+
+        $scope.streamActions = function(actions) {
+            let accumulatedTimeout = 0;
+            
+            actions.map(function(action){
+                $scope.intervalPromise(action, action['interval']);
+            });
+        }
+
+        $scope.streamActionsRandom = function(actions) {
+            let accumulatedTimeout = 0;
+                
+            actions.map(async function(action){
+            	let interval = 0;
+                let min = action['min'] ? parseInt(action['min']) : 0;
+                let max = action['max'] ? parseInt(action['max']) : 1000;
+                interval = Math.floor((Math.random() * (max - min)) + min);
+                
+                if(VERBOSE) {
+                    console.log('Intervals',min, max, interval)
+                }
+                
+                $scope.intervalPromise(action, interval);
+            });
+        }
+        
+        $scope.ActionEnums = {
+            'Send': $scope.sendAction,
+            'Queue': $scope.queueActions,
+            'QueueRandom': $scope.queueActionsRandom,
+            'Stream': $scope.streamActions,
+            'StreamRandom': $scope.streamActionsRandom
+        }
+        
+        $scope.clearQueue = async function(type){
+            console.log($scope.queue);
+            
+            return new Promise(function(resolve,reject){
+                try{
+                    $scope.queue.map(function(item) {
+                        switch(type){
+                            case 'Stream':
+                                clearInterval(item)
+                                break;
+                            case 'StreamRandom': 
+                                clearInterval(item)
+                                break;
+                            default: 
+                                clearTimeout(item);
+                        }
+                    });
+                    $scope.active = false;
+                    resolve();
+                } catch(err){
+                    reject(err);
+                }
+            })
+        }
+    })
+    
+    </script>
+    
+    <body ng-app="PlatformEventsApp" ng-controller="MainCtrl" class="main" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <div class="background" ng-style="setBackground()"></div>
+        
+        <div class="header">
+            <div class="header-title" title="Salesforce React Integration">{{PlatformEventsPage.Name}}</div>
+            <div class="header-subtitle">{{PlatformEventsPage.Subtitle__c}}</div>
+        </div>
+        
+        <div class="actions">
+            <div ng-repeat="action in actions" class="action" ng-controller="ActionController">
+                <button ng-show="!active" class="action-button" ng-click="runAction(action.Action_Type__c, action.Action_Data__c)">
+                    {{action.Name}}
+                </button>
+                <button ng-show="active" class="action-button active" ng-click="clearQueue(action.Action_Type__c)">
+                    {{action.Name}}
+                </button>
+            </div>
+        </div>
+    </body>
+    
+        
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-46606102-1', 'auto');
+    ga('send', 'pageview');
+    
+    </script>
+</apex:page>

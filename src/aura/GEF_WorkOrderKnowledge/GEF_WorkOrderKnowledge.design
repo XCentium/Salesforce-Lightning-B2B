@@ -1,0 +1,7 @@
+<design:component >
+    <design:attribute name="nbResult" label="Number of Knwoledge Article to Display" datasource="5, 10, 15, 20" default="5" description="Select how many knowledge article the component will display"/>
+    <design:attribute name="searchLanguage" label="Language used to perform search" datasource="User Language, en_US, fr" default="User Language" description="Select which language will be used to perform search"/>
+	<sfdc:objects >
+        <sfdc:object >WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

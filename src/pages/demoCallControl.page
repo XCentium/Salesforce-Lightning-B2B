@@ -1,0 +1,724 @@
+<apex:page showHeader="false" controller="SoftphoneSearchController">
+<script>
+    // CALL CONFIGURATION
+    callFromContactANI = '(212) 842-5500';
+    callFromIVRCaseNumber = '00001001';
+    basicScreenPopUrl = '/500/e?cas14=Call%20From%20(415)%20555-1212';
+    callFromLeadANI = '(434) 369-3100';
+    disableSoftphoneInStandardApp = false;
+    callLogSubject = 'Call on ';
+</script>
+
+<style>
+html, body {
+    height: 100%;
+    text-align: center;
+    font-size:0.80em;
+}
+
+/* Inbound and Outbound icon sprite */
+.callDiv{
+    width: 20px;
+    height: 20px;
+    display: inline-table;
+    background-image: url({!$Resource.cti_sprite});
+}
+.inboundCall{
+    background-position: -0px -20px;
+}
+.outboundCall{
+    background-position: -0px -40px;
+}
+
+.bPageBlock {
+    border-top: 4px solid #F8F8F8;
+}
+
+.yui3-skin-night table.yui3-datatable-table {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+.yui3-skin-night .yui3-datatable-cell {
+    color: #4A4A56 !important;
+    border : 0 !important;
+}
+
+.yui3-skin-night .yui3-tabview-list, .yui3-skin-night .yui3-widget-hd, .yui3-skin-night .yui3-widget-ft {   
+    z-index:1;
+    border:1px solid #d5dadc !important;
+    border-bottom-color:#8A8C8D !important;
+    padding:2px 2px !important;
+    background: #ffffff !important;
+    background: -moz-linear-gradient(top,  #ffffff 0%, #ededed 100%) !important;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ededed)) !important;
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    background: -o-linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    background: -ms-linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    background: linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    font-size:1em !important;
+    background-color:#4A4A56 !important;
+}
+
+.yui3-skin-night .yui3-widget-hd {
+    color: #4A4A56 !important;
+}
+
+.yui3-skin-night .yui3-tabview-panel {
+    background-color:#E0E8E8 !important;
+}
+
+.yui3-skin-night .yui3-button {
+    background-color:#E0E8E8 !important;
+    color: #4A4A56 !important;
+}
+
+.yui3-skin-night .yui3-tabview-list li a {
+    background: -webkit-gradient(linear,left bottom,left top,from(#E0E8E8), to(#F1FAFE)) !important;
+    background: -moz-linear-gradient(top, #E0E8E8 0%, #F1FAFE 100%) !important;
+    color: #4A4A56 !important;
+    border: 0 !important;
+    border-right : solid 1px #E0E8E8 !important;
+    text-shadow: none !important;
+}
+
+.yui3-skin-night .yui3-datatable-table {
+    z-index:1;
+    border:1px solid #d5dadc !important;
+    border-bottom-color:#8A8C8D !important;
+    padding:2px 2px !important;
+    background: #ffffff !important;
+    background: -moz-linear-gradient(top,  #ffffff 0%, #ededed 100%) !important;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ededed)) !important;
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    background: -o-linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    background: -ms-linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    background: linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    font-size:1em !important;
+    background-color:#4A4A56 !important;    
+}
+
+.yui3-skin-night .yui3-datatable-header {
+    display : none;
+}
+
+.yui3-skin-night .yui3-datatable-message-content {
+    background-color: inherit !important;
+    color: #4A4A56;
+    border-bottom : 0 !important;
+}
+
+.yui3-skin-night .yui3-datatable-odd .yui3-datatable-cell {
+    background-color: Transparent !important;
+}
+
+.yui3-skin-night .yui3-datatable-even .yui3-datatable-cell {
+    background-color: Transparent !important;
+}
+
+.yui3-skin-night .yui3-widget-stdmod {
+    background-color: #E0E8E8 !important;
+    color: #4A4A56;
+}
+
+</style>
+
+<div id="softphonePanel" style="height:100%;background-color:#E0E8E8;">
+    <div id="panelLogin">
+        <div class="yui3-widget-bd">
+            <form>
+            <fieldset>
+                <p>
+                    <label for="labelUsername">
+                        Username</label><br />
+                    <input type="text" name="Username" id="inputUsername" placeholder="" />
+                </p>
+                <p>
+                    <label for="labelPassword">
+                        Password</label><br />
+                    <input type="password" name="Password" id="inputPassword" value="" placeholder="" />
+                </p>
+                <p>
+                    <label for="labelExtension">
+                        Extension</label><br />
+                    <input type="text" name="Extension" id="inputExtension" value="" placeholder="" />
+                </p>
+            </fieldset>
+            </form>
+        </div>
+    </div>
+    <div class="yui3-tabview-panel" style="text-align: center">
+        <select id="selectDisposition">
+            <option value="readyForCalls">Ready for calls</option>
+            <option value="onCall">On call</option>
+            <option value="wrapUp">Wrap up</option>
+            <option value="lunch">Lunch</option>
+        </select>
+        <button id="buttonLogout">
+            Logout</button>
+    </div>
+    <div id="callControl">
+        <ul>
+            <li><a href="#linkMenu">Menu</a></li>
+            <li><a href="#linkPhone">Phone</a></li>
+            <li><a href="#linkHelp">Help</a></li>            
+        </ul>
+        <div>
+            <div id="linkMenu" style="text-align: center;">
+            
+                <apex:form >
+                    <apex:pageBlock >
+                        <apex:outputLabel value="Name: " for="Name" />
+                        <apex:inputText value="{!ContactName}" id="contactName" >
+                        <apex:actionSupport action="{!doSearch}" event="onkeyup" rerender="resultBlock"/>
+                        </apex:inputText>
+                        <apex:commandButton value="Search" action="{!doSearch}" rerender="resultBlock"/>                  
+                    </apex:pageBlock>
+                </apex:form>
+                
+                <apex:pageBlock id="resultBlock">
+                    <apex:pageBlockTable value="{!contactList}" var="cur">
+                        <apex:column headerValue="Action">
+                            <div class="callDiv inboundCall" onclick="javascript:YUI.VisualforceCallControl.callFromNumber('{!cur.FirstName} {!cur.LastName}', '{!cur.Phone}')"/>        
+                            <div style="width:20px; display:inline-table;"/>
+                            <div class="callDiv outboundCall" onclick="javascript:YUI.VisualforceCallControl.callToNumber('{!cur.FirstName} {!cur.LastName}','{!cur.Phone}')"/>                                      </apex:column>
+                        <apex:column headerValue="Contact Name">
+                            <a href="javascript:YUI.VisualforceCallControl.callToNumber('{!cur.FirstName} {!cur.LastName}','{!cur.Phone}')">{!cur.FirstName} {!cur.LastName}</a>
+                        </apex:column>
+                        <apex:column headerValue="Number">
+                            <a href="javascript:YUI.VisualforceCallControl.callToNumber('{!cur.FirstName} {!cur.LastName}','{!cur.Phone}')">{!cur.Phone}</a>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlock>   
+            </div>
+            <div id="linkPhone" style="text-align: center;">
+                <div style="vertical-align:super">
+                    <div id="divCallData" style="height:100%;display:inline-table;"/>
+                    <div style="display:inline-table; padding-left: 10px;">
+                        <div id="divDuration"><br/>
+                            <span id="spanMinutes" /> : <span id="spanSeconds" />
+                        </div>
+                        <div class="endCall"><br/>
+                            <button id="buttonEndCall">End Call</button>
+                        </div>
+                    </div>
+                </div>
+                <div><br/><br/>
+                    Enter Call Notes...<br/>
+                    <textarea style="overflow:hidden; width:75%;" rows="5" id="inputTextLog" onkeyup="YUI.VisualforceCallControl.handleLogEntry();"/>
+                </div>
+                <div style="text-align:left; padding-left:25px;"><br/>Call Result:<br/>
+                    <div style="display:inline-table">
+                        <input type="radio" name="callDisposition" value="Add to do-not-call list"/> Add to do-not-call list <br/>
+                        <input type="radio" name="callDisposition" value="Call Successful"/> Call Successful <br/>
+                    </div>
+                    <div style="display:inline-table">
+                        <input type="radio" name="callDisposition" value="Left Voicemail"/> Left Voicemail <br/>
+                        <input type="radio" name="callDisposition" value="Number out of service"/> Number out of service <br/>
+                    </div>                    
+                </div>
+            </div>
+            <div id="linkHelp" style="text-align: left;">
+                <p>
+                    Welcome to the salesforce demo CTI Call Control!
+                    <br/><br/>
+                    <a href="#linkAboutThisCallControlTool"> Jump to About This Call Control Tool.</a>
+                    <br/>
+                    <a href="#linkToUseThisCallControl"> Jump to Use This Call Control Tool.</a>
+                </p>
+                <p>
+                    <a name="linkAboutThisCallControlTool">About This Interface</a><br/>
+                    The purpose of this call control interface is twofold :
+                    <br/> - Showcase CTI Integration capabilites of salesforce.com. This includes functionality like screen pops, click-to-dial, call logging, reporting, setup etc 
+                    <br/> - Serve as a starting point and code sample for partners, SIs and customers wishing to build CTI integrations to salesforce.com                    
+                    <br/>This call control does not connect to a real telephony system. In most cases customers engage salesforce.com partners or their telephony vendors for such a CTI integration.<br/>                      
+                </p>
+                <p>
+                    <a name="linkToUseThisCallControl">Use This Call Control Tool</a><br/>
+                    - Press shift-q to simulate an incoming call from a salesforce.com contact.<br/> 
+                    - Press shift-w to simulate an incoming call from a customer with a pre-existing case number.<br/>
+                    - Press shift-e to screen pop a new case page with the subject field pre-populated with call data.<br/>
+                    - Press shift-r to screen pop an incoming call from an existing lead in salesforce.com.<br/>
+                    - Click the "Logout" button to simulate logging out of a telephony system. Note that this also disables the click-to-dial functionality in salesforce.<br/>
+                    - Click any phone field in salesforce or the call control interface to initiate a click-to-dial call.<br/>
+                    - To modify the settings of the Call Control, navigate to the "demoCallControl" Visualforce page in setup. Configurations for this tool are available at the top of this page.<br/>
+                    - Call logs are saved at the end of the call. However, the Activity related list is not automatically refreshed to reflect this. This will be possible in an upcoming release. For now, a manual refresh is needed.<br/>           
+                </p>
+                <p>
+                    This tool is currently designed to work in the Service Cloud Console and standard salesforce.com app.  
+                    <br/> Additionally, the interface has been optimized for Chrome and Firefox browsers. It has not been tested in Internet Explorer.                     
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="phone_ring_mp3" src="{!$Resource.phone_ring_mp3}" ></audio>
+<audio id="phone_dialing_mp3" src="{!$Resource.phone_dialing_mp3}" ></audio> 
+
+<script src="/support/api/25.0/interaction.js"></script>
+<script src="https://yuicombo.appspot.com/combo?3.5.0/build/yui/yui-min.js"></script>
+
+
+<script type="text/javascript">
+    // Body skin. Also available yui3-skin-sam
+    document.body.className = 'yui3-skin-night';
+    document.body.style.margin = 0;  
+    
+    // STATE VALUES 
+    var LOGGED_IN = 'loggedIn';
+    var CALL_DETAILS = 'callDetails';
+    var ON_CALL = 'onCall';   
+    var CALL_START_TIME = 'callStartTime';
+    var END_CALL = 'endCall';
+    var CALL_LOG = 'callLog';
+    var CALLED_TYPE = 'calledType';
+    var CALL_NUMBER = 'calledNumber';
+    
+    // State variables
+    var phoneTabIndex = 1;
+    var loginPanelWidth = '180px';
+    var callStartTime = null;
+    var calledType = null;    
+    var callNumber = null;    
+    
+    // Console Flag
+    var isInConsole = false;
+    
+    sforce.interaction.isInConsole(function(response){
+        if(!response.result) {
+            if (disableSoftphoneInStandardApp) {
+                document.body.innerHTML = 'This tool is not available outside the Service Cloud Console.';         
+            } else {
+                var sheet = document.createElement('style')
+                sheet.innerHTML = '.yui3-skin-night .yui3-tabview-list li a {padding: 6px 10px 6px 10px !important;} .yui3-skin-night .yui3-tabview-list {height: 35px !important;} .yui3-skin-night .yui3-widget-bd input {width: 125px !important;}';
+                document.body.appendChild(sheet);
+                sforce.interaction.cti.setSoftphoneHeight(475);
+            }
+        } else {
+            loginPanelWidth = '250px'; 
+            isInConsole = true;
+        }
+    });
+    
+    YUI.namespace('VisualforceCallControl');
+    
+    var demoSoftphone = function(Y) {                   
+        var agentDisposition = Y.one('#selectDisposition');            
+        var tabview = new Y.TabView({srcNode:'#callControl'});                                 
+        tabview.render();
+        function disableTab(index, disabled) {
+            if (disabled) {
+                tabview._items[index].disable();    
+            } else {
+                tabview._items[index].enable();
+            }                        
+        }  
+        // Disable the phone tab unless there is a call 
+        disableTab(phoneTabIndex, true);
+        
+        // Call duration values
+        var minutes = Y.one('#spanMinutes'); 
+        var seconds = Y.one('#spanSeconds');
+        var timer = null;                    
+        
+        // Call Log area
+        var callLogText = document.getElementById('inputTextLog');
+        var callDisposition = document.getElementsByName("callDisposition");
+
+        // Login panel for agent credentials. Will show whenever the agent "logs off"
+        var loginPanel = new Y.Panel({
+            srcNode      : '#panelLogin',
+            headerContent: 'Cirrus Caller',
+            close        : false,
+            width        : loginPanelWidth,
+            zIndex       : 5,
+            centered     : true,
+            modal        : true,
+            visible      : false,
+            render       : true,
+            buttons      : [{
+                value  : 'Login',
+                section: Y.WidgetStdMod.FOOTER,
+                action : function (e) {
+                    setLocalStorageValue(LOGGED_IN, 'true');
+                    this.hide();
+                    sforce.interaction.cti.enableClickToDial();
+                    sforce.interaction.cti.onClickToDial(clickToDialCallback);                  
+                }
+            }]
+        });
+        
+        // Audio for call control ring and dial
+        var phoneRingAudio = document.getElementById('phone_ring_mp3');
+        var phoneDialingAudio = document.getElementById('phone_dialing_mp3');
+        
+        function renderButton(buttonId, onClickCallback) {
+             var button = new Y.Button({
+                 id: buttonId, 
+                 srcNode:'#' + buttonId,
+                 on: {
+                     'click' : onClickCallback
+                 }                  
+             });
+             button.render();
+             return button;
+        }
+
+        // Softphone Logout button
+        var buttonLogout = renderButton('buttonLogout', function(e){
+            setLocalStorageValue(LOGGED_IN, 'false');
+            loginPanel.show();
+            sforce.interaction.cti.disableClickToDial();
+        });
+
+        function processEndCall() {
+            if(timer) {
+                timer.cancel();
+            }
+            tabview.selectChild(0);         
+            agentDisposition.getDOMNode().value = 'readyForCalls';
+            agentDisposition.getDOMNode().disabled = false;
+            buttonLogout.enable();
+            buttonEndCall.disable();
+            disableTab(phoneTabIndex, true);            
+        }
+        
+        function responseAnalysis(response) {
+            alert(response.result);
+        }
+
+        function saveLog(response) {
+            var timeStamp = new Date().toString();
+            timeStamp = timeStamp.substring(0, timeStamp.lastIndexOf(':') + 3);             
+            var currentDate = new Date();           
+            var currentDay = currentDate.getDate();
+            var currentMonth = currentDate.getMonth()+1;
+            var currentYear = currentDate.getFullYear();
+            
+            var dueDate = currentYear+ '-' + currentMonth + '-' + currentDay;
+            var saveParams = 'Subject=' + callLogSubject + timeStamp;
+            saveParams += '&Status=completed';                 
+            saveParams += '&CallType=' + calledType;
+            saveParams += '&Activitydate=' + dueDate;
+            saveParams += '&CallObject=' + currentDate.getTime();
+            saveParams += '&Phone=' + callNumber;   
+            saveParams += '&Description=' + callLogText.value;   
+            var callDisposition = getSelectedCallDisposition();
+            if(callDisposition) {
+                saveParams += '&CallDisposition=' + callDisposition.value;       
+            }                      
+            saveParams += '&CallDurationInSeconds=' + Math.floor((currentDate.getTime() - callStartTime)/ 1000);
+            
+            var result = JSON.parse(response.result);
+            if(result.objectId.substr(0,3) == '003') {
+                saveParams += '&whoId=' + result.objectId;                    
+            } else {
+                saveParams += '&whatId=' + result.objectId;            
+            }
+            sforce.interaction.saveLog('Task', saveParams);         
+        }
+    
+        // End call button
+        var buttonEndCall = renderButton('buttonEndCall', function(e){
+            processEndCall();
+            setLocalStorageValue(END_CALL, (new Date().getTime()));
+            removeLocalStorageValue(ON_CALL);
+            removeLocalStorageValue(CALL_START_TIME);
+            removeLocalStorageValue(CALLED_TYPE);
+            removeLocalStorageValue(CALL_NUMBER);
+            sforce.interaction.getPageInfo(saveLog);
+        });
+                
+        buttonEndCall.disable();
+        
+        // Clean number formatting
+        function cleanFormatting(number) {        
+            return number.replace(' ','').replace('-','').replace('(','').replace(')','');
+        }
+        
+        // Get selected call disposition
+        function getSelectedCallDisposition() {        
+            for(var i=0;i<callDisposition.length;i++) {
+                if (callDisposition[i].checked) {
+                    return callDisposition[i];
+                }                
+            }
+        }
+        
+        // Local storage persistence 
+        function setLocalStorageValue(name,value){
+            localStorage.setItem(name, value);
+        }
+        
+        function getLocalStorageValue(name){
+            return localStorage.getItem(name);
+        }
+        
+        function setLocalStorageObject(key, value) {
+            setLocalStorageValue(key, JSON.stringify(value));
+        }
+        
+        function getLocalStorageObject(key) {
+            var value = getLocalStorageValue(key);
+            return value && JSON.parse(value);
+        }
+        
+        function removeLocalStorageValue(key) {
+            localStorage.removeItem(key);
+        }
+        
+        // Methods for calculating the call duration                
+        function increaseSeconds() {
+            var elapsed = new Date().getTime() - callStartTime;     
+            var secondsElapsed = Math.floor(((elapsed / 1000)));
+            var minutesElapsed = Math.floor (secondsElapsed/60);
+            secondsElapsed = secondsElapsed % 60;                                   
+            seconds.set('innerHTML', secondsElapsed);
+            minutes.set('innerHTML', minutesElapsed);            
+        }
+        
+        function startCallDuration() {
+            minutes.set('innerHTML', '00');
+            seconds.set('innerHTML', '00');
+            //increaseSeconds();
+            timer = Y.later(1000, null, increaseSeconds, [], true);
+        }
+        
+        // Methods for call initiation
+        function screenPop(number) {
+            sforce.interaction.searchAndScreenPop(number,'','inbound');    
+        }
+        
+        function setupCall() {
+            startCallDuration();        
+            disableTab(phoneTabIndex, false);
+            // Select phone tab                           
+            tabview.selectChild(phoneTabIndex);            
+            agentDisposition.getDOMNode().value = 'onCall';
+            agentDisposition.getDOMNode().disabled = true;  
+            buttonLogout.disable();
+            buttonEndCall.enable();
+        }
+        
+        function startCall(number, callType) {
+            callStartTime = new Date().getTime();
+            setLocalStorageObject(CALL_START_TIME, callStartTime);            
+            setLocalStorageValue(ON_CALL, 'true');
+            if (!number) {
+                callNumber = cleanFormatting(callFromContactANI);
+            } else {
+                callNumber = cleanFormatting(number);
+            }            
+            setLocalStorageValue(CALL_NUMBER, callNumber);
+            setupCall();
+            if (!callType) {
+                phoneRingAudio.play();
+                calledType = 'Inbound';
+            } else {
+                phoneDialingAudio.play();
+                calledType = 'Outbound';
+            }
+            setLocalStorageObject(CALLED_TYPE, calledType);
+        }
+                        
+        function startCallAndScreenPop(number, callType){
+            screenPop(number);        
+            startCall(number, callType);   
+        }                                      
+        
+        function createTableRow(name, value){
+            var row = new Object();
+            row.name = name;
+            row.value = value;
+            return row;
+        }
+        
+        function renderTable(data) {
+            var tableDiv = Y.one('#divCallData');
+            tableDiv.set('innerHTML', ''); 
+            var table = new Y.DataTable({
+                columns: [
+                {key: 'name', label:'Name'}, 
+                {key: 'value', label:'Value'}
+                ],
+                data: data,
+    
+                // Optionally configure table with a caption
+                caption: 'Call Data',
+            });            
+            table.render('#divCallData');
+            if (data.length == 0) {
+                table.showMessage('No Results Found for ' + callBackSearchParam + '.');
+            }           
+        }
+        
+        // Phone panel display 
+        function createTable(data){
+            setLocalStorageObject(CALL_DETAILS, data);
+            renderTable(data);
+            // Clear call log area
+            clearCallLog();
+        }
+        
+        // Call backs and phone and salesforce interaction
+        YUI.VisualforceCallControl.callFromNumber = function (name, number) {
+            var data= [];
+            data[0] = createTableRow('Caller', name);
+            data[1] = createTableRow('Number', number);
+            data[2] = createTableRow('Dialed Number', '1(800)555-1212'); 
+            createTable(data);                 
+            startCallAndScreenPop(number);
+        }
+        
+        YUI.VisualforceCallControl.callToNumber = function (name, number) {
+            var data= [];
+            data[0] = createTableRow('Caller', name);
+            data[1] = createTableRow('Number', number);
+            createTable(data);      
+            startCallAndScreenPop(number);           
+        }
+        
+        function clickToDialCallback(response) {
+            sforce.interaction.setVisible(true);  
+            var result = JSON.parse(response.result);
+            var data= [];
+            data[0] = createTableRow('Caller', result.objectName.replace('+', ' '));
+            data[1] = createTableRow('Type', result.object);
+            data[2] = createTableRow('Number', result.number);
+            data[3] = createTableRow('Record Id', result.objectId);            
+            createTable(data);      
+            startCallAndScreenPop(response.number, 'OUTBOUND');             
+        }
+
+        var callBackSearchParam = '';
+        YUI.VisualforceCallControl.shortcutHandler = function(event) {
+            // Shift-q call from Contact
+            if (event.shiftKey && event.which == 81) {
+                sforce.interaction.runApex('SoftphoneSearchController','getContacts','ANI=' + callFromContactANI, runApexCallback);      
+                callBackSearchParam = cleanFormatting(callFromContactANI);
+            }
+            // Shift-w call from case
+            if (event.shiftKey && event.which == 87) {
+                sforce.interaction.runApex('SoftphoneSearchController','getCases','caseNumber=' + callFromIVRCaseNumber, runApexCaseCallback);      
+                callBackSearchParam = callFromIVRCaseNumber;
+            }
+            // Shift-e basic screen pop
+            if (event.shiftKey && event.which == 69) {
+                sforce.interaction.screenPop(basicScreenPopUrl);
+            }
+            // Shift-r call from lead
+            if (event.shiftKey && event.which == 82) {
+                sforce.interaction.runApex('SoftphoneSearchController','getLeads','ANI=' + callFromLeadANI, runApexCallback);      
+                callBackSearchParam = cleanFormatting(callFromLeadANI);
+            }           
+        }        
+
+        function runApexCallback(response) {
+            var result = JSON.parse(response.result);
+            var data= [];
+            var i = 0;
+            for(var attribute in result) {
+                if(result.hasOwnProperty(attribute)) {
+                    var objectData = result[attribute];
+                    for(var objectField in objectData) {
+                        if(objectData.hasOwnProperty(objectField) && objectField != 'attributes' && objectField != 'Id') {
+                            data[i++] = createTableRow(objectField, objectData[objectField]);
+                        }
+                    }
+                }
+            }
+            createTable(data);      
+            startCallAndScreenPop(callBackSearchParam); 
+        }
+        
+        function runApexCaseCallback(response) {
+            var result = JSON.parse(response.result);
+            var data= [];
+            var i = 0;
+            var bookmarkableURL = '/ui/support/servicedesk/ServiceDeskPage#';
+            var focusedTab = '';
+            for(var attribute in result) {
+                if(result.hasOwnProperty(attribute)) {
+                    var caseData = result[attribute];
+                    for(var caseField in caseData) {
+                        if(caseData.hasOwnProperty(caseField) && caseField != 'attributes') {
+                            if (caseField == 'Id' || caseField == 'ContactId' || caseField == 'AccountId') {
+                                if (caseField == 'Id') {
+                                    focusedTab = '/' + caseData[caseField];
+                                }
+                                bookmarkableURL += '/' + caseData[caseField] + '|';
+                            } else {
+                                data[i++] = createTableRow(caseField, caseData[caseField]);
+                            }
+                        }
+                    }
+                }
+            }
+            createTable(data);      
+            startCall();
+            if (bookmarkableURL === '/ui/support/servicedesk/ServiceDeskPage#') {
+                return;
+            }
+            bookmarkableURL += '|' + focusedTab;
+            if (!isInConsole) {
+                bookmarkableURL = focusedTab;
+            }            
+            sforce.interaction.screenPop(bookmarkableURL);                               
+        }
+        
+        function clearCallLog() {
+            callLogText.value = '';  
+            removeLocalStorageValue(CALL_LOG);          
+            getSelectedCallDisposition.checked = false;
+        }
+        
+        YUI.VisualforceCallControl.handleLogEntry = function() {
+            setLocalStorageValue(CALL_LOG, callLogText.value);
+        }
+                        
+        if(getLocalStorageValue(LOGGED_IN)==null || getLocalStorageValue(LOGGED_IN)=='false') {
+            loginPanel.show();
+        }
+        sforce.interaction.cti.onClickToDial(clickToDialCallback); 
+        
+        function processLocalStorageStartCall() {
+            onCallData = getLocalStorageObject(CALL_DETAILS);
+            callStartTime = getLocalStorageObject(CALL_START_TIME);
+            calledType = getLocalStorageObject(CALLED_TYPE);
+            callNumber = getLocalStorageObject(CALL_NUMBER);
+            setupCall();
+        }
+        
+        var onCallData = getLocalStorageObject(CALL_DETAILS);
+        if(onCallData!==null) {
+            renderTable(onCallData);
+            if (getLocalStorageValue(ON_CALL) != null) {
+                processLocalStorageStartCall();
+            }
+        }
+        
+        callLogText.value = getLocalStorageValue(CALL_LOG);
+
+        function storageEventHandler(e){
+            if (e.key == END_CALL) {
+                processEndCall();
+            } else if (e.key == ON_CALL && e.newValue=='true') {
+                processLocalStorageStartCall();                
+            } else if (e.key == CALL_LOG) {
+                callLogText.value = e.newValue;                
+            }
+        }        
+        window.addEventListener('storage', storageEventHandler, false);
+    };
+    YUI({skin: 'night'}).use(
+        'tabview', 
+        'button', 
+        'datatable',
+        'node', 
+        'panel',
+        demoSoftphone
+    ); 
+    window.onkeypress = function(event) {YUI.VisualforceCallControl.shortcutHandler(event);};
+    
+</script>      
+</apex:page>

@@ -1,0 +1,15 @@
+<template>
+
+    <lightning-card>
+        <h3 slot="title">
+            <!--<lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>-->
+            ACH
+        </h3>
+        <p class="slds-p-horizontal_small">
+            <lightning-input type="text" label="Name on Account" value={nameOnAccount} onchange={handleNameChange}></lightning-input>
+            <lightning-input type="text" label="Account Number" value={accountNumber} onchange={handleAccountChange}></lightning-input>
+            <lightning-input type="text" label="Routing Number" value={routingNumber} onchange={handleRoutingChange}></lightning-input>
+        </p>
+    </lightning-card>
+
+</template>

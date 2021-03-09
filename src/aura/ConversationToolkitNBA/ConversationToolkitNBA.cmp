@@ -1,0 +1,25 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="ConversationToolkitNBAController">
+    <!-- init -->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    
+    <!-- destroy -->
+    <aura:handler name="destroy" value="{!this}" action="{!c.onDestroy}"/>
+    
+    <!-- voice message subscribers -->
+    <force:serviceCloudVoiceToolkitApi aura:id="voiceToolkitApi"/>
+    
+    <!-- chat message subscribers -->
+    <lightning:conversationToolkitAPI aura:id="conversationKit" />
+    <aura:handler event="lightning:conversationNewMessage" action="{!c.onChatTranscriptCustomer}" />
+    <aura:handler event="lightning:conversationAgentSend" action="{!c.onChatTranscriptAgent}" />
+        
+    <!-- attributes -->
+    <aura:attribute name="message" type="String" default="No events received yet."/>
+    <aura:attribute name="transcript" type="String" default="No transcripts received yet."/>
+    <aura:attribute name="payload" type="String" default=""/>
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="helperList" type="List" />
+    
+    <!-- get record data -->
+    <force:recordData recordId="{!v.recordId}" layoutType="FULL" targetFields="{!v.record}"/>
+</aura:component>

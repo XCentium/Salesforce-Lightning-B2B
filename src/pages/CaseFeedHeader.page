@@ -1,0 +1,165 @@
+<apex:page id="CaseHighlightPanelPageId" standardController="Case" showheader="false">
+                    <title>Case Feed Header </title>
+
+    <apex:stylesheet value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/CSS/HVEMEmailEditorComponentStyle.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/CSS/HVEMCaseConversationComponentStyle.css')}" />
+    
+    <apex:includeScript value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/JavaScript/HVEMEmailEditorComponent.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/JavaScript/HVEMCommon.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/JavaScript/HVEMCaseConversation.js')}" />
+
+<style>
+
+body {
+   margin: 1px !important;
+//   background: #A4A4A4 !important;
+   background: ##EEF1F4 !important;
+}
+
+.sfdcBody {
+       
+    /* IE10 */ 
+    background-image: -ms-linear-gradient(bottom right, #FFFFFF 0%, #52527A 100%) !important;
+
+    /* Mozilla Firefox */ 
+    background-image: -moz-linear-gradient(bottom right, #FFFFFF 0%, #52527A 100%) !important;
+    /* Webkit (Safari/Chrome 10) */ 
+    background-image: -webkit-gradient(linear, right bottom, left top, color-stop(0, #FFFFFF), color-stop(1, #52527A)) !important;
+
+    /* Webkit (Chrome 11+) */ 
+    background-image: -webkit-linear-gradient(bottom left, #FFFFFF 0%, #52527A 100%) !important;
+
+    border: none !important;
+    margin: none !important;
+}
+
+body .bPageBlock, body #bodyCell .bResource .secondaryPalette, body .secondaryPalette.bPageBlock, body .overlayDialog .secondaryPalette.bPageBlock, body .individualPalette .secondaryPalette.bPageBlock, body .bodyDiv .genericTable, body .genericPageBlockTable, body .bodyDiv .bSubBlock, body .bComponentBlock .bPageBlock, body .bMyDashboard .bPageBlock, body.rlHoverFrame .bPageBlock, body.subjectSelectionPopup div.choicesBox, body.lookupTab .secondaryPalette.bPageBlock, body.popupTab .secondaryPalette.bPageBlock, body.UserTagStatsPage .secondaryPalette.bPageBlock {
+    background-color: #F8F8F8 !important;
+    border-bottom: 1px solid #EAEAEA;
+    border-left: 1px solid #EAEAEA;
+    border-radius: 2px 2px 2px 2px;
+    border-right: 1px solid #EAEAEA;
+    border-bottom: 1px solid #EAEAEA;
+}
+
+.pbBody .hvemEmailItem > div > .pbSubheader, .apexp .bPageBlock.apexDefaultPageBlock .pbBody .hvemEmailItem > div > .pbSubheader.first, .hvemControlPanel {
+    position:relative;
+    z-index:1;
+    border:1px solid #d5dadc !important;
+    border-bottom-color:#8A8C8D !important;
+    padding:2px 2px !important;
+    background: #ffffff !important;
+    background: -moz-linear-gradient(top,  #ffffff 0%, #ededed 100%) !important;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ededed)) !important;
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    background: -o-linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    background: -ms-linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    background: linear-gradient(top,  #ffffff 0%,#ededed 100%) !important;
+    font-size:1em !important;
+    color:#00121d !important;
+}
+
+
+.hvemTable .list, .hvemBasicPanel, .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader.first, .pbBody .hvemEmailItem > div > .pbSubheader, .hvemEmailItem > div > .pbSubsection {
+    margin:0 0 1px;
+    border:1px solid #D5DADC !important;
+    border-bottom:1px solid #8B8D8E !important;
+}
+
+.hvemListItem, .hvemBasicPanel, .hvemCaseItem, .hvemCaseItemSelection, .rightArrowIcon, input[type=text], .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader.first, .pbBody .hvemEmailItem > div > .pbSubheader {
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+}
+
+.hvemBasicPanel {
+    display:block;
+    background-color:#fff;
+}
+
+.hvemBasicPanel > tbody > tr> td {
+    border-right: 2px solid;
+    border-color: #EBEBEB;
+    padding-left: 5px;
+}
+
+.hvemBasicPanel > tbody > tr> td:last-child {
+    border-right: none;
+}
+
+.contactNameClass{
+    border-bottom: 5px;
+    font-weight: bold;
+    font-size: large;
+    color: #525252 !important;
+    padding: 5px;
+}
+
+.caseSubjectClass {
+    font-weight: bold;
+    font-size: 115%;
+    color: #525252 !important;
+    text-align: left;
+}
+
+        .score{
+            position:relative;
+            float:left;
+            background:transparent url('{!URLFOR($Resource.klout)}') no-repeat top left;
+            color:#ffffff;
+            font:7px / 10px 'DINBold',Arial,sans-serif;
+            font-size:33px;
+            line-height:51px;
+            height:56px;
+            width:56px;
+            letter-spacing:-1px;
+            text-align:center;
+        }
+
+</style>
+<apex:pageBlock id="thePageBlock" mode="edit">
+    <apex:form id="CaseHighlightPanelFormId">
+
+        <table class="hvemBasicPanel hvemControlPanel" border="0" height="65px" width="100%">
+        <tr>
+            <td width="12%">
+                <div class="contactNameClass">
+                    <apex:outputField id="contact" value="{!case.Contact.Name}"/>&nbsp;&nbsp;
+                    
+                </div>
+            </td>
+            <td width="7%">
+                <div class="score">
+                    <apex:outputText value="{0, number, ###,###,###,###}"><apex:param value="{!case.Contact.Klout_Score__c}"/>
+                    </apex:outputText>
+                </div>
+                <!--<div>
+                    <apex:outputText ><strong style="color: #525252;">Social Network Influence</strong></apex:outputText><br />
+                    <apex:image value="{!$Resource.Influencer_Image}" />&nbsp;&nbsp;
+                    <apex:outputText value="{!LEFT(TEXT(case.Contact.Klout_Number__c), 2)}" escape="false"/>
+                    <apex:image value="{!$Resource.Klout_Score_Logo}" width="90px" height="17px" />
+                </div>-->
+            </td>
+            <td width="25%">
+                <apex:outputLabel styleClass="caseSubjectClass" value="{!case.Subject}" style="width:300px;"/>
+            </td>
+            <td width="25%">
+                <apex:include id="nextMilestone" pageName="GetNextCaseMilestone" rendered="{!Case.MilestoneStatus <> null}"/>
+                <apex:outputText rendered="{!Case.MilestoneStatus = null}"></apex:outputText>
+            </td>
+        </tr>
+        </table>
+    </apex:form>
+</apex:pageBlock>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

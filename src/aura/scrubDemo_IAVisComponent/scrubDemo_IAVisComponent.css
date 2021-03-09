@@ -1,0 +1,23 @@
+.THIS {
+}
+
+.THIS .iaItem{
+    margin:5px;
+}
+
+.THIS .redText{
+    color:#c23934;
+}
+
+.THIS .greenText{
+    color:rgb(85,194,125);
+}
+
+.THIS .cSentLogo{
+    margin-right:5px;
+    height:24px;
+}
+
+.THIS .cSentCard{
+    padding: 0 10px;
+}

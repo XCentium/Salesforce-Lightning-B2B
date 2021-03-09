@@ -1,0 +1,66 @@
+<!--
+ - Created by msobczak on 10/31/2018.
+ -->
+
+<aura:component description="ckz_RetrievedOrders">
+
+    <aura:attribute name="childOrders" type="List" required="false"/>
+
+    <!-- 2019-09-20  msobczak: added -->
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <div class="slds-var-m-around_small">
+        <div class="slds-text-heading_large slds-m-bottom_small">Order History</div>
+
+        <!-- TABLE VIEW -->
+        <aura:if isTrue="{! $Browser.formFactor == 'DESKTOP' &amp;&amp; (v.useCardLayout == false) }">
+
+            <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout">
+                <thead>
+                <tr class="slds-text-heading_label">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Order #">Order #</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Order Date">Order Date</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Products">Products</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Amount">Amount</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Status">Status</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Actions">Actions</div>
+                    </th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                <aura:iteration items="{!v.childOrders}" var="retrievedOrder">
+
+                    <c:ckz_RetrievedOrderDetail childOrder="{!retrievedOrder}" useCardLayout="{!v.useCardLayout}"/>
+
+                </aura:iteration>
+                </tbody>
+            </table>
+
+        </aura:if>
+
+        <!-- CARD VIEW -->
+        <aura:if isTrue="{! $Browser.formFactor != 'DESKTOP' || (v.useCardLayout == true) }">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <aura:iteration items="{!v.childOrders}" var="retrievedOrder">
+                    <div class="slds-col slds-small-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_4-of-12">
+                        <c:ckz_RetrievedOrderDetail childOrder="{!retrievedOrder}" useCardLayout="{!v.useCardLayout}"/>
+                    </div>
+                </aura:iteration>
+            </div>
+        </aura:if>
+    </div>
+
+</aura:component>

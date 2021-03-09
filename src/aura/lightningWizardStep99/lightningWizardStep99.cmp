@@ -1,0 +1,41 @@
+<aura:component >
+    <aura:registerEvent name="stepchange" type="c:lightningWizardStepChange99" />
+    
+    <aura:attribute name="name" type="string"></aura:attribute>
+    <aura:attribute name="currentIndex" type="Integer"></aura:attribute>
+    <aura:attribute name="totalSteps" type="Integer"></aura:attribute>
+    <aura:attribute name="current" type="boolean" default="false"></aura:attribute>
+    <aura:attribute name="hasPrevious" type="boolean" default="true"></aura:attribute>
+    <aura:attribute name="hasNext" type="boolean" default="true"></aura:attribute>
+    
+    <aura:attribute name="previousButtonText" type="string" 
+                    access="GLOBAL" default="Previous"/>
+    <aura:attribute name="previousButtonAction" type="Aura.Action" 
+                    access="GLOBAL" description="action handler for previous" />
+    <aura:attribute name="nextButtonText" type="string" 
+                    access="GLOBAL" default="Next"/>
+    <aura:attribute name="nextButtonAction" type="Aura.Action" 
+                    access="GLOBAL" description="action handler for next" />
+    
+    
+    <aura:if isTrue="{!v.current}">
+        
+        <center>
+            <h2 class="slds-page-header__title slds-m-bottom_medium">{!v.name}</h2>
+        </center>
+        {!v.body}
+        <footer class="slds-m-top_medium slds-p-around_medium slds-docked-form-footer slds-grid slds-grid_align-spread ">
+            
+            <lightning:button onclick="{!c.goToPreviousPage}"
+                              variant="neutral"
+                              label="{!v.previousButtonText}"
+                              disabled="{!not(v.hasPrevious)}"
+                              />
+            <c:lightningProgressIndicator totalSteps="{!v.totalSteps}" currentIndex="{!v.currentIndex}"/>
+            <lightning:button onclick="{!c.goToNextPage}"
+                              variant="brand"
+                              label="{!v.nextButtonText}"  
+                              disabled="{!not(v.hasNext)}"/>
+        </footer>
+    </aura:if>
+</aura:component>

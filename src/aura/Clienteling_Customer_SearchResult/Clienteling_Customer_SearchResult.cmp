@@ -1,0 +1,12 @@
+<aura:component access="global">
+    <aura:attribute type="list" name="recordIds" />
+    <aura:attribute name="SelectedContact" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    	<aura:iteration items="{!v.recordIds}" var="id">
+        	<c:Clienteling_SearchResultItem 
+            	recordId="{!id}" 
+                SelectedContact="{!v.SelectedContact}"
+                ListCount="{!v.recordIds.length}"
+            />
+        </aura:iteration>
+</aura:component>

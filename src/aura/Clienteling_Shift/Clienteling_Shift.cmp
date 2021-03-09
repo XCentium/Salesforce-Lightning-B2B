@@ -1,0 +1,65 @@
+<aura:component controller="ClientellingController">
+    <aura:attribute name="checkinStatus" type="String" default="Check In"/>
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="checkinButtonClass" type="String" default="slds-button_brand"/>
+    <aura:attribute name="CheckinTime" type="String" default=""/>
+    <aura:attribute name="allShifts" type="IDO_Work_Shift__c[]"/>
+    <aura:attribute name="CheckoutTime" type="String" default=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.getSchedule}"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index"> 
+        <div class="slds-card">
+            <div class="slds-media padding">
+                <div class="profilepicture">
+                    <lightning:icon iconName="standard:business_hours" size="small" alternativeText="Indicates approval"/> 
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions"> My Shifts</h1>
+                </div>
+           </div>
+           <div class="padding">
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <thead>
+                        <tr class="slds-text-title_caps">
+                            <th scope="col">
+                                <div class="slds-truncate" title="Opportunity Name">Shift Start</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Opportunity Name">Shift End</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Status">Check-in Time</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Account Name">Check-Out Time</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Account Name">Status</div>
+                            </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          <aura:iteration var="shift" items="{!v.allShifts}" indexVar="index"> 
+                            <tr>
+                                <td><ui:outputDateTime value="{!shift.Shift_Start__c}"/></td>
+                                <td><ui:outputDateTime value="{!shift.Shift_End__c}"/></td>
+                                <td><ui:outputDateTime value="{!shift.Shift_Checkin__c}"/></td>
+                                <td><ui:outputDateTime value="{!shift.Shift_Check_out__c}"/></td>
+                                <aura:if isTrue="{!shift.Is_this_todays_shift__c == true}">
+                                    <aura:if isTrue="{!or(shift.Shift_Checkin__c == null, shift.Shift_Check_out__c == null)}">
+                                        <td><button class="{!'slds-button ' + v.checkinButtonClass}" id='{!shift.Id}' onclick="{!c.Checkin}" style="{!'background-color:' + setting.Primary_Button_Color__c + ';border-color:' + setting.Primary_Button_Color__c + ';'}">{!v.checkinStatus}</button></td>
+                                    </aura:if>
+                                    <aura:if isTrue="{!(shift.Shift_Checkin__c != null) &amp;&amp; (shift.Shift_Check_out__c != null)}" >
+                                        <td>{!shift.Status__c} </td>
+                                    </aura:if>
+                                </aura:if>
+                                <aura:if isTrue="{!shift.Is_this_todays_shift__c == false}">
+                                    <td>{!shift.Status__c}</td>
+                                </aura:if>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+               </table>
+            </div>
+        </div>
+    </aura:iteration>
+</aura:component>

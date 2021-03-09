@@ -1,0 +1,207 @@
+<aura:component controller="ClientellingController">
+    <aura:attribute name="ContactID" type="String"/>
+    <aura:attribute name="Backorders" type="Integer"/>
+    <aura:attribute name="CancelledOrders" type="Integer"/>
+    <aura:attribute name="NormalOrders" type="Integer"/>
+    <aura:attribute name="Score" type="String"/>
+    <aura:attribute name="CaseScore" type="String"/>
+    <aura:attribute name="OrderScore" type="String"/>
+    <aura:attribute name="Orders" type="Order[]"/>
+    <aura:attribute name="Cases" type="Case[]"/>
+	<aura:handler name="init" value="{!this}" action="{!c.init}"/>
+	<aura:attribute name="Sentiment" type="String" default="Content"/>
+    <aura:attribute name="SentImage" type="String" default="contentface"/>
+    <div class="paneltwothirds">
+        <div class="sentimentReasons">
+            <div class="box">
+            	<div class="box-header">
+                    <div class="padding">
+                        <h3>Order Sentiment History</h3>  
+                    </div> 
+                </div>
+                <ul>
+                    <aura:iteration var="order" items="{!v.Orders}" indexVar="index"> 
+                        <article class="slds-card">
+                            <div class="slds-media padding">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container slds-icon-standard-contact" title="description of icon when needed">
+                                            <lightning:icon iconName="standard:orders" size="medium" />
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body slds-truncate_container_75 paddingtop">
+                                        <h2>
+                                            <p class="slds-text-heading_small slds-truncate">Order {!order.OrderNumber}</p> 
+                                        </h2>
+                                    </div>
+                                    <div class="positiontopright">
+                                        <span class="slds-text-title--caps slds-line-height--reset slds-col alignleft">
+                                            <aura:if isTrue="{!or(order.Status == 'Backorder',order.Status == 'Draft')}">
+                                                <img src="{!$Resource.ClientelingIcons + '/images/contentface.png'}" class="sentimenticon"/>
+                                            </aura:if>
+                                            <aura:if isTrue="{!order.Status == 'Cancelled'}">
+                                                <img src="{!$Resource.ClientelingIcons + '/images/madface.png'}" class="sentimenticon"/>
+                                            </aura:if>
+                                            <aura:if isTrue="{!and(and(order.Status != 'Backorder', order.Status != 'Cancelled'),order.Status != 'Draft')}">
+                                                <img src="{!$Resource.ClientelingIcons + '/images/happyface.png'}" class="sentimenticon"/>
+                                            </aura:if>
+                                        </span>  
+                                    </div>
+                            </div>
+                            <div class="slds-card__body slds-card__body_inner padding slds-grid slds-gutters">
+                                <span class="slds-text-title--caps slds-line-height--reset slds-col alignleft">
+                                    
+                                    <aura:if isTrue="{!or(order.Status == 'Backorder',order.Status == 'Draft')}">
+                                    	<strong>Sentiment Analysis: </strong> Because Order Status is {!order.Status}, the order sentiment is neutral
+                                    </aura:if>
+                                    <aura:if isTrue="{!order.Status == 'Cancelled'}">
+                                    	<strong>Sentiment Analysis: </strong> Because Order Status is {!order.Status}, the order sentiment is negative.
+                                    </aura:if>
+                                    <aura:if isTrue="{!and(and(order.Status != 'Backorder', order.Status != 'Cancelled'),order.Status != 'Draft')}">
+                                    	<strong>Sentiment Analysis: </strong> Because Order Status is {!order.Status}, the order sentiment is positive.
+                                    </aura:if>
+                                </span>
+                            </div>
+                        </article>
+                    </aura:iteration>
+                </ul>
+        	</div>
+        </div>
+        <div class="sentimentReasons">
+            <div class="box">
+            	<div class="box-header">
+                    <div class="padding">
+                        <h3>Case Sentiment History</h3>  
+                    </div> 
+                </div>
+                <ul>
+                    <aura:iteration var="case" items="{!v.Cases}" indexVar="index"> 
+                        <article class="slds-card">
+                            <div class="slds-media padding">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container slds-icon-standard-contact" title="description of icon when needed">
+                                            <lightning:icon iconName="standard:case" size="medium" />
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body slds-truncate_container_75 paddingtop">
+                                        <h2>
+                                            <p class="slds-text-heading_small slds-truncate">Case {!case.CaseNumber}</p> 
+                                        </h2>
+                                    </div>
+                                    <div class="positiontopright">
+                                        <span class="slds-text-title--caps slds-line-height--reset slds-col alignleft">
+                                            <aura:if isTrue="{!and(case.Status != 'Closed',(lessthanorequal (case.Days_Open__c, 7))   )}">
+                                                <img src="{!$Resource.ClientelingIcons + '/images/contentface.png'}" class="sentimenticon"/>
+                                            </aura:if>
+                                            <aura:if isTrue="{!and(case.Status != 'Closed',(greaterthanorequal (case.Days_Open__c, 7)))}">
+                                                <img src="{!$Resource.ClientelingIcons + '/images/madface.png'}" class="sentimenticon"/>
+                                            </aura:if>
+                                            <aura:if isTrue="{!and(and(case.Status == 'Closed', (lessthanorequal (case.Days_Open__c, 7))))}">
+                                                <img src="{!$Resource.ClientelingIcons + '/images/happyface.png'}" class="sentimenticon"/>
+                                            </aura:if>
+                                        </span>  
+                                    </div>
+                            </div>
+                            <div class="slds-card__body slds-card__body_inner padding slds-grid slds-gutters">
+                                <span class="slds-text-title--caps slds-line-height--reset slds-col alignleft">
+                                    <aura:if isTrue="{!and(case.Status != 'Closed',(lessthanorequal (case.Days_Open__c, 7))   )}">
+                                        <strong>Sentiment Analysis: </strong> Because Case Status is {!case.Status}, and the Days open is less than 7, the sentiment is content.
+                                    </aura:if>
+                                    <aura:if isTrue="{!and(case.Status != 'Closed',(greaterthanorequal (case.Days_Open__c, 7)))}">
+                                        <strong>Sentiment Analysis: </strong> Because Case Status is {!case.Status}, and the Days open is greater than 7, the sentiment is negative.
+                                    </aura:if>
+                                    <aura:if isTrue="{!and(and(case.Status == 'Closed', (lessthanorequal (case.Days_Open__c, 7))))}">
+                                        <strong>Sentiment Analysis: </strong> Because Case Status is {!case.Status}, and the Days open is less than 7, the sentiment is positive.
+                                    </aura:if>
+                                </span>
+                            </div>
+                        </article>
+                    </aura:iteration>
+                </ul>
+        	</div>
+        </div>
+    </div>
+    <div class="panelonethird">
+        <div class="box">
+            <div class="box-header">
+                    <div class="padding">
+                        <h3>Overall Sentiment</h3>  
+                    </div> 
+                </div>
+                <div class="padding">
+                    <aura:if isTrue="{!greaterthan (v.Score,.7)}">
+                        <div class="sentiment">
+                             <h3><lightning:formattedNumber value="{!v.Score}" style="percent" /> Happy</h3>
+                            <img src="{!$Resource.ClientelingIcons + '/images/happyface.png'}" class="contactpicture"/>
+                        </div>
+                    </aura:if> 
+                    <aura:if isTrue="{!and(greaterthan (v.Score,.4999),lessthan (v.Score,.7))}">
+                        <div class="sentiment">
+                            <h3> <lightning:formattedNumber value="{!v.Score}" style="percent" /> Content</h3>
+                            <img src="{!$Resource.ClientelingIcons + '/images/contentface.png'}" class="contactpicture"/>
+                        </div>
+                    </aura:if> 
+                    <aura:if isTrue="{!lessthan (v.Score,.4999)}">
+                        <div class="sentiment">
+                            <h3> <lightning:formattedNumber value="{!v.Score}" style="percent" /> Upset</h3>
+                            <img src="{!$Resource.ClientelingIcons + '/images/madface.png'}" class="contactpicture"/>
+                        </div>
+                    </aura:if> 
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header">
+                    <div class="padding">
+                        <h3>Order Sentiment</h3>  
+                    </div> 
+                </div>
+                <div class="padding">
+                    <aura:if isTrue="{!greaterthan (v.OrderScore,.7)}">
+                        <div class="sentiment">
+                             <h3><lightning:formattedNumber value="{!v.OrderScore}" style="percent" /> Happy</h3>
+                            <img src="{!$Resource.ClientelingIcons + '/images/happyface.png'}" class="contactpicture"/>
+                        </div>
+                    </aura:if> 
+                    <aura:if isTrue="{!and(greaterthan (v.OrderScore,.4999),lessthan (v.OrderScore,.7))}">
+                        <div class="sentiment">
+                            <h3> <lightning:formattedNumber value="{!v.OrderScore}" style="percent" /> Content</h3>
+                            <img src="{!$Resource.ClientelingIcons + '/images/contentface.png'}" class="contactpicture"/>
+                        </div>
+                    </aura:if> 
+                    <aura:if isTrue="{!lessthan (v.OrderScore,.4999)}">
+                        <div class="sentiment">
+                            <h3> <lightning:formattedNumber value="{!v.OrderScore}" style="percent" /> Upset</h3>
+                            <img src="{!$Resource.ClientelingIcons + '/images/madface.png'}" class="contactpicture"/>
+                        </div>
+                    </aura:if> 
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header">
+                    <div class="padding">
+                        <h3>Case Sentiment</h3>  
+                    </div> 
+                </div>
+                <div class="padding">
+                    <aura:if isTrue="{!greaterthan (v.CaseScore,.7)}">
+                        <div class="sentiment">
+                             <h3><lightning:formattedNumber value="{!v.CaseScore}" style="percent" /> Happy</h3>
+                            <img src="{!$Resource.ClientelingIcons + '/images/happyface.png'}" class="contactpicture"/>
+                        </div>
+                    </aura:if> 
+                    <aura:if isTrue="{!and(greaterthan (v.CaseScore,.4999),lessthan (v.CaseScore,.7))}">
+                        <div class="sentiment">
+                            <h3> <lightning:formattedNumber value="{!v.CaseScore}" style="percent" /> Content</h3>
+                            <img src="{!$Resource.ClientelingIcons + '/images/contentface.png'}" class="contactpicture"/>
+                        </div>
+                    </aura:if> 
+                    <aura:if isTrue="{!lessthan (v.CaseScore,.4999)}">
+                        <div class="sentiment">
+                            <h3> <lightning:formattedNumber value="{!v.CaseScore}" style="percent" /> Upset</h3>
+                            <img src="{!$Resource.ClientelingIcons + '/images/madface.png'}" class="contactpicture"/>
+                        </div>
+                    </aura:if> 
+            </div>
+        </div>
+    </div>
+	<div class="clear"></div>
+</aura:component>

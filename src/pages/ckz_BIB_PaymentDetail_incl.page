@@ -1,0 +1,7 @@
+<!--
+ - Created by brandon.rogers on 3/24/20.
+ -->
+
+<apex:page id="ckz_BIB_PaymentDetail_incl" sidebar="false" showHeader="false" standardStylesheets="false">
+    
+</apex:page>

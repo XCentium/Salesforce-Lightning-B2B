@@ -1,0 +1,366 @@
+<aura:component >
+    <aura:attribute name="ScreenChoice" type="String" default='Home'/>
+    <aura:attribute name="MenuOpenClose" type="String"/>
+    <aura:attribute name="ComponentTitle" type="String"  />
+    <aura:attribute name="CompetedTotal" type="Integer"  />
+    <aura:attribute name="CompetedTotalPercent" type="Integer"  />
+    <aura:attribute name="BrandCompleted" type="Integer" />
+    <aura:attribute name="PersonaCompleted" type="Integer"  />
+    <aura:attribute name="SolutionsCompleted" type="Integer"  />
+    <aura:attribute name="ResourcesCompleted" type="Integer"  />
+    <aura:attribute name="PartnersCompleted" type="Integer"  />
+    <aura:attribute name="FeaturesCompleted" type="Integer"  />
+    <aura:attribute name="SetupCompleted" type="Integer"  />
+    <aura:attribute name="VideosCompleted" type="Integer"  />
+    <section role="dialog" aura:id="WelcomeModal" tabindex="-1" class="{!'slds-modal slds-welcome-mat slds-fade-in-'+ v.MenuOpenClose}" aria-labelledby="welcome-mat-13-label" aria-describedby="welcome-mat-13-content" aria-modal="true">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header slds-modal__header_empty">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse menuicon" onclick="{!c.CloseWelcome}" title="Close">
+                    <lightning:icon iconName="utility:close" size="small"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+            </header>
+            <div class="slds-modal__content slds-welcome-mat__content slds-grid" id="welcome-mat-13-content">
+                <div class="slds-welcome-mat__info slds-size_1-of-2">
+                    <div class="slds-welcome-mat__info-content">
+                        <h2 id="welcome-mat-13-label" class="slds-welcome-mat__info-title">Welcome to Getting Started!</h2>
+                        <div class="slds-welcome-mat__info-description slds-text-longform">
+                            <p>The IDO team is here to help you be successful. Please review all the resources in our IDO so you know what is available and how to customize.</p>
+                        </div>
+                        <div class="slds-welcome-mat__info-progress">
+                          <p>
+                            <strong>{!v.CompetedTotal}/7 units completed</strong>
+                          </p>
+                        </div>
+                        <div class="slds-progress-bar slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" role="progressbar">
+                          <span class="slds-progress-bar__value" style="{!'width:' + v.CompetedTotalPercent + '%'}">
+                            <span class="slds-assistive-text">Progress: 0%</span>
+                          </span>
+                        </div>
+                    </div>
+                </div>
+                <ul class="slds-welcome-mat__tiles slds-size_1-of-2 slds-p-around_medium">
+                    <aura:if isTrue="{!v.BrandCompleted == 0}">
+                        <li class="slds-welcome-mat__tile">
+                            <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToBrand}">
+                                <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                    <div class="slds-welcome-mat__tile-icon-container">
+                                        <span class="slds-icon_container slds-icon-utility-animal_and_nature">
+                                            <lightning:icon iconName="utility:notebook" size="small"/>
+                                        </span>
+                                        <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                            <span class="slds-assistive-text">Completed</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-border_left slds-p-around_small">
+                                    <h3 class="slds-welcome-mat__tile-title">Get to know your brand</h3>
+                                    <p class="slds-welcome-mat__tile-description">Lets get to know the fictitious brands we have ready to support you.</p>
+                                </div>
+                            </a>
+                        </li>
+                        <aura:set attribute="else">
+                            <li class="slds-welcome-mat__tile tile_complete">
+                                <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToBrand}">
+                                    <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                        <div class="slds-welcome-mat__tile-icon-container">
+                                            <span class="slds-icon_container slds-icon-utility-animal_and_nature">
+                                                <div class="completedcheck">
+                                                	<lightning:icon iconName="utility:check" size="small"/>    '
+                                                </div>
+                                            </span>
+                                            <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                                <span class="slds-assistive-text">Completed</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-media__body slds-border_left slds-p-around_small">
+                                        <h3 class="slds-welcome-mat__tile-title">Get to know your brand</h3>
+                                        <p class="slds-welcome-mat__tile-description">Lets get to know the fictitious brands we have ready to support you.</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </aura:set>
+                    </aura:if>   
+                    <aura:if isTrue="{!v.PersonaCompleted == 0}">
+                        <li class="slds-welcome-mat__tile">
+                            <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToPersonas}">
+                                <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                    <div class="slds-welcome-mat__tile-icon-container">
+                                        <span class="slds-icon_container slds-icon-utility-animal_and_nature">
+                                            <lightning:icon iconName="utility:people" size="small"/>
+                                        </span>
+                                        <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                            <span class="slds-assistive-text">Completed</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-border_left slds-p-around_small">
+                                    <h3 class="slds-welcome-mat__tile-title">Get to know your personas</h3>
+                                    <p class="slds-welcome-mat__tile-description">Lets get to know the personas who are in each of our scripts.</p>
+                                </div>
+                            </a>
+                        </li>
+                        <aura:set attribute="else">
+                            <li class="slds-welcome-mat__tile tile_complete">
+                                <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToPersona}">
+                                    <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                        <div class="slds-welcome-mat__tile-icon-container">
+                                            <span class="slds-icon_container slds-icon-utility-animal_and_nature">
+                                                <div class="completedcheck">
+                                                	<lightning:icon iconName="utility:check" size="small"/>    '
+                                                </div>
+                                            </span>
+                                            <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                                <span class="slds-assistive-text">Completed</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-media__body slds-border_left slds-p-around_small">
+                                        <h3 class="slds-welcome-mat__tile-title">Get to know your personas</h3>
+                                        <p class="slds-welcome-mat__tile-description">Lets get to know the personas who are in each of our scripts.</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </aura:set>
+                    </aura:if>  
+                   <aura:if isTrue="{!v.SolutionsCompleted == 0}">
+                        <li class="slds-welcome-mat__tile">
+                            <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToSolutions}">
+                                <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                    <div class="slds-welcome-mat__tile-icon-container">
+                                        <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                            <lightning:icon iconName="utility:knowledge_base" size="small"/>
+                                        </span>
+                                        <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                            <span class="slds-assistive-text">Completed</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-border_left slds-p-around_small">
+                                    <h3 class="slds-welcome-mat__tile-title">Get to know your solutions</h3>
+                                    <p class="slds-welcome-mat__tile-description">Understand your Industry GTM Solutions and what demo scripts are available in the IDO to support them.</p>
+                                </div>
+                            </a>
+                        </li>
+                       <aura:set attribute="else">
+                       		<li class="slds-welcome-mat__tile tile_complete">
+                                <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToPartners}">
+                                    <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                        <div class="slds-welcome-mat__tile-icon-container">
+                                            <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                                <lightning:icon iconName="utility:check" size="small"/>
+                                            </span>
+                                            <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                                <span class="slds-assistive-text">Completed</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-media__body slds-border_left slds-p-around_small">
+                                        <h3 class="slds-welcome-mat__tile-title">Get to know your solutions</h3>
+                                        <p class="slds-welcome-mat__tile-description">Understand your Industry GTM Solutions and what demo scripts are available in the IDO to support them.</p>
+                                    </div>
+                                </a>
+                            </li>    
+                       </aura:set>
+                    </aura:if>
+                   <aura:if isTrue="{!v.PartnersCompleted == 0}">
+                        <li class="slds-welcome-mat__tile">
+                            <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToPartners}">
+                                <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                    <div class="slds-welcome-mat__tile-icon-container">
+                                        <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                            <lightning:icon iconName="utility:identity" size="small"/>
+                                        </span>
+                                        <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                            <span class="slds-assistive-text">Completed</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-border_left slds-p-around_small">
+                                    <h3 class="slds-welcome-mat__tile-title">Get to know your partners</h3>
+                                    <p class="slds-welcome-mat__tile-description">Lets get to know the IDO partners and what their solutions bring you only in the IDO.</p>
+                                </div>
+                            </a>
+                        </li>
+                       <aura:set attribute="else">
+                       		<li class="slds-welcome-mat__tile tile_complete">
+                                <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToPartners}">
+                                    <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                        <div class="slds-welcome-mat__tile-icon-container">
+                                            <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                                <lightning:icon iconName="utility:check" size="small"/>
+                                            </span>
+                                            <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                                <span class="slds-assistive-text">Completed</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-media__body slds-border_left slds-p-around_small">
+                                        <h3 class="slds-welcome-mat__tile-title">Get to know your partners</h3>
+                                        <p class="slds-welcome-mat__tile-description">Lets get to know the IDO partners and what their solutions bring you only in the IDO.</p>
+                                    </div>
+                                </a>
+                            </li>    
+                       </aura:set>
+                    </aura:if>
+                    
+                    
+                    <aura:if isTrue="{!v.FeaturesCompleted == 0}">
+                        <li class="slds-welcome-mat__tile">
+                            <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToFeatures}">
+                                <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                    <div class="slds-welcome-mat__tile-icon-container">
+                                        <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                            <lightning:icon iconName="utility:favorite" size="small"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-border_left slds-p-around_small">
+                                    <h3 class="slds-welcome-mat__tile-title">Get to know your Customizations</h3>
+                                    <p class="slds-welcome-mat__tile-description">Lets get to know additional IDO Customizations and how you can use them.</p>
+                                </div>
+                            </a>
+                        </li>
+                       <aura:set attribute="else">
+                       		<li class="slds-welcome-mat__tile tile_complete">
+                                <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToFeatures}">
+                                    <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                        <div class="slds-welcome-mat__tile-icon-container">
+                                            <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                                <lightning:icon iconName="utility:check" size="small"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-media__body slds-border_left slds-p-around_small">
+                                        <h3 class="slds-welcome-mat__tile-title">Get to know your Customizations</h3>
+                                        <p class="slds-welcome-mat__tile-description">Lets get to know additional IDO Customizations and how you can use them.</p>
+                                    </div>
+                                </a>
+                            </li>    
+                       </aura:set>
+                    </aura:if>
+                    
+                    <aura:if isTrue="{!v.VideosCompleted == 0}">
+                        <li class="slds-welcome-mat__tile">
+                            <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToVideos}">
+                                <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                    <div class="slds-welcome-mat__tile-icon-container">
+                                        <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                            <lightning:icon iconName="utility:tablet_portrait" size="small"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-border_left slds-p-around_small">
+                                    <h3 class="slds-welcome-mat__tile-title">Get to know your Videos</h3>
+                                    <p class="slds-welcome-mat__tile-description">Review our Video Library of Enablement Calls, How tos, Setup Guides, and Demo Scripts</p>
+                                </div>
+                            </a>
+                        </li>
+                       <aura:set attribute="else">
+                       		<li class="slds-welcome-mat__tile tile_complete">
+                                <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToVideos}">
+                                    <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                        <div class="slds-welcome-mat__tile-icon-container">
+                                            <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                                <lightning:icon iconName="utility:check" size="small"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-media__body slds-border_left slds-p-around_small">
+                                        <h3 class="slds-welcome-mat__tile-title">Get to know your Videos</h3>
+                                        <p class="slds-welcome-mat__tile-description">Review our Video Library of Enablement Calls, How tos, Setup Guides, and Demo Scripts</p>
+                                    </div>
+                                </a>
+                            </li>    
+                       </aura:set>
+                    </aura:if>
+                    
+                    
+                    <aura:if isTrue="{!v.ResourcesCompleted == 0}">
+                        <li class="slds-welcome-mat__tile">
+                            <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToResources}">
+                                <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                    <div class="slds-welcome-mat__tile-icon-container">
+                                        <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                            <lightning:icon iconName="utility:groups" size="small"/>
+                                        </span>
+                                        <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                            <span class="slds-assistive-text">Completed</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-border_left slds-p-around_small">
+                                    <h3 class="slds-welcome-mat__tile-title">Get to know your resources</h3>
+                                    <p class="slds-welcome-mat__tile-description">Lets get to know the IDO owners, chatter groups, and other resources here for you.</p>
+                                </div>
+                            </a>
+                        </li>
+                       <aura:set attribute="else">
+                       		<li class="slds-welcome-mat__tile tile_complete">
+                                <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToPartners}">
+                                    <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                        <div class="slds-welcome-mat__tile-icon-container">
+                                            <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                                <lightning:icon iconName="utility:check" size="small"/>
+                                            </span>
+                                            <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                                <span class="slds-assistive-text">Completed</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-media__body slds-border_left slds-p-around_small">
+                                        <h3 class="slds-welcome-mat__tile-title">Get to know your resources</h3>
+                                        <p class="slds-welcome-mat__tile-description">Lets get to know the IDO owners, chatter groups, and other resources here for you.</p>
+                                    </div>
+                                </a>
+                            </li>    
+                       </aura:set>
+                    </aura:if>
+                    <aura:if isTrue="{!v.SetupCompleted == 0}">
+                        <li class="slds-welcome-mat__tile">
+                            <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToSetup}">
+                                <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                    <div class="slds-welcome-mat__tile-icon-container">
+                                        <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                            <lightning:icon iconName="utility:automate" size="small"/>
+                                        </span>
+                                        <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                            <span class="slds-assistive-text">Completed</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-border_left slds-p-around_small">
+                                    <h3 class="slds-welcome-mat__tile-title">Setup Your IDO</h3>
+                                    <p class="slds-welcome-mat__tile-description">Now that you know about the IDO, lets setup it up.</p>
+                                </div>
+                            </a>
+                        </li>
+                       <aura:set attribute="else">
+                       		<li class="slds-welcome-mat__tile tile_complete">
+                                <a href="javascript:void(0);" class="slds-box slds-box_link slds-box_x-small slds-media" onclick="{!c.GoToSetup}">
+                                    <div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center slds-m-left_xx-small">
+                                        <div class="slds-welcome-mat__tile-icon-container">
+                                            <span class="slds-icon_container slds-icon-utility-animal_and_nature">	
+                                                <lightning:icon iconName="utility:check" size="small"/>
+                                            </span>
+                                            <span class="slds-icon_container slds-icon_container_circle slds-icon-action-check" title="Completed">
+                                                <span class="slds-assistive-text">Completed</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-media__body slds-border_left slds-p-around_small">
+                                        <h3 class="slds-welcome-mat__tile-title">Setup Your IDO</h3>
+                                        <p class="slds-welcome-mat__tile-description">Now that you know about the IDO, lets setup it up.</p>
+                                    </div>
+                                </a>
+                            </li>    
+                       </aura:set>
+                    </aura:if>
+
+                </ul>
+            </div>
+        </div>
+    </section>
+	<div aura:id="overlay" class="{!'slds-backdrop slds-backdrop_' + v.MenuOpenClose}"></div>
+</aura:component>

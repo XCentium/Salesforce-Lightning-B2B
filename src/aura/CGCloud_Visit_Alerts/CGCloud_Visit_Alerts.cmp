@@ -1,0 +1,35 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="AlertTitle1" type="String" default="Product AC-2234 Out of Stock" />
+    <aura:attribute name="AlertDescription1" type="String" default="Currently Accepting No new orders at this time." />
+    <aura:attribute name="Alert1Icon" type="String" default="standard:announcement" />
+    <aura:attribute name="AlertTitle2" type="String" default="New Product Launch" />
+    <aura:attribute name="AlertDescription2" type="String" default="Schedule a Visit before upcoming product promotions." />
+    <aura:attribute name="Alert2Icon" type="String" default="standard:product" />
+    <aura:if isTrue="{!v.AlertTitle1 != ''}">
+        <div class="alert">
+        	<div class="padding">
+                <div class="iconwrapper">
+                	<lightning:icon iconName="{!v.Alert1Icon}" size="small" alternativeText="ALERT" class="icon" />
+                </div>
+                <div class="textwrapper">
+                    <h2>{!v.AlertTitle1}</h2>
+                    <p>{!v.AlertDescription1}</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        
+        <div class="alert">
+        	<div class="padding">
+                <div class="iconwrapper">
+                	<lightning:icon iconName="{!v.Alert2Icon}" size="small" alternativeText="ALERT" class="icon" />
+                </div>
+                <div class="textwrapper">
+                    <h2>{!v.AlertTitle2}</h2>
+                    <p>{!v.AlertDescription2}</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

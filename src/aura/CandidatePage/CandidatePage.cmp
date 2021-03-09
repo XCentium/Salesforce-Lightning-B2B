@@ -1,0 +1,16 @@
+<aura:component >   
+    <aura:attribute name="applicant" type="HR_Applicant__c"/>
+    
+    <figure class="slds-image slds-image--card maxwidth">
+        <a href="javascript:void(0);" onclick="{!c.contactSelected}" class="slds-image__crop slds-image__crop--1-by-1">
+            <img src="{!v.applicant.HR_Headshot_Url__c}" alt="Headshot of the candidate" />
+        </a>
+        <figcaption class="slds-image__title slds-image__title--card">
+            <span class="slds-image__text slds-truncate" title="{!v.applicant.Name}">{!v.applicant.Name}<br/>
+                <a href="{!'tel:'+v.applicant.HR_Mobile_Phone__c}">
+                    <lightning:icon iconName="utility:call" size="x-small"/>
+                    {!v.applicant.HR_Mobile_Phone__c}
+                </a></span>
+        </figcaption>
+    </figure>
+</aura:component>

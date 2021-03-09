@@ -1,0 +1,60 @@
+<apex:page standardController="Account" showHeader="false" sidebar="false">
+    <apex:slds >
+        <div class="slds-scope">
+    <table  class="slds-table slds-table_bordered slds-table_cell-buffer" >
+<tr class="slds-text-title_caps" style="">
+    <th scope="col" >
+        <div class="slds-truncate" title="Opportunity Name">Credit Area</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Account Name">Account Number</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Close Date">Name</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Stage">Credit Limit</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Confidence">Credit Exposure</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Amount">Currency</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Contact">Credit Block?</div>
+      </th>
+    <th scope="col">
+        <div class="slds-truncate" title="Contact">Credit Used</div>
+      </th>
+</tr>
+<tr>
+    <th scope="col">
+        <div class="slds-truncate" title="Opportunity Name">US01</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Account Name">000062636</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Close Date">{!Account.Name}</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Stage">$750,000</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Confidence">$21,986</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Amount">USD</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Contact">No</div>
+      </th>
+    <th scope="col">
+        <div class="slds-truncate" title="Contact">$999.99</div>
+      </th>
+</tr>
+</table>
+            </div>
+        </apex:slds>
+</apex:page>

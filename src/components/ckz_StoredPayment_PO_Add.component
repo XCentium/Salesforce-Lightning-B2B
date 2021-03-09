@@ -1,0 +1,113 @@
+<!--
+ - Created by brandon.rogers on 2/5/19.
+ -->
+
+<apex:component id="ckz_StoredPayment_PO_Add">
+
+    <script id="CKZ-MyAccount-MyWalletPO" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_mywallet m-t-1">
+            <div class="panel-body MyAccount_ContactInfo_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title newPO hide m-y-0">{{pageLabelMap 'MyWallet_AddPO'}}</h2>
+                        <h2 class="cc_title editPO hide m-y-0">{{pageLabelMap 'MyWallet_EditPO'}}</h2>
+                    </div>
+
+                    <div class="col-sm-4 text-right">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="cc_myaccount_content panel-body cc_body">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="error_messages_section" style="display:none;"></div>
+
+                        <!-- EDIT PO FORM -->
+                        <form id="editPOForm" class="editPOForm cc_edit_po_form hide">
+
+                            <div class="form-group displayName">
+                                <label for="displayName" class="control-label poLabel Name fieldLabel">{{pageLabelMap 'MyWallet_NameOpt'}}</label>
+                                <input id="displayName" type="text" class="form-control" value="{{this.displayName}}" name="displayName" maxlength="50"/>
+                            </div>
+
+                            <div class="form-group accountNumber">
+                                <label for="accountNumber" class="control-label poLabel Number fieldLabel">{{pageLabelMap 'MyWallet_PONum'}}</label>
+                                <input id="accountNumber" type="text" class="form-control" name="accountNumber" value="{{this.accountNumber}}" maxlength="50"/>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label for="isEnabled" class="poLabel SavePayment fieldLabel">
+                                        <input type="checkbox" name="isEnabled" id="isEnabled" {{#if this.isEnabled}}checked{{/if}} />{{pageLabelMap 'MyWallet_Enabled'}}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="text-right">
+                                    <input type="button" class='btn btn-default btn-sm button cancelPO cc_cancel_po' id="cancelPO" value="{{pageLabelMap 'MyWallet_Cancel'}}"/>
+                                    <input type="button" class='btn btn-primary btn-sm button savePO cc_save_po' id="savePO" value="{{pageLabelMap 'MyWallet_SaveToWall'}}"/>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- NEW PO FORM -->
+                        <form id="newPOForm" class="newPOForm cc_new_po_form hide">
+
+                            <div class="form-group displayName">
+                                <label for="displayName" class="control-label poLabel Name fieldLabel">{{pageLabelMap 'MyWallet_NameOpt'}}</label>
+                                <input id="displayName" type="text" class="form-control" value="{{this.displayName}}" name="displayName" maxlength="50"/>
+                            </div>
+
+                            <div class="form-group accountNumber">
+                                <label for="accountNumber" class="control-label poLabel Number fieldLabel">{{pageLabelMap 'MyWallet_PONum'}}</label>
+                                <input id="accountNumber" type="text" class="form-control" name="accountNumber" value="{{this.accountNumber}}" maxlength="50"/>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label for="isEnabled" class="poLabel SavePayment fieldLabel">
+                                        <input type="checkbox" name="isEnabled" id="isEnabled" {{#if this.isEnabled}}checked{{/if}} />{{pageLabelMap 'MyWallet_Enabled'}}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="text-right">
+                                    <input type="button" class='btn btn-default btn-sm button cancelPO cc_cancel_po' id="cancelPO" value="{{pageLabelMap 'MyWallet_Cancel'}}"/>
+                                    <input type="button" class='btn btn-primary btn-sm button savePO cc_save_po' id="savePO" value="{{pageLabelMap 'MyWallet_SaveToWall'}}"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.StoredPaymentsPOView.desktop.tmpl = 'CKZ-MyAccount-MyWalletPO';
+
+            CCRZ.pubSub.on('view:StoredPaymentsPOView:refresh', function () {
+                console.log("do the thing");
+
+                if (CCRZ.pagevars.queryParams.mode === "new") {
+                    $('.editPO').addClass('hide');
+                    $('.newPO').removeClass('hide');
+                    $('.editPOForm').addClass('hide');
+                    $('.newPOForm').removeClass('hide');
+                } else if (CCRZ.pagevars.queryParams.mode === "edit") {
+                    $('.newPO').removeClass('hide');
+                    $('.editPO').addClass('hide');
+                    $('.newPOForm').addClass('hide');
+                    $('.editPOForm').removeClass('hide');
+                }
+            });
+
+        });
+    </script>
+</apex:component>

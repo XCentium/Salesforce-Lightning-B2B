@@ -1,0 +1,52 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="contactSuggestion" type="Map" default="{
+                                                                 'Score': 1,
+                                                                 'Status': 'New'
+                                                                 }"></aura:attribute>
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    <aura:attribute name="roleOptions" type="Map[]"></aura:attribute>
+    <aura:attribute name="disableSave" type="Boolean" default="true"></aura:attribute>
+    
+    <aura:handler name="change" value="{!v.contactSuggestion}" action="{!c.handleValueChange}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <div class="action-body">
+        <div class="row">
+            <div class="column">
+                <div class="slds-text-heading_medium">Opportunity Contact Role Suggestion</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <c:Utility_Lookup aura:id="lookup"
+                              lookupObject="Contact" 
+                              lookupField="Name" 
+                              boundValue="{!v.contactSuggestion.ContactId}"></c:Utility_Lookup>
+        </div>
+        
+        <div class="row">
+            <lightning:select aura:id="contactRole"
+                              label="Role"
+                              value="{!v.contactSuggestion.Role}">
+                <aura:iteration items="{!v.roleOptions}" var="option">
+                    <option value="{!option.value}" selected="{!option.selected}">{!option.label}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        
+        <div class="row">
+            <lightning:input type="checkbox" label="Is Primary Contact"  value="{!v.contactSuggestion.IsPrimary}"></lightning:input>
+        </div>
+    </div>
+    
+    <div class="action-footer">
+        <div class="row">
+            <lightning:button label="Back" variant="neutral" onclick="{!c.handleGoBack}"></lightning:button>
+            <lightning:button class="column flex-right" 
+                              label="Save" 
+                              variant="brand"
+                              onclick="{!c.handleSave}"
+                              disabled="{!v.disableSave}"></lightning:button>
+        </div>
+    </div>
+</aura:component>

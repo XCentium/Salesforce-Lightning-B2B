@@ -1,0 +1,5 @@
+<design:component label="Chatter Group Tiles">
+    <design:attribute name="publicOnly" label="Public Group Only" description="Check if the component should only display public group" />
+    <design:attribute name="filter" label="Keyword to Filter" description="Display Only Chatter Group with this Keyword in the description Field" />
+    <design:attribute name="bgcolor" label="Color when hovering tile (Hex)" description="Color with opacity 0.9 used when hovering over a tile. Recommend to use the action color from the palette in community, or leave like thta in Lightning Experience" />
+</design:component>

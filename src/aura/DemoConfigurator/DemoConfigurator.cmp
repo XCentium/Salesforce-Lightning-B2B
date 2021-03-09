@@ -1,0 +1,67 @@
+<aura:component access="global" controller="DemoConfigurator" implements="force:appHostable,lightning:availableForFlowScreens">
+    <aura:attribute name="SetupScreenTitle" type="String"  default="Lets Enable Stuff"/>
+    <aura:attribute name="SetupScreenDecription" type="String"  default="This tool handles some of the post trialforce setup for this IDO. After running this tool you will still need to configure anything else you need via qhome instructions. This tool is in Pilot for the Winter 19 initial release with plans to more formally release for our Final Release. Please help test this out and provide feedback send email to jchase@salesforce.com"/>
+    <aura:attribute name="FinishScreenTitle" type="String"  default="Lets Finish Up"/>
+    <aura:attribute name="FinishScreenDecription" type="String"  default="Please note, you will need to finish configurations in the Qhome Tab (Click Finish Setup Below). This tool simply configures what is available through the API. Please finish all setup items needed in your demo."/>
+    <aura:attribute name="SpinnerOnOff" type="boolean" default="false"/>
+    <aura:attribute name="ObjDetEnabled" type="Boolean" default="true" /> 
+    <aura:handler name="change" value="{!v.SpinnerOnOff}" action="{!c.SpinnerCheck}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <div class="slds-card">
+        <!--
+        <div class="slds-media">
+        	<div class="slds-media__body padding"> 
+            	<h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">
+                    Demo Configurator
+                </h1>
+            </div>
+        </div>  
+		-->    
+        <div class="padding">
+            <div class="show" aura:id="chooseyouroptions">
+                
+                <div class="desc">
+                    <!--
+                    <div class="center">
+                        <div class="padding">
+                            <img src="/resource/DemoConfigurator/assets/images/HomeIcon.png" class="alldone"/>
+                            <h1 class="largeh1">
+                                <strong>
+                                    {!v.SetupScreenTitle}
+                                </strong>
+                            </h1>
+                            <p>Welcome to the Demo Configurator. This tool automates <em>SOME</em> post trialforce setup steps. You can simply enable what you need. </p>
+                            <p><strong>Please Note: </strong> <a href="/lightning/n/qbranch__Q_Home_Lightning">There may be Additional setup steps detailed here</a>.</p>
+                        </div>
+                    </div>
+                    -->
+                    <aura:if isTrue="{!v.ObjDetEnabled == true}">
+                    	<c:DemoConfiguratorDemoSetup SpinnerOnOff="{!v.SpinnerOnOff}" /> 
+                        <aura:set attribute="else">
+                            <div class="center">
+                                <h3>Have you enabled Object Detection?</h3>
+                                <p>Object Detection is required to use this tool. <a href="/lightning/setup/ObjectDetection/home" target="_blank">Please Enable here</a>.</p>
+                                <div class="padding">
+                                    <button class="slds-button slds-button_neutral menuicon" onclick="{!c.ObjSet}">
+                                        Object Detection is enabled
+                                    </button>
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <aura:if isTrue="{!v.SpinnerOnOff}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+           <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+             <span class="slds-assistive-text">Loading</span>
+             <div class="slds-spinner__dot-a"></div>
+             <div class="slds-spinner__dot-b"></div>
+           </div>
+        </div>
+     </aura:if>
+</aura:component>

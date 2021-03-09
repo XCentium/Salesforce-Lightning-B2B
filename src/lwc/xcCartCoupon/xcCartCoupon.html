@@ -1,0 +1,31 @@
+<template>
+    <lightning-card title="Promo Code">
+        <!-- Checks if widget is loaded -->
+        <template if:true={mLoaded}>
+            <!-- No Coupon Applied -->
+            <div if:false={mHasCoupon} class="slds-p-around_x-small">
+                <div if:true={mOpInProgress}>
+                    <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+                </div>
+                <div if:true={mShowError} class="slds-p-bottom_small">
+                    <c-xc-scoped-notification variant="error" message={mErrorMsg}></c-xc-scoped-notification>
+                </div>
+                <div class="slds-publisher">
+                    <textarea class="slds-publisher__input slds-textarea slds-text-longform square" maxlength="8" onkeypress={handleKeyPress}></textarea>
+                    <button class="slds-button slds-button_brand slds-m-left_x-small square" onclick={handleApply}>Apply</button>
+                </div>
+            </div>
+
+            <!-- Has Coupon -->
+            <div if:true={mHasCoupon} class="slds-p-around_x-small">
+                <div if:true={mOpInProgress}>
+                    <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+                </div>
+                <lightning-pill label={mCouponName} onremove={handleRemove}></lightning-pill>
+            </div>
+        </template>
+        <template if:false={mLoaded}>
+            <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+        </template>
+    </lightning-card>
+</template>

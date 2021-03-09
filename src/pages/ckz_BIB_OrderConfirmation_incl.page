@@ -1,0 +1,7 @@
+<!--
+ - Created by brandon.rogers on 1/24/19.
+ -->
+
+<apex:page id="ckz_BIB_OrderConfirmation_incl" sidebar="false" showHeader="false" standardStylesheets="false">
+    <c:ckz_OrderConfirmation_LLI />
+</apex:page>

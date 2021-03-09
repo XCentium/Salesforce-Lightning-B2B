@@ -1,0 +1,348 @@
+<aura:component controller="FIDO" extends="c:Mixpanel" implements="c:MixpanelInterface">
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="ScriptId" type="String" />
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Data" type="String[]" />
+    <aura:attribute name="RelatedRecords" type="String[]" />
+    <aura:attribute name="activeSections" type="List" default="[]" />
+    <aura:attribute name="RelatedPersonas" type="String[]" />
+    <aura:attribute name="RelatedVideos" type="String[]" />
+    <aura:attribute name="RelatedCustomizations" type="String[]" />
+    <aura:attribute name="RelatedLicenses" type="String[]" />
+    <aura:attribute name="featuredetailjunctionid" type="String"/>
+    <aura:attribute name="featureId" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="UserEmail" type="String"/>
+    <aura:attribute name="RecordName" type="String" />
+     
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:if  isTrue="{!and(v.recid != '', v.recid != null)}" >
+        <button class="slds-button backButton" onclick="{!c.back}">
+            <lightning:icon iconName="utility:back" size="xx-small"/> 
+        </button> 
+    </aura:if> 
+    <div class="owner">
+        <aura:if isTrue="{!not(empty(v.Data))}">
+            <aura:iteration items="{!v.Data}" var="script">
+                <div class="padding">
+                    <div class="tile-header slds-p-vertical_xx-small  slds-m-bottom_xx-small">
+                        <h3 class="slds-text-heading_small">
+                            {!script.name}
+                        </h3>
+                    </div>
+                    <aura:if isTrue="{!script.type__c != ''}">
+                        <span class="slds-text-title_caps slds-list_horizontal slds-has-dividers_right">Script Type - {!script.type__c}</span>
+                    </aura:if>
+                    
+                    <div class="paddingtopbottom">
+                        <ui:outputRichText value="{!script.description__c}"/>
+                    </div>
+                    <table class="slds-table slds-table_cell-buffer slds-table_header-hidden slds-table_noHover">
+                        <tbody> 
+                            <aura:if isTrue="{!script.cloud_product__c != NULL}">
+                                <tr >
+                                    <td data-label="Clouds">
+                                        <strong class="slds-p-right_x-small">Clouds:</strong>{!script.cloud_product__c}  
+                                    </td>    
+                                </tr>
+                            </aura:if>
+                            
+                            <aura:if isTrue="{!script.industry__c != ''}">
+                                <tr >
+                                    <td data-label="Industry">
+                                        <strong class="slds-p-right_x-small">Industry: </strong>  {!script.industry__c}
+                                    </td>    
+                                </tr>
+                            </aura:if>
+                            
+                            <aura:if isTrue="{!demo_setup_time__c != null}">
+                                <tr >
+                                    <td data-label="Setup Time">
+                                        <strong class="slds-p-right_x-small">Setup Time: </strong> {!script.demo_setup_time__c} Minutes   
+                                    </td>    
+                                </tr>
+                            </aura:if>
+                            
+                            <aura:if isTrue="{!script.demo_time__c != null}">
+                                <tr >
+                                    <td data-label="Demo Delivery Time">
+                                        <strong class="slds-p-right_x-small">Demo Delivery Time: </strong>  {!script.demo_time__c} Minutes
+                                    </td>    
+                                </tr>
+                            </aura:if>
+                            <aura:if isTrue="{!script.device__c != NULL}">
+                                <tr >
+                                    <td data-label="Supported Devices">
+                                        <strong class="slds-p-right_x-small">Supported Devices:</strong>{!script.device__c}  
+                                    </td>    
+                                </tr>
+                            </aura:if>
+                            <aura:if isTrue="{!script.languages_supported__c != NULL}">
+                                <tr >
+                                    <td data-label="Supported Languages">
+                                        <strong class="slds-p-right_x-small">Supported Languages: </strong>{!script.languages_supported__c}  
+                                    </td>    
+                                </tr>
+                            </aura:if>
+                        </tbody>
+                    </table>
+                    <aura:if isTrue="{!script.video_link__c != null}">
+                        <button class="slds-button slds-button_neutral" aura:id="{!script.video_link__c}" id="{!script.video_link__c}" onclick="{!c.toURL}">Demo Video</button>
+                    </aura:if>
+                    <button class="slds-button slds-button_neutral" aura:id="{!script.quip_doc__c}" id="{!script.quip_doc__c}" onclick="{!c.toURL}">View Script</button>
+                    <aura:if isTrue="{!script.package_url__c != null}">
+                        <button class="slds-button slds-button_neutral" aura:id="{!script.package_url__c}" id="{!script.package_url__c}" onclick="{!c.toURL}">Install Package</button>
+                    </aura:if>
+                </div>
+            </aura:iteration>
+        </aura:if>
+    </div>
+    
+    <aura:if isTrue="{!
+                     (or(
+                     not(empty(v.RelatedVideos)),
+                     not(empty(v.RelatedPersonas)),
+                     not(empty(v.RelatedRecords)),
+                     not(empty(v.RelatedCustomizations)),
+                     not(empty(v.RelatedLicenses))
+                     )
+                     )
+                     }">     
+        <div class="owner">
+            <lightning:tabset>
+                <aura:if isTrue="{!not(empty(v.Data))}">
+                    <aura:iteration items="{!v.Data}" var="script">
+                        <aura:if isTrue="{!not(empty(v.RelatedVideos))}">
+                            <lightning:tab label="Videos" id="1">
+                                <div class="cardWrapper">
+                                    <aura:iteration items="{!v.RelatedVideos}" var="video">
+                                        <div class="videoCard">
+                                            <div class="paddingsmall"> 
+                                                <button class="slds-button slds-button_neutral cardButton" aura:id="{!video.video_url__c}" id="{!video.video_url__c}" onclick="{!c.toURL}">
+                                                    <div class=""> 
+                                                        <aura:if isTrue="{!and(video.thumbnail_url__c != '',video.thumbnail_url__c != null)}">
+                                                            <div class="videoTitle" style="{!'background-image:url(' + video.thumbnail_url__c + ');'}">
+                                                            </div>
+                                                            <aura:set attribute="else">
+                                                                <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);'}">
+                                                                </div>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                        <div class="videoDescription">
+                                                            <div class="padding">
+                                                                <h3>
+                                                                    <div class="headingleft">
+                                                                        {!video.name}
+                                                                    </div>
+                                                                </h3>
+                                                                <div class=" desc">
+                                                                    <ui:outputRichText value="{!video.video_description__c }"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>  
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </aura:iteration>
+                                </div>
+                            </lightning:tab>
+                        </aura:if>
+                        <aura:if isTrue="{!not(empty(v.RelatedPersonas))}">
+                            <lightning:tab label="Personas" id="2">
+                                <div class="paddingleftright">
+                                    <div class="cardWrapper">
+                                        <aura:iteration items="{!v.RelatedPersonas}" var="persona">
+                                            <div class="cardhalf">
+                                                <div class="owner marginbottom marginleftright">
+                                                    <h2 class="borderbottom relative personaTitle" >
+                                                        <div class="padding">
+                                                            <img src="{!persona.user_image_url__c}" class="personaimg" /> {!persona.name} 
+                                                            <aura:if isTrue="{!persona.title__c != ''}">
+                                                                | <span class="personaUserTitle" >{!persona.title__c}</span>
+                                                            </aura:if>
+                                                        </div>
+                                                    </h2>
+                                                    <div class="padding personaContent">
+                                                        <div class="textleft">
+                                                            <ui:outputRichText value="{!persona.description__c}"/>
+                                                            <aura:if isTrue="{!and(persona.clouds__c != null,persona.clouds__c != '')}">
+                                                                <div class="paddingtopbottom">
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Analytics"> 
+                                                                        <span class="slds-badge">Analytics Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Commerce"> 
+                                                                        <span class="slds-badge">Commerce Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Community"> 
+                                                                        <span class="slds-badge">Community Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Integration"> 
+                                                                        <span class="slds-badge">Integration Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Marketing"> 
+                                                                        <span class="slds-badge">Marketing Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Sales"> 
+                                                                        <span class="slds-badge">Sales Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Service"> 
+                                                                        <span class="slds-badge">Service Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Consumer Goods"> 
+                                                                        <span class="slds-badge">Consumer Goods Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Financial"> 
+                                                                        <span class="slds-badge">Financial Services Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Manufacturing"> 
+                                                                        <span class="slds-badge">Manufacturing Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Health"> 
+                                                                        <span class="slds-badge">Health Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                </div>
+                                                            </aura:if>
+                                                        </div>
+                                                    </div>
+                                                    <div class="bordertop">
+                                                        <div class="padding"> 
+                                                            <c:FIDO_Persona_Buttons ShowShareButton="false" Industry="{!v.Industry}" Settings="{!v.Settings}" recid="{!persona.id}" ScreenChoice="{!v.ScreenChoice}" recType="{!persona.type__c}" PersonaName="{!persona.name}" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:iteration>
+                                    </div>
+                                </div>
+                            </lightning:tab>
+                        </aura:if>                                
+                        <aura:if isTrue="{!not(empty(v.RelatedRecords))}">
+                            <lightning:tab label="Features" id="3">
+                                <div class="paddingleftright">
+                                    <div class="cardWrapper">
+                                        <aura:iteration items="{!v.RelatedRecords}" var="orgfeature">
+                                            <div class="cardhalf">
+                                                <div class="paddingsmall"> 
+                                                    <div class="owner">
+                                                        <h3 class="borderbottom">
+                                                            <div class="padding relative">
+                                                                <lightning:icon iconName="standard:resource_preference" size="medium" alternativeText=""/> 
+                                                                <span class="marginleft">{!orgfeature.name}</span>
+                                                            </div>
+                                                        </h3>
+                                                        <div class="padding videoDescription">   
+                                                            <ui:outputRichText value="{!orgfeature.description_of_customization__c }"/>
+                                                        </div>
+                                                        <div class="footer center">
+                                                            <div class="padding">
+                                                                <button class="slds-button slds-button_neutral" aura:id="{!orgfeature.sfid}" id="{!orgfeature.sfid}" onclick="{!c.goToOrgFeature}">
+                                                                    Learn More
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                </div>
+                                            </div>
+                                        </aura:iteration>
+                                    </div>
+                                </div>
+                            </lightning:tab>
+                        </aura:if>
+                        <aura:if isTrue="{!not(empty(v.RelatedCustomizations))}">
+                            <lightning:tab label="Customizations" id="4">
+                                <div class="paddingleftright">
+                                    <div class="cardWrapper">
+                                        <aura:iteration items="{!v.RelatedCustomizations}" var="feature">
+                                            <div class="videoCard">
+                                                <div class="paddingsmall"> 
+                                                    <button class="slds-button slds-button_neutral cardButton" aura:id="{!feature.id}" id="{!feature.id}" onclick="{!c.goToCustomization}" >
+                                                        <div class=""> 
+                                                            <aura:if isTrue="{!feature.image__c != null}" >        
+                                                                <div class="videoTitle" style="{!'background-image:url(' + feature.image__c + ');'}">
+                                                                    <div class="videoBadge" >
+                                                                    </div>
+                                                                </div>
+                                                                <aura:set attribute="else">
+                                                                    <div class="videoTitle NoImgBg" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);">
+                                                                        <div class="videoBadge">
+                                                                        </div>
+                                                                    </div>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                            <div class="padding">
+                                                                <div class="videoDescription">
+                                                                    <h3>
+                                                                        <div class="headingleft">
+                                                                            <ui:outputRichText value="{!feature.name}"/>
+                                                                        </div>
+                                                                    </h3>
+                                                                    <div class="paddingtopbottom desc">
+                                                                        <ui:outputRichText value="{!feature.description__c }"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </aura:iteration>
+                                    </div>
+                                </div>
+                            </lightning:tab>
+                        </aura:if>
+                        <aura:if isTrue="{!not(empty(v.RelatedLicenses))}">
+                            <lightning:tab label="Licenses" id="5">
+                                <div class="paddingleftright">
+                                    <div class="center">
+                                        <h3>This Demo Script Uses these Licenses</h3>
+                                        <p>Please note, there may be additional licensing required.</p>
+                                    </div>
+                                    <div class="paddingtopbottom">
+                                        <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal dtable">
+                                            <thead>
+                                                <tr class="slds-text-title_caps">
+                                                    <th class="" scope="col">
+                                                        <div class="slds-truncate" scope="col">License</div>
+                                                    </th>
+                                                    <th class="" scope="col">
+                                                        <div class="slds-truncate" scope="col">Type</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <aura:iteration items="{!v.RelatedLicenses}" var="license">
+                                                    <tr class="slds-hint-parent">   
+                                                        <td data-label="{!license.name}" scope="col">
+                                                            <div class="slds-truncate" >
+                                                                {!license.name}
+                                                            </div>
+                                                        </td>
+                                                        <td data-label="{!license.is_addon__c}" scope="col">
+                                                            <div class="slds-truncate" >
+                                                                <aura:if isTrue="{!license.is_addon__c == true }">
+                                                                    Add-On
+                                                                    <aura:set attribute="else">
+                                                                        License
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </aura:iteration>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </lightning:tab>
+                        </aura:if>
+                    </aura:iteration>
+                </aura:if>
+            </lightning:tabset>
+        </div>
+    </aura:if>
+</aura:component>

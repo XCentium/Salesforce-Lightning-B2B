@@ -1,0 +1,246 @@
+<apex:page showHeader="false" standardController="PricebookEntry" extensions="SDO_ProductPage"> 
+    <apex:composition template="SDO_Catalog">
+        <apex:define name="_layout">
+
+<html lang="en">
+<style>
+html * {
+    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif !important;
+}
+
+.product-specs table {
+  width:auto !important;
+}
+</style>
+
+<!-- Body BEGIN -->
+<body class="ecommerce">
+    <div class="main">
+      <div class="container">
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+
+          <!-- BEGIN CONTENT -->
+          <div class="col-md-12 col-sm-12">
+            <div class="product-page">
+              <div class="row">
+                <div class="col-md-4 col-sm-4">
+                  <div class="product-main-image">
+                    <img src="/servlet/servlet.FileDownload?file={!pricebookentry.product2.image__c}" alt="Cool green dress with red bell" class="img-responsive" data-BigImgsrc="/servlet/servlet.FileDownload?file={!pricebookentry.product2.image__c}"/>
+                  </div>
+                  <!-- 
+                  <div class="product-other-images">
+                    <a href="../../assets/frontend/pages/img/products/model3.jpg" class="fancybox-button" rel="photos-lib"><img alt="Berry Lace Dress" src="../../assets/frontend/pages/img/products/model3.jpg"/></a>
+                  </div>
+                  -->
+                </div>
+                <div class="col-md-8 col-sm-8">
+                  <h1>{!pricebookentry.name}</h1>
+                  <div class="price-availability-block clearfix">
+                    <div class="price">
+                      ${!pricebookentry.unitprice}0
+                      <!-- <em>$<span>62.00</span></em> -->
+                    </div>
+                    <div class="availability">
+                      Availability: <strong>In Stock</strong>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <p>{!pricebookentry.product2.description}</p>
+                  </div>
+                  <div class="product-page-options">
+                    
+                  <apex:form styleClass="form-inline">
+                    <!--
+                    <apex:outputPanel rendered="{!pricebookentry.product2.Attribute_1__c != NULL}">
+                      <div class="form-group">
+                        <apex:selectList styleClass="form-control" size="1" value="{!attribute1Value}">
+                          <apex:selectOptions value="{!attribute1Options}"/>
+                        </apex:selectList>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!pricebookentry.product2.Attribute_2__c != NULL}">
+                      <div class="form-group">
+                        <apex:selectList styleClass="form-control" size="1" value="{!attribute2Value}">
+                          <apex:selectOptions value="{!attribute2Options}"/>
+                        </apex:selectList>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!pricebookentry.product2.Attribute_3__c != NULL}">
+                      <div class="form-group">
+                      <apex:selectList styleClass="form-control" size="1" value="{!attribute3Value}">
+                        <apex:selectOptions value="{!attribute3Options}"/>
+                      </apex:selectList>
+                       </div>
+                    </apex:outputPanel>
+                    -->
+
+                    <apex:outputPanel rendered="{!pricebookentry.product2.Attribute_4__c != NULL}">
+                      <div class="form-group">
+                      <apex:selectList styleClass="form-control" size="1" value="{!attribute4Value}">
+                        <apex:selectOptions value="{!attribute4Options}"/>
+                      </apex:selectList>
+                       </div>
+                    </apex:outputPanel>
+                    <!-- 
+                    <apex:outputPanel rendered="{!pricebookentry.product2.Attribute_5__c != NULL}">
+                      <div class="form-group">
+                      <apex:selectList styleClass="form-control" size="1" value="{!attribute5Value}">
+                        <apex:selectOptions value="{!attribute5Options}"/>
+                      </apex:selectList>
+                      </div>
+                    </apex:outputPanel>
+                    -->
+                    <div class="form-group">
+                      Qty: <input id="product-quantity" type="text" value="1" readonly="" style="width:40px;" class="product-qty qty-{!pricebookentry.id} form-control input-sm"/>
+                    </div>
+                    <div class="form-group" style="float:right;">
+                      <button onclick="addProductToShoppingCart('{!pricebookentry.id}');"  class="green-btn" type="submit">Add to cart</button>
+                    </div>
+                    </apex:form>
+                  </div>
+                </div>
+            <!-- BEGIN SIMILAR PRODUCTS -->
+		        <apex:outputPanel rendered="{!rpwList.size > 0}">
+              <div class="row margin-bottom-40">
+  		          <div class="col-md-12 col-sm-12">
+  		            <h2 class="recommended-products-header">Recommended Products</h2>
+  		            <div class="owl-carousel owl-carousel4">
+  		              <apex:repeat value="{!rpwList}" var="rp">
+                      <div>
+  			                <div class="product-item">
+  			                  <div class="pi-img-wrapper">
+  			                    <img src="/servlet/servlet.FileDownload?file={!rp.o.recommended_product__r.image__c}" class="img-responsive" alt="Recommended Product"/>
+  			                    <div>
+  			                      <a onclick="openSubtab('{!rp.pbe.id}','The Headphones')" href="#" class="btn btn-default fancybox-fast-view">View</a>
+  			                    </div>
+  			                  </div>
+  			                  <div>
+                           <h3><a style="text-transform:none;" onclick="openSubtab('{!rp.pbe.id}','The Headphones')" href="#">{!rp.o.Recommended_Product__r.name}</a></h3>
+  			                  </div>
+                          <div class="row">
+                              <div class="recommended-price col-xs-6">
+                               ${!rp.o.Price__c}
+                              </div>
+                              <div class="col-xs-6">
+                                <a onclick="addProductToShoppingCart('{!rp.pbe.id}');"  href="#" class="btn btn-default add2cart">Add to cart</a>
+                              </div>
+                          </div>
+  			                </div>
+  			              </div>
+  		              </apex:repeat>
+  		            </div>
+  		          </div>
+  		        </div>
+            </apex:outputPanel>
+		        <!-- END SIMILAR PRODUCTS -->
+                <div class="product-page-content">
+                  <ul id="myTab" class="nav nav-tabs">
+                    <li class=""><a href="#Details" data-toggle="tab">Details</a></li>
+                    <li class="active"><a href="#Chatter" data-toggle="tab">Chatter</a></li>
+                  </ul>
+                  <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade" id="Details">
+                        <apex:outputPanel rendered="{!pricebookentry.product2.Item_Features__c != null}">
+                          <div class="panel panel-default">
+                            <div class="panel-heading">Product Features</div>
+                            <div class="panel-body">
+                             <apex:outputText escape="false" value="{!pricebookentry.product2.Item_Features__c}"/>
+                            </div>
+                          </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!pricebookentry.product2.Item_Specifications__c != null}">
+                          <div class="panel panel-default product-specs">
+                            <div class="panel-heading">Product Specifications</div>
+                            <div class="panel-body">
+                             <apex:outputText escape="false" value="{!pricebookentry.product2.Item_Specifications__c}"/>
+                            </div>
+                          </div>                          
+                        </apex:outputPanel>
+                    </div>
+                    <div class="tab-pane fade in active" id="Chatter">
+                      <chatter:feed entityId="{!PricebookEntry.product2id}"/>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sticker sticker-sale"></div>
+              </div>
+            </div>
+          </div>
+          <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+
+
+      </div>
+    </div>
+
+   
+
+    <!-- BEGIN fast view of a product -->
+    <div id="product-pop-up" style="display: none; width: 700px;">
+            <div class="product-page product-pop-up">
+              <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-3">
+                  <div class="product-main-image">
+                    <img src="../../assets/frontend/pages/img/products/model7.jpg" alt="Cool green dress with red bell" class="img-responsive"/>
+                  </div>
+                  <div class="product-other-images">
+                    <a href="#" class="active"><img alt="Berry Lace Dress" src="../../assets/frontend/pages/img/products/model3.jpg"/></a>
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-9">
+                  <h2>Cool green dress with red bell</h2>
+                  <div class="price-availability-block clearfix">
+                    <div class="price">
+                      <strong><span>$</span>47.00</strong>
+                      <em>$<span>62.00</span></em>
+                    </div>
+                    <div class="availability">
+                      Availability: <strong>In Stock</strong>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <p>Lorem ipsum dolor ut sit ame dolore  adipiscing elit, sed nonumy nibh sed euismod laoreet dolore magna aliquarm erat volutpat 
+Nostrud duis molestie at dolore.</p>
+                  </div>
+                  <div class="product-page-options">
+                    <div class="pull-left">
+                      <label class="control-label">Size:</label>
+                      <select class="form-control input-sm">
+                        <option>L</option>
+                        <option>M</option>
+                        <option>XL</option>
+                      </select>
+                    </div>
+                    <div class="pull-left">
+                      <label class="control-label">Color:</label>
+                      <select class="form-control input-sm">
+                        <option>Red</option>
+                        <option>Blue</option>
+                        <option>Black</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="product-page-cart">
+                    <div class="product-quantity">
+                        <input id="product-quantity2" type="text" value="1" readonly="" class="form-control input-sm"/>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Add to cart</button>
+                    <a href="shop-item.html" class="btn btn-default">More details</a>
+                  </div>
+                </div>
+
+                <div class="sticker sticker-sale"></div>
+              </div>
+            </div>
+    </div>
+    <!-- END fast view of a product -->
+
+</body>
+<!-- END BODY -->
+</html>
+</apex:define>
+</apex:composition>
+</apex:page>

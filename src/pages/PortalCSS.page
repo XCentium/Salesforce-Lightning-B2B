@@ -1,0 +1,187 @@
+<apex:page cache="false" showHeader="false" contentType="text/css">
+<!-- 
+    Useful Measurements!
+        Portal Main Content (.bodyDiv) width: 1024px; min-height: 1500px;
+        SideBar Included in .bodyDiv
+        Tabs are build in the following order
+        td > div > a
+-->
+ 
+<!-- Outermost Body (Mostly Background) -->
+body {
+}
+
+<!-- Outer Table Box Shadow (Comment out to disable) -->
+
+table#table_portal{
+    box-shadow: 0px 3px 12px #333;
+    -moz-box-shadow: 0px 3px 12px #333;
+    -webkit-box-shadow: 0px 3px 12px #333;
+}
+
+<!-- Tab Navigation -->
+
+<!-- Main Tab Row on Page (fills bodyDiv) -->
+.tabNavigation {
+}
+
+<!-- Contains all Tabs, Inside tabNavigation -->
+<!-- Adjust Margins and Width to position center if necessary -->
+#tabBar {
+}
+
+<!-- Outermost Shell -->
+#tabBar td {
+    background: transparent;
+    border: 0px solid transparent;
+}
+
+.tab .currentTab {
+	background: transparent !important;
+	border: none !important;
+}
+
+<!-- Tab Content. Set Custom Background, Rounded Corners -->
+#tabBar div {
+    -moz-border-radius-topleft: 6px;
+    -moz-border-radius-topright: 6px;
+
+}
+
+<!-- Current Tab. Set Background, Border & Rounded Corners -->
+#tabBar .currentTab div {
+    -moz-border-radius-topleft: 6px;
+    -moz-border-radius-topright: 6px;
+
+}
+
+<!-- General Tab Text Apply to All -->
+#tabBar a {
+    text-decoration: none; 
+}
+
+<!-- Tab Text Hover Setting -->
+#tabBar a:hover { 
+}
+
+<!-- Current Tab Text -->              
+#tabBar .currentTab a {
+}
+
+<!-- Last Tab -->
+#tabBar .last a {
+}
+
+<!-- Main Content Settings (includes Side-Bar)
+     If your portal size is greater than default of 1024px adjust width here -->
+.bodyDiv {  
+    min-height: 1000px;
+    width:1024px;
+    left:0px;
+    margin:0pt auto;
+    position:relative;
+    text-align:left;  
+    border-bottom: 0; 
+}
+
+<!-- This section governs Content, Workspaces, and the Content Previews. Make sure the !important is after each attribute as shown below. -->
+#wsTabs{
+	width: 765px !important;
+}
+
+.x-tab-panel-body, .x-panel-noborder .x-panel-body-noborder {
+    width: 740px !important;
+}
+        
+#div_rendition_small {
+    width: 370px !important;
+}
+
+
+.x-panel-body dl, div.tabset dl.tabcontent dd.tc.on dl {
+    width: 380px;   
+}
+
+.x-panel-body dt.chead, div.tabset dl.tabcontent dt.chead {
+    width: 354px;
+}
+
+
+<!-- This section governs Ideas. -->
+.sectionHeaderWithCommunityNavLinks .bPageTitle {
+    width: 750px;
+}
+  
+.ideaNavCommunity  {
+    width: 740px;
+}
+  
+.communityIntro {
+    width: 750px;
+}
+  
+#ideaSubtabs {
+    width: 750px;
+}
+  
+.ideaBlock {
+    width: 750px;
+}
+  
+.ideaBody {
+    width: 605px;
+}
+
+.ideaContentWidth {
+    width: 570px;
+}
+
+.ideaSide {
+    padding: 0 17px 0 0;
+}
+
+#ideaSubtabs ul#nav .ideasCurrentTab div a {
+    
+}
+
+.ideaViewCategory {
+    
+}
+
+#ideaSubtabs .bg {
+
+}
+
+
+<!-- Left Side-Bar Style -->
+#sidebarCell{
+}
+
+<!-- Shadow & Rounded Border section for Side-Bar -->
+.sidebarModule{
+    background: none;
+    box-shadow: 0px 2px 6px #ccc;
+    -webkit-box-shadow: 0px 2px 6px #ccc;
+    -moz-box-shadow: 0px 2px 6px #ccc;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+.sidebarModuleHeader, 
+.sidebarModuleBody,
+.sidebarModuleBodyNoHeader {
+    -moz-border-radius-topleft: 6px;
+    -webkit-border-top-left-radius: 6px;
+    -moz-border-radius-topright: 6px;
+    -webkit-border-top-right-radius: 6px;
+}
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

@@ -1,0 +1,251 @@
+<apex:page controller="CustomerPortalWelcomeController" showHeader="false">
+<script type="text/javascript">
+
+var date1 = '{!TODAY() + 7}';
+var date2 = '{!TODAY() + 15}';
+var date3 = '{!TODAY() + 24}';
+
+</script>
+
+<apex:image value="{!URLFOR($Resource.Site_CustomerBanner)}"/>
+<!--
+   <table> 
+      
+      <tr> 
+         <td class="welcome_marketingheaderimage"><apex:image value="{!$Resource.CustomerPortalWelcome_MarketingHeaderImageLeft}" /></td>
+         <td class="welcome_marketingheaderimage"><apex:image value="{!$Resource.CustomerPortalWelcome_MarketingHeaderImageCenter}" /></td>
+         <td class="welcome_marketingheaderimage"><apex:image value="{!$Resource.CustomerPortalWelcome_MarketingHeaderImageRight}" /></td>
+      </tr>
+      
+      <tr> 
+         <td><h1>Anytime, Anywhere Access to Answers</h1></td>
+         <td><h1>Upcoming Marketing Events</h1></td>
+         <td><h1>Product Spotlight</h1></td>
+      </tr>
+      
+      <tr> 
+         <td><br>
+            We've recently re-designed our customer portal. You can log support cases, search our knowledge base, browse support content, and share your ideas with our customer community.
+         </td>
+         
+         <td>
+            <ul>
+              <li><script>document.writeln(date1.substring(0,10));</script> : Platinum Customer Dinner</li>
+              <li><script>document.writeln(date2.substring(0,10));</script> : Customer Success Summit</li>
+              <li><script>document.writeln(date3.substring(0,10));</script> : Macbook Air Giveaway</li>
+            </ul>
+         </td>
+         
+         <td>
+            <ul>
+               <li>Product X : The latest in our classic line.</li>
+               <li>Product Y : Our premium product.</li>
+               <li>Product Z : An alternative to our classic product.</li>
+            </ul>
+         </td>
+      </tr>   
+   
+   </table>
+   
+   -->
+<apex:form >   
+   <!-- This section shows the customer's registered products in a table -->
+    <apex:pageBlock title="My Registered Products">
+      <apex:pageBlockTable value="{!MyRegisteredProducts}" var="currentProduct" id="productTable">
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Name" action="{!SortProducts}" rerender="productTable">
+                     <apex:param name="sortField1" value="Name" assignTo="{!sortField1}"/>
+                 </apex:commandLink>
+            </apex:facet>
+            <a href="/{!currentProduct.id}" target="_top">{!currentProduct.Name}</a>
+         </apex:column>
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Serial Number" action="{!SortProducts}" rerender="productTable">
+                     <apex:param name="sortField1" value="SerialNumber" assignTo="{!sortField1}"/>
+                 </apex:commandLink>
+            </apex:facet>
+            <a href="/{!currentProduct.id}" target="_top">{!currentProduct.SerialNumber}</a>
+         </apex:column> 
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Install Date" action="{!SortProducts}" rerender="productTable">
+                     <apex:param name="sortField1" value="InstallDate" assignTo="{!sortField1}"/>
+                 </apex:commandLink>
+            </apex:facet>
+            <apex:outputField value="{!currentProduct.InstallDate}" />
+         </apex:column>
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Usage End Date" action="{!SortProducts}" rerender="productTable">
+                     <apex:param name="sortField1" value="UsageEndDate" assignTo="{!sortField1}"/>
+                 </apex:commandLink>
+            </apex:facet>
+         <apex:outputField value="{!currentProduct.UsageEndDate}" />
+         </apex:column>
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Status" action="{!SortProducts}" rerender="productTable">
+                     <apex:param name="sortField1" value="Status" assignTo="{!sortField1}"/>
+                 </apex:commandLink>
+            </apex:facet>
+         <apex:outputField value="{!currentProduct.Status}" />
+         </apex:column>
+      </apex:pageBlockTable>
+   </apex:pageBlock>
+  
+   <!-- This section shows the customer's recent cases in a table -->
+    <apex:pageBlock title="My Recent Cases">
+      <apex:pageBlockTable value="{!MyRecentCases}" var="currentCase" id="caseTable">
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Case Number" action="{!SortCases}" rerender="caseTable">
+                     <apex:param name="sortField2" value="CaseNumber" assignTo="{!sortField2}"/>
+                 </apex:commandLink>
+            </apex:facet>
+            <a href="/{!currentCase.id}" target="_top">{!currentCase.CaseNumber}</a>
+         </apex:column>
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Subject" action="{!SortCases}" rerender="caseTable">
+                     <apex:param name="sortField2" value="Subject" assignTo="{!sortField2}"/>
+                 </apex:commandLink>
+            </apex:facet>
+            <a href="/{!currentCase.id}" target="_top">{!currentCase.Subject}</a>
+         </apex:column>
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Status" action="{!SortCases}" rerender="caseTable">
+                     <apex:param name="sortField2" value="Status" assignTo="{!sortField2}"/>
+                 </apex:commandLink>
+            </apex:facet>
+            <apex:outputField value="{!currentCase.Status}" />
+         </apex:column> 
+
+      </apex:pageBlockTable>
+   </apex:pageBlock>
+    
+   <!-- This section shows the top solutions in a table -->
+   <apex:pageBlock title="Popular Solutions">
+      <apex:pageBlockTable value="{!TopSolutions}" var="currentSolution" id="solutionTable">
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Solution Name" action="{!SortSolutions}" rerender="solutionTable">
+                     <apex:param name="sortField3" value="SolutionName" assignTo="{!sortField3}"/>
+                 </apex:commandLink>
+            </apex:facet>
+            <a href="/{!currentSolution.id}" target="_top">{!currentSolution.SolutionName}</a>
+         </apex:column>
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Times Used" action="{!SortSolutions}" rerender="solutionTable">
+                     <apex:param name="sortField3" value="TimesUsed" assignTo="{!sortField3}"/>
+                 </apex:commandLink>
+            </apex:facet>
+            <apex:outputField value="{!currentSolution.TimesUsed}" />
+         </apex:column>
+      </apex:pageBlockTable>
+   </apex:pageBlock>
+
+   <!-- This section shows the most popular ideas (uncomment it to show) -->
+   
+    <apex:pageBlock title="Popular Ideas">
+      <apex:pageBlockTable value="{!PopularIdeas}" var="currentIdea" id="ideaTable">
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Idea Name" action="{!SortIdeas}" rerender="ideaTable">
+                     <apex:param name="sortField4" value="Title" assignTo="{!sortField4}"/>
+                 </apex:commandLink>
+            </apex:facet>
+            <a href="/{!currentIdea.id}" target="_top">{!currentIdea.Title}</a>
+         </apex:column>
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Category" action="{!SortIdeas}" rerender="ideaTable">
+                     <apex:param name="sortField4" value="Category" assignTo="{!sortField4}"/>
+                 </apex:commandLink>
+            </apex:facet>         
+            <apex:outputField value="{!currentIdea.Category}" />
+         </apex:column>
+         <apex:column >
+            <apex:facet name="header">
+                 <apex:commandLink value="Votes" action="{!SortIdeas}" rerender="ideaTable">
+                     <apex:param name="sortField4" value="VoteTotal" assignTo="{!sortField4}"/>
+                 </apex:commandLink>
+            </apex:facet>         
+            <apex:outputField value="{!currentIdea.VoteTotal}" />         
+         </apex:column>
+      </apex:pageBlockTable>
+   </apex:pageBlock>
+</apex:form>  
+<style>
+   .welcome_marketingheaderimage {
+        width:30%;
+        padding:10px 0;
+   }
+   body{
+    /*
+        background-color: transparent;
+    */      
+    }
+    #intro {
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .text{
+        font-size: 12px;
+        text-align: top left;
+    }
+    
+    .list .headerRow th, .list .headerRow th a {
+        font-size: 12px;
+    }
+    
+    .list tr.even th, .list tr.odd th, .list tr.even td, .list tr.odd td {
+        font-size: 12px;
+    }
+    
+    .bPageBlock .pbTitle {
+        font-size: 12px;
+    }
+    
+    .bPageBlock .pbHeader { /*Header section*/
+        padding: 4px;
+    }
+    
+/** Uncomment below for Rounded Data Tables on Homepage **/
+    
+    /*
+    .bPageBlock .pbHeader { 
+        padding: 4px;
+        
+            -webkit-border-top-left-radius: 6px;
+            -moz-border-radius-topright: 6px;
+            -webkit-border-top-right-radius: 6px;
+        box-shadow: 0px 2px 6px #ccc;
+        -moz-border-radius-topleft:6px;
+        -moz-border-radius-topright:6px;
+        border-left:1px solid #C1C1C1;
+        border-right:1px solid #C1C1C1;
+        border-top:1px solid #C1C1C1;
+    }
+    .bPageBlock .pbBody {
+        -moz-border-radius-bottomleft:6px;
+        -moz-border-radius-bottomright:6px;
+        background:none repeat scroll 0 0 white;
+        border-bottom:1px solid #C1C1C1;
+        border-left:1px solid #C1C1C1;
+        border-right:1px solid #C1C1C1;
+        background-color:#FFFFFF;
+    }
+    .bPageBlock, .individualPalette .bPageBlock {
+        background:none repeat scroll 0 0 transparent;
+        border:medium none;
+        background-color:#FFFFFF;
+    }
+   */     
+</style>
+</apex:page>

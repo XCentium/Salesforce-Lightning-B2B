@@ -1,0 +1,6 @@
+<!--
+ - Created by brandon.rogers on 3/12/19.
+ -->
+
+<apex:component id="ckz_CO_LLI_ShippingDetails">
+</apex:component>

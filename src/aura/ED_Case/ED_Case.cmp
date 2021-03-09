@@ -1,0 +1,48 @@
+<aura:component extends="c:EinsteinWrapperCard" controller="ED_CaseCT" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <ltng:require styles="/resource/SLDS0120/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <ltng:require scripts="/resource/jquery, /resource/ED_CaseJS" afterScriptsLoaded="{!c.doInit}"	/>
+    
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <div class="slds-grid slds-wrap slds-grid--pull-padded">
+        
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-top--small" style="background-color: rgb(255, 255, 255); ">
+            <div id='csat_container' class="slds-list--horizontal slds-wrap slds-m-horizontal--large" style="margin-bottom:5px">                    
+                <div id='csat' class='slds-item--label ac-sdd-left-col slds-text-heading--large slds-text-color--weak slds-p-left--xx-large font-weight-bold' style="margin-left: -36px; !important; width:36% !important; font-size:1.75rem !important; margin-right:2px"/>
+                <div id='csat_label' class='slds-item--detail ac-sdd-right-col slds-text-title--caps slds-text-color--weak slds-p-left--small slds-p-top--medium' style="width: 50%!important; margin-top: 15px !important;">
+                    Predicted CSAT
+                </div> 
+            </div>
+        </div>  
+    </div>
+    <div class="slds-border--bottom"/>
+    <div class="slds-grid slds-wrap slds-grid--pull-padded  slds-p-vertical--small" style="background-color: rgb(255, 255, 255); ">
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+            <div class='slds-text-heading--medium slds-text-title--caps slds-text-color--weak slds-p-horizontal--medium' style="margin-left:8px">
+                Leading Causes
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+            <div id='leadingCauses' class="slds-list--horizontal slds-wrap slds-m-horizontal--large">
+                <div class='slds-text-body--regular slds-text-color--weak'>
+                    No causes detected
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-border--bottom slds-m-horizontal--medium" />
+    <div class="slds-grid slds-wrap slds-grid--pull-padded  slds-p-vertical--small" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;background-color: rgb(255, 255, 255);">
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+            <div class='slds-text-heading--medium slds-text-title--caps slds-text-color--weak slds-p-horizontal--medium'>
+                How to Improve This
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+            <div id='recommendedImprovements' class="slds-list--horizontal slds-wrap slds-m-horizontal--large" style="width:100%">
+                <div class='slds-text-body--regular slds-text-color--weak'>
+                    No recommendations detected
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

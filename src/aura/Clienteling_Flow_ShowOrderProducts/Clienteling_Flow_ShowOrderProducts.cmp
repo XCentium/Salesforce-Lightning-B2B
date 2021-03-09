@@ -1,0 +1,50 @@
+<aura:component implements="lightning:availableForFlowScreens" controller="ClientellingController" access="global"  >
+	<aura:attribute name="OrderId" type="String" access="global" />
+    <aura:attribute name="Products" type="OrderItem[]" />
+    <aura:attribute name="Order" type="Order[]" />
+    <aura:attribute name="ShowNav" type="Boolean" default="false"/>
+	<aura:attribute name="availableActions" type="String[]" />
+    <aura:registerEvent name="navigateFlowEvent" type="c:navigateFlow"/>
+    <aura:attribute name="AllowRemove" type="Boolean" default="true"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:if isTrue="{!v.ShowNav == true}">
+    	<c:FlowFooter availableActions="{!v.availableActions}" navigateFlowEvent="{!c.handleNavigate}"/>
+    </aura:if>
+    	<aura:iteration items="{!v.Products}" var="prod">
+        	<div class="border margin">
+                <div class="slds-grid slds-gutters padding "> 
+                    <div class="slds-col slds-size_1-of-6">
+                        <span>
+                            <img src="{!prod.Product2.purl__c}" class="prodimg"/>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_3-of-6">
+                        <span>
+                            <h3>{!prod.Product2.Name}</h3>
+                        	<p>{!prod.Product2.Description}</p>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-6">
+                        <span class="slds-text-title--caps slds-line-height--reset">Quantity: {!prod.Quantity}</span><br/>
+                        <span class="slds-text-title--caps slds-line-height--reset">Price:<ui:outputCurrency aura:id="curr" value="{!prod.UnitPrice}" format="$##,##,###,###.00"/></span>
+                    </div>
+                    <aura:if isTrue="{!v.AllowRemove == true}">
+                        <div class="slds-col slds-size_1-of-6 alignRight">
+                            <span class="alignRight"><button class="slds-button slds-button_success" id="{!prod.Product2Id}" aura:id="{!prod.Product2Id}" onclick="{!c.removeProds}">Remove</button></span>
+                        </div>
+                    </aura:if>
+                </div>
+            </div>
+        </aura:iteration>
+    <hr/>
+    <aura:iteration items="{!v.Order}" var="order"> 
+        <div class="alignRight">
+            <div class="padding">
+                <span class="slds-text-title--caps slds-line-height--reset">Order Total<br/>
+                    <ui:outputCurrency aura:id="curr" value="{!order.TotalAmount}" format="$##,##,###,###.00"/>
+                </span>
+            </div>
+        </div>
+    </aura:iteration>
+    
+</aura:component>

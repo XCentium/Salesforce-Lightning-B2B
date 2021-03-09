@@ -1,0 +1,10 @@
+.THIS .slds-path__nav .slds-is-complete .slds-path__title{
+    transform: rotateX(0deg) !important;
+    display: inline-block;
+}
+
+.THIS .slds-path__nav .slds-is-complete .slds-path__stage  {
+        left: 6px;
+    position: relative;
+    display: inline-block;
+}

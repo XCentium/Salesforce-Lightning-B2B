@@ -1,0 +1,30 @@
+.THIS #signature-pad {
+    background-color: #fff;
+}
+
+.THIS.wrapper canvas,.THIS .wrapper canvas{
+	width:90%!important;
+    max-width:90%;
+    border:1px solid #ddd;
+    height:200px;
+}
+.THIS .lab{
+    display:block;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+.THIS.butts {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    margin:10px 0;
+}
+.THIS #save {
+    margin-top: 3%;
+}
+.THIS.wrapper {
+    position: relative;
+    width:100%;
+    margin:20px 0;
+    width:100%;
+}

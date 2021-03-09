@@ -1,0 +1,12 @@
+<design:component >
+	<design:attribute name="toast"
+           label="Toast message on work assignment" 
+           default="true"
+           description="Shows a info only toast message when a unit of work is assigned via omni-channel"
+      />
+    <design:attribute name="animatedIcon"
+                      label="Animated Icon"
+                      default="true"
+                      description="Toggles between animated and static icon, defaults to animated"/>
+    
+</design:component>

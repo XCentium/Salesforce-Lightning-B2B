@@ -1,0 +1,59 @@
+<aura:component >
+    <aura:attribute name="taskLabel" type="String" />
+    <aura:attribute name="taskIcon" type="String" default="standard:activations"/>
+    <aura:attribute name="IconSize" type="String" default="x-small"/>
+    <aura:attribute name="taskDescription" type="String" />
+    <aura:attribute name="taskButton" type="String" />
+    <aura:attribute name="taskStatus" type="String" />
+    <aura:attribute name="taskValue" type="Boolean" default="false"/>
+    <div class="checkboxwrapper"> 
+        <div class="iconwrapper left marginright">
+            <aura:if isTrue="{!v.taskStatus == 'Completed'}">
+                <lightning:icon iconName="action:approval" class="icon" size="xx-small" alternativeText=""/>
+                <aura:set attribute="else">
+                     <lightning:icon iconName="{!v.taskIcon}" class="icon" size="{!v.IconSize}" alternativeText=""/>
+                </aura:set>
+            </aura:if>
+        </div>
+        <div class="textwrapper left marginright taskTitle">
+            <aura:if isTrue="{!v.taskStatus == 'Completed'}">
+                <h3 class="strike"><a href="javascript:void()">{!v.taskLabel}</a></h3>
+                <aura:set attribute="else">
+                    <h3><a href="javascript:void()">{!v.taskLabel}</a></h3>
+                </aura:set>
+            </aura:if>
+        </div>
+        <div class="statusWrapper right">
+        	<em class="SmallText marginright">
+                {!v.taskStatus}
+            </em>
+            <button class="slds-button slds-button_neutral smallpadding" onclick="{!c.action}">
+            	<lightning:icon iconName="utility:down" class="icon" size="x-small" alternativeText=""/>
+            </button>
+        </div>
+        <div class="clear"></div>
+        <div class="desc">
+            <aura:if isTrue="{!v.taskStatus == 'Completed'}">
+                	<div class="strike">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                    	Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+                	</div>
+                <aura:set attribute="else">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+                </aura:set>
+            </aura:if>
+            
+        </div>
+        <div class="right"> 
+            <aura:if isTrue="{!v.taskStatus == 'Completed'}">
+                <aura:set attribute="else">
+                     <button class="slds-button slds-button_neutral normalPadding" onclick="{!c.action}">
+                         View Task
+                    </button>
+                </aura:set>
+            </aura:if>
+        </div>
+         <div class="clear"></div>
+    </div>
+</aura:component>

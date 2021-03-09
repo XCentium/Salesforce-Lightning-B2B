@@ -1,0 +1,5 @@
+<apex:page >
+  # go away
+User-agent: *
+Disallow: /
+</apex:page>

@@ -1,0 +1,6 @@
+<aura:component controller="ChatPopController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global"  >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="caseId" type="String" />
+    <lightning:workspaceAPI aura:id="workspace" />
+    <aura:handler name="init" action="{!c.openTabWithSubtab}" value="{!this}"/>
+</aura:component>

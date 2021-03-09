@@ -1,0 +1,140 @@
+<apex:component id="ckz_SaveCartInclude" controller="ckz_ctrl_SaveCartInclude">
+
+    <div id="ckz-section-saveCart"></div>
+
+    <!-- 2020/01/31
+            BROGERS: Added -->
+
+    <!-- Save Cart Modal -->
+    <script type="text/x-handlebars-template" id="ckzSaveCartModalTemplate">
+        <div class="modal fade" id="ckzSaveCartModal" tabindex="-1" role="dialog" aria-labelledby="ckzSaveCartModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="ckzSaveCartModalLabel">{{pageLabelMap 'SaveCart_Title'}}</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="ckzSaveCartName">{{pageLabelMap 'SaveCart_Name'}}</label>
+                                <input type="text" class="form-control" id="ckzSaveCartName" placeholder="{{pageLabelMap 'SaveCart_Name'}}" maxlength="255"/>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{pageLabelMap 'SaveCart_DialogButtonCancel'}}</button>
+                        <button type="button" class="btn btn-primary" id="ckzSaveCartBtn">{{pageLabelMap 'SaveCart_DialogButtonSave'}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+
+        jQuery(function ($) {
+
+            var saveCartBtnEnabled = true;
+
+            if (CCRZ.pagevars.pageConfig["c.savecartbtn"]) {
+                if (CCRZ.pagevars.pageConfig["c.savecartbtn"] == "FALSE") {
+                    saveCartBtnEnabled = false;
+                }
+                else {
+                    saveCartBtnEnabled = true;
+                }
+            }
+
+            if (saveCartBtnEnabled == false) {
+                return false;
+            }
+
+            CCRZ.subsc = _.extend(CCRZ.subsc || {});
+
+            CCRZ.subsc.cartRemoteActions = _.extend({
+                className: 'ckz_ctrl_SaveCartInclude',
+                saveCart: function (cartId, cartName, callback) {
+                    this.className = 'ckz_ctrl_SaveCartInclude',
+                    this.invokeContainerLoadingCtx($('.deskLayout'), 'saveCart', cartId, cartName,
+                        function (resp) {
+                            callback(resp);
+                        }, {
+                            buffer: false, // this call will be executed by itself
+                            nmsp: false // defines that this is a call to a subscriber class
+                        }); // end invokeCtx call
+                }
+            }, (CCRZ.subsc.cartRemoteActions || CCRZ.RemoteInvocation));
+
+            CCRZ.pubSub.on('view:CartDetailView:refresh', function (cartDetailView) {
+
+                /* 2020/01/31
+                *   BROGERS: Added */
+                //RENDER SAVE CART MODAL
+                let context = {};
+                let saveCartSource = $("#ckzSaveCartModalTemplate").html();
+                let saveCartTemplate = Handlebars.compile(saveCartSource);
+                let saveCartContext = context;
+                let saveCartHTML = saveCartTemplate(saveCartContext);
+                //$("#ckz-section-saveCart").html(saveCartHTML);
+                $(".cartContainer").append(saveCartHTML);
+
+                // dynamically add button
+
+                var buttonLabel = CCRZ.processPageLabelMap('SaveCart_ButtonSave').string;;
+
+                var cartActionTotalsDiv = $('.cc_action_totals');
+
+                var btn = '<button class="btn btn-default btn-sm btn-block" id="saveCartModalBtn" type="button">' + buttonLabel + '</button>';
+
+                cartActionTotalsDiv.append(btn);
+
+                // OPEN DIALOG HERE
+                cartDetailView.triggerModalAction = function (event) {
+                    $('#ckzSaveCartModal').modal('show');
+                };
+
+                cartDetailView.saveCartAction = function (event) {
+
+                    $('#ckzSaveCartModal').modal('hide');
+
+                    var cartAttrs = CCRZ.cartDetailView.model.attributes;
+
+                    var cartId = CCRZ.cartDetailView.model.attributes.sfid;
+
+                    // get cart name provided by the user
+
+                    var cartName = $('#ckzSaveCartName').val();
+
+                    CCRZ.subsc.cartRemoteActions.saveCart(cartId, cartName, function (resp) {
+
+                        CCRZ.pubSub.trigger('pageMessage', resp);
+
+                        if (resp && resp.success) {
+                            $('.saveCartBtn').prop('disabled', true);
+
+                            CCRZ.pagevars.currentCartID = '';
+                            CCRZ.pagevars.remoteContext.currentCartId = '';
+                            CCRZ.headerView.update();
+
+                            var data = resp.data;
+                            var cartEncrId = data.cartEncrId;
+
+                            window.location = 'ccrz__HomePage?cartId=' + cartEncrId;
+                        }
+                    });
+                };
+
+                cartDetailView.events['click #saveCartModalBtn'] = 'triggerModalAction';
+                cartDetailView.events['click #ckzSaveCartBtn'] = 'saveCartAction';
+
+                cartDetailView.delegateEvents();
+            });
+        });
+
+    </script>
+
+</apex:component>

@@ -1,0 +1,136 @@
+<apex:page showHeader="False" sidebar="false" contentType="text/html" Controller="SlickCtiController">
+<head>
+    <apex:include pageName="SlickCTI_CSS"/>
+    <script src="/support/console/29.0/integration.js" type="text/javascript"></script>     
+    <script type="text/javascript" src="/support/api/29.0/interaction.js"></script>    
+    <script src="{!$Resource.SlickCTI_jQuery}"></script>
+    <script src="{!$Resource.SlickCTI_iCanHaz}"></script>
+    <script src="{!$Resource.SlickCTI_js}"></script> 
+	<script src="{!$Resource.SlickCTI_MomentJS}"></script>
+    <script>
+    //Initialize multilingual library with user language
+    	moment.locale('{!getUserLocale}');
+    //Initialize CallTypes used within SlickCTI_js
+    	var localizedCallType={'Inbound':'{!$label.SlickCTI_InboundCall}','Outbound':'{!$label.SlickCTI_OutboundCall}','Internal':'{!$label.SlickCTI_Internal}'}
+    	var emptyNotes='{!$label.SlickCTI_EmptyNotes}';
+    //Set this var to true if you want transfer to automagically close everything down (except the tab itself) ie: end the call.
+    	var transferEndCall=false;
+        </script>     
+</head>
+<body>
+
+    <audio id="inboundRingSound">  
+        <source src="{!URLFOR($Resource.SlickCTI_InboundRing, 'SlickCTI_InboundRing.mp3')}" type="audio/mp3"/>    
+        <source src="{!URLFOR($Resource.SlickCTI_InboundRing, 'SlickCTI_InboundRing.ogg')}" type="audio/ogg"/>
+    </audio>
+    
+    <audio id="outboundRingSound">
+        <source src="{!URLFOR($Resource.SlickCTI_Outbound, 'SlickCTI_Outbound.mp3')}" type="audio/mp3"/>    
+        <source src="{!URLFOR($Resource.SlickCTI_Outbound, 'SlickCTI_Outbound.ogg')}" type="audio/ogg"/>
+    </audio>
+
+
+    <script type="text/javascript">           
+        var outboundAudio = document.getElementById("outboundRingSound");
+        var phoneRingAudio = document.getElementById("inboundRingSound");
+    </script>
+
+
+    <div id="wrapper">
+ 
+            <img src="{!$Resource.SlickCTI_Logo}"/>    
+            <img src="{!$Resource.SlickCTI_Volume}" class="volume"/>    
+            <div class="dialbox"></div>
+    
+            <div class="button callButtons">
+                <div id="callButtons" class="popButton">
+                    <img src="{!$Resource.SlickCTI_DialPhone}"/>
+                </div>
+                <div id="hangUpBtn" hidden="true">
+                    <img src="{!$Resource.SlickCTI_HangUp}"/>
+                    <div id="hangupSpacer"></div>
+                </div>              
+            </div>
+
+            <div id="transferBtn" class="button callButtons" hidden="true" style="display:none;">
+                <img src="{!$Resource.SlickCTI_Transfer}"/>
+                <div id="hangupSpacer"></div>
+            </div>              
+
+        <div id="dialPad"> 
+            <ul>      
+                <li id="button1" class="button popButton"><h1>1</h1><h2>&nbsp;</h2></li>
+                <li id="button2" class="button popButton"><h1>2</h1><h2>ABC</h2></li>
+                <li id="button3" class="button popButton"><h1>3</h1><h2>DEF</h2></li>
+            </ul>
+            <ul>
+                <li id="button4" class="button popButton"><h1>4</h1><h2>GHI</h2></li>
+                <li id="button5" class="button popButton"><h1>5</h1><h2>JKL</h2></li>
+                <li id="button6" class="button popButton"><h1>6</h1><h2>MNO</h2></li>
+            </ul>
+            <ul>            
+                <li id="button7" class="button popButton"><h1>7</h1><h2>PQRS</h2></li>
+                <li id="button8" class="button popButton"><h1>8</h1><h2>TUV</h2></li>
+                <li id="button9" class="button popButton"><h1>9</h1><h2>WXYZ</h2></li>
+            </ul>
+            <ul>            
+                <li id="pickupTransfer" class="button"><h1>*</h1><h2>&nbsp;</h2></li>
+                <li class="button"><h1>0</h1><h2>&nbsp;</h2></li>
+                <li class="button"><h1>#</h1><h2>&nbsp;</h2></li>
+            </ul>
+            <div class="styled-select">
+                <select name="status">
+                  <option value="Available">{!$label.SlickCTI_AvailableForCalls}</option>
+                  <option value="NotAvailable">{!$label.SlickCTI_NotAvailable}</option>
+                  <option value="Wrapup">{!$label.SlickCTI_CallWrapup}</option>
+                </select>
+            </div>        
+        </div>
+        
+        <div id="callNotes" hidden="true">  
+            <div class="notesSection">
+                <textarea id="callNotesField" class="callNoteBlock emptyNotes">{!$label.SlickCTI_EmptyNotes}</textarea>
+                <div class="styled-select">
+                <select id="callDisposition">
+                    <option value="Voicemail">{!$label.SlickCTI_LeftVoicemail}</option>
+                    <option value="Connect">{!$label.SlickCTI_CallConnect}</option>
+                    <option value="NoAnswer">{!$label.SlickCTI_NoAnswer}</option>
+                </select>
+                </div>               
+            </div>
+        </div>
+    </div>      
+        
+             
+    <!-- HTML Templates for displaying Contact/Lead fields in DialBox -->
+    <!-- Templates are dynamically generated at run time based on Field Sets SLICK_CTI_CONTACT and SLICK_CTI_LEAD -->    
+    <script id="contactTemplate" type="text/html">        
+            <apex:repeat value="{!ContactFieldSet}" var="contactFs">
+                <div>{{& recordObject.{!contactFs.fieldPath} }}</div>
+            </apex:repeat>
+            <span id="elapsed" class="timer"></span>        
+    </script>
+    
+    <script id="leadTemplate" type="text/html">        
+            <apex:repeat value="{!LeadFieldSet}" var="leadFs">
+                <div>{{& recordObject.{!leadFs.fieldPath} }}</div>            
+            </apex:repeat>        
+            <span id="elapsed" class="timer"></span>
+    </script>
+    
+    <script id="accountTemplate" type="text/html">        
+            <apex:repeat value="{!AccountFieldSet}" var="accountFs">
+                <div>{{& recordObject.{!accountFs.fieldPath} }}</div>
+            </apex:repeat>
+            <span id="elapsed" class="timer"></span>        
+    </script>    
+
+    <script id="caseTemplate" type="text/html">        
+            <apex:repeat value="{!caseFieldSet}" var="caseFs">
+                <div>{{& recordObject.{!caseFs.fieldPath} }}</div>
+            </apex:repeat>
+            <span id="elapsed" class="timer"></span>        
+    </script>     
+    
+</body>
+</apex:page>

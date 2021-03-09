@@ -1,0 +1,10 @@
+<design:component>
+    <design:attribute name="objectField" label="Field Name" description="Name of the field you want to use for setting the Tab label - make sure this is the 'Name' field and not the 'Label'. Must be a field on the current record." />
+	<design:attribute name="useContact" label="Use Contact or Account as priority" description="Checking this will prioritize the associated Contact or Account as the label over the field value entered above" />
+    <sfdc:objects>
+        <sfdc:object>Case</sfdc:object>
+        <sfdc:object>LiveChatTranscript</sfdc:object>
+        <sfdc:object>MessagingSession</sfdc:object>
+        <sfdc:object>WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

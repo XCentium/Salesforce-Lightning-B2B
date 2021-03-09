@@ -1,0 +1,10 @@
+<aura:component>
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+        <div class="fixedHeader" style="{!'background-color:' + setting.Logo_Background_Color__c + ';' }">
+            <div class="padding">
+            	<img src="{!'/resource/' + setting.App_Logo__c}" class="imgmaxwidth logo"/> 
+            </div>
+        </div>
+    </aura:iteration>    
+</aura:component>

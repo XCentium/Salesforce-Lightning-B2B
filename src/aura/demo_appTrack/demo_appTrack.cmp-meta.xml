@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuraDefinitionBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>49.0</apiVersion>
+    <description>PLEASE DO NOT REMOVE
+This component helps Q Branch understand how demos are used so we can better invest our resources.  No personal information is used.</description>
+</AuraDefinitionBundle>

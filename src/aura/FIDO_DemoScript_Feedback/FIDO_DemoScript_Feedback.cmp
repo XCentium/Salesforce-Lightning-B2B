@@ -1,0 +1,41 @@
+<aura:component controller="FIDO" >
+    <aura:attribute name="unlikeDescription" type="String" />    
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="owneremail" type="String" />
+    <aura:attribute name="title" type="String"  />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="options" type="List" default="[
+                                                        {'label': 'Outdated', 'value': 'Outdated'},
+                                                        {'label': 'Does not Work', 'value': 'Does not Work'},
+                                                        {'label': 'Lacks Key Features', 'value': 'Lacks Key Features'},
+                                                        {'label': 'Poorly Written', 'value': 'Poorly Written'},
+                                                        {'label': 'Other', 'value': 'Other'}
+                                                        ]"/>
+    <aura:attribute name="value" type="String" />
+    <div aura:id="feedback">
+        <lightning:card title="How can we improve this content?">
+            <center><lightning:spinner variant="brand" size="small" aura:id="spinner" class="slds-hide"/></center>
+            <p class="slds-p-horizontal_medium">
+                Tell us how it could be more helpful.
+                <lightning:combobox name="comboGroup" label="Choose a general reason:" value="{! v.value }" placeholder="Select reason" options="{! v.options }" />
+                <br></br>
+                <lightning:textarea name="myTextArea" value="{!v.unlikeDescription}" label="Description" />
+                <br></br>
+                <center>
+                    <lightning:button variant="brand" label="Submit" onclick="{! c.handleClick }" />
+                </center>
+            </p>
+        </lightning:card>        
+    </div>
+    <div aura:id="Thankyou" class="slds-hide">
+        <lightning:card title="">
+            <center><lightning:spinner variant="brand" size="small" aura:id="spinner" class="slds-hide"/></center>
+            <p class="slds-p-horizontal_medium">
+                <div class="padding center">
+                    <img src="/resource/DemoConfigurator/assets/images/ScriptIcon.png" class="alldone"/>
+                    <h1 class="largeh1">Feedback Sent!</h1>
+                </div>  
+            </p>
+        </lightning:card>
+    </div>
+</aura:component>

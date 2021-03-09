@@ -1,0 +1,38 @@
+.THIS .logoSize{
+    max-width:50%;
+    width:200px;
+    height:auto;
+}
+.THIS .padding{
+    padding:20px;
+}
+.THIS.box,.THIS .box{
+    display:block;
+    width:100%;
+    border-radius:5px;
+}
+.THIS .logowrapper{
+    width:30%;
+    float:left;
+    margin-right:4%;
+}
+.THIS .headerSearch{
+    width:55%;
+    float:right;
+    margin-top:-10px;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    top: 0px;
+}
+
+.THIS .clear{
+    clear:both;
+}
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px)  { 
+    .THIS .headerSearch{
+        top: -15px;
+    }
+}

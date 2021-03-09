@@ -1,0 +1,371 @@
+<aura:component access="global"  implements="force:appHostable,lightning:isUrlAddressable" controller="FIDO">
+    <aura:attribute name="Industry" type="String" default=''/> 
+    <aura:attribute name="IndustryName" type="String" default=''/>
+    <aura:attribute name="SearchPhrase" type="String" default='' /> 
+    <aura:attribute name="SearchType" type="String" default='This Page' /> 
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Org" type="String[]" />
+    <aura:attribute name="ScreenChoice" type="String" default='Home'/>
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="ShowFilter" type="String" default='false'/>
+    <aura:attribute name="MenuOpenClose" type="String" default='close'/>
+    <aura:attribute name="HideSetupPage" type="String" default='false'/>
+    
+    <aura:attribute name="CompetedTotal" type="Integer" default="0" />
+    <aura:attribute name="CompetedTotalPercent" type="Integer"  default="0"/>
+    <aura:attribute name="ComponentTitle" type="String" default="Getting to know the IDO" />
+    <aura:attribute name="OrgId" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="appLogo" type="String" />
+    <aura:attribute name="industryHeader" type="String" />
+    <aura:attribute name="Filter" type="String" default=""/>
+    <aura:attribute name="Type" type="string" />
+    <aura:attribute name="Loaded" type="boolean" default="false"/>
+    
+    <aura:attribute name="UpdateFilter" type="Boolean" default='true'/>
+    <aura:attribute name="PersonaFilter" type="Boolean" default='true'/>
+    <aura:attribute name="BrandFilter" type="Boolean" default='true'/>
+    <aura:attribute name="ScriptFilter" type="Boolean" default='true'/>
+    <aura:attribute name="FeatureFilter" type="Boolean" default='true'/>
+    <aura:attribute name="CustomizationsFilter" type="Boolean" default='true'/>
+    <aura:attribute name="PartnerFilter" type="Boolean" default='true'/>
+    <aura:attribute name="VideoFilter" type="Boolean" default='true'/>
+    <aura:attribute name="ResourceFilter" type="Boolean" default='true'/>
+    
+    <aura:handler name="change" value="{!v.Industry}" action="{!c.updateSettings}"/>
+    <aura:handler name="change" value="{!v.SearchType}" action="{!c.GlobalSearch}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <lightning:spinner aura:id="Spinner" alternativeText="Loading" size="medium" variant="brand" class="slds-hide"/>
+    <aura:if isTrue="{!and(v.setname != '', v.setname != null)}">
+        <div class="fullwidthWrapper">
+            <div class="padding80">
+                <div class="center">
+                    <h1>Unable to Identify this Org.</h1>
+                    <p>Please Contact Jesse Chase.</p>
+                </div>
+            </div>
+        </div>
+        <aura:set attribute="else">
+            <div class="fullwidthWrapper">
+                <div class="TopHeader relative">
+                    <div class="padding ">
+                        <div class="logo">
+                            <div class="padding">
+                                <aura:if isTrue="{!v.Industry != ''}">
+                                    <div class="floatleft">
+                                        <div class="industryback">
+                                            <button class="slds-button filterpadding" onclick="{!c.ChangeIndustry}">
+                                                <lightning:icon iconName="utility:change_record_type" size="xx-small"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </aura:if>
+                                <div class="floatleft">
+                                    <div class="">
+                                        <aura:if isTrue="{!and(v.appLogo != '', v.appLogo != null )}">
+                                            <img src="{!v.appLogo}" alt="Q Industries" class="logosmall logoimg" />
+                                            <aura:set attribute="else">
+                                                <img src="https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/q-industries.png" alt="Q Industries" class="logosmall logoimg" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </div>
+                                <aura:if isTrue="{!v.Industry != ''}">
+                                    <div class="floatleft industryName">| {!v.IndustryName}</div>
+                                </aura:if>    
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="Brand">
+                            <div class="padding relative">
+                                <aura:if isTrue="{!or(v.ScreenChoice == 'Home',v.ScreenChoice == 'Welcome')}">
+                                    <h1 class="apptitle">Get to Know YOUR Demo Org</h1>
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!v.ScreenChoice != 'Search'}">
+                                            <h1 class="apptitle">Get to Know YOUR <span class="titleem">{!v.ScreenChoice}</span> 
+                                                <aura:if isTrue="{!and(v.ScreenChoice != 'Home',v.ScreenChoice != 'Industry')}">
+                                                    <button class="slds-button marginleftright5 inlineshare" onclick="{!c.ShareableURL}">
+                                                        <lightning:icon iconName="utility:share" size="x-small"/>  
+                                                    </button> 
+                                                </aura:if>
+                                            </h1>
+                                            <aura:set attribute="else">
+                                                <h1 class="apptitle">Search Get to Know YOUR Demo Org</h1>
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                                
+                            </div>
+                        </div>
+                        <div class="Search">
+                            <aura:if isTrue="{!and(v.Industry != '',v.ScreenChoice != 'Welcome')}">   
+                                <aura:if isTrue="{!and(v.ScreenChoice != 'Welcome',v.ScreenChoice != 'Search')}">  
+                                    <aura:if isTrue="{!and(v.ScreenChoice != 'Brand',v.recid == '')}"> 
+                                        <lightning:buttonMenu label="{!v.SearchType}" aura:id="menu" class="partnerMenu FilterMenu searchfilter" onselect="{! c.searchSelect }" >
+                                            <lightning:menuItem value="All" label="All"  />
+                                            <lightning:menuItem value="{!v.ScreenChoice}" label="This Page"  />
+                                        </lightning:buttonMenu>
+                                    </aura:if>
+                                </aura:if>
+                                <ui:inputText label="" class="searchbox" value="{!v.SearchPhrase}" updateOn="change" placeholder="Search" />
+                                <button class="slds-button slds-button_neutral searchbtn" onclick="{!c.GlobalSearch}">
+                                    <lightning:icon iconName="utility:search" size="xx-small"/>
+                                </button> 
+                            </aura:if>
+                        </div>
+                        <div class="mobileMenu">
+                            <lightning:buttonMenu menuAlignment="right" iconName="utility:list"  aura:id="menu" class="FilterMenu" onselect="{! c.MobileNavSelect }"   iconSize="medium" alternativeText="Show menu">
+                                <lightning:menuItem value="Welcome" label="Welcome"  />
+                                <lightning:menuItem value="Updates" label="Updates"  />
+                                <lightning:menuItem value="Brand" label="Brand"  />
+                                <lightning:menuItem value="Personas" label="Personas"  />
+                                <lightning:menuItem value="Scripts" label="Scripts"  />
+                                <lightning:menuItem value="Partners" label="Partners"  />
+                                <lightning:menuItem value="Features" label="Features"  />
+                                <lightning:menuItem value="Customizations" label="Customizations"  />
+                                <lightning:menuItem value="Videos" label="Videos"  />
+                                <lightning:menuItem value="Resources" label="Resources"  />
+                            </lightning:buttonMenu>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.Industry != ''}">
+                    <div class="contentWrapper">
+                        <div class="SidebarArea relative">
+                            <div class="">
+                                <div class="navset">
+                                    <aura:iteration items="{!v.Settings}" var="setting">
+                                        <ul>
+                                            <aura:if isTrue="{!setting.hide_welcome_page__c  != true}">
+                                                <li>
+                                                    <aura:if isTrue="{!v.ScreenChoice == 'Welcome'}">
+                                                        <button class="slds-button navItem NavItemSelected" onclick="{!c.setPage}" aura:id="Welcome" id="Welcome">
+                                                            <lightning:icon iconName="standard:home" size="xx-small"/>
+                                                            Welcome
+                                                        </button>
+                                                        <aura:set attribute="else">
+                                                            <button class="slds-button navItem" onclick="{!c.setPage}" aura:id="Welcome" id="Welcome">
+                                                                <lightning:icon iconName="standard:home" size="xx-small"/>
+                                                                Welcome
+                                                            </button>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </li>
+                                            </aura:if>
+                                            <aura:if isTrue="{!setting.hide_news_page__c  != true}">
+                                                <li>	    
+                                                    <aura:if isTrue="{!v.ScreenChoice == 'Updates'}">
+                                                        <button class="slds-button navItem NavItemSelected" onclick="{!c.setPage}" aura:id="Updates" id="Updates">
+                                                            <lightning:icon iconName="standard:announcement" size="xx-small"/>
+                                                            Updates
+                                                        </button>
+                                                        <aura:set attribute="else">
+                                                            <button class="slds-button navItem" onclick="{!c.setPage}" aura:id="Updates" id="Updates">
+                                                                <lightning:icon iconName="standard:announcement" size="xx-small"/>
+                                                                Updates
+                                                            </button>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </li>    
+                                            </aura:if>
+                                            <li>
+                                                <aura:if isTrue="{!v.ScreenChoice == 'Brand'}">
+                                                    <button class="slds-button navItem NavItemSelected" onclick="{!c.setPage}" aura:id="Brand" id="Brand">
+                                                        <lightning:icon iconName="utility:identity" size="xx-small"/>
+                                                        Brand
+                                                    </button>
+                                                    <aura:set attribute="else">
+                                                        <button class="slds-button navItem" onclick="{!c.setPage}" aura:id="Brand" id="Brand">
+                                                            <lightning:icon iconName="utility:identity" size="xx-small"/>
+                                                            Brand
+                                                        </button>
+                                                    </aura:set>
+                                                </aura:if>
+                                            </li>
+                                            <li>
+                                                <aura:if isTrue="{!v.ScreenChoice == 'Scripts'}">
+                                                    <button class="slds-button navItem NavItemSelected" onclick="{!c.setPage}" aura:id="Scripts" id="Scripts">
+                                                        <lightning:icon iconName="standard:reward" size="xx-small"/>
+                                                        Scripts
+                                                    </button>
+                                                    <aura:set attribute="else">
+                                                        <button class="slds-button navItem" onclick="{!c.setPage}" aura:id="Scripts" id="Scripts">
+                                                            <lightning:icon iconName="standard:reward" size="xx-small"/>
+                                                            Scripts
+                                                        </button>
+                                                    </aura:set>
+                                                </aura:if>
+                                            </li>
+                                            <aura:if isTrue="{!setting.hide_feature_compare__c != true}">
+                                                <li>	    
+                                                    <aura:if isTrue="{!v.ScreenChoice == 'Features'}">
+                                                        <button class="slds-button navItem NavItemSelected" onclick="{!c.setPage}" aura:id="Features" id="Features">
+                                                            <lightning:icon iconName="standard:resource_preference" size="xx-small"/>
+                                                            Features
+                                                        </button>
+                                                        <aura:set attribute="else">
+                                                            <button class="slds-button navItem" onclick="{!c.setPage}" aura:id="Features" id="Features">
+                                                                <lightning:icon iconName="standard:resource_preference" size="xx-small"/>
+                                                                Features
+                                                            </button>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </li>    
+                                            </aura:if>
+                                            <aura:if isTrue="{!setting.hide_customizations_page__c != true}">
+                                                <li>
+                                                    <aura:if isTrue="{!v.ScreenChoice == 'Customizations'}">
+                                                        <button class="slds-button navItem NavItemSelected" onclick="{!c.setPage}" aura:id="Customizations" id="Customizations">
+                                                            <lightning:icon iconName="standard:code_playground" size="xx-small"/>
+                                                            Customizations
+                                                        </button>
+                                                        <aura:set attribute="else">
+                                                            <button class="slds-button navItem" onclick="{!c.setPage}" aura:id="Customizations" id="Customizations">
+                                                                <lightning:icon iconName="standard:code_playground" size="xx-small"/>
+                                                                Customizations
+                                                            </button>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </li>
+                                            </aura:if>
+                                            <aura:if isTrue="{!setting.hide_partners_page__c != true}">
+                                                <li>
+                                                    <aura:if isTrue="{!v.ScreenChoice == 'Partners'}">
+                                                        <button class="slds-button navItem NavItemSelected" onclick="{!c.setPage}" aura:id="Partners" id="Partners">
+                                                            <lightning:icon iconName="standard:partners" size="xx-small"/>
+                                                            Partners
+                                                        </button>
+                                                        <aura:set attribute="else">
+                                                            <button class="slds-button navItem" onclick="{!c.setPage}" aura:id="Partners" id="Partners">
+                                                                <lightning:icon iconName="standard:partners" size="xx-small"/>
+                                                                Partners
+                                                            </button>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </li>
+                                            </aura:if>
+                                            <aura:if isTrue="{!setting.hide_videos_page__c != true}">
+                                                <li>
+                                                    <aura:if isTrue="{!v.ScreenChoice == 'Videos'}">
+                                                        <button class="slds-button navItem NavItemSelected" onclick="{!c.setPage}" aura:id="Videos" id="Videos">
+                                                            <lightning:icon iconName="standard:screen" size="xx-small"/>
+                                                            Videos
+                                                        </button>
+                                                        <aura:set attribute="else">
+                                                            <button class="slds-button navItem" onclick="{!c.setPage}" aura:id="Videos" id="Videos">
+                                                                <lightning:icon iconName="standard:screen" size="xx-small"/>
+                                                                Videos
+                                                            </button>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </li>
+                                            </aura:if>
+                                            <aura:if isTrue="{!setting.hide_resources_page__c != true}">
+                                                <li>
+                                                    <aura:if isTrue="{!v.ScreenChoice == 'Resources'}">
+                                                        <button class="slds-button navItem NavItemSelected" onclick="{!c.setPage}" aura:id="Resources" id="Resources">
+                                                            <lightning:icon iconName="standard:resource_capacity" size="xx-small"/>
+                                                            Resources
+                                                        </button>
+                                                        <aura:set attribute="else">
+                                                            <button class="slds-button navItem" onclick="{!c.setPage}" aura:id="Resources" id="Resources">
+                                                                <lightning:icon iconName="standard:resource_capacity" size="xx-small"/>
+                                                                Resources
+                                                            </button>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </li>
+                                            </aura:if>
+                                        </ul>
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ContentArea">
+                            <aura:if isTrue="{!or(v.recid == '',v.recid == NULL)}">
+                                <aura:if isTrue="{!v.ScreenChoice != 'Industry'}">
+                                    <aura:if isTrue="{!and(v.ScreenChoice != 'Welcome',v.ScreenChoice != 'Brand')}">
+                                        <c:FIDO_Filters PersonaFilter="{!v.PersonaFilter}" UpdateFilter="{!v.UpdateFilter}" BrandFilter="{!v.BrandFilter}" ScriptFilter="{!v.ScriptFilter}" FeatureFilter="{!v.FeatureFilter}" CustomizationsFilter="{!v.CustomizationsFilter}" PartnerFilter="{!v.PartnerFilter}" VideoFilter="{!v.VideoFilter}" ResourceFilter="{!v.ResourceFilter}" OrgName="{!v.OrgName}" recid="{!v.recid}" Industry="{!v.Industry}" ScreenChoice="{!v.ScreenChoice}" Filter="{!v.Filter}" />
+                                    </aura:if>
+                                </aura:if>
+                            </aura:if>
+                            <div class="paddingleftright relative">
+                                <aura:if isTrue="{!v.ScreenChoice != 'Search'}">
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Industry'}">
+                                        <c:FIDO_Industry industryHeader="{!v.industryHeader}" IndustryName="{!v.IndustryName}" Loaded="{!v.Loaded}" OrgId="{!v.OrgId}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Welcome'}">
+                                        <c:FIDO_Landing  recid="{!v.recid}" SearchPhrase="{!v.SearchPhrase}" IndustryName="{!v.IndustryName}" Settings="{!v.Settings}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" OrgId="{!v.OrgId}" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Updates'}">
+                                        <c:FIDO_Announcements SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" OrgId="{!v.OrgId}" OrgName="{!v.OrgName}"/>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Features'}">
+                                        <c:FIDO_FeatureCompare  SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" OrgId="{!v.OrgId}" Industry="{!v.Industry}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Brand'}">
+                                        <c:FIDO_Brand OrgName="{!v.OrgName}" SearchPhrase="{!v.SearchPhrase}" Filter="{!v.Filter}" recid="{!v.recid}" SearchType="{!v.SearchType}" OrgId="{!v.OrgId}" MenuOpenClose="{!v.MenuOpenClose}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" Settings="{!v.Settings}"/>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Scripts'}">
+                                        <c:FIDO_Solutions SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" Filter="{!v.Filter}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" Settings="{!v.Settings}" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Partners'}">
+                                        <c:FIDO_Partners SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" Filter="{!v.Filter}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Personas'}">
+                                        <c:FIDO_Personas SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" Filter="{!v.Filter}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Customizations'}">
+                                        <c:FIDO_Features SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" ScreenChoice="{!v.ScreenChoice}" Filter="{!v.Filter}" recid="{!v.recid}" MenuOpenClose="{!v.MenuOpenClose}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" Settings="{!v.Settings}"/>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Videos'}">
+                                        <c:FIDO_Videos SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" Filter="{!v.Filter}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" Settings="{!v.Settings}"/>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.ScreenChoice == 'Resources'}">
+                                        <c:FIDO_Resources SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" Settings="{!v.Settings}"/>
+                                    </aura:if>
+                                    <aura:set attribute="else">
+                                        <c:FIDO_Search PersonaFilter="{!v.PersonaFilter}" UpdateFilter="{!v.UpdateFilter}" BrandFilter="{!v.BrandFilter}" ScriptFilter="{!v.ScriptFilter}" FeatureFilter="{!v.FeatureFilter}" CustomizationsFilter="{!v.CustomizationsFilter}" PartnerFilter="{!v.PartnerFilter}" VideoFilter="{!v.VideoFilter}" ResourceFilter="{!v.ResourceFilter}" Industry="{!v.Industry}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" SearchPhrase="{!v.SearchPhrase}" OrgId="{!v.OrgId}" />
+                                    </aura:set>
+                                </aura:if>
+                                <div class="spacer80px"></div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <aura:set attribute="else">
+                        <c:FIDO_Industry IndustryName="{!v.IndustryName}" Loaded="{!v.Loaded}" OrgId="{!v.OrgId}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" ComponentTitle="{!v.ComponentTitle}" />
+                    </aura:set>
+                </aura:if>
+            </div>
+        </aura:set>
+    </aura:if>
+    <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+    <section role="dialog" aura:id="ShareModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Share Content</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="padding">
+                    <div class="padding center">
+                        <h3 class="borderbottom">Share these instructions</h3>
+                        <div class="paddingtopbottom">
+                            To access this IDO Information, paste the below URL into a browser and replace the YOURDOMAIN in the URL with your Org's Domain.<br/><br/>
+                            <a href="{!v.ShareableURL}" target="_blank">https://<strong>YOURDOMAIN</strong>.lightning.force.com{!v.ShareableURL}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}">Close</button>
+            </footer>
+        </div>
+    </section>
+</aura:component>

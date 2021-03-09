@@ -1,0 +1,28 @@
+<apex:page showheader="false" sidebar="false" standardStylesheets="false">
+    <title>SDO Portal Brander Wrapper</title>
+    <apex:composition template="SDO_Bootstrap_Template"/>
+    <apex:define name="_content">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="well" style="border: 2px solid #049cdb;">
+                    <p class="muted pull-right">v2.0</p>
+                    <h1>SDO Portal Brander
+                        <span class="label label-info">Branding</span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12 contentDiv">
+                <div class="btn btn-primary" onclick="openPortalBranderWindow()">Open Portal Brander</div>
+            </div>
+        </div>
+    </apex:define>
+    
+    <script type="text/javascript">
+        function openPortalBranderWindow() {
+          w = window.open("/apex/SSEPortalListView");
+        }
+    </script>
+
+</apex:page>

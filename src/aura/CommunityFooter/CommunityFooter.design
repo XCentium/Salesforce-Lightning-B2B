@@ -1,0 +1,10 @@
+<design:component label="Community Footer">
+    <design:attribute name="footerBackground" label="Footer Background Color" description="Hex Color Value for Background Color" default="#000000"/>
+    <design:attribute name="linkColor" label="Footer Link Color" description="Hex Color Value for the Link Color" default="#494949"/>
+    <design:attribute name="LogoURL" label="Footer Logo" description="URL to the Logo you would like to show in the footer" default="/alpineconsumer/file-asset/alpinegroupprimarylogowhite"/>
+    <design:attribute name="LogoWidth" label="Footer Width" description="Width of the Logo in the Footer" default="150px"/>
+    
+	<design:attribute name="Section1Heading" label="Section 1 Heading" description="Enter the title text you want to appear in the block" default="Company"/>
+    <design:attribute name="Section2Heading" label="Section 2 Heading" description="Enter the title text you want to appear in the block" default="Communities"/>
+    <design:attribute name="Section3Heading" label="Section 3 Heading" description="Enter the title text you want to appear in the block" default="Useful Links"/>
+</design:component>

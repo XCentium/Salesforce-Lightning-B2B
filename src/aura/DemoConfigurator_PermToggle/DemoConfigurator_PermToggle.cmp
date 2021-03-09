@@ -1,0 +1,45 @@
+<aura:component controller="DemoConfigurator" implements="flexipage:availableForAllPageTypes,force:appHostable,lightning:availableForFlowScreens" access="global">
+    <aura:attribute name="ToggleLabel" type="String" default="false" />
+    <aura:attribute name="UseCaseDescription" type="String" default="" />
+    <aura:attribute name="ExternalUrl" type="String" default="" />
+    <aura:attribute name="isAdded" type="Boolean" default="false" />
+    <aura:attribute name="PermissionSetApiName" type="String" default="" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="wrapper" >
+        <div class="config">
+            <div class="configleft">
+                <div class="icon">
+                    <div class="slds-form-element">
+                        <label class="slds-checkbox_toggle slds-grid">
+                            <span class="slds-form-element__label slds-m-bottom_none settingLabel"></span>
+                            <input type="checkbox" 
+                                   name="checkbox-toggle-16" 
+                                   Checked="{!v.isAdded}" 
+                                   aria-describedby="checkbox-toggle-16" 
+                                   onchange="{!c.toggleChange}"
+                                   aura:id="tglbtns"
+                                   />
+                            <span id="checkbox-toggle-16" class="slds-checkbox_faux_container" aria-live="assertive">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-checkbox_on">Enabled</span>
+                                <span class="slds-checkbox_off">Disabled</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="configright">
+                <div class="slds-form-element">
+                    <h1><strong>{!v.ToggleLabel}</strong></h1>
+                    <aura:unescapedHtml value="{!v.UseCaseDescription}" />
+                    <aura:if isTrue="{!v.ExternalUrl != ''}">
+                        <div class="buttonwrapper">
+                        	<ui:button label="Learn More" press="{!c.openActionWindow}"/>
+                        </div>
+                    </aura:if>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</aura:component>

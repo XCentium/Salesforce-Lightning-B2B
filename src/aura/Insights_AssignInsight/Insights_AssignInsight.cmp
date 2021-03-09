@@ -1,0 +1,59 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    <aura:attribute name="session" type="string"></aura:attribute>
+    
+    <aura:attribute name="isLoading" type="Boolean" default="true"></aura:attribute>
+    <aura:attribute name="insightId" type="string"></aura:attribute>
+    <aura:attribute name="insightType" type="string"></aura:attribute>
+    <aura:attribute name="insightTitle" type="string"></aura:attribute>
+    
+    <aura:attribute name="assigneeId" type="string"></aura:attribute>
+    
+    <aura:attribute name="predictionDefinitionsMap" type="Map"></aura:attribute>
+    <aura:attribute name="assignments" type="Map[]"></aura:attribute>
+    <aura:attribute name="usersMap" type="Map"></aura:attribute>
+    
+    <aura:handler name="render" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <iframe aura:id="sessionPage" class="hidden" src="/apex/VisualforceREST"></iframe>
+    
+    <aura:if isTrue="{! !v.isLoading }">
+        
+        <div aura:id="main" class="action-body">
+            <div class="row">
+                <div class="column">
+                    <div class="slds-text-heading_medium ">Assign Insight</div>
+                </div>
+            </div>
+            
+            <div class="row lookup">
+                <div class="column column_3-of-4">
+                    <c:Utility_Lookup aura:id="lookup" 
+                                      lookupObject="User" 
+                                      lookupField="Name" 
+                                      filters=""
+                                      boundValue="{!v.assigneeId}"></c:Utility_Lookup>
+                </div>
+                <div class="column">
+                    <lightning:button class="assign-button" variant="brand" label="Assign" 
+                                      onclick="{!c.insertAssignment}"></lightning:button>
+                </div>
+            </div>
+            
+            
+            <aura:iteration items="{!v.assignments}" var="assignment">
+                <c:Insights_Assignment assignment="{!assignment}" session="{!v.session}"></c:Insights_Assignment>
+            </aura:iteration>
+        </div>
+        
+        <div class="action-footer">
+            <div class="row">
+                <lightning:button label="Back" class="column" variant="neutral" onclick="{!c.handleGoBack}"></lightning:button>
+            </div>
+        </div>
+        
+        <aura:set attribute="else">
+            <lightning:spinner alternativeText="Loading" size="medium" />
+        </aura:set>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,114 @@
+<apex:page contentType="application/javascript">
+    const tools = [
+    	{
+    		'title': 'Einstein Bots',
+    		'description': 'Bots that can hold a conversation!',
+    		'link': 'https://salesforce.quip.com/c45mAiwImbIj',
+    		'tags': ['Service Cloud Einstein']
+    	},
+    	{
+    		'title': 'Einstein Account/Opportunity Insights',
+    		'description': 'Secure opportunities and reduce.',
+    		'link': 'https://salesforce.quip.com/8CQiAu4sVzjX',
+    		'tags': ['Sales Cloud Einstein']
+    	},
+    	{
+    		'title': 'Einstein Automated Contacts',
+    		'description': 'Never type a contact record again.',
+    		'link': 'https://salesforce.quip.com/8CQiAu4sVzjX',
+    		'tags': ['Sales Cloud Einstein']
+    	},
+    	{
+    		'title': 'Einstein Lead Scoring',
+    		'description': 'Convert more leads faster.',
+    		'link': 'https://salesforce.quip.com/G8lIAS9JTcZP',
+    		'tags': ['Sales Cloud Einstein']
+    	},
+    	{
+    		'title': 'Einstein Forecasting',
+    		'description': 'Show how sales teams will perform and how to pivot from using forecastings. Setup Einstein forecasting for the home page and forecasting tab.',
+    		'link': 'https://salesforce.quip.com/AlyNA4jeLbKr',
+    		'tags': ['Sales Cloud Einstein']
+    	},
+    	{
+    		'title': 'Einstein Opportunity Scoring',
+    		'description': 'Focus on the right deals, every time.',
+    		'link': 'https://salesforce.quip.com/xr18A8WbzahU',
+    		'tags': ['Sales Cloud Einstein']
+    	},
+    	{
+    		'title': 'Einstein Prediction Builder',
+    		'description': 'Demonstrate how Prediction Builder can identify customers at risk and recommend actions you can take to retain them.',
+    		'link': 'https://salesforce.quip.com/mye2Ac5hFY8M',
+    		'tags': ['Sales Cloud Einstein','Service Cloud Einstein']
+    	},
+    	{
+    		'title': 'Salesforce Inbox',
+    		'description': 'Bring email, calendar, and Salesforce together, eliminate data entry and spend more time selling.',
+    		'link': 'https://quip.com/XJxtAOarNcOb',
+    		'tags': ['Sales Cloud Einstein']
+    	},
+    	{
+    		'title': 'Sales Analytics',
+    		'description': 'The smartest analytics for Sales Cloud customers.',
+    		'link': 'https://quip.com/MBs7Ag8nXdFh',
+    		'tags': ['Sales Cloud Einstein']
+    	},
+    	{
+    		'title': 'Einstein Case Classification',
+    		'description': 'Einstein helps fill in the blanks and helps priority cases.',
+    		'link': 'https://salesforce.quip.com/7cajAa0gvumx#WJcACA7owZS',
+    		'tags': ['Einstein for Service']
+    	},
+    	{
+    		'title': 'Einstein Article Recommendations',
+    		'description': 'Setup Einstein for Service feature Einstein Article Recommendations',
+    		'link': 'https://salesforce.quip.com/7cajAa0gvumx#WJcACA7owZS',
+    		'tags': ['Einstein for Service']
+    	},
+    	{
+    		'title': 'Einstein Next Best Action',
+    		'description': 'Setup Einstein for Service feature Einstein Next Best Action',
+    		'link': 'https://salesforce.quip.com/7cajAa0gvumx',
+    		'tags': ['Einstein for Service']
+    	},
+    	{
+    		'title': 'Einstein Case Sentiment',
+    		'description': 'See how Einstein can view your cases and read between the lines.',
+    		'link': 'https://salesforce.quip.com/sx0BA8v7zQFf',
+    		'tags': ['Einstein for Service','Einstein.ai']
+    	},
+    	{
+    		'title': 'Einstein Campaign Insight',
+    		'description': 'Get insights into how your campaigns are doing',
+    		'link': 'https://salesforce.quip.com/P8uLALyDUQDB',
+    		'tags': ['Sales Cloud Einstein','Marketing']
+    	},
+    	{
+    		'title': 'Einstein Behavior Score',
+    		'description': 'Score prospects and customers on how they interact with your emails, websites, and marketing campaigns',
+    		'link': 'https://salesforce.quip.com/PHt3AaeDPVXV',
+    		'tags': ['Sales Cloud Einstein','Marketing']
+    	},
+    	{
+    		'title': 'Einstein Search',
+    		'description': 'Find and do things faster with personalized search results.',
+    		'link': 'https://salesforce.quip.com/bZ92AaPvjCFH',
+    		'tags': ['Sales Cloud Einstein','Service Cloud Einstein']
+    	},
+    	{
+    		'title': 'Einstein Call Coaching',
+    		'description': 'Upload sample call recordings with insights and key moments highlighted',
+    		'link': 'https://salesforce.quip.com/QCycACS7tqzK',
+    		'tags': ['Sales Cloud Einstein','High Velocity Sales']
+    	}
+    ]
+    
+    function HomeCtrl($scope){
+    	$scope.init = function(){
+    
+    	}
+    
+    	$scope.tools = tools;
+    } 
+</apex:page>

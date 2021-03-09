@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>42.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>The purpose of this Visualforce page is to redirect users to the CloudCraze Storefront from the Lightning App Launcher. Set as main tab in DefaultStore community.</description>
+    <label>CloudCraze Storefront Redirect</label>
+</ApexPage>

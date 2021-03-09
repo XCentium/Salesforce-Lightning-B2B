@@ -1,0 +1,232 @@
+<!--
+ - Created by brandon.rogers on 9/24/18.
+ -->
+
+<apex:component id="ckz_Footer">
+    <script id="ckz_tmpl_Footer" type="text/template">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4>
+                        <a href="javascript:void(0);" class="footer-logo"></a>
+                    </h4>
+                </div>
+            </div>
+
+            <div class="row hide">
+                <div class="col-xs-3 col-sm-2 col-sm-offset-2">
+                    <div class="footer-link text-center">
+                        <h4>Shop By Category</h4>
+                        <ul class="footer-link-list list-unstyled">
+                            <li><a href="#">Catalog</a></li>
+                            <li><a href="#">Mens</a></li>
+                            <li><a href="#">Womens</a></li>
+                            <li><a href="#">Kids</a></li>
+                            <li><a href="#">Gear</a></li>
+                            <li><a href="#">Electronics</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-xs-3 col-sm-2">
+                    <div class="footer-link text-center">
+                        <h4>Shop By Activity</h4>
+                        <ul class="footer-link-list list-unstyled">
+                            <li><a href="#">Biking</a></li>
+                            <li><a href="#">Camping</a></li>
+                            <li><a href="#">Climbing</a></li>
+                            <li><a href="#">Hiking</a></li>
+                            <li><a href="#">Running</a></li>
+                            <li><a href="#">Training</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-xs-3 col-sm-2">
+                    <div class="footer-link text-center">
+                        <h4>Company</h4>
+
+                        <ul class="footer-link-list list-unstyled">
+                            <li><a href="#">Who We Are</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Careers</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                <div class="col-xs-3 col-sm-2">
+                    <div class="footer-link text-center">
+                        <h4>Support</h4>
+
+                        <ul class="footer-link-list list-unstyled">
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Community</a></li>
+                            <li><a href="#">FAQ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="footer-link text-center m-t-2">
+                        <ul class="footer-link-list list-inline">
+                            <li>
+                                <a href="#" class="social">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                                        <i class="fab fa-facebook-f fa-stack-1x"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="social">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                                        <i class="fab fa-twitter fa-stack-1x"></i>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#" class="social">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                                        <i class="fab fa-linkedin fa-stack-1x"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ckz-footer-disclaimer text-center">
+                        <p>{{pageLabelMap 'Footer_Disclaimer'}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <!--<span class="footer-builtOn">Built on </span>-->
+                        <span class="footer-logo-commerceCloud"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </script>
+
+    <!--<style type='text/css'>
+        .embeddedServiceHelpButton .helpButton .uiButton {
+            background-color: #005290;
+            font-family: "Salesforce Sans", sans-serif;
+        }
+        .embeddedServiceHelpButton .helpButton .uiButton:focus {
+            outline: 1px solid #005290;
+        }
+        @font-face {
+            font-family: 'Salesforce Sans';
+            src: url('https://www.sfdcstatic.com/system/shared/common/assets/fonts/SalesforceSans/SalesforceSans-Regular.woff') format('woff'),
+            url('https://www.sfdcstatic.com/system/shared/common/assets/fonts/SalesforceSans/SalesforceSans-Regular.ttf') format('truetype');
+        }
+    </style>-->
+
+    <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.pubSub.on('view:myAccountHeaderView:refresh', function () {
+                //console.log("ckz_Footer:view:myAccountHeaderView:refresh");
+
+                let fName = '';
+                let lName = '';
+                let utype = '';
+                let eMail = '';
+
+                if (CCRZ.currentUser) {
+                    //console.log("ckz_Header:CCRZ.currentUser: " + JSON.stringify(CCRZ.currentUser));
+
+                    utype = CCRZ.currentUser.UserType;
+
+                    if (utype === "Guest") {
+                        fName = '';
+                        lName = '';
+                        eMail = '';
+                    } else {
+                        fName = CCRZ.currentUser.FirstName;
+                        lName = CCRZ.currentUser.LastName;
+                        eMail = CCRZ.currentUser.Email;
+                    }
+                }
+
+                let initESW = function (gslbBaseURL) {
+                    embedded_svc.settings.displayHelpButton = true; //Or false
+                    embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
+
+                    //embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
+                    //embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
+
+                    //embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
+                    //embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
+
+                    // Settings for Live Agent
+                    //embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
+                    // Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
+                    // Returns a valid button ID.
+                    //};
+                    embedded_svc.settings.prepopulatedPrechatFields = {
+                        FirstName: fName,
+                        LastName: lName,
+                        Email: eMail,
+                        Subject: ''
+                    };
+                    //embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
+                    //embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
+
+                    embedded_svc.settings.enabledFeatures = ['LiveAgent'];
+                    embedded_svc.settings.entryFeature = 'LiveAgent';
+
+                    // *** SNAP IN UPDATE BEGIN ***
+
+                    embedded_svc.init(
+                        'https://sdomaster2.my.salesforce.com',
+                        'https://sdodemo-main-166ce2cf6b6.force.com/DefaultStore',
+                        gslbBaseURL,
+                        '00D5Y000001bSfg',
+                        'B2B_Commerce_Bot',
+                        {
+                            baseLiveAgentContentURL: 'https://c.la4-c4-ph2.salesforceliveagent.com/content',
+                            deploymentId: '5725Y000000Lcad',
+                            buttonId: '5735Y000000HQoo',
+                            baseLiveAgentURL: 'https://d.la4-c4-ph2.salesforceliveagent.com/chat',
+                            eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I5Y000000GvpLUAU_16b9e291e48',
+                            isOfflineSupportEnabled: false
+                        }
+                    );
+                };
+
+                if (!window.embedded_svc) {
+                    let s = document.createElement('script');
+                    s.setAttribute('src', 'https://sdomaster2.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+                    s.onload = function () {
+                        initESW(null);
+                    };
+                    document.body.appendChild(s);
+                } else {
+                    initESW('https://service.force.com');
+                }
+
+                // *** SNAP IN UPDATE END ***
+
+            })
+        });
+
+    </script>
+</apex:component>

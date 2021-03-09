@@ -1,0 +1,224 @@
+<!--
+ - Created by brandon.rogers on 2019-05-02.
+ -->
+
+<apex:page id="ckz_SelfRegister_incl" title="Self Register" controller="ckz_ctrl_SelfRegister"
+        applyHtmlTag="false" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false" cache="false">
+
+    <div class="anchorClass"></div>
+
+    <script id="SelfReg-Desktop" type="text/template">
+
+        <div class="component-site-register">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="messagingSection-Error" style="display: none"></div>
+                    <div class="messagingSection-Info" style="display: none"></div>
+                    <div class="messagingSection-Warning" style="display: none"></div>
+                    <!--<div class="error_messages_section" style="display:none;"></div>-->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 form-box">
+                    <div class="card-container manual-flip text-center">
+                        <div class="card">
+                            <div class="front">
+                                <div class="b2b-logo m-t-3"></div>
+                                <h3 class="m-b-2">{{pageLabelMap 'SiteRegistration_NewCustomer'}}</h3>
+                                <p>{{pageLabelMap 'SiteRegistration_NewCustomerInstructions'}}</p>
+
+                                <form id="newCustomerForm" forceSSL="true" class="">
+                                    <!-- PERSONAL INFO -->
+                                    <div class="SiteRegister_NewCustomer_PersonalInfo" style="padding-bottom:15px;padding-top:15px;">
+                                        <h3 class="cc_title m-t-0" style="display:none;">{{pageLabelMap 'SiteRegistration_PersonalInfo'}}</h3>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="firstName" class="cc_firstname_label sr-only">{{pageLabelMap 'CheckOut_FirstName'}}</label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-addon">
+                                                            <i class="fas fa-user"></i>
+                                                        </span>
+                                                        <input id="firstName" name="firstName" type="text" class="form-control cc_firstname" value="{{firstName}}" onfocus="myFocus(this);" onblur="myBlur(this);" placeholder="{{pageLabelMap 'CheckOut_FirstName'}}">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="lastName" class="cc_lastname_label sr-only">{{pageLabelMap 'CheckOut_LastName'}}</label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-addon">
+                                                            <i class="fas fa-user"></i>
+                                                        </span>
+                                                        <input id="lastName" name="lastName" type="text" class="form-control cc_lastname" value="{{lastName}}" onfocus="myFocus(this);" onblur="myBlur(this);" placeholder="{{pageLabelMap 'CheckOut_LastName'}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="username" class="cc_username_label sr-only">{{pageLabelMap 'SiteRegistration_UsernameEmail'}}</label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-addon">
+                                                            <i class="far fa-at"></i>
+                                                        </span>
+                                                        <input id="username" name="username" type="text" class="form-control cc_username" value="{{username}}" onfocus="myFocus(this);" onblur="myBlur(this);" placeholder="{{pageLabelMap 'SiteRegistration_UsernameEmail'}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-primary btn-block submit cc_submit">
+                                                    {{pageLabelMap 'Site_Submit'}}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </form>
+
+                                <a href="ccrz__CCSiteLogin" type="button" class="btn btn-link btn-block register cc_register">
+                                    {{pageLabelMap 'SiteRegistration_Login'}}
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            </div> <!-- /.front -->
+                        </div><!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+
+        $("body").addClass('ckz_SelfRegister');
+
+        function validateEmail(value) {
+            var regex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            return (regex.test(value)) ? true : false;
+        }
+
+        jQuery(function ($) {
+
+            jQuery.validator.addMethod("validEmail", function (value, element) {
+
+                var test = validateEmail(value);
+
+                console.log('validEmail = ' + test);
+
+                return this.optional(element) || test;
+            }, "Please enter a valid email address");
+
+            CCRZ.models.SelfRegModel = CCRZ.CloudCrazeModel.extend({
+                className: "ckz_ctrl_SelfRegister",
+                registerNewUser: function (formData, callback) {
+
+                    CCRZ.pubSub.trigger('pageMessage', {});
+
+                    this.invokeContainerLoadingCtx($('body'), "registerNewUser", JSON.stringify(formData),
+                        function (response) {
+                            if (response) {
+                                callback(response);
+                            }
+                        },
+                        {nmsp: false}
+                    );
+
+                },
+            });
+
+            CCRZ.subsc = CCRZ.subsc || {};
+            CCRZ.subsc.views = CCRZ.subsc.views || {};
+
+            CCRZ.subsc.views.SelfRegView = CCRZ.CloudCrazeView.extend({
+                viewName: "SelfRegView",
+                templateName: CCRZ.util.template('SelfReg-Desktop'),
+                renderSelector: ".anchorClass",
+                init: function (options) {
+                    var thisView = this;
+                    thisView.dataSet = {};
+                    thisView.render();
+                },
+                events: {
+                    "click .submit": "registerNewUser",
+                    "click #cancelACH": "cancelNewACHNumber"
+                },
+                initValidation: function () {
+                    $('#newCustomerForm').validate({
+                        invalidHandler: function (event, validator) {
+                            CCRZ.handleValidationErrors(event, validator, 'messagingSection-Error', false);
+                        },
+                        rules: {
+                            firstName: {required: true},
+                            lastName: {required: true},
+                            username: {required: true, validEmail: true}
+                        },
+                        messages: {
+                            firstName: {required: 'First Name is required'},
+                            lastName: {required: 'Last Name is required'},
+                            username: {required: 'Email is required'}
+                        },
+                        errorPlacement: function (error, element) {
+                        }
+                    });
+                },
+                renderDesktop: function () {
+                    this.renderView(this.templateName, this.renderSelector);
+                },
+                renderPhone: function () {
+                    this.renderView(this.templateName, this.renderSelector);
+                },
+                renderView: function (templateName, renderSelector) {
+                    var v = this;
+                    v.setElement(renderSelector);
+                    v.$el.html(templateName(this));
+                },
+                postRender: function () {
+                    this.initValidation();
+                },
+                cancelNewACHNumber: function () {
+                    myWallet();
+                },
+                registerNewUser: function () {
+                    if ($('#newCustomerForm').valid()) {
+                        var formData = form2js("newCustomerForm", '.', false, function (node) {
+                        }, false);
+
+                        this.model.registerNewUser(formData, this.userRegCallback);
+                    }
+                },
+                userRegCallback: function (response) {
+                    $('.cc_submit').prop('disabled', false);
+                    if (response.messages) {
+                        CCRZ.pubSub.trigger('pageMessage', response);
+                    }
+
+                    if (response.success) {
+                        window.location = '/ccrz__CCSiteLogin?registrationSuccess=true' + getCSRQueryString();
+                    }
+
+                }
+            });
+
+            // Initialize and Render the Custom View
+            CCRZ.subsc.views.Demo = new CCRZ.subsc.views.SelfRegView(
+                {
+                    model: new CCRZ.models.SelfRegModel
+                }
+            );
+            CCRZ.subsc.views.Demo.render();
+        });
+    </script>
+</apex:page>

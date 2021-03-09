@@ -1,0 +1,51 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" controller="recommendedProducts" >
+	<lightning:workspaceAPI aura:id="workspace" />
+    <aura:attribute name="ReturnedProduct" type="Product2[]"/>
+    <aura:attribute name="ProductID" type="String"/>
+    <aura:attribute name="ProductID2" type="String"/>
+    <aura:attribute name="height" type="String" default="auto"/>
+    <aura:attribute name="showAddtoChat" type="Boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.GetProducts}"/>
+	<lightning:card >
+        	<div class="padding" style="{!'height:' + v.height + 'px'}">
+    			<h2 class="header-title-container">
+                    <span class="slds-text-heading--small slds-truncate">Recommended Product</span>
+                </h2>
+                <aura:iteration var="product" items="{!v.ReturnedProduct}" indexVar="index"> 
+                    <div class="product">
+                        <strong>
+                            {!product.Name}
+                            <aura:if isTrue="{!product.MSRP__c  != null}">
+                            	- $ {!product.MSRP__c}
+                            </aura:if>
+                        </strong>
+                        <p>{!product.Description}</p>
+                    	<img src="{!product.purl__c}" class="product_image" />
+                        <div class="circle">
+                        	<aura:if isTrue="{! index == 0}">
+                                94
+                            <aura:set attribute="else">
+                                88
+							</aura:set>
+                            </aura:if>
+                        </div>
+                        <div class="stat-info">
+                       		<aura:if isTrue="{! index == 0}">
+                                1242 Times
+                            <aura:set attribute="else">
+                                987 Times
+							</aura:set>
+                            </aura:if>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="center">
+                        
+                        <aura:if isTrue="{!v.showAddtoChat == true}">
+                        	<lightning:button variant="brand" class="productbutton" label="Add to Chat" onclick="{! c.handleClick }" />
+                        </aura:if>
+                    	</div>
+                    </div>
+                </aura:iteration>
+ 			</div>
+    </lightning:card>
+</aura:component>

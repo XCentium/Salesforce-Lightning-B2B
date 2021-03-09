@@ -1,0 +1,482 @@
+<!--
+ - Created by brandon.rogers on 1/22/19.
+ -->
+
+<apex:component id="ckz_Checkout_LLI_ShippingDetails">
+
+    <script id="CKZ-Shipping-Detail-LLI-Desktop" type="text/template">
+        
+        <div class="cc_shipping_detail_lli">
+            <div class="row cc_message_row">
+                <div class="col-xs-12">
+                    <div class="messagingSection-Error" style="display: none"></div>
+                    <div class="messagingSection-Info" style="display: none"></div>
+                    <div class="messagingSection-Warning" style="display: none"></div>
+                </div>
+            </div>
+
+            <div class="row shippingContainer">
+                <div class="col-sm-4 col-sm-push-8">
+                    <div class="row checkoutNav cc_checkout_nav hidden-xs">
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-default btn-block btn-sm processBack cc_process_back">
+                                {{pageLabelMap 'LLICheckOut_Back'}}
+                            </button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-primary btn-block btn-sm processLLIShippingInfo proceed cc_proceed">
+                                {{pageLabelMap 'LLICheckOut_Proceed'}}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default m-t-2">
+                                <div class="panel-body text-center">
+                                    <h3 class="m-t-0">{{pageLabelMap 'LLICheckOut_OrderSummary'}}</h3>
+                                    <p class="small">{{this.productList.length}} {{pageLabelMap 'LLICheckOut_TotalItems'}}</p>
+
+                                    {{#with this.cartData}}
+                                        <h6>{{pageLabelMap 'LLICheckOut_Subtotal'}} {{{price subtotalAmount}}}</h6>
+
+                                        {{#if rewardPointsApplied}}
+                                            <h6>{{pageLabelMap 'LLICheckOut_PointsApplied'}} {{rewardPointsApplied}}</h6>
+                                        {{/if}}
+
+                                        {{#if adjustmentAmount}}
+                                            <h6>{{pageLabelMap 'LLICheckOut_Discount'}} {{{price adjustmentAmount}}}</h6>
+                                        {{/if}}
+
+                                        {{#if taxAmount}}
+                                            <h6>{{pageLabelMap 'LLICheckOut_Tax'}} {{{price taxAmount}}}</h6>
+                                        {{/if}}
+
+                                        {{#if shipAmount}}
+                                            <h6>{{pageLabelMap 'LLICheckOut_Shipping'}} {{{price shipAmount}}}</h6>
+                                        {{/if}}
+
+                                        <h4>{{pageLabelMap 'LLICheckOut_Total'}} {{{price totalAmount}}}</h4>
+                                    {{/with}}
+
+                                    <a href="#" type="button" class="btn btn-secondary btn-block btn-sm" onclick="ckzBackToCart();">
+                                        {{pageLabelMap 'LLICheckOut_BackToCart'}}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--<div class="summaryWidget cc_summary_widget">
+                        {{> cartSummaryWidget}}
+                    </div>-->
+                </div>
+
+                <div class="col-sm-8 col-sm-pull-4">
+                    <div class="shipGroups">
+                        <div class="row cc_buyerInfo">
+                            <div class="col-sm-12">
+                                <h3 class="m-t-0">{{pageLabelMap 'LLICheckOut_BuyerInfoHeader'}}</h3>
+                            </div>
+
+                            {{#with this.cartData}}
+                                <form id="buyerInfo" class="form buyerInfoForm cc_buyerinfo_form">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="buyerFirstName" class="control-label cc_firstname_label">{{pageLabelMap 'LLICheckOut_FirstName'}}</label>
+                                            <input id="buyerFirstName" type="text" value="{{buyerFirstName}}" class="form-control contactField cc_firstname" maxlength=100 name="buyerFirstName"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="buyerLastName" class="control-label cc_lastname_label">{{pageLabelMap 'LLICheckOut_LastName'}}</label>
+                                            <input id="buyerLastName" type="text" value="{{buyerLastName}}" class="form-control contactField cc_lastname" maxlength=100 name="buyerLastName"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="buyerEmail" class="control-label cc_email_label">{{pageLabelMap 'LLICheckOut_Email'}}</label>
+                                            <input id="buyerEmail" type="text" value="{{buyerEmail}}" class="form-control contactField cc_email" maxlength=80 name="buyerEmail"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="buyerPhone" class="control-label cc_phone_label">{{pageLabelMap 'LLICheckOut_Phone'}}</label>
+                                            <input id="buyerPhone" type="text" value="{{buyerPhone}}" class="form-control contactField cc_phone" maxlength=40 name="buyerPhone"/>
+                                        </div>
+                                    </div>
+                                </form>
+                            {{/with}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row m-b-1">
+                <div class="col-sm-8">
+                    <h4 class="m-y-0">{{pageLabelMap 'ShippingGroups'}}</h4>
+                </div>
+
+                <div class="col-sm-4">
+                    <span class="pull-right">
+                        <button type="button" class="btn btn-link btn-xs cc_btn cc_btn_primary addItemGroupBtn cc_additem_group">
+                            {{pageLabelMap 'LLICheckOut_AddItemGroup'}}
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <form id="shipForm" class="form cc_ship_form">
+                        {{#each this.cartData.ECartItemGroupsS.models}}
+                            {{#with this.attributes}}
+                                <div class="panel panel-default cc_panel shippingGroupPanel{{sfid}} cc_shipping_group_panel" data-id="{{sfid}}">
+                                    <div class="panel-body cc_body shipGroupBody{{sfid}}">
+                                        <div class="cc_ship_group">
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <h3 class="m-t-0" data-toggle="collapse" data-target="#collapse_{{sfid}}" style="cursor:pointer;">
+                                                        <span data-toggle="tooltip" data-placement="right" title="{{pageLabelMap 'CollapseLabel'}}">
+                                                            <i class="far fa-angle-down"></i>
+                                                            {{groupName}}
+                                                        </span>
+                                                    </h3>
+                                                </div>
+
+                                                <div class="col-xs-6">
+                                                    <div class="small text-right">
+                                                        <span class="cc_label cc_label_groupheader">{{pageLabelMap 'LLICheckOut_GroupHeader'}}</span>
+                                                        <span class="cc_label cc_xofy cc_xofy{{@index}}">{{XofY @index ../../this.cartData.ECartItemGroupsS.models}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div id="collapse_{{sfid}}" class="collapse {{#ifEquals @index 0}}in{{/ifEquals}} m-t-2">
+                                                <div class="row LLIshipOptions cc_lli_shipoptions">
+
+                                                    <div class="col-sm-4 addressEntry cc_address_entry">
+                                                        <label for="groupAddress" class="control-label cc_group_address_label">{{pageLabelMap 'LLICheckOut_ShipAddrHeader'}}</label>
+                                                        <div id="groupAddress" class="groupAddress cc_group_address">
+                                                            <input type="hidden" name="shipToId_{{sfid}}" value="{{shipTo.sfid}}"/>
+                                                            {{>addressDisplay this.shipTo}}
+                                                        </div>
+                                                        {{#if shipTo}}
+                                                        <p class="cc_edit_addr_section">
+                                                            <a href="" class="editAddr cc_edit_addr" data-id="{{sfid}}" data-toggle="modal">{{pageLabelMap 'LLICheckOut_EditAddr'}}</a>
+                                                        </p>
+                                                        {{else}}
+                                                        <p class="cc_edit_addr_section">
+                                                            <a href="" class="editAddr cc_edit_addr" data-id="{{sfid}}" data-toggle="modal">{{pageLabelMap 'LLICheckOut_EnterAddr'}}</a>
+                                                        </p>
+                                                        {{/if}}
+                                                    </div>
+
+                                                    <div class="col-sm-8">
+                                                        <div class="row shipInfo cc_ship_info">
+                                                            {{#if this.ECartItemsS}}
+                                                                <div class="col-sm-6">
+                                                                    {{#ifDisplay 'SO.DsplShipOptions'}}
+                                                                    {{#if this.shippingOptions}}
+                                                                    <label for="shippingMethod_{{sfid}}" class="control-label cc_shipping_method_label">{{pageLabelMap 'LLICheckOut_ShippingMethod'}}</label>
+                                                                    <select id="shippingMethod_{{sfid}}" class="shippingOptions form-control shippingOptions{{sfid}} cc_shipping_method" name="shippingMethod_{{sfid}}">
+                                                                        {{#each this.shippingOptions}}
+                                                                        <option value="{{this.uniqueId}}" {{#ifEquals ../shipMethod this.uniqueId}} selected {{/ifEquals}}>
+                                                                        {{price this.price}} - {{this.provider}} - {{pageLabelMap this.serviceName}}
+                                                                        </option>
+                                                                        {{/each}}
+                                                                    </select>
+                                                                    {{/if}}
+                                                                    {{/ifDisplay}}
+                                                                </div>
+
+                                                                <div class="col-sm-6">
+                                                                    {{#ifDisplay 'SO.ShowReqDate'}}
+                                                                    {{#if shipTo}}
+                                                                    <div class="deliveryDateMessages_{{shipTo.sfid}} cc_delivey_date_messages" id="deliveryDateMessages"></div>
+                                                                    {{#unless ../../this.requestDateData.ApiError}}
+                                                                    <label for="requestedDateStr_{{sfid}}" class="control-label cc_requested_date_label">{{pageLabelMap 'LLICheckOut_RequestedDeliveryDt'}}</label>
+                                                                    <div class="input-group date">
+                                                                        <input name="requestedDateStr_{{sfid}}" value="{{requestDate}}" class=" form-control requestedDate requestedDate{{sfid}} cc_requested_date" data-sfid="{{shipTo.sfid}}" readonly="true">
+                                                                        <div class="input-group-addon">
+                                                                            <span class="glyphicon glyphicon-th"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    {{/unless}}
+                                                                    {{/if}}
+                                                                    {{/ifDisplay}}
+                                                                </div>
+                                                            {{/if}}
+                                                        </div>
+
+                                                        <div class="shipNotes cc_ship_notes m-t-1">
+                                                            {{#if this.ECartItemsS}}
+                                                            {{#ifDisplay 'SO.DsplShipNotes'}}
+                                                            <div class="ship_notes cc_ship_notes">
+                                                                <label for="shippingInst_{{sfid}}" class="control-label cc_shipping_inst_label">{{pageLabelMap 'LLICheckOut_ShippingNotes'}}</label>
+                                                                <p class="shippingGuidingText cc_shipping_guiding_text small">
+                                                                    {{pageLabelMap 'LLICheckOut_ShippingGuidingText'}}
+                                                                </p>
+                                                                <textarea id="shippingInst_{{sfid}}" name="shippingInst_{{sfid}}" rows="6" class="form-control cc_shipping_inst">{{note}}</textarea>
+                                                            </div>
+                                                            {{/ifDisplay}}
+                                                            {{/if}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="groupItems cc_group_items m-t-2">
+                                                    {{> cartItemsDesktop productList=../../productList}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/with}}
+                        {{/each}}
+                    </form>
+                </div>
+
+                <!--<div class="col-xs-12 text-right">
+                    <button type="button" class="btn btn-default btn-xs cc_btn cc_btn_primary addItemGroupBtn cc_additem_group m-b-2">
+                        {{pageLabelMap 'LLICheckOut_AddItemGroup'}}
+                    </button>
+                </div>-->
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2 col-sm-offset-4">
+                    <div class="checkoutNav cc_checkout_nav text-center m-y-2">
+                        <button type="button" class="btn btn-default btn-block processBack cc_process_back">
+                            {{pageLabelMap 'LLICheckOut_Back'}}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="checkoutNav cc_checkout_nav text-center m-y-2">
+                        <button type="button" class="btn btn-primary btn-block processLLIShippingInfo proceed cc_proceed">
+                            {{pageLabelMap 'LLICheckOut_Proceed'}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modalSec"></div>
+        </div>
+    </script>
+
+    <script id="CKZ-CartItem-Detail-LLI-Desktop" type="text/template">
+        {{#if this.ECartItemsS}}
+            <div class="table-responsive">
+                <table class="table LLI-CartItems">
+                    <thead>
+                        <tr>
+                            <th class="LLI-CartItems-col lliheader itemDetails">{{pageLabelMap 'LLICheckOut_CartItem'}}</th>
+                            <th class="LLI-CartItems-col lliheader">{{pageLabelMap 'LLICheckOut_CartItem_Quantity'}}</th>
+                            <th class="LLI-CartItems-col lliheader">{{pageLabelMap 'LLICheckOut_CartItem_UnitPrice'}}</th>
+                            <th class="LLI-CartItems-col lliheader">{{pageLabelMap 'LLICheckOut_CartItem_TotalPrice'}}</th>
+                            <th class="LLI-CartItems-col lliheader">{{pageLabelMap 'LLICheckOut_CartItem_Actions'}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each this.ECartItemsS}}
+                            {{#ifEquals this.cartItemType 'Major'}}
+                            {{log this}}
+                                <tr class="LLI-CartItems-row">
+                                    <td class="LLI-CartItems-col itemDetails">
+                                        {{#if this.itemLabel}}
+                                        <div class="cc_name cc_value cc_name">
+                                            <b>{{productLink this.productR 'cc_product_link' text=this.itemLabel}}</b>
+                                        </div>
+                                        {{else}}
+                                            {{#ifEquals this.pricingType 'external'}}
+                                                {{#if this.extName}}
+                                                    <div class="cc_name cc_value cc_ext_name">
+                                                        <b>{{productLink this.productR 'cc_product_link' text=(displayProductName 'Aggregate_Display'  (product-field 'parentName' this.product ../this.productList) this.extName)}}</b>
+                                                    </div>
+                                                {{else}}
+                                                    <div class="cc_name cc_value cc_agg_name">
+                                                        <b>{{productLink this.productR 'cc_product_link' text=(displayProductName 'Aggregate_Display'  (product-field 'parentName' this.product ../this.productList) (product-field 'sfdcName' this.product ../this.productList)) }}</b>
+                                                    </div>
+                                                {{/if}}
+                                            {{else}}
+                                                <div class="cc_name cc_value cc_agg_name">
+                                                    <b>{{productLink this.productR 'cc_product_link' text=(displayProductName 'Aggregate_Display'  (product-field 'parentName' this.product ../this.productList) (product-field 'sfdcName' this.product ../this.productList)) }}</b>
+                                                </div>
+                                            {{/ifEquals}}
+                                        {{/if}}
+
+                                        {{#ifEquals this.pricingType 'external'}}
+                                            {{#if this.extSKU}}
+                                                <div class="cc_sku cc_value cc_sku small">{{this.productSKU}}</div>
+                                            {{else}}
+                                                <div class="cc_sku cc_value cc_sku small">{{this.productSKU}}</div>
+                                            {{/if}}
+                                        {{else}}
+                                                <div class="cc_sku cc_value cc_sku small">{{this.productSKU}}</div>
+                                        {{/ifEquals}}
+
+                                        <!-- INCLUDED ITEMS -->
+                                        {{#if this.showIncludedItems}}
+
+                                            {{#ifNotEquals this.pricingType "attrGroup" }}
+                                                <p class="cc_included_items">
+                                                    <a class="included_items cc_included_items" href="#included_items{{this.sfid}}" id="includedItemsLink{{this.sfid}}" data-toggle="modal">{{pageLabelMap 'LLICheckOut_IncludedItems'}}</a>
+                                                    {{> includedDisplay}}
+                                                </p>
+                                            {{/ifNotEquals}}
+
+                                            {{#ifEquals pricingType "attrGroup" }}
+                                                <p class="cc_attribute_items">
+                                                    <a href="#included_items{{sfid}}" class="attributeItemsLink cc_included_items_link gp_attribute_items_link" id="includedItemsLink{{sfid}}" data-desktop="true" data-toggle="modal" data-id="{{sfid}}">
+                                                        {{pageLabelMap 'Cart_AttributeItems'}}
+                                                    </a>
+                                                </p>
+
+                                                <div id="included_items{{this.sfid}}" class="modal fade cc_modal cc_cart_attribute_items_modal gp_cart_attribute_items_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content cc_modal_content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close cc_close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&#215;</span></button>
+
+                                                                {{#ifEquals this.pricingType 'external'}}
+                                                                    {{#if extName}}
+                                                                        <h3 id="myModalLabel">{{this.extName}}&#58;&#160;{{pageLabelMap 'CheckOut_AttributeItems'}}</h3>
+                                                                    {{else}}
+                                                                        <h3 id="myModalLabel">{{this.productName}}&#58;&#160;{{pageLabelMap 'CheckOut_AttributeItems'}}</h3>
+                                                                    {{/if}}
+                                                                {{else}}
+                                                                    <h3 id="myModalLabel">{{this.productName}}&#58;&#160;{{pageLabelMap 'CheckOut_AttributeItems'}}</h3>
+                                                                {{/ifEquals}}
+                                                            </div>
+
+                                                            <div class="modal-body cc_modal-body modal-attribute_items{{this.sfid}}" id="modal-attribute_items{{sfid}}">
+                                                                <div class="table-responsive">
+                                                                    <table class="cart_figures table table-striped table-condensed cc_table cc_included_items">
+                                                                        <thead class="cc_table_header">
+                                                                            <tr>
+                                                                                <th class="cc_name">{{pageLabelMap 'CartInc_SKU'}}</th>
+
+                                                                                <!--{{#each this.topAttributes}}
+                                                                                    <th class="cc_attribute_name">{{this.displayName}}</th>
+                                                                                {{/each}}-->
+
+                                                                                <!--<th class="cc_attribute_name">{{this.primaryAttr.displayName}}</th>
+                                                                                <th class="cc_attribute_name">{{this.secondaryAttr.displayName}}</th>
+                                                                                <th class="cc_attribute_name">{{this.tertiaryAttr.displayName}}</th>-->
+
+                                                                                <th class="cc_attribute_qty">{{pageLabelMap 'CartInc_AttributeQuantity'}}</th>
+                                                                                <th class="cc_total">{{pageLabelMap 'CartInc_Price'}}</th>
+                                                                                <th class="cc_total">{{pageLabelMap 'CartInc_Total'}}</th>
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody>
+                                                                        {{#each this.minorLines}}
+                                                                        <tr>
+                                                                            <td class="text-nowrap">
+                                                                                {{#if extSKU}}
+                                                                                    {{extSKU}}
+                                                                                {{else}}
+                                                                                    {{mockProduct.sku}}
+                                                                                {{/if}}
+                                                                            </td>
+
+                                                                            <!--{{#if this.primaryAttr}}
+                                                                                <td><span class="cc_attr_display">{{this.primaryAttr}}</span></td>
+                                                                            {{/if}}
+
+                                                                            {{#if this.secondaryAttr}}
+                                                                                <td><span class="cc_attr_display">{{this.secondaryAttr}}</span></td>
+                                                                            {{/if}}
+
+                                                                            {{#if this.tertiaryAttr}}
+                                                                                <td><span class="cc_attr_display">{{this.tertiaryAttr}}</span></td>
+                                                                            {{/if}}-->
+
+                                                                            <td>
+                                                                                {{this.quantity}}
+                                                                            </td>
+
+                                                                            <td><span class="cc_attr_price">{{price this.price this.currencyCode}}</span></td>
+                                                                            <td><span class="cc_attr_line_total">{{price this.subAmount this.currencyCode}}</span></td>
+                                                                        </tr>
+                                                                        {{/each}}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <hr/>
+                                                                <!--<div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <span class="pull-right">{{pageLabelMap 'CartInc_Total'}}&#58;&#160;{{price this.attributes.subAmount}}</span>
+                                                                    </div>
+                                                                </div>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/ifEquals}}
+                                        {{/if}}
+                                    </td>
+
+                                    <td class="LLI-CartItems-col">
+                                        <p>{{this.quantity}}</p>
+                                    </td>
+
+                                    <td class="LLI-CartItems-col">
+                                        {{#ifEquals pricingType "attrGroup" }}
+                                            {{pageLabelMap 'SeeAttributeItems'}}
+                                        {{else}}
+                                            {{#if this.price}}
+                                                <p>{{{price this.price}}}</p>
+                                            {{/if}}
+                                        {{/ifEquals}}
+                                    </td>
+
+                                    <td class="LLI-CartItems-col">
+                                        {{#ifEquals pricingType "attrGroup" }}
+                                            {{pageLabelMap 'SeeAttributeItems'}}
+                                        {{else}}
+                                            {{#if this.itemTotal}}
+                                                {{{price this.itemTotal}}}
+                                            {{/if}}
+                                        {{/ifEquals}}
+                                    </td>
+
+                                    <td class="LLI-CartItems-col">
+                                        <p class="cc_move_item">
+                                            <a href="" class="moveItem cc_moveItem" data-group="{{this.cartItemGroup}}" data-id="{{this.sfid}}" data-toggle="modal">{{pageLabelMap 'LLICheckOut_MoveItemBtn'}}</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            {{/ifEquals}}
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        {{else}}
+            <p>{{pageLabelMap 'LLICheckOut_EmptyGroup'}} </p>
+        {{/if}}
+    </script>
+
+    <script id="CKZ-Checkout-AttributeItems" type="text/template">
+        TEST
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.LLIShippingDetailView.desktop.tmpl = 'CKZ-Shipping-Detail-LLI-Desktop';
+            CCRZ.uiProperties.LLIShippingDetailView.partial.cartItemsDesktop = '#CKZ-CartItem-Detail-LLI-Desktop';
+            // CCRZ.uiProperties.LLIShippingDetailView.partial.attributesDisplay = '#CKZ-Checkout-AttributeItems';
+
+            // Handlebars.registerPartial('myPartial', '{{name}}');
+
+
+            CCRZ.pubSub.on('view:LLIShippingDetailView:refresh', function() {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+
+        });
+    </script>
+</apex:component>

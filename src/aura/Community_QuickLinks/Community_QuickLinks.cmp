@@ -1,0 +1,57 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes">
+    <aura:attribute type="String" name="FirstImg" />
+    <aura:attribute type="String" name="SecondImg" />
+    <aura:attribute type="String" name="ThirdImg" />
+    
+    <aura:attribute type="String" name="FirstLink" />
+    <aura:attribute type="String" name="SecondLink" />
+    <aura:attribute type="String" name="ThirdLink" />
+    
+    <aura:attribute type="String" name="FirstText" />
+    <aura:attribute type="String" name="SecondText" />
+    <aura:attribute type="String" name="ThirdText" />
+    
+    <aura:attribute type="String" name="HeadingBackgroundColor" />
+    <aura:attribute type="String" name="HeadingFontColor" />
+
+
+    <div class="slds-size_1-of-1 slds-grid slds-wrap slds-gutters slds-align_absolute-center">
+        
+        <aura:if isTrue="{!v.FirstImg != ''}">
+            <div class="slds-size_1-of-1 slds-large-size_1-of-3 slds-col slds-m-top_medium">
+                <a href="javascript:void(0)" onclick="{!c.redirectFirst}" >
+                    <aura:if isTrue="{!v.FirstText != ''}">
+                        <div class="imgheading" style="{! 'background-color:' + v.HeadingBackgroundColor + ';color:' + v.HeadingFontColor + ';'}">
+                            <h3>{!v.FirstText}</h3>
+                        </div>
+                    </aura:if>
+                    <img src="{!v.FirstImg}" title="Pre Shift Huddle" alt="PreShiftHuddle" />
+                </a>
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!v.SecondImg != ''}">
+            <div class="slds-size_1-of-1 slds-large-size_1-of-3 slds-col slds-m-top_medium">
+                <a href="javascript:void(0)" onclick="{!c.redirectSecond}" >
+                    <aura:if isTrue="{!v.SecondText != ''}">
+                        <div class="imgheading" style="{! 'background-color:' + v.HeadingBackgroundColor + ';color:' + v.HeadingFontColor + ';'}">
+                            <h3>{!v.SecondText}</h3>
+                        </div>
+                    </aura:if>
+                    <img src="{!v.SecondImg}"  title="Food Safety Checklist" alt="Food" />
+                </a>
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!v.ThirdImg != ''}">
+            <div class="slds-size_1-of-1 slds-large-size_1-of-3 slds-col slds-m-top_medium">
+                <a href="javascript:void(0)" onclick="{!c.redirectThird}" >
+                    <aura:if isTrue="{!v.ThirdText != ''}">
+                        <div class="imgheading" style="{! 'background-color:' + v.HeadingBackgroundColor + ';color:' + v.HeadingFontColor + ';'}">
+                            <h3>{!v.ThirdText}</h3>
+                        </div>
+                    </aura:if>
+                    <img src="{!v.ThirdImg}" title="Daily Planner" alt="DailyPlanner" />
+                </a>
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

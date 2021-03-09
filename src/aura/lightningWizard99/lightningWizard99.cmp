@@ -1,0 +1,31 @@
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    
+    <aura:attribute name="steps" type="Object[]"></aura:attribute>
+    <aura:attribute name="subtags" type="Object[]"></aura:attribute>
+    <aura:attribute name="currentStep" type="Integer" default="0"></aura:attribute>
+    <aura:attribute name="totalSteps" type="Integer" ></aura:attribute>
+    
+    <aura:handler event="c:lightningWizardStepChange99" action="{!c.handleStepChange}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.currentStep}" action="{!c.stepChange}"/>
+    <!--
+    <div class="slds-tabs_path" role="application">
+        <ul class="slds-tabs_path__nav" role="tablist">
+            <aura:iteration items="{!v.steps}" var="step">
+                <li class="{! 'slds-tabs_path__item ' + step.className }" role="presentation">
+                    <a aria-selected="true" class="slds-tabs_path__link"  role="tab" >
+                        <span class="slds-tabs_path__stage">
+                            <lightning:icon iconName="utility:check" size="x-small" variant="inverse"/>
+                            <span class="slds-assistive-text">{!step.name}</span>
+                        </span>
+                        <span class="slds-tabs_path__title">{!step.name}</span>
+                    </a>
+                </li>
+            </aura:iteration>
+        </ul>
+    </div>
+-->
+    <div class="slds-m-top_large">
+        {!v.body}
+    </div>
+</aura:component>

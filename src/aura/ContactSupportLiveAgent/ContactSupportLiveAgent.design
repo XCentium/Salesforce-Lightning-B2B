@@ -1,0 +1,7 @@
+<design:component label="Contact Support - Live Agent">
+<design:attribute name="title" label="Title"/>
+<design:attribute name="subtitle1" label="Subtitle One"/>
+<design:attribute name="subtitle2" label="Subtitle Two"/>
+<design:attribute name="onlineButtonText" label="Online Chat Button Text" />    
+<design:attribute name="offlineButtonText" label="Offline Chat Button Text" />
+</design:component>

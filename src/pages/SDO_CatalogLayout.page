@@ -1,0 +1,233 @@
+<apex:page showHeader="false" standardController="order" extensions="SDO_Catalog">
+    <apex:composition template="SDO_Catalog">
+        <apex:define name="_layout">
+	     <apex:form >
+
+    <!-- BEGIN HEADER 
+    <div class="header">
+      <div class="container">
+      	<h1 class="page-title">Product Catalog</h1>
+        <div class="checkout-wrapper" style="float:right;">
+        	<span>Checkout</span>
+        </div>
+        <div class="top-cart-block">
+          <div class="top-cart-info">
+            <a href="javascript:void(0);" class="top-cart-info-count">0 items</a>
+            <a href="javascript:void(0);" class="top-cart-info-value">$0</a>
+          </div>
+          <i class="fa fa-shopping-cart"></i>          
+          <div class="top-cart-content-wrapper">
+            <div class="top-cart-content">
+              <ul class="scroller" style="height: 250px;">
+                <li>
+                  <a href="shop-item.html"><img src="../../assets/frontend/pages/img/cart-img.jpg" alt="Rolex Classic Watch" width="37" height="34"/></a>
+                  <span class="cart-content-count">x 1</span>
+                  <strong><a href="shop-item.html">Rolex Classic Watch</a></strong>
+                  <em>$1230</em>
+                  <a href="javascript:void(0);" class="del-goods">&nbsp;</a>
+                </li>
+              </ul>
+              <div class="text-right">
+                <a href="shop-shopping-cart.html" class="btn btn-default">View Cart</a>
+                <a href="shop-checkout.html" class="btn btn-primary">Checkout</a>
+              </div>
+            </div>
+          </div>            
+        </div>
+      </div>
+    </div>
+    -->
+    <!-- Header END -->
+
+<div style="position:fixed;top:50px;left:300px;">{!debugString} <apex:pageMessages id="msgs" /></div>
+    <div class="main">
+      <div class="container">
+
+      <!-- change pricebook code -->
+      <div class="row">
+        <div class="col-xs-12">
+            <div id="currentPricebook"> 
+              <label class="control-label">Current Pricebook: </label> <a id="currentPricebookName" href="#" onclick="$('#currentPricebook').hide();$('#changePricebook').show();">{!pricebookName}</a>
+            </div>
+            <div id="changePricebook" style="display:none;">
+              <select id="pricebookSelectList">
+                <apex:repeat value="{!pricebookList}" var="pb2">
+                  <option name="{!pb2.name}" value="{!pb2.id}">{!pb2.name}</option>
+                </apex:repeat>
+              </select>
+              <div onclick="setPricebook();" class="btn btn-default">Update</div>
+            </div>
+          </div>
+      </div>
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+          <!-- BEGIN SIDEBAR -->
+          <div class="sidebar col-md-3 col-sm-3">
+	       <input id="searchInput" placeholder="Search Products..." class="form-control" onkeyup="searchProducts();"/>
+
+            <div class="sidebar-filter margin-bottom-25">
+              <!-- SEARCH -->
+              
+              
+              <!-- PRODUCT CATALOG -->
+              <div class="form-group" style="margin-top:-10px;">
+	          	<br/>
+	          	<label class="form-title">Product Catalog</label>
+	          	<apex:inputField onchange="setProductCatalog();" styleClass="productCatalogInput form-control" value="{!testProduct.Product_Catalog__c}"/>
+	          </div>
+
+              <!-- CHECKBOXES -->
+              <div class="form-group">
+	              <label class="form-title">{!Attribute1Name}</label>
+	              <div class="checkbox-list attribute1">
+	                <apex:selectCheckboxes onchange="" layout="pageDirection" value="{!Attribute1}">
+	            		<apex:selectoptions value="{!Attributes1}"></apex:selectoptions>
+	                </apex:selectCheckboxes>
+	              </div>
+              </div>
+              <div class="checkbox-group">
+	              <label class="form-title">{!Attribute2Name}</label>
+	              <div class="checkbox-list attribute2">
+	                <apex:selectCheckboxes layout="pageDirection" value="{!Attribute2}">
+	            		<apex:selectoptions value="{!Attributes2}"></apex:selectoptions>
+	                </apex:selectCheckboxes>
+	              </div>
+              </div>
+              <div class="checkbox-group">
+	              <label class="form-title">{!Attribute3Name}</label>
+	              <div class="checkbox-list attribute3">
+	                <apex:selectCheckboxes layout="pageDirection" value="{!Attribute3}">
+	            		<apex:selectoptions value="{!Attributes3}"></apex:selectoptions>
+	                </apex:selectCheckboxes>
+	              </div>
+              </div>
+              <div class="checkbox-group">
+	              <label class="form-title">{!Attribute4Name}</label>
+	              <div class="checkbox-list attribute4">
+	                <apex:selectCheckboxes layout="pageDirection" value="{!Attribute4}">
+	            		<apex:selectoptions value="{!Attributes4}"></apex:selectoptions>
+	                </apex:selectCheckboxes>
+	              </div>
+              </div>
+              <div class="checkbox-group">
+	              <label class="form-title">{!Attribute5Name}</label>
+	              <div class="checkbox-list attribute5">
+	                <apex:selectCheckboxes layout="pageDirection" value="{!Attribute5}">
+	            		<apex:selectoptions value="{!Attributes5}"></apex:selectoptions>
+	                </apex:selectCheckboxes>
+	              </div>
+              </div>
+              </div>
+          </div>
+          <!-- END SIDEBAR -->
+          <!-- BEGIN CONTENT -->
+          <div class="col-md-9 col-sm-9 product-content">
+            <div class="row list-view-sorting clearfix">
+              <div class="col-md-2 col-sm-2 list-view">
+                <a href="#"><i class="fa fa-th-large"></i></a>
+                <a href="#"><i class="fa fa-th-list"></i></a>
+              </div>
+              <div class="col-md-10 col-sm-10">
+                <div class="pull-right">
+                  <label class="control-label">Sort&nbsp;By:</label>
+                  <select onchange="sortItems();" class="form-control input-sm sortInput">
+                    <option value="ASC" selected="selected">Default</option>
+                    <option value="ASC">Name (A - Z)</option>
+                    <option value="DESC">Name (Z - A)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <!-- BEGIN PRODUCT LIST -->
+            <div class="row product-list">
+            <apex:actionFunction action="{!search3}" name="search3" rerender="productList, msgs" >
+		        <apex:param name="searchTerm" assignTo="{!searchTerm}" value=""/>
+		        <apex:param name="catalogInput" assignTo="{!catalogInput}" value=""/>
+		        <apex:param name="attributes" assignTo="{!attributes}" value=""/>
+		        <apex:param name="searchOrder" assignTo="{!searchOrder}" value=""/>
+		    </apex:actionFunction>
+
+              <apex:outputPanel id="productList">
+	              <apex:repeat value="{!pwList}" var="pw">
+	              	<!-- PRODUCT ITEM START -->
+        					<div data-attributes="{!pw.p.product2.attribute_1__c} {!pw.p.product2.attribute_2__c} {!pw.p.product2.attribute_3__c} {!pw.p.product2.attribute_4__c} {!pw.p.product2.attribute_5__c}" data-name="{!pw.p.name} {!pw.p.product2.productcode}" data-id="{!pw.p.product2.id}" data-catalog="{!pw.p.product2.product_catalog__c}" class=" product-wrapper col-xs-4"> <!-- col-md-4 col-sm-6 col-xs-12 -->
+        						<div class="product-item" >
+        						  <div class="pi-img-wrapper">
+        						    
+        						    <img src="/servlet/servlet.FileDownload?file={!pw.p.product2.image__c}" class="img-responsive" alt=""/>
+        						    <div>
+        						      <a onclick="openSubtab('{!pw.p.id}','{!pw.p.name}');" class="btn btn-default">View</a>
+        						    </div>
+        						  </div>
+        						  <h3><a href="#" onclick="openSubtab('{!pw.p.id}','{!pw.p.name}');" style="text-transform:none;">{!pw.p.name}</a></h3><br/>
+        						  <div class="pi-price">${!pw.p.unitprice}</div>
+        						 <a href="#" onclick="addProductToShoppingCart('{!pw.p.id}');" class="btn btn-default add2cart">Add to cart</a>
+        						</div>
+        					</div>
+					         <!-- PRODUCT ITEM END -->
+	              </apex:repeat>
+              </apex:outputPanel>
+            </div>
+            <!-- END PRODUCT LIST -->
+          </div>
+          <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+      </div>
+    </div>
+
+
+  </apex:form>
+  <script>
+
+  function setPricebook() {
+    console.log($('#pricebookSelectList').find('option:selected').attr("name"));
+    var r1 = sforce.connection.query('select id, pricebook2id from order where id=\'{!order.id}\'');
+    var r2 = r1.getArray("records");
+    var order = r2[0];
+    order.pricebook2id = $('pricebookSelectList').val();
+    var r3 = sforce.connection.update([order]);
+    if (r3[0].getBoolean("success")) {
+      console.log("order with id " + r3[0].id + " updated");
+    } else {
+      console.log("failed to update order " + r3[0]);
+    }
+    $('#currentPricebook').show();
+    $('#changePricebook').hide();
+    var newPricebookname = $('#pricebookSelectList').find('option:selected').attr("name");
+    $('#currentPricebookName').html(newPricebookname);
+  }
+
+    var tabId;
+    var orderId;
+     function setTabTitle() {
+          sforce.console.getEnclosingPrimaryTabId(renameTab);
+     }       
+    
+     var previousOnload = window.onload;        
+     window.onload = function() { 
+          if (previousOnload) { 
+              previousOnload();
+          }                
+          setTimeout('setTabTitle()', '500'); 
+     }
+        
+      var renameTab = function renameTab(result) {
+          tabId = result.id;
+          sforce.console.getEnclosingPrimaryTabObjectId(showObjectId);
+      }
+
+      var showObjectId = function showObjectId(result) {
+          orderId = result.id;
+          console.log('Order Id : {!order.id}');
+          var result2 = sforce.connection.retrieve("OrderNumber", "Order", [orderId]);
+          sforce.console.setTabTitle('Order ' + result2[0].OrderNumber,tabId);
+          sforce.console.setTabIcon('/img/icon/orderBell16.png',tabId);
+        };
+  </script>
+
+    <!-- END fast view of a product -->
+            </apex:define>
+    </apex:composition>
+
+</apex:page>

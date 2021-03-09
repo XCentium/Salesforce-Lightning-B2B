@@ -1,0 +1,184 @@
+.THIS .formElementNoLabel{
+    margin-top:1.25rem;
+}
+
+.THIS .paddedCardBody {
+        padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+
+}
+
+.THIS .width100 {
+    width:100%;
+}
+
+.THIS .slds-card{
+      background: white !important;
+      border: 1px solid #dddbda !important;
+      box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.1) !important;
+
+}
+
+.THIS .slds-card__header{
+  padding: .75rem 1rem 0 !important;
+  margin: 0 0 .75rem !important;
+}
+
+
+
+
+.THIS .headerBlock {
+    height:auto;
+    min-height:250px;
+   	margin-top:15px;
+
+}
+
+.THIS .headerBlockSmall {
+    height:auto;
+    min-height:150px;
+   	margin-top:15px;
+
+}
+
+.THIS .cardHeight{
+    height:100%;
+      min-height:240px;
+        padding-bottom: 20px;
+}
+
+.THIS .circle_green
+    {
+
+        padding: 10px 11px;
+        background: #1fcaa0;
+        width: 2px;
+        border-radius: 100%;
+        margin-left: 10px;
+        margin-right: auto;
+        width: 1%;
+    }
+
+.THIS .circle_orange
+    {
+
+        padding: 10px 11px;
+        background: #f39e58;
+        width: 2px;
+        border-radius: 100%;
+        margin-left: 10px;
+        margin-right: auto;
+        width: 1%;
+    }
+
+.THIS .circle_red
+    {
+
+        padding: 10px 11px;
+        background: #ef6e64;
+        width: 2px;
+        border-radius: 100%;
+        margin-left: 10px;
+        margin-right: auto;
+        width: 1%;
+    }
+
+.THIS .centerContent{
+    text-align: center;
+}
+
+.THIS .flexDisp {
+    display:flex;
+}
+
+.THIS .width100 {
+    width:100%
+}
+
+.THIS .btnBrandDropDown {
+	padding-left: 0.4rem;
+    padding-right: 0.4rem;
+    border-radius: 0 .25rem .25rem 0;
+    box-shadow: inset 1px 0 0 rgb(255, 255, 255)!important;
+}    
+
+.THIS .btnBrandDropDown button {
+    border-color: rgba(27, 82, 151, 1.0) !important;
+    color: rgb(255, 255, 255) !important;
+    border: 0 !important;
+}
+
+.THIS .btnMobileDropDown svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.THIS .savingInProgress{
+    position: relative;
+    display: inline-block;
+    margin-top:-10px;
+    margin-left: 15px;
+    width: 55px;
+    vertical-align: middle;
+    white-space: nowrap; 
+}
+
+.THIS .mobileHeader {
+   position: fixed;
+   display:flex; 
+   top: 0;
+   right: 0;
+   left: 0; 
+   padding: 10px;
+   background:white;
+   width: 100%;
+   z-index: 10;  
+   transform: translate3d(0,0,0);
+   border-bottom: solid 1px #ccc; 
+   /*background:rgb(0, 112, 210);*/
+}
+
+.THIS .mobileFooter {
+    z-index: 10;
+    position: absolute;
+    bottom: 0;
+    /* height: 50px !important; */
+    width: 100%;
+    box-sizing: border-box;
+    height: 3.75rem;
+    border-top: 1px solid rgb(221, 219, 218);
+    background-color: rgb(255, 255, 255);
+    transition: transform .2s,visibility .2s;
+    visibility: visible;
+    display: block; 
+    transform: translate3d(0,0,0);
+}
+
+
+
+.THIS .scroller {
+    height: 97vh;
+    overflow:scroll;
+}
+
+
+.THIS .scrollerForQuickAction{
+    margin-left: -14px;
+    margin-right: -14px;
+    margin-top:-17px;
+}
+
+.THIS .mobileSummary{
+    background: white; 
+    padding: 10px;
+}
+
+.THIS .height40px{
+  height: 40px;  
+}
+
+.THIS .ddmenu button{
+  height: 40px;
+  padding-left:10px;
+  padding-right:10px;
+}

@@ -1,0 +1,38 @@
+<aura:component controller="LogMeInCtrl" implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" access="global" >
+    <aura:attribute name="LoginUserIds" type="String"></aura:attribute>
+    <aura:attribute name="LoginUserSubIds" type="String" ></aura:attribute>
+    <aura:attribute name="LoginUsers" type="Aura.Component[]" ></aura:attribute>
+    <aura:attribute name="LoginSubUsers" type="Aura.Component[]" ></aura:attribute>
+    <aura:attribute name="Title" type="String" default="Personas"></aura:attribute>
+    <lightning:workspaceAPI aura:id="workspace" />
+    <lightning:navigation aura:id="navigate" />
+    <aura:attribute name="showContent" type="Boolean" default="True"/>
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"></aura:handler>
+    <div class="slds-scope slds-card">
+        <div class="slds-card__header">
+            <h2 class="slds-text-heading--small">{!v.Title}</h2> 
+            <aura:if isTrue="{!v.showContent == TRUE}">
+                <button class="slds-button_neutral topright" onclick="{!c.gotoURL}">Learn More</button>
+            </aura:if>
+        </div>
+        <aura:if isTrue="{! not(empty(v.LoginUsers)) }">
+            <div class="slds-card__body slds-card__body--inner">
+                <strong>Suggested Personas for this App</strong>
+                {!v.LoginUsers}
+            </div>
+            <aura:set attribute="else">
+              <div class="padding center"><strong>Your Admin User may be used to demonstrate this app</strong></div>
+            </aura:set>
+        </aura:if>
+
+        <aura:if isTrue="{! not(empty(v.LoginSubUsers)) }">
+            <hr/>
+            <div class="slds-card__body slds-card__body--inner">
+                <strong>Related Community Personas</strong>
+                {!v.LoginSubUsers}
+            </div>
+        </aura:if>
+        <div class="slds-card__footer">
+        </div>
+    </div>
+</aura:component>

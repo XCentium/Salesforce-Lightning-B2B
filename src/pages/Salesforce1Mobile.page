@@ -1,0 +1,62 @@
+<apex:page controller="SDO_Salesforce1" showHeader="false">
+    <title>Salesforce1</title>
+    <style type="text/css">
+        #container{
+            height: 735px;
+            width: 1250px;
+            background:url({!$Resource.ipadmini}) no-repeat left top;
+            background-size:100%;
+            position:relative;
+            margin:0 auto;
+            margin-top: 10px;
+        }
+        #frameHolder{
+            position: absolute;
+            top: 51px;
+            left: 108px;
+            border: 1px solid #ccc;
+        }
+        #theFrame{
+            width: 1033px;
+            height: 630px;
+        }
+        #wrapper{
+            background:url({!$Resource.iphonebackground}) no-repeat;
+            position:absolute;
+            background-size: cover;
+            background-position: center; 
+            width:100%;
+            height:100%;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload=function(){
+            var cssLink = document.createElement("link") 
+            cssLink.href = "/apex/iPhoneStyleSheet"; 
+            cssLink .rel = "stylesheet"; 
+            cssLink .type = "text/css"; 
+            document.getElementById("theFrame").contentDocument.body.appendChild(cssLink);
+        }
+    </script>
+<!--    <apex:form >
+        <a href="/{!backgroundid[0]}" target="_blank">Change Image</a>
+    </apex:form>    
+-->
+    <div id="wrapper">
+        <div id="container">
+            <div id="frameHolder">
+                <iframe src="/one/one.app?allowFraming=true" frameborder="0" id="theFrame"/>
+            </div>
+        </div>
+    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-46606102-1', 'salesforce.com');
+      ga('send', 'pageview');
+    
+    </script>
+</apex:page>

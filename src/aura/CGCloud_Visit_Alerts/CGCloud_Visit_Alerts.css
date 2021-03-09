@@ -1,0 +1,32 @@
+.THIS.alert{
+    border:1px solid #ddd;
+    margin:10px;
+    background:#fff;
+}
+.THIS .icon{
+    position:relative;
+    top:5px;
+}
+.THIS .iconwrapper{
+    width:30px;
+    margin-right:10px;
+    float:left;
+}
+.THIS .textwrapper{
+    width:calc(100% - 40px);
+    float:left;
+}
+.THIS .clear{
+    clear:both;
+}
+.THIS .inline{
+    display:inline-block;
+    margin-right:20px;
+}
+.THIS .padding{
+    padding:20px;
+}
+.THIS h2{
+    font-weight:bold;
+    font-size:16px;
+}

@@ -1,0 +1,74 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="cqb_ContactHighlight_CT">
+    
+    <aura:attribute name="recordId" type="String" access="global"/>
+    
+    <!--Design attribute fields -->
+    <aura:attribute name="contactImgUrl" type="String" access="global"/>
+    <aura:attribute name="imageSize" type="String" access="global" default="124px"/>
+    <aura:attribute name="borderHexColor" type="String" access="global"/>    
+    <aura:attribute name="fieldsListString" type="String" access="global"/> 
+    <aura:attribute name="backgroundImageUrl" type="String" access="global"/>    
+    <!-- Easter Egg for Strat West team -->    
+    <aura:attribute name="stiefelingMullet" type="Boolean" access="global"/>
+    
+    <aura:attribute name="showEdit" type="Boolean" default="false" access="global" />
+    <aura:attribute name="contact" type="Contact" access="global"/>
+    <aura:attribute name="user" type="User" access="global" />
+    <aura:attribute name="fieldsList" type="String[]" access="global"/>        
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>        
+    
+    <div class="slds-card">
+        <div class="container slds-clearfix">  		
+            <div class="header-image slds-clearfix" style="{! 'background-image:url(' + (v.backgroundImageUrl ? v.backgroundImageUrl : $Resource.userBannerDefault) + ');background-position: ' + (v.backgroundImageUrl ? '0px' : '0px -30px') + ';'}" >                                                 
+                <div class="myGrid grid slds-grid slds-wrap slds-float_left slds-m-horizontal_large">                    
+                    <div class="image slds-col slds-m-left_medium" style="{! 'border-color:' + (v.borderHexColor ? v.borderHexColor : '#FFFFFF' ) + ';'  }" >
+                        <aura:if isTrue="{!v.stiefelingMullet}">
+                            <img src="{!$Resource.ContactImageResources + '/ContactImageResources/StiefelingMullet.png'}" alt="Contact Image" style="{! 'width:' + (v.imageSize) + ';height:' + (v.imageSize) + ';border-radius:50%;'}"  />
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!(v.contactImgUrl == 'none')}">
+                                    <aura:if isTrue="{!empty(v.user.FullPhotoUrl)}">
+                                        <img src="{!$Resource.ContactImageResources + '/ContactImageResources/Astro.png'}" alt="Contact Image" style="{! 'width:' + (v.imageSize) + ';height:' + (v.imageSize) + ';border-radius:50%;'}"  />
+                                        <aura:set attribute="else">
+                                            <img src="{!v.user.FullPhotoUrl}" alt="Contact Image" style="{! 'width:' + (v.imageSize) + ';height:' + (v.imageSize) + ';border-radius:50%;'}" />
+                                        </aura:set>
+                                    </aura:if>
+                                    <aura:set attribute="else">
+                                        <img src="{!$Resource.ContactImageResources + '/ContactImageResources/' + v.contactImgUrl}" alt="Contact Image" style="{! 'width:' + (v.imageSize) + ';height:' + (v.imageSize) + ';border-radius:50%;'}" />
+                                    </aura:set>                  
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>                       
+                    </div>    
+                    <lightning:buttonMenu iconsize="x-small" menuAlignment="right" aura:id="menu" onselect="{! c.handleDropdownSelect }" alternativeText="Show menu" class="dropdownSelect slds-button--icon-x-small">
+                        <lightning:menuItem value="View" label="View" />
+                        <lightning:menuItem value="Edit" label="Edit" />
+                    </lightning:buttonMenu>
+                    <aura:if isTrue="{!not(empty(v.contact.Id))}">                        
+                        <lightning:recordViewForm recordId="{!v.contact.Id}" objectApiName="Contact" class="slds-grid slds-grid_align-space recordViewForm slds-truncate">                                                
+                            <div class="slds-m-right_x-large" style="display:flex;flex-direction:column;">
+                                <span class="slds-text-heading_small slds-form-element__static">{!v.contact.Salutation}&nbsp;{!v.contact.Name}</span>               
+                                <span class="slds-form-element__static">{!v.contact.Title}</span>                                                   
+                            </div>
+                            <div class="fieldsContainer">
+                                <aura:iteration items="{!v.fieldsList}" var="fieldName">
+                                    <aura:if isTrue="{!fieldName == 'AccountId'}">
+                                        <div class="outputItem">
+                                            <label class="slds-form-element__label" for="form-element-help-01">Account Name</label>
+                                            <lightning:outputField fieldName="{!fieldName}" variant="label-hidden"/> 
+                                        </div>
+                                        <aura:set attribute="else">
+                                            <lightning:outputField fieldName="{!fieldName}" class="outputItem"/> 
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:iteration>        
+                            </div>
+                        </lightning:recordViewForm>      
+                    </aura:if>                    
+                    <c:cqb_EditModal contactId="{!v.contact.Id}" show="{!v.showEdit}"/>                    
+                </div>
+            </div>                                                      
+        </div>              
+    </div>
+    
+</aura:component>

@@ -1,0 +1,4 @@
+<aura:component >
+    <aura:attribute name="Contact" type="Contact[]"/>
+	<img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/Retail/Clienteling/Clienteling_Timeline.png" class="fullwidth" width="100%"/>
+</aura:component>

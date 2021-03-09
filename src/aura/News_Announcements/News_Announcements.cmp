@@ -1,0 +1,155 @@
+<aura:component controller="News_AnnouncementsController" implements="forceCommunity:availableForAllPageTypes">
+    <aura:attribute name="title" type="String" default="News" />
+    <aura:attribute name="numbberOfArticles" type="Integer" default="5" />
+    <aura:attribute name="useInSideBar" type="Boolean" default="false" />
+    <aura:attribute name="ErrorMessage" type="String" default="No records to display!" />
+    <aura:attribute name="displayLoader" type="Boolean" />
+    
+    <!-- Handle component initialization in a client-side controller -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- Populate values in attributes -->
+    <aura:attribute name="selectedNewsChannel" type="String"/><!--used with LDS Menu-->
+    <aura:attribute name="encodedSelectedNewsChannel" type="String"/><!--encoded to account for spaces or special characters in the channel name-->    
+    <aura:attribute name="menuState" type="String" default="Collapsed"/><!--used with LDS Menu-->
+    <aura:attribute name="newsChannelNames" type="News_Announcements__c[]"/>
+    <aura:attribute name="numDocsByChannel" type="Map"/>
+    <aura:attribute name="newsDocs" type="News_Announcements__c[]"/>
+
+    <div class="wrapper">
+        <!--Menus: Display newsChannel using LDS Menus component-->
+        <table style="width:auto;" ><tr><td style="padding-left:1rem;padding-top:1rem;">
+        <a aura:id="newsMenu" class="triggerLink forceListViewPicker slds-dropdown-trigger slds-dropdown-trigger--click" onclick="{!c.showHideMenu}" aria-expanded="false" title="Select News Channel" href="javascript:void(0);">
+            <div class="triggerLinkTextAndIconWrapper">
+                <span class="triggerLinkText selectedListView uiOutputText selfServiceProfileMenu" style="font-size:18px !important;text-transform:uppercase;font-weight:bold;">{!v.selectedNewsChannel}</span>
+                <!--slds-truncate selfServiceProfileMenu titleText-->
+                <aura:renderIf isTrue="{! !empty(v.newsChannelNames)}">
+                    <span class="icon-fallback-text downIcon forceIcon" style="top:35%" aria-hidden="true" data-icon="" data-key="down">
+                        <span class="icon icon-key"></span>
+                    </span>
+                    <span class="newAssistiveText forceIcon"></span>
+                </aura:renderIf>
+            </div>
+            <!--populate dropdown list-->
+            <div class="slds-dropdown slds-dropdown--left slds-dropdown--menu">
+                <ul class="dropdown__list" role="menu">
+                    <aura:iteration var="newsChannelName" items="{!v.newsChannelNames}">
+                        <li class="slds-dropdown__item">
+                            <a href="javascript:void(0);" class="slds-truncate" data-value="{!newsChannelName}" value ="{!newsChannelName}" onclick="{!c.displayNewsChannelRecords}" role="menuitem">{!newsChannelName}</a>
+                        </li>
+                    </aura:iteration>
+                </ul>
+            </div>
+        </a>
+        </td></tr></table>      
+    	<!--End Menu Option-->
+        <br/>
+        
+        <!-- Button: Display newsChannel using LDS buttons component-->
+        <!-- remove the word dash in markup below
+        <div class="slds-grid slds-wrap slds-grid-dash-pull-padded" style="padding-bottom:10px;padding-top:10px;">
+        	<div class="slds-col-dash-padded-large slds-size-dash-1-of-1">
+            	<aura:iteration var="newsChannelName" items="{!v.newsChannelNames}">
+            		<a href="javascript:void(0);" class="slds-button slds-button-dash-neutral" id="{!newsChannelName}" value ="{!newsChannelName}" onclick="{!c.displayNewsChannelRecords}">{!newsChannelName}</a>&nbsp;
+        		</aura:iteration>    
+            </div>
+        </div>
+		-->
+        <!-- Iterate over the list of News_Announcements records and display them -->
+        <aura:iteration var="newsDoc" items="{!v.newsDocs}" indexVar="i">
+             <aura:if isTrue="{!v.useInSideBar}">   
+             	<!--set div class to slds-grid vertical if displaying in Sidebar of template. This stacks the image on top of the Display Date and Title even when in desktop mode-->
+                <div class="slds-grid--vertical slds-wrap slds-grid--pull-padded">
+                    <!--adjust slds-size to 1-of-1 image height below adjusted to 125px when compared to 80px in else attribute-->
+                    <div class="slds-col--padded-large slds-size--1-of-1">
+                        <!--display news attachment as image-->
+                        <aura:if isTrue="{!newsDoc.External_URL__c}">
+                            <a href="{!newsDoc.URL__c}" target="_blank"><img style="height:125px;margin-top:4px;" src="{!$SfdcSite.pathPrefix+'/servlet/servlet.FileDownload?file='+newsDoc.ImageAttachmentId__c}"/></a>
+                        <aura:set attribute="else">
+                            <a href="{!'./detail/'+newsDoc.Id}"><img style="height:125px;margin-top:4px;" src="{!$SfdcSite.pathPrefix+'/servlet/servlet.FileDownload?file='+newsDoc.ImageAttachmentId__c}"/></a>
+                        </aura:set>
+                        </aura:if>
+                    </div>
+                    <!--display created date, title, and teaser-->
+                    <div class="slds-col--padded-large slds-size--1-of-1">
+                        <span class="slds-text-heading--label">{!newsDoc.DisplayDate__c}</span><br/>
+                        <aura:if isTrue="{!newsDoc.External_URL__c}">
+                            <a href="{!newsDoc.URL__c}" target="_blank"><ui:outputText value="{!newsDoc.Title__c}"/></a><br/>
+                        <aura:set attribute="else">
+                            <a href="{!'./detail/'+newsDoc.Id}"><ui:outputText value="{!newsDoc.Title__c}"/></a><br/>
+                        </aura:set>
+                      	</aura:if>
+                        <span class="slds-text-body--regular">{!newsDoc.Teaser__c}</span>
+                    </div>
+                    <aura:renderIf isTrue="{!i == (v.newsDocs.length-1)}">
+                        <!--No <hr/> element required as this is the last record--> 
+                        <div class="slds-col--padded-large slds-size--1-of-1" style="margin-top:8px;margin-bottom:8px;"></div>
+                    <aura:set attribute="else">
+                        <!--display <hr/> element for visually appealing separation-->
+                        <div class="slds-col--padded-large slds-size--1-of-1"><hr class="listViewContainer" style="margin-top:8px;margin-bottom:8px;"/></div>
+                    </aura:set>
+                    </aura:renderIf> 
+                </div>
+            <aura:set attribute="else">
+                <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                    <div class="slds-col--padded-large slds-size--1-of-1 slds-medium-size--4-of-12 slds-large-size--3-of-12">
+                        <!--display news attachment as image-->
+                        <aura:if isTrue="{!newsDoc.External_URL__c}">
+                            <a href="{!newsDoc.URL__c}" target="_blank"><img style="height:80px;margin-top:4px;" src="{!$SfdcSite.pathPrefix+'/servlet/servlet.FileDownload?file='+newsDoc.ImageAttachmentId__c}"/></a>
+                        <aura:set attribute="else">
+                            <a href="{!'./detail/'+newsDoc.Id}"><img style="height:80px;margin-top:4px;" src="{!$SfdcSite.pathPrefix+'/servlet/servlet.FileDownload?file='+newsDoc.ImageAttachmentId__c}"/></a>
+                        </aura:set>
+                        </aura:if>
+                    </div>
+                    <!--display created date, title, and teaser-->
+                    <div class="slds-col--padded-medium slds-size--1-of-1 slds-medium-size--8-of-12 slds-large-size--9-of-12">
+                        <span class="slds-text-heading--label">{!newsDoc.DisplayDate__c}</span><br/>
+                        <aura:if isTrue="{!newsDoc.External_URL__c}">
+                            <a href="{!newsDoc.URL__c}" target="_blank"><ui:outputText value="{!newsDoc.Title__c}"/></a><br/>
+                        <aura:set attribute="else">
+                            <a href="{!'./detail/'+newsDoc.Id}"><ui:outputText value="{!newsDoc.Title__c}"/></a><br/>
+                        </aura:set>
+                      </aura:if>
+                        <span class="slds-text-body--regular">{!newsDoc.Teaser__c}</span>
+                    </div>
+                    <aura:renderIf isTrue="{!i == (v.newsDocs.length-1)}">
+                        <!--No <hr/> element required as this is the last record--> 
+                        <div class="slds-col--padded-large slds-size--1-of-1" style="margin-top:8px;margin-bottom:8px;"></div>
+                    <aura:set attribute="else">
+                        <!--display <hr/> element for visually appealing separation-->
+                        <div class="slds-col--padded-large slds-size--1-of-1"><hr class="listViewContainer" style="margin-top:8px;margin-bottom:8px;"/></div>
+                    </aura:set>
+                    </aura:renderIf> 
+                </div>            
+            </aura:set>
+            </aura:if>
+        </aura:iteration>
+		<!-- If a menu item has no records to display-->
+         <div class="slds-grid slds-wrap slds-grid--pull-padded">
+             <div class="slds-col--padded-large slds-size--1-of-1">
+                <span aura:id="errorMsg" class="slds-box slds-theme--error hide">
+        			{!v.ErrorMessage}
+        		</span>
+             </div>
+        </div>
+        <!--display More... link, if number of news articles are greater than attribute "numbberOfArticles"-->
+        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+            <div class="slds-col--padded-large slds-size--1-of-1" >
+                <!--a aura:id="more" href="{! '#channel/' + v.encodedSelectedNewsChannel}" onclick="{!c.navigateToURL}" style="float:right;padding-bottom:1rem;" class="hide">More...</a-->
+                <a aura:id="more" href="{! 'recentnews#channel/' + v.encodedSelectedNewsChannel}" style="float:right;padding-bottom:1rem;" class="hide">More...</a>
+
+            </div>
+        </div>
+    
+        <!-- ANIMATED LOADER --> 
+        <center>
+            <aura:if isTrue="{!v.displayLoader}">
+                <div class="slds">
+                    <div id="spinner" class="slds-spinner--medium">
+                        <img  style="padding-bottom:50px;" src="{!$SfdcSite.pathPrefix+'/resource/LDS100/assets/images/spinners/slds_spinner.gif'}" alt="Loading..." />
+                    </div>
+                </div>
+        </aura:if>
+        </center>
+    </div>
+</aura:component>

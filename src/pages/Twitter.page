@@ -1,0 +1,278 @@
+<apex:page controller="Twitter_Mockup" >
+
+
+<title>Twitter</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <script>
+    $(document).ready(function(){           
+        $(".modal-footer .btn").on("click", function(e){
+        
+            var postValue = document.getElementById("j_id0:j_id2:postinfo").value;
+            $( "#post2" ).html('<div class="profileimgsmall"></div><div class="textarea"><h4 class="posth4">Rachel Morris <span class="smallh4">@xRachelMorris - 13 Nov 2017</span></h4><div class="posttext">' + postValue + '</div><div><img src="{!URLFOR($Resource.TwitterMockup, 'images/tweet-actions.png')}" alt=""></div></div><div class="clear"></div><hr/>' );
+           
+            $("#exampleModal").modal("hide");
+          e.stopPropagation();
+        });
+      });
+    
+</script>
+
+
+   
+    <style>
+        body{
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+            font-weight: 300;
+            margin:0;
+            padding:0;
+            background:#E6ECF0;
+        }
+        .center{
+            text-align:center;
+        }
+        .posth4{
+            font-size:16px;
+            margin-right:6px;
+            position:relative;
+            top:4px;
+            font-weight:bold;
+        }
+        .posttext{
+            display:block;
+            padding:10px 0;
+        }
+        .smallh4{
+            font-size:14px;
+            color:#657786;
+            font-weight:normal;
+        }
+        .container{
+            width:1180px;
+            margin:0 auto;
+        }
+        .half{width:50%;float:left;}
+        .clear{clear:both;}
+        .padding{padding:10px;display:block;}
+        .paddingtopbottom{padding:20px 0;}
+        .textright{text-align:right}
+        #header{
+            border-bottom:1px solid #9C9496;
+            background:#fff;
+            position:fixed;
+            top:0;
+            left:0;
+            right:0;
+        }
+        .mytweetheader{
+            border-bottom:1px solid #E6ECF0;
+        }
+        #coverphoto{
+            width:100%;
+            height:462px;
+            background-image:url("{!URLFOR($Resource.TwitterMockup, 'images/cover.jpeg')}");
+            background-size:cover;
+            background-position:center center;
+        }
+        #infobar{
+            border-bottom:1px solid #9C9496;background:#fff;;
+        }
+        .twothird{width:890px;float:right;}
+        .third{
+            width:calc(100% - 890px);
+            float:left;
+            position:relative;
+        }
+        .fullwidth{
+            width:100%;
+            height:auto;
+        }
+        .profileimg{
+            background-image:url("{!URLFOR($Resource.TwitterMockup, 'images/profilepicture.jpg')}");
+            background-position:center center;
+            background-size:cover;
+            width:200px;
+            height:200px;
+            border-radius:50%;
+            border:5px solid #fff;
+            position:absolute;
+            top:-120px;
+            left:0;
+        }
+        .profileimgsmall{
+            background-image:url("{!URLFOR($Resource.TwitterMockup, 'images/profilepicture.jpg')}");
+            background-position:center center;
+            background-size:cover;
+            width:50px;
+            height:50px;
+            border-radius:50%;
+            border:5px solid #fff;
+            float:left;
+            margin-right:10px;
+        }
+        .textarea{
+            width:calc(100% - 60px);
+            float:right;
+        }
+        textarea{
+            width:100%;
+            outline:none;
+            border:2px solid #FFC3A5;
+            border-radius:5px;
+            padding:10px;
+        }
+        textarea::placeholder{color:#AEBBC5;}
+        .modal-body,.modal-footer{
+            background:#FFF1EB;
+        }
+        .whitebg{
+            background:#fff;
+        }
+        .handle{color:#657786; font-size:15px;display:block;margin-bottom:10px;margin-top:-10px;}
+        .whoifollow{
+            width:33%;
+            float:right;
+        }
+        .mytweets{
+            width:66%;
+            float:left;
+        }
+        .btn-primary{background:#FF864B!important;border-radius:10px;border:none;}
+        @media (max-width: 1200px) {
+            .container{width:90%;}
+            .third{width:calc((100%/3) - 20px);}
+            .twothird{width:66.6665%;}
+            .mytweets,.whoifollow{width:100%;margin-bottom:10px;}
+        }
+        @media (max-width: 960px) {
+            .third{display:none}
+            .twothird{width:100%;}
+            .half{width:100%;display:block;float:none;margin-bottom:5px;text-align:center;}
+            .half:first-child{display:none;}
+            .half img{width:100%;}
+            #coverphoto{height:200px;}
+            .fullwidth{width:100%;}
+        }
+    </style>
+
+<body>
+    <div id="header">
+        <div class="container">
+            <div class="half">
+                <div class="padding">
+                    <img src="{!URLFOR($Resource.TwitterMockup, 'images/nav.png')}" alt="" />
+                </div>
+            </div>
+            <div class="half textright">
+                <div class="padding">
+                    <a data-toggle="modal" data-target="#exampleModal">
+                        <img src="{!URLFOR($Resource.TwitterMockup, 'images/login.png')}" alt="" />
+                    </a>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div id="coverphoto"></div>
+    <div id="infobar">
+        <div class="container">
+            <div class="third">
+                <div class="profileimg"></div>
+            </div>
+            <div class="twothird textright">
+                <img src="{!URLFOR($Resource.TwitterMockup, 'images/tweets.png')}" alt="" class="fullwidth" />
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="paddingtopbottom">
+            <div class="third">
+                <div class="paddingtopbottom">
+                    <h3>Rachel Morris</h3>
+                    <div class="handle">@xRachelMorris</div>
+                    <div>
+                        <img src="{!URLFOR($Resource.TwitterMockup, 'images/userinfo.png')}" alt="" />
+                    </div>
+                </div>
+            </div>
+            <div class="twothird">
+                <div class="mytweets">
+                        <div class="whitebg">
+                            <div class="mytweetheader">
+                                    <div class="padding"><img src="{!URLFOR($Resource.TwitterMockup, 'images/tweetnav.png')}" alt="" /></div>
+                            </div>
+                            <div class="padding">
+                                <div id="myposts">
+                                    <div id="post1">
+                                        <div class="profileimgsmall"></div>
+                                        <div class="textarea">
+                                            <h4 class="posth4">Rachel Morris <span class="smallh4">@xRachelMorris - 13 Nov 2017</span></h4>
+                                          Looking forward to our Waikiki trip- staying at the Hilton Hawaiian Village. For friends traveling soon!
+                                            <div><img src="{!URLFOR($Resource.TwitterMockup, 'images/tweet-actions.png')}" alt="" /></div>
+                                        </div>
+                                        <div class="clear"></div><hr/>
+                                    </div>
+                                    <div id="post2" class="posttext"></div>
+                                </div>
+                                <div class="center">
+                                    <img src="{!URLFOR($Resource.TwitterMockup, 'images/logo-dark.png')}" alt="" /> 
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="whoifollow">
+                        <div class="whitebg">
+                            <img src="{!URLFOR($Resource.TwitterMockup, 'images/whotofollow.png')}" alt="" class="fullwidth" />
+                        </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    
+    
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Compose new Tweet</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <apex:form >
+      <div class="modal-body">
+            <div class="profileimgsmall"></div>
+              
+            <div class="textarea">
+            
+                <apex:inputTextarea id="postinfo" value="{!comm}"/>
+                
+            </div>
+              <div class="clear"></div>
+          </div>
+          <div class="modal-footer">
+              <apex:commandButton action="{!createSocialCase}" value="Tweet" reRender="dummyId" >
+                  <apex:param name="comment" assignTo="{!comment}" value="{!comm}" />
+              </apex:commandButton>
+              
+    
+          </div>
+      </apex:form>
+    </div>
+  </div>
+</div>
+</body>
+
+
+</apex:page>

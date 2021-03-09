@@ -1,0 +1,288 @@
+<aura:component description="ckz_OrderForm_ProductSearch" controller="ckz_OrderFormProductSearchController">
+
+    <ltng:require scripts="{!$Resource.ckz_OrderForm_Utilities}" afterScriptsLoaded="{!c.scriptsLoaded}" />
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <aura:registerEvent name="renderPanel" type="c:ckz_OrderFormRenderPanelEvent"/>
+
+    <aura:handler event="aura:waiting" action="{!c.waiting}" phase="capture"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}" phase="capture"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="userId" type="String" access="global"/>
+    <aura:attribute name="contactId" type="String" access="global"/>
+    <aura:attribute name="accountId" type="String" access="global"/>
+    <aura:attribute name="locale" type="String" access="global"/>
+    <aura:attribute name="currencyCode" type="String" access="global" default="USD"/>
+    <aura:attribute name="selectedStorefront" type="String" access="global"/>
+    <aura:attribute name="orderType" type="String" access="global"/>
+    <aura:attribute name="selectedOrder" type="String" access="global"/>
+    <aura:attribute name="selectedOrderId" type="String" access="global"/>
+    <aura:attribute name="cartId" type="String" access="global"/>
+    <aura:attribute name="cartEncryptedId" type="String" access="global"/>
+    <aura:attribute name="selectedObjectName" type="String" access="global" default=""/>
+    <aura:attribute name="cartStatus" type="String" access="global" default=""/>
+    <aura:attribute name="accountGroupName" type="String"/>
+    <aura:attribute name="userName" type="String"/>
+    <aura:attribute name="accountName" type="String"/>
+    <aura:attribute name="wishListName" type="String" default="New Wish List" />
+    <aura:attribute name="newCartFirstScreenChoice" type="String" default="Empty cart" />
+
+    <aura:attribute name="orderItem" type="Map" required="false"/>
+
+    <aura:attribute name="orderItems" type="List" default="[]"/>
+
+    <aura:attribute name="addButtonLabel" type="String" default=""/>
+
+    <!-- data returned from the server -->
+    <aura:attribute name="productData" type="List" default="[]"/>
+    <aura:attribute name="filterData" type="List" default="[]"/>
+
+    <!-- the user selections -->
+    <aura:attribute name="filterValues" type="Map" default="{}"/>
+    <aura:attribute name="productSelections" type="Map" default="{}"/>
+
+    <aura:handler name="productFilterChange" event="c:ckz_OrderForm_ProductFilterEvent" action="{!c.handleFilterChange}"/>
+    <aura:handler name="productSelectChange" event="c:ckz_OrderForm_ProductSelectEvent" action="{!c.handleProductSelect}"/>
+
+    <aura:attribute name="pageMessages" type="List" default="[]"/>
+
+    <aura:renderIf isTrue="{!v.showSpinner}">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+            <span class="slds-assistive-text">Loading, Please Wait...</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </aura:renderIf>
+
+    <div class="pageMessages">
+
+        <aura:if isTrue="{!(v.pageMessages.length > 0)}">
+            <ul>
+                <aura:iteration items="{!v.pageMessages}" var="msg">
+                    <li>
+                        <c:ckzMessageDisplay severity="{!msg.severity}" message="{!msg.message}"/>
+                    </li>
+                </aura:iteration>
+            </ul>
+        </aura:if>
+
+    </div>
+
+    <div class="slds-grid slds-wrap" style="background-color: #fff;">
+
+        <!-- FILTER DISPLAY -->
+        <div class="slds-col slds-small-size_1-of-1 slds-medium-size_1-of-3">
+            <aura:if isTrue="{! v.filterData.length > 0 }">
+                <div class="slds-grid slds-wrap">
+                    <aura:iteration items="{!v.filterData}" var="filter">
+                        <div class="slds-col slds-size_12-of-12">
+                            <article class="slds-card slds-m-around_small">
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <div class="slds-grid slds-gutters">
+                                        <div class="slds-col">
+                                            <c:ckz_OrderForm_ProductSearchFilter filterName="{!filter.name}" filterOptions="{!filter.options}" filterSfid="{!filter.sfid}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </aura:iteration>
+                </div>
+            </aura:if>
+        </div>
+
+        <!-- PRODUCTS DISPLAY -->
+        <div class="slds-col slds-small-size_1-of-1 slds-medium-size_2-of-3">
+            <aura:if isTrue="{! v.productData.length > 0 }">
+                <div class="action-footer slds-p-bottom_small slds-p-right_small" style="background-color: #fff;">
+                    <div class="slds-grid">
+
+                        <div class="slds-col slds-size_1-of-10">
+                            <lightning:button aura:id="cancel"
+                                              label="Cancel"
+                                              class="slds-m-top--medium"
+                                              variant="neutral"
+                                              onclick="{!c.handleNavigatePrev}"
+                            />
+                        </div>
+
+                        <div class="slds-col" />
+
+                        <div class="slds-col slds-size_1-of-10">
+                            <lightning:button aura:id="addToCart"
+                                              label="{!v.addButtonLabel}"
+                                              class="slds-m-top--medium"
+                                              variant="brand"
+                                              onclick="{!c.addItemsAndReturnToCart}"
+                            />
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Table display of products -->
+                <aura:if isTrue="{! $Browser.formFactor == 'DESKTOP' &amp;&amp; (v.useCardLayout == false) }">
+
+                    <div class="slds-scrollable slds-grow">
+                        <div class="slds-scrollable_none">
+                            <table aria-multiselectable="true" class="slds-table slds-no-row-hover slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
+                                <thead>
+                                <tr class="slds-line-height_reset">
+
+                                    <th class="" scope="col" style="width:3.75rem"/>
+
+                                    <th aria-label="Product Image" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                                <span class="slds-truncate" title="Product Image">
+                                                    <!-- Image goes here -->
+                                                </span>
+
+                                            </div>
+
+                                        <div class="slds-resizable">
+                                            <input type="range" aria-label="Product Family column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-68" max="1000" min="20" tabindex="-1" />
+                                            <span class="slds-resizable__handle">
+                                                <span class="slds-resizable__divider"/>
+                                            </span>
+                                        </div>
+                                    </th>
+
+                                    <th aria-label="Name" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+                                        <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                            <span class="slds-assistive-text">Sort by: </span>
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                                <span class="slds-truncate" title="Name">Name</span>
+
+                                            </div>
+                                        </a>
+                                        <div class="slds-resizable">
+                                            <input type="range" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-65" max="1000" min="20" tabindex="-1" />
+                                            <span class="slds-resizable__handle">
+                                                <span class="slds-resizable__divider"/>
+                                            </span>
+                                        </div>
+                                    </th>
+
+                                    <th aria-label="Product Code" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+                                        <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                            <span class="slds-assistive-text">Sort by: </span>
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                                <span class=" slds-wrap" title="Product Code">Product Code</span>
+
+                                            </div>
+                                        </a>
+                                        <div class="slds-resizable">
+                                            <input type="range" aria-label="Product Code column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-66" max="1000" min="20" tabindex="-1" />
+                                            <span class="slds-resizable__handle">
+                                                <span class="slds-resizable__divider"/>
+                                            </span>
+                                        </div>
+                                    </th>
+
+                                    <th aria-label="List Price" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+                                        <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                            <span class="slds-assistive-text">Sort by: </span>
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                                <span class="slds-truncate" title="List Price">List Price</span>
+
+                                            </div>
+                                        </a>
+                                        <div class="slds-resizable">
+                                            <input type="range" aria-label="List Price column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-67" max="1000" min="20" tabindex="-1" />
+                                            <span class="slds-resizable__handle">
+                                                <span class="slds-resizable__divider"/>
+                                            </span>
+                                        </div>
+                                    </th>
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <!-- one row for each product returned -->
+                                    <aura:iteration items="{!v.productData}" var="product">
+
+                                        <c:ckz_OrderForm_Product product="{!product}" useCardLayout="{!v.useCardLayout}" />
+
+                                    </aura:iteration>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </aura:if>
+
+                <!-- Card View -->
+                <aura:if isTrue="{! $Browser.formFactor != 'DESKTOP' || (v.useCardLayout == true) }">
+
+                    <div class="slds-grid slds-wrap">
+
+                        <!-- one row for each product returned -->
+                        <aura:iteration items="{!v.productData}" var="product">
+
+                            <c:ckz_OrderForm_ProductCardLayout product="{!product}" useCardLayout="{!v.useCardLayout}" />
+
+                        </aura:iteration>
+
+                    </div>
+
+                </aura:if>
+
+                <div class="action-footer slds-p-bottom_small slds-p-right_small" style="background-color: #fff;">
+                    <div class="slds-grid">
+
+                        <div class="slds-col slds-size_1-of-10">
+                            <lightning:button aura:id="cancel"
+                                              label="Cancel"
+                                              class="slds-m-top--medium"
+                                              variant="neutral"
+                                              onclick="{!c.handleNavigatePrev}"
+                            />
+                        </div>
+
+                        <div class="slds-col" />
+
+                        <div class="slds-col slds-size_1-of-10">
+                            <lightning:button aura:id="addToCart"
+                                              label="{!v.addButtonLabel}"
+                                              class="slds-m-top--medium"
+                                              variant="brand"
+                                              onclick="{!c.addItemsAndReturnToCart}"
+                            />
+                        </div>
+
+                    </div>
+                </div>
+
+            </aura:if>
+
+        </div>
+
+    </div>
+
+    <footer class="slds-card__footer">
+        <div class="slds-grid slds-gutters slds-wrap">
+
+            <div class="slds-col slds-size_1-of-10 slds-p-top_small slds-p-right_small">
+                <lightning:button aura:id="doPrevious"
+                                  label="Previous"
+                                  class="slds-m-around_small"
+                                  variant="neutral"
+                                  onclick="{!c.handleNavigatePrev}"
+                />
+            </div>
+
+            <div class="slds-col"/>
+
+        </div>
+    </footer>
+
+</aura:component>

@@ -1,0 +1,68 @@
+<aura:component controller="EinsteinBuilderMegaController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="recordId" type="Id" />
+    
+    <aura:attribute name="obj" type="String"/>
+    <aura:attribute name="field" type="String"/>
+    <aura:attribute name="factors" type="String"/>
+    <aura:attribute name="factorsField" type="String"/>
+    
+    <aura:attribute name="predictionName" type="String" default="Likelihood of Attrition"/>
+    <aura:attribute name="showHeader" type="Boolean" default="true"/>
+    <aura:attribute name="headerStyle" type="String" default="display:inline;"/>
+    <aura:attribute name="score" type="String" default="..."/>
+    <aura:attribute name="redZoneThreshold" type="Integer" default="25"/>
+    <aura:attribute name="showAsPercentage" type="Boolean" default="true"/>
+    <aura:attribute name="showFactors" type="Boolean" default="true"/>
+    <aura:attribute name="circlecolor" type="String" default="goodnum"/>
+    <aura:attribute name="factor_conf1" type="String" default="True"/>
+    <aura:attribute name="factor_name1" type="String" default="Hair is"/>
+    <aura:attribute name="factor_value1" type="String" default="Thick and Full"/>
+    <aura:attribute name="factor_shown1" type="String" default="display:none;"/>
+    <aura:attribute name="factor_conf2" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_name2" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_value2" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_shown2" type="String" default="display:none;"/>
+    <aura:attribute name="factor_conf3" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_name3" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_value3" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_shown3" type="String" default="display:none;"/>
+    <aura:attribute name="factor_conf4" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_name4" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_value4" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_shown4" type="String" default="display:none;"/>
+    <aura:attribute name="factor_conf5" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_name5" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_value5" type="String" default="&nbsp;"/>
+    <aura:attribute name="factor_shown5" type="String" default="display:none;"/>
+    <aura:attribute name="model_factors_shown" type="String" default="display:none;"/>
+    <aura:attribute name="factors_label_shown" type="String" default="display:none;"/>
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <div class="wrapper">      
+        <div class="top-card">
+            <div class="center-card">
+                <span class="{!v.circlecolor}">{!v.score}</span>
+                <span><h1>{!v.predictionName}</h1></span>
+            </div>
+            <div class="right-center-card">
+            	<img src="/resource/einstein_only"/>
+            </div>
+            
+        </div>
+        <div class="bottom-card" style="{!v.model_factors_shown}">
+            <div style="{!v.factors_label_shown}">
+                <h3>TOP PREDICTIVE FACTORS</h3>
+                <ul>
+                    <div style="{!v.factor_shown1}"><li><img src="{!v.factor_conf1}"></img>&nbsp;{!v.factor_name1} <b>&nbsp;{!v.factor_value1}</b></li></div>
+                    <div style="{!v.factor_shown2}"><li><img src="{!v.factor_conf2}"></img>&nbsp;{!v.factor_name2} <b>&nbsp;{!v.factor_value2}</b></li></div>
+                    <div style="{!v.factor_shown3}"><li><img src="{!v.factor_conf3}"></img>&nbsp;{!v.factor_name3} <b>&nbsp;{!v.factor_value3}</b></li></div>
+                    <div style="{!v.factor_shown4}"><li><img src="{!v.factor_conf4}"></img>&nbsp;{!v.factor_name4} <b>&nbsp;{!v.factor_value4}</b></li></div>
+                    <div style="{!v.factor_shown5}"><li><img src="{!v.factor_conf5}"></img>&nbsp;{!v.factor_name5} <b>&nbsp;{!v.factor_value5}</b></li></div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</aura:component>

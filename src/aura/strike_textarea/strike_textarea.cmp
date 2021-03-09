@@ -1,0 +1,106 @@
+<!--
+Strike by Appiphony
+
+Version: 0.8.0
+Website: http://www.lightningstrike.io
+GitHub: https://github.com/appiphony/Strike-Components
+License: BSD 2-Clause License
+-->
+<aura:component >
+    <!-- Required -->
+    <aura:attribute name="label" type="String" description="Text that describes the desired textarea input"/>
+    <aura:attribute name="helpText" type="String" description="String value when hovering over the help box"/>
+    <aura:attribute name="helpTextPlacement" type="String" default="auto top" description="Determines position of the helpText"/>
+    <aura:attribute name="name" type="String" description="Specifies the name of an input element" default="Strike TextArea"/>
+    <aura:attribute name="class" type="String" description="A CSS class that will be applied to the outer element. This style is in addition to base classes associated with the component"/>
+    <aura:attribute name="placeholder" type="String" description="Text that is displayed when the field is empty, to prompt the user for a valid entry"/>
+    <aura:attribute name="height" type="String" description="Determines the height of the textarea"/>
+    <aura:attribute name="size" type="String" description="Determines the height of the textarea"/>
+
+    <aura:attribute name="maxlength" type="Integer" description="The maximum number of characters allowed in the textarea"/>
+    <aura:attribute name="minlength" type="Integer" description="The minimum number of characters allowed in the textarea"/>
+    <aura:attribute name="tabindex" type="Integer" description="Specifies the tab order of an element (when the tab button is used for navigating)"/>
+
+    <aura:attribute name="errorMessage" type="String" description="message to be displayed when 'error' is set to true" default="There was a problem"/>
+    <aura:attribute name="value" type="String" description="the value of the textarea"/>
+
+    <aura:attribute name="resizable" type="Boolean" description="Specifies whether or not the text area is verically resizble" default="true"/>
+    <aura:attribute name="disabled" type="Boolean" description="Specifies that an input element should be disabled. This value defaults to false"/>
+    <aura:attribute name="required" type="Boolean" description="Specifies that an input field must be filled out before submitting the form. This value defaults to false"/>
+    <aura:attribute name="error" type="Boolean" description="Specifies whether or not the text area is in an error state. This will trigger messageWhenBadInput"/>
+
+    <aura:registerEvent name="onblur" type="c:strike_evt"/>
+    <aura:registerEvent name="onchange" type="c:strike_evt"/>
+    <aura:registerEvent name="onfocus" type="c:strike_evt"/>
+    <aura:registerEvent name="oninput" type="c:strike_evt"/>
+    <aura:registerEvent name="onkeydown" type="c:strike_evt"/>
+    <aura:registerEvent name="onkeyup" type="c:strike_evt"/>
+
+    <!-- Internal -->
+    <aura:attribute name="idNumber" type="Integer" description="Random id assigned to pair labels with inputs" access="private"/>
+
+    <!-- Methods -->
+    <aura:method name="focus" action="{!c.focus}"/>
+    <aura:method name="blur" action="{!c.blur}"/>
+    <aura:method name="select" action="{!c.select}"/>
+    <aura:method name="showError" action="{!c.showError}">
+        <aura:attribute name="errorMessage" type="String"/>
+    </aura:method>
+    <aura:method name="hideError" action="{!c.hideError}"/>
+    
+    <!-- Event registration and handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+    <aura:handler name="change" value="{!v.size}" action="{!c.sizeChanged}"/>
+    <aura:handler name="change" value="{!v.maxlength}" action="{!c.handleChangeMaxlength}"/>
+    <aura:handler name="change" value="{!v.value}" action="{!c.updateTextAreaValue}"/>
+
+    <div class="{!'slds-form-element' + if(v.error, ' slds-has-error', '')}">
+        <label class="slds-form-element__label" for="{!'strike-textarea-' + v.idNumber}">
+            <aura:if isTrue="{!v.required == true}">
+                <abbr class="slds-required" title="required">*</abbr>
+            </aura:if>
+            {!v.label}
+        </label>
+        <aura:if isTrue="{!not(empty(v.helpText))}">
+            <c:strike_tooltip placement="{!v.helpTextPlacement}" text="{!v.helpText}" class="st-help-text-icon">
+                <lightning:icon iconName="utility:info" size="xx-small"/>
+            </c:strike_tooltip>
+        </aura:if>
+        <div class="slds-form-element__control">
+            <textarea
+                aura:id="thisTextarea"
+                id="{!'strike-textarea-' + v.idNumber}"
+                name="{!v.name}"
+                class="{!'slds-textarea ' + if(v.resizable, 'strike-resizable ', 'strike-static ') + v.class}"
+                placeholder="{!v.placeholder}"
+                style="{!'height: ' + v.height}"
+                minlength="{!v.minlength}"
+                maxlength="{!v.maxlength}"
+                tabindex="{!v.tabindex}"
+                disabled="{!v.disabled}"
+                required="{!v.required}"
+                oninput="{!c.handleInput}"
+                onblur="{!c.handleBlur}"
+                onfocus="{!c.handleFocus}"
+                onchange="{!c.handleChange}"
+                onkeyup="{!c.handleKeyup}"
+                onkeydown="{!c.handleKeydown}">
+                {!v.value}
+            </textarea>
+        </div>
+        <aura:if isTrue="{!and(v.error, not(empty(v.errorMessage)))}">
+            <div class="slds-form-element__help">{!v.errorMessage}</div>
+        </aura:if>
+    </div>
+
+</aura:component>
+<!--
+Copyright 2017 Appiphony, LLC
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->

@@ -1,0 +1,1 @@
+global class PSIllegalStateException extends Exception {}

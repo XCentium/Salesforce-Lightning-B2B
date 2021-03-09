@@ -1,0 +1,45 @@
+.THIS .user-avatar{
+    height: 75px;
+    width: 75px;
+    border-radius:50%;
+
+}
+.THIS .image-container{
+    height: 75px;
+    width: 75px;
+    position: relative;
+}
+.THIS .status-indicator{
+    width: 18px;
+    height: 18px;
+    border-radius:50%;
+    position: absolute;
+    top: 55px;
+    left: 57px;
+    border: 3px solid white;
+}
+.THIS .eq{
+    display: inline-block;
+}
+.THIS .omni-status-item-available .slds-icon-text-default{
+    fill: #4bca81 !important;
+}
+.THIS .omni-status-item-busy .slds-icon-text-default{
+    fill: #ffb75d !important;
+}
+
+
+
+/*.THIS .available-status-icon{
+    
+    background-color: #FFFFFF !important;
+    color: #4bca81 !important;
+   
+}
+.THIS .busy-status-icon{
+    width: 15px;
+    height: 15px;
+    border-radius:50%;
+    background-color: #ffb75d;
+    
+}*/

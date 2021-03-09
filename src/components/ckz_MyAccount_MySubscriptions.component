@@ -1,0 +1,168 @@
+<apex:component id="ckz_MyAccount_MySubscriptions">
+
+    <script id="CKZ-MyAccount-MySubscriptions" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_mysubscriptions m-t-1">
+
+            <div class="panel-body MyAccount_MySubscriptions_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_MySubscriptions'}}</h2>
+                    </div>
+                    <div class="col-sm-4 text-right">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body MyAccount_MySubscriptions">
+                <div class="messagingSection-subscription-Error" style="display: none"></div>
+                <div class="messagingSection-subscription-Info" role="alert" style="display: none">
+                    <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&#215;</span></button>
+                </div>
+
+                <div class="orderPaginationSec paginationTop m-t-3"></div>
+
+                <div class="table-responsive ">
+                    <table id="subscriptionTable" class="table table-hover cc_table cc_mysubscriptions_table">
+                        <thead>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_subscription_id">{{pageLabelMap 'MyAccount_MySubscription_Id'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_subscription_prod_name">{{pageLabelMap 'MyAccount_MySubscription_Product'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_subscription_recurring_price">{{pageLabelMap 'MyAccount_MySubscription_RecurringPrice'}}</span>
+                        </th>
+
+                        <!-- msobczak -->
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_subscription_recurring_price">{{pageLabelMap 'MyAccount_MySubscription_Frequency'}}</span>
+                        </th>
+
+                        <!-- msobczak -->
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_subscription_recurring_price">{{pageLabelMap 'MyAccount_MySubscription_Quantity'}}</span>
+                        </th>
+
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_subscription_status">{{pageLabelMap 'MyAccount_MySubscription_Status'}}</span>
+                        </th>
+                        {{#ifDisplay 'shact.subs'}}
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_subscription_actions">{{pageLabelMap 'MyAccount_MySubscription_Actions'}}</span>
+                        </th>
+                        {{/ifDisplay}}
+                        </thead>
+
+                        <tbody>
+                        {{#each this.subscriptionList}}
+                        <tr class="myAccOrderRows cc_table_row">
+                            <td class="cc_table_col">
+                                <span class="cc_col_subscription_id">
+                                    <a href="#" data-id="{{sfid}}" class="gotoSubscriptionDetails cc_goto_subscription_details">{{name}}</a>
+                                </span>
+                            </td>
+                            <td class="cc_table_col">
+                                {{productLink subProduct 'cc_prod_link'}}
+                            </td>
+                            <td class="cc_table_col">
+                                <span class="cc_col_subscription_recurring_price">{{price topRecurringPrice currencyIsoCode}}</span>
+                            </td>
+
+                            <!-- msobczak -->
+                            <td class="cc_table_col">
+                                <span class="cc_col_subscription_frequency">{{sptInstFreqUOM}}</span>
+                            </td>
+
+                            <!-- msobczak -->
+                            <td class="cc_table_col">
+                                <span class="cc_col_subscription_quantity">{{quantity}}</span>
+                            </td>
+
+                            <td class="cc_table_col">
+                                <span class="cc_col_subscription_status">{{pageLabelPrefixMap 'SUBSST_' subStatus}}</span>
+                            </td>
+                            {{#ifDisplay 'shact.subs'}}
+                            <td class="cc_table_col" nowrap="true">
+                                {{#if canCancel }}
+                                <input type="button" class="promptCancel btn btn-default btn-sm cc_prompt_cancel" data-id="{{@index}}" data-mode="Cancel" value="{{pageLabelMap 'MyAccount_MySubscriptions_Cancel'}}"/>&#160;
+
+                                <!-- msobczak -->
+                                <input type="button" class="btn btn-default btn-sm cc_upgrade" data-id="{{@index}}" data-mode="Upgrade" data-sub-product-sku="{{subProductSku}}" value="{{pageLabelMap 'MyAccount_MySubscriptions_Upgrade'}}"/>&#160;
+
+                                {{/if}}
+                            </td>
+                            {{/ifDisplay}}
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="orderPaginationSec paginationBottom m-b-3"></div>
+
+                <div id="modalSec"></div>
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.mySubscriptionSummaryNewView.desktop.tmpl = 'CKZ-MyAccount-MySubscriptions';
+        });
+
+        jQuery(function ($) {
+
+            //view:mySubscriptionsNewView:refresh
+            //pagination:mySubscriptionsNewView:rendered
+
+        var listenerEvent = 'view:mySubscriptionsNewView:refresh';
+        CCRZ.pubSub.on(listenerEvent, function(theView) {
+            console.log(listenerEvent + " triggered");
+            theView.events["click .cc_upgrade"] = function(){
+
+                var objLink = $(event.target);
+                var sku     = objLink.attr('data-sub-product-sku');
+
+                console.log('sku: ' + sku);
+
+                var newUrl = 'ccrz__ProductDetails?sku=' + sku;
+                console.log('newUrl: ' + newUrl);
+
+                window.location.href = newUrl;
+
+                // // call a custom remote action
+                // this.className = 'b2bSample_actions';
+                // orderVal ='1234';
+                // currAccountId ='0015Y00002UY9BeQAY';
+                // this.invokeCtx(
+                //     'b2bSampleSOQL',
+                //     orderVal,
+                //     currAccountId,
+                //     function(response,event){
+                //         if(event.status){
+                //             console.log("b2bSampleSOQL remote action called successfully");
+                //             //do something with the response
+                //             alert(response.data.length + ' records found');
+                //         }else{
+                //             console.log("b2bSampleSOQL remote action called, but something went wrong");
+                //         }
+                //     },
+                //     {
+                //         buffer:false, //this call will be executed by itself
+                //         nmsp : false //defines that this is a call to a subscriber class
+                //     }
+                // ); // end of b2bSampleSOQL remote invoke
+
+
+            } // end of click.b2b_test  event
+            theView.delegateEvents();                
+        });  // end of view:cartView:refresh pubSub
+
+    });
+
+    </script>
+</apex:component>

@@ -1,0 +1,31 @@
+<design:component >
+    <design:attribute name="title" label="Title" default="Activity Scorecard - Last 30 Days"/>
+    <design:attribute name="kpiTitle1" label="KPI Title 1" default="Deals Won"/>
+    <design:attribute name="kpiValue1" label="KPI Value 1" default="10"/>
+    <design:attribute name="kpiSign1" label="KPI 1 Positive?" default="true"/>
+    <design:attribute name="kpiTitle2" label="KPI Title 2" default="Deals Lost"/>
+    <design:attribute name="kpiValue2" label="KPI Value 2" default="7"/>
+    <design:attribute name="kpiSign2" label="KPI 2 Positive?" default="false"/>
+    <design:attribute name="activityIcon1" label="Activity 1 Icon" default="standard:task"/>
+    <design:attribute name="activitiesCompleted1" label="# of Activities Completed 1" default="90"/>
+    <design:attribute name="activitiesDescription1" label="Activity 1 Description" default="tasks completed"/>
+    <design:attribute name="personalBest1" label="Personal Best 1" default="78"/>
+    <design:attribute name="progressBarColor1" label="Progress Bar Color 1" default="#4bca81"/>
+    <design:attribute name="activityIcon2" label="Activity 2 Icon" default="standard:log_a_call"/>
+    <design:attribute name="activitiesCompleted2" label="# of Activities Completed 2" default="98"/>
+    <design:attribute name="activitiesDescription2" label="Activity 2 Description" default="calls logged"/>
+    <design:attribute name="personalBest2" label="Personal Best 2" default="120"/>
+    <design:attribute name="progressBarColor2" label="Progress Bar Color 2" default="#48C3CC"/>
+    <design:attribute name="activityIcon3" label="Activity 3 Icon" default="standard:email"/>
+    <design:attribute name="activitiesCompleted3" label="# of Activities Completed 3" default="98"/>
+    <design:attribute name="activitiesDescription3" label="Activity 3 Description" default="emails sent"/>
+    <design:attribute name="personalBest3" label="Personal Best 3" default="150"/>
+    <design:attribute name="progressBarColor3" label="Progress Bar Color 3" default="#95AEC5"/>
+    <design:attribute name="activityIcon4" label="Activity 4 Icon" default="standard:event"/>
+    <design:attribute name="activitiesCompleted4" label="# of Activities Completed 4" default="23"/>
+    <design:attribute name="activitiesDescription4" label="Activity 4 Description" default="events logged"/>
+    <design:attribute name="personalBest4" label="Personal Best 4" default="35"/>
+    <design:attribute name="progressBarColor4" label="Progress Bar Color 4" default="#EB7092"/>
+    
+    
+</design:component>

@@ -1,0 +1,86 @@
+<apex:page controller="DE_CheckIn">
+    <title>DE Check-In</title>
+    <style type="text/css">
+        input[type="text"] {
+            border: 1px solid #c7ccce;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            width: 72%;
+            padding: 7px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        label {
+            color: #222;
+            font-weight: bold;
+            height: 30px;
+            line-height: 30px;
+            display: inline-block;
+        }
+
+        .chris{
+            font-family: Arial !important;
+            font-size: 1.08em !important;
+            background-color: #8ab529 !important;
+            border: 1px solid #6c8049 !important;
+            background-image: -ms-linear-gradient(top,#8AB529 0,#87AC31 100%) !important;
+            background-image: -moz-linear-gradient(top,#8AB529 0,#87AC31 100%) !important;
+            background-image: -webkit-linear-gradient(top,#8AB529 0,#87AC31 100%) !important;
+            background-image: linear-gradient(top,#8AB529 0,#87AC31 100%) !important;
+            display: inline-block !important;
+            padding-top: 0 !important;
+            padding-bottom: 1px !important;
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+            height: 30px !important;
+            color: #fff !important;
+            -moz-border-radius: 3px !important;
+            border-radius: 2px !important;
+            -moz-box-shadow: 0 1px 2px 0 #adadad !important;
+            -webkit-box-shadow: 0 1px 2px 0 #adadad !important;
+            box-shadow: 0 1px 2px 0 #adadad !important;
+            margin: 0 !important;
+        }
+
+        .bottomBar {
+        }
+        
+        .bottomBarRight {
+            float: right;
+        }
+    </style>
+    <apex:form >
+        <label>Account Name:</label>
+        <apex:inputfield value="{!Hi.name}" id="memNam">
+            <c:autoComplete autocomplete_textbox="{!$Component.memNam}" objectname="Account"/>
+        </apex:inputfield>
+        <br/>
+        <label>Check In Time:</label>
+        <apex:inputField value="{!CheckinEvent.StartDateTime}"/>
+        <br/>
+        <label>Check Out Time:</label>
+        <apex:inputField value="{!CheckinEvent.EndDateTime}"/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="bottomBar">
+            <div class="bottomBarRight">      
+                <apex:commandButton styleClass="chris" action="{!savecheckin}" value="Save" oncomplete="javascript:parent.window.location.reload(true)"/>
+            </div>
+        </div>
+    </apex:form>   
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

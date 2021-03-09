@@ -1,0 +1,22 @@
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                access="global">
+
+    <aura:registerEvent name="categorySelectEvt" type="c:ProductCatalogAddToCart"/>
+
+    <aura:attribute name="catalogItems" type="Object[]" />
+    <aura:handler name="categorySelected" event="c:ProductCatalogCategorySelected" action="{!c.filterByCategory}"/>
+    <!-- <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> -->
+
+    <div class="slds-card">
+        <div class="slds-page-header">
+            <h1 class="slds-page-header__title slds-truncate">Catalog</h1>
+        </div>
+        <div class="slds-page-header" style="border: none;">
+            <div class="catalog">
+            <aura:iteration items="{!v.catalogItems}" var="obj">
+                <c:ProductCatalogItem product="{!obj}" quantity="1"/>
+            </aura:iteration>
+            </div>
+        </div>
+    </div>
+</aura:component>

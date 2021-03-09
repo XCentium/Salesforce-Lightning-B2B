@@ -1,0 +1,43 @@
+<aura:component controller="ClientellingController" access="global">
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="allAnnouncements" type="IDO_Announcements__c[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.getAnnouncements}"/>
+	<div class="slds-card">
+        <div class="padding2">
+            <div class="slds-media padding">
+                <div class="profilepicture">
+                    <lightning:icon iconName="standard:announcement" size="small" alternativeText="Indicates approval"/> 
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions"> Announcements</h1>
+                </div>
+            </div>
+            <div class="padding">
+                <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+                  <thead>
+                    <tr class="slds-text-title_caps">
+                      <th scope="col">
+                        <div class="slds-truncate" title="Opportunity Name">Announcment</div>
+                      </th>
+                      <th scope="col">
+                        <div class="slds-truncate" title="Status">Details</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <aura:iteration var="announcement" items="{!v.allAnnouncements}" indexVar="index">
+                        <tr>
+                            <td>
+                                {!announcement.Name}        
+                            </td>
+                            <td>
+                                {!announcement.Description__c}    
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+			</table>
+            </div>
+    	</div>
+    </div>
+</aura:component>

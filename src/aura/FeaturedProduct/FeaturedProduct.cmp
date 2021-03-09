@@ -1,0 +1,19 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+     <aura:attribute name="ProductName" type="String" default="Product Name" access="global" />
+     <aura:attribute name="ProductURL" type="String" default="https://www.northerntrailoutfitters.com/" access="global" />
+     <aura:attribute name="ImgURL" type="String" access="global" default="https://www.northerntrailoutfitters.com/dw/image/v2/BDPX_PRD/on/demandware.static/-/Sites-nto-gear/default/dwdc8f8992/images/hi-res/4090376AMR-0.jpg" />
+
+	<div class="slds-p-around_large slds-text-align_center slds-m-bottom_large">
+    <div class="image-container slds-p-bottom_small">
+    <a href="{!v.ProductURL}" target="_blank">
+        <img class="tile-image" src="{!v.ImgURL}" alt="{!v.ProductName}" title="{!v.ProductName}"></img>
+    </a>
+    <div class="pdp-link slds-text-align_center slds-p-bottom_small">
+    <a class="link" href="{!v.ProductURL}" target="_blank">{!v.ProductName}</a>
+</div>
+        <div class="">
+    <a class="slds-button slds-button_brand" href="{!v.ProductURL}" target="_blank">Shop Now</a>
+</div>
+</div>
+</div>
+</aura:component>

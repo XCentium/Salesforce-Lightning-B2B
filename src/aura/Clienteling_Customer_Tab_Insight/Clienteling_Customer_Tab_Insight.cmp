@@ -1,0 +1,66 @@
+<aura:component >
+    <aura:attribute name="Contact" type="Contact[]"/>
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+	<div class="paneltwothirds">
+    	<div class="box">
+        	<div class="box-header">
+            	<div class="padding">
+                	<h3>Social Profile</h3>  
+                </div> 
+            </div>
+            <div class="padding">
+            	<ul class="knowledgelist">
+                    <li><a href="javascript:void(0)"><img src="/resource/social_icons/images/facebook.png" class="icon"/> @rachelmorris</a></li>
+                    <li><a href="javascript:void(0)"><img src="/resource/social_icons/images/linkedin.png" class="icon"/> @rachelmorris</a></li>
+                    <li><a href="javascript:void(0)"><img src="/resource/social_icons/images/twitter.png" class="icon"/> @rachelmorris</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header">
+                <div class="padding">
+                    <h3>Social Activity</h3> 
+                </div> 
+            </div>
+            <div class="padding">
+                <ul class="knowledgelist">
+                    <li>
+                        <div class="paneltwothirds">Clicked on Twitter Ad for Friends and Family Event</div>
+                        <div class="panelonethird alignRight"><button class="slds-button slds-button_outline-brand">View Profile</button></div>
+                        <div class="clear"></div>
+                    </li>
+                    <li>
+                        <div class="paneltwothirds">Started Following NTO Retailers</div>
+                        <div class="panelonethird alignRight"><button class="slds-button slds-button_outline-brand">View Profile</button></div>
+                        <div class="clear"></div>
+                    </li>
+                    <li>
+                        <div class="paneltwothirds">Shared sale with friend base</div>
+                        <div class="panelonethird alignRight"><button class="slds-button slds-button_outline-brand">View Profile</button></div>
+                        <div class="clear"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panelonethird">
+        <div class="box">
+            <div class="box-header">
+                <div class="padding">
+                    <h3>Recommended Products</h3> 
+                </div> 
+            </div>
+            <div class="padding">
+                <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index"> 
+                    <c:RecommendedProducts 
+                        ProductID="{!setting.Customer_Recommended_Product_Name_1__c}" 
+                        ProductID2="{!setting.Customer_Recommended_Product_Name_2__c}" 
+                        height="400" 
+                        showAddtoChat="false"
+                    />
+                </aura:iteration>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</aura:component>

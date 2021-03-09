@@ -1,0 +1,19 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global" controller="Flow_getProductstoRegister">
+    <aura:attribute name="selectedCard" type="String" default="Please click a product"/>
+	<aura:attribute name="PreviousCard" type="String" default=""/>
+    <aura:attribute name="ReturnedProduct" type="Product2[]"/>
+    <aura:attribute name="ProductId" type="String"/>
+    <aura:attribute name="OrderId" type="String"/>
+    <aura:attribute name="ContactId" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.GetProducts}"/>
+    <div class="bigpadding">
+        <div class="center">
+            <aura:if isTrue="{!not(empty(v.ReturnedProduct))}">
+                <aura:iteration var="product" items="{!v.ReturnedProduct}" indexVar="index"> 
+                    <h3>Congratulations!</h3>
+                    <strong>Order #{!v.OrderId} qualifies for a promotion.</strong>
+                </aura:iteration>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

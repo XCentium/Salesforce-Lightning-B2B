@@ -1,0 +1,11 @@
+<apex:page >
+<html>
+<header>
+    <meta property="og:title" content="Alert: We will monitor your device for 24 hours. Please respond to this for further support." />
+    <meta property="og:image" content="https://i.imgur.com/nmWRWKP.png" />
+ </header>
+  <body>
+  </body>
+
+  </html>
+</apex:page>

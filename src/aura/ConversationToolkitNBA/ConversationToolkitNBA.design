@@ -1,0 +1,4 @@
+<design:component label="Conversation Toolkit Helper">
+    <sfdc:objects>
+    </sfdc:objects>
+</design:component>

@@ -1,0 +1,55 @@
+.THIS.container {
+    position: relative;
+    height: 868px;
+}
+
+.THIS .main {
+    position:absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow-y:auto;
+}
+.THIS .button-container {
+    position:absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.THIS .reason-container {
+    position:relative;
+    padding: .5rem !important;
+}
+
+.THIS .reason-container:nth-child(n+1) {
+    margin-bottom: .5rem !important;
+}
+
+.THIS .slds-form-element+.slds-form-element, .THIS .slds-size_1-of-2 + .slds-size_1-of-2 {
+    padding-left: .5rem !important;
+    margin-left: 0 !important;
+}
+
+.THIS .close {
+    position: absolute;
+    top: .25rem;
+    right: .5rem;
+    z-index: 5;
+}
+
+.THIS .add {
+	padding: .25rem;
+	border: 1px solid #efefef;
+    border-radius: 3px;
+}
+
+.THIS .add:hover {
+    cursor: pointer;
+    background-color: #fefefe;
+}
+
+.THIS .hidden {
+    display:none;
+}

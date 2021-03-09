@@ -1,0 +1,379 @@
+<!--
+ - Created by brandon.rogers on 2/12/19.
+ -->
+
+<apex:component id="ckz_SiteRegister">
+
+    <script id="CKZ-SiteRegister-NewCustomer" type="text/template">
+
+        <div class="component-site-register">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!--<div class="messagingSection-Error" style="display: none"></div>
+                    <div class="messagingSection-Info" style="display: none"></div>
+                    <div class="messagingSection-Warning" style="display: none"></div>-->
+                    <div class="error_messages_section" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!--<div class="row">
+                <div class="col-sm-8 col-sm-offset-2 site-greeting">
+                    <div class="text-center">
+                        <h2>{{pageLabelMap 'Component_SiteRegister_SiteGreeting'}}</h2>
+                        <p>{{pageLabelMap 'Component_SiteRegister_SiteDesc'}}</p>
+
+                        <h2 class="m-b-2">{{pageLabelMap 'Component_SiteRegister_NewCustomer'}}</h2>
+                        <p class="small cc_required_fields">{{pageLabelMap 'Required_Fields'}}</p>
+                    </div>
+                </div>
+            </div>-->
+
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 form-box">
+                    <div class="card-container manual-flip text-center">
+                        <div class="card">
+                            <div class="front">
+                                <div class="b2b-logo m-t-3"></div>
+                                <h3 class="m-b-2">{{pageLabelMap 'Component_SiteRegister_NewCustomer'}}</h3>
+                                <p>{{pageLabelMap 'Component_SiteRegister_NewCustomerInstructions'}}</p>
+
+                                <form id="newCustomerForm" forceSSL="true" class="">
+                                    <!-- PERSONAL INFO -->
+                                    <div class="SiteRegister_NewCustomer_PersonalInfo" style="padding-bottom:15px;padding-top:15px;">
+                                        <h3 class="cc_title m-t-0" style="display:none;">{{pageLabelMap 'SiteRegistration_PersonalInfo'}}</h3>
+
+                                        <div class="row hide">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="salutation" class="cc_salutation_label">{{pageLabelMap 'Title'}}</label>
+                                                    <select id="salutation" name="salutation" class="form-control cc_salutation">
+                                                        {{#each salutationOptions}}
+                                                        <option value="{{this.value}}">{{this.label}}</option>
+                                                        {{/each}}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="firstName" class="cc_firstname_label sr-only">{{pageLabelMap 'CheckOut_FirstName'}}</label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-addon">
+                                                            <i class="fas fa-user"></i>
+                                                        </span>
+                                                        <input id="firstName" name="firstName" type="text" class="form-control cc_firstname" value="{{firstName}}" onfocus="myFocus(this);" onblur="myBlur(this);" placeholder="{{pageLabelMap 'CheckOut_FirstName'}}">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="lastName" class="cc_lastname_label sr-only">{{pageLabelMap 'CheckOut_LastName'}}</label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-addon">
+                                                            <i class="fas fa-user"></i>
+                                                        </span>
+                                                        <input id="lastName" name="lastName" type="text" class="form-control cc_lastname" value="{{lastName}}" onfocus="myFocus(this);" onblur="myBlur(this);" placeholder="{{pageLabelMap 'CheckOut_LastName'}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="username" class="cc_username_label sr-only">{{pageLabelMap 'SiteRegistration_UsernameEmail'}}</label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-addon">
+                                                            <i class="far fa-at"></i>
+                                                        </span>
+                                                        <input id="username" name="username" type="text" class="form-control cc_username" value="{{username}}" onfocus="myFocus(this);" onblur="myBlur(this);" placeholder="{{pageLabelMap 'SiteRegistration_UsernameEmail'}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-primary btn-block submit cc_submit">
+                                                    {{pageLabelMap 'Site_Submit'}}
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-sm-6" style="display:none;">
+                                                <div class="form-group">
+                                                    <label for="primaryPhone" class="cc_phone_label">{{pageLabelMap 'CheckOut_PrimaryPhone'}}</label>
+                                                    <input id="primaryPhone" name="primaryPhone" type="text" class="form-control cc_phone" value="855-382-6558" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6" style="display:none;">
+                                                <div class="form-group">
+                                                    <label for="language" class="cc_language_label">{{pageLabelMap 'SiteRegistration_Language'}}</label>
+                                                    <select id="language" name="language" class="form-control cc_language">
+                                                        {{#each languageOptions}}
+                                                        <option value="{{this.value}}">{{this.label}}</option>
+                                                        {{/each}}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6" style="display:none;">
+                                                <div class="form-group">
+                                                    <label for="currencyCode" class="cc_currency_label">{{pageLabelMap 'SiteRegistration_Currency'}}</label>
+                                                    <select id="currencyCode" name="currencyCode" class="form-control cc_currency">
+                                                        {{#each currencyOptions}}
+                                                        <option value="{{this.value}}">{{this.label}}</option>
+                                                        {{/each}}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                            {{#ifDisplay 'reg.tmZn'}}
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="timeZone" class="cc_timezone_label">{{pageLabelMap 'SiteRegistration_TimeZone'}}</label>
+                                                    <select id="timeZone" name="timeZone" class="form-control cc_timezone">
+                                                        {{#each timeZoneOptions}}
+                                                        {{#ifEquals this.value ../timeZone}}
+                                                        <option value="{{this.value}}" selected>{{this.label}}</option>
+                                                        {{else}}
+                                                        <option value="{{this.value}}">{{this.label}}</option>
+                                                        {{/ifEquals}}
+                                                        {{/each}}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            {{/ifDisplay}}
+                                        </div>
+                                    </div>
+
+                                    <!-- ADDITIONAL INFO -->
+                                    {{#ifDisplay 'reg.addlInf'}}
+                                    <div class="panel-body SiteRegister_NewCustomer_AdditionalInfo">
+                                        <h3 class="cc_title m-t-0">{{pageLabelMap 'SiteRegistration_AdditionalInfo'}}</h3>
+
+                                        {{#ifStoreSettingEquals 'eCommerceType__c' 'B2B'}}
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="companyName" class="cc_companyname_label">{{pageLabelMap 'CheckOut_CompanyName'}}</label>
+                                                    <input id="companyName" name="companyName" type="text" class="form-control cc_companyname" value="{{companyName}}" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="companyType" class="cc_companytype_label">{{pageLabelMap 'SiteRegistration_CompanyType'}}</label>
+                                                    <select id="companyType" name="companyType" class="form-control cc_companytype">
+                                                        {{#each companyTypeOptions}}
+                                                        <option value="{{this.value}}">{{this.label}}</option>
+                                                        {{/each}}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <div class="checkbox">
+                                                        <label for="taxExemptFlag" class="cc_taxexempt_flag_label">
+                                                            <input id="taxExemptFlag" type="checkbox" name="taxExemptFlag" value="true" class="cc_taxexempt_flag" {{#if this.taxExemptFlag}} checked {{/if}} />{{pageLabelMap 'SiteRegistration_TaxExempt'}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{/ifStoreSettingEquals}}
+
+                                        <div class="row">
+                                            {{#ifDisplay 'UR.ShowCF1'}}
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="customField1" class="cc_custom_field1_label">{{pageLabelMap 'SiteRegistration_CustomField1'}}</label>
+                                                    <input id="customField1" type="text" class="form-control cc_custom_field1" value="{{customField1}}" name="customField1" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+                                            {{/ifDisplay}}
+
+                                            {{#ifDisplay 'UR.ShowCF2'}}
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="customField2" class="cc_custom_field2_label">{{pageLabelMap 'SiteRegistration_CustomField2'}}</label>
+                                                    <input id="customField2" type="text" class="form-control cc_custom_field2" value="{{customField2}}" name="customField2" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+                                            {{/ifDisplay}}
+                                        </div>
+                                    </div>
+                                    {{/ifDisplay}}
+
+                                    <!-- LOGIN INFO -->
+                                    <div class="panel-body SiteRegister_NewCustomer_LoginInfo" style="display:none;">
+                                        <h3 class="cc_title m-t-0" style="display:none;">{{pageLabelMap 'SiteRegistration_LoginInfo'}}</h3>
+
+
+
+                                        <div class="row">
+                                            {{#ifDisplay 'UR.DirLogin'}}
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="NewPassword" class="cc_newpassword_label">{{pageLabelMap 'SiteRegistration_NewPassword'}}</label>
+                                                    <input id="NewPassword" name="NewPassword" type="password" class="form-control cc_newpassword" value="{{NewPassword}}" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="ConfirmPassword" class="cc_confirmpassword_label">{{pageLabelMap 'SiteRegistration_ConfirmPassword'}}</label>
+                                                    <input id="ConfirmPassword" name="ConfirmPassword" type="password" class="form-control cc_confirmpassword" value="{{ConfirmPassword}}" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+                                            {{/ifDisplay}}
+                                        </div>
+                                    </div>
+
+                                    <!-- BILLING -->
+                                    <div class="panel-body SiteRegister_NewCustomer_Billing" style="display:none;">
+                                        <h3 class="cc_title m-t-0">{{pageLabelMap 'CheckOut_BillingAddress'}}</h3>
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="billingAddress.address1" class="cc_checkoutaddress_label">{{pageLabelMap 'CheckOut_Address'}}</label>
+                                                    <input id="billingAddress.address1" name="billingAddress.address1" type="text" class="form-control cc_checkoutaddress" value="415 Mission Street" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="billingAddress.address2" class="cc_profileaddress_label">{{pageLabelMap 'Profile_Address_2'}}</label>
+                                                    <input id="billingAddress.address2" name="billingAddress.address2" type="text" class="form-control cc_profileaddress" value="" id="billingAddress.address2" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="billingAddress.city" class="cc_checkoutcity_label">{{pageLabelMap 'CheckOut_City'}}</label>
+                                                    <input id="billingAddress.city" name="billingAddress.city" type="text" class="form-control cc_checkoutcity" value="San Francisco" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="billingStateSection" class="cc_checkoutstate_label">{{pageLabelMap 'CheckOut_State'}}</label>
+                                                    <div class="billingStateSection"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="billingAddress.postalCode" class="cc_checkoutpostalcode_label">{{pageLabelMap 'CheckOut_PostalCode'}}</label>
+                                                    <input id="billingAddress.postalCode" name="billingAddress.postalCode" type="text" class="form-control cc_checkoutpostalcode" value="94105" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="billingStateSection" class="cc_country_label">{{pageLabelMap 'CheckOut_Country'}}</label>
+                                                    {{{selectGeo 'country' this.countryList billingAddress.country 'billing wide countryListing form-control cc_country' 'billingAddress.'}}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- SHIPPING -->
+                                    <div class="panel-body SiteRegister_NewCustomer_Shipping" style="display:none;">
+                                        <h3 class="cc_title m-t-0">{{pageLabelMap 'CheckOut_ShippingAddress'}}</h3>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="useBillingAddress" class="cc_usebillingaddress_label">
+                                                        <a class="useBillingAddress cc_usebillingaddress" id="useBillingAddress">{{pageLabelMap 'Checkout_UseBillingAddress'}}</a>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="shippingAddress.address1" class="cc_shippingaddress1_label">{{pageLabelMap 'CheckOut_Address'}}</label>
+                                                    <input id="shippingAddress.address1" name="shippingAddress.address1" type="text" class="form-control cc_shippingaddress1" value="415 Mission Street" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="shippingAddress.address2" class="cc_profileaddress2_label">{{pageLabelMap 'Profile_Address_2'}}</label>
+                                                    <input id="shippingAddress.address2" name="shippingAddress.address2" type="text" class="form-control cc_profileaddress2" value="" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="shippingAddress.city" class="cc_checkoutcity_label">{{pageLabelMap 'CheckOut_City'}}</label>
+                                                    <input id="shippingAddress.city" name="shippingAddress.city" type="text" class="form-control cc_checkoutcity" value="San Francisco" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="shippingStateSection" class="cc_checkoutstate_label">{{pageLabelMap 'CheckOut_State'}}</label>
+                                                    <div id="shippingStateSection" class="shippingStateSection cc_checkoutstate"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="shippingAddress.postalCode" class="cc_checkoutpostalcode_label">{{pageLabelMap 'CheckOut_PostalCode'}}</label>
+                                                    <input id="shippingAddress.postalCode" name="shippingAddress.postalCode" type="text" class="form-control cc_checkoutpostalcode" value="94105" onfocus="myFocus(this);" onblur="myBlur(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="shippingStateSection" class="cc_country_label">{{pageLabelMap 'CheckOut_Country'}}</label>
+                                                    {{{selectGeo 'country' this.countryList shippingAddress.country 'shipping wide countryListing form-control' 'shippingAddress.'}}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <a href="ccrz__CCSiteLogin" type="button" class="btn btn-link btn-block register cc_register">
+                                    {{pageLabelMap 'Component_SiteRegister_Login'}}
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            </div> <!-- /.front -->
+                        </div><!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.newCustomerView.desktop.tmpl = 'CKZ-SiteRegister-NewCustomer';
+
+            CCRZ.pubSub.on('view:newCustomerView:refresh', function (theView) {
+                if (CCRZ.pagevars.currentPageName === 'ccrz__CCSiteRegister') {
+                    console.log("Site Register");
+                    // $('.ckz_CCSiteRegister .ckz_tmpl_OneCol_RCG').removeClass('container').addClass('container-fluid');
+                }
+            });
+        });
+    </script>
+</apex:component>

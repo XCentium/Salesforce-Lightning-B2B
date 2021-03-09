@@ -1,0 +1,38 @@
+<aura:component controller="PlatformEventsChartController"  extends="c:PlatformEventListener"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                access="global" >
+
+    
+    <ltng:require scripts="{!join(',', $Resource.momentjs,  $Resource.chartJS )}" afterScriptsLoaded="{!c.onInitChart }" /> 
+     
+  
+    <aura:attribute name="objectName" type="String" />
+     <aura:attribute name="chart" type="Object" />
+   
+    <aura:attribute name="jsLoaded" type="Boolean" default="false"/>
+
+    <aura:attribute name="objectFields" type="String[]" />
+    <aura:attribute name="objectDefs" type="Object[]"/>
+     
+    <aura:attribute name="fieldNamesToLabelsMap" type="Map"/>
+    
+    <aura:attribute name="color" type="String" />
+    
+    <aura:attribute name="eventNameFieldsMap" type="Map"/>
+    <aura:attribute name="eventLabelsAndNames" type="List"/>
+    <aura:attribute name="nameLabelMap" type="Map"/>
+
+     <!-- <aura:handler name="change" value="{!v.selectedFieldValue}" action="{!c.loadChart}"/> -->
+    
+    <aura:handler name="change" value="{!v.payload}" action="{!c.receivePayload}"/>
+
+  	<aura:handler name="change" value="{!v.selectedEventLabel}" action="{!c.loadChart}"/>   
+
+ 
+    
+   <canvas id="{!v.chartId}" aura:id="{!v.chartId}" width="100%" ></canvas> 
+
+
+    
+ 
+</aura:component>

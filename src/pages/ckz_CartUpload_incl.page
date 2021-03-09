@@ -1,0 +1,22 @@
+<!--
+ - Created by brandon.rogers on 2019-08-27.
+ -->
+
+<apex:page id="ckz_CartUpload_incl" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false" applyHtmlTag="false">
+    <!-- Sidebar -->
+    <div class="wrapper">
+        <div id="sidebar">
+
+            <div id="dismiss">
+                <i class="fal fa-times fa-2x"></i>
+            </div>
+
+            <div class="sidebarMiniCart hide">
+                <apex:insert name="MiniCartBox"/>
+            </div>
+
+        </div>
+    </div>
+
+    <c:ckz_CartUpload />
+</apex:page>

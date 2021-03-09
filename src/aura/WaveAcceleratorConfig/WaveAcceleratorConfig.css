@@ -1,0 +1,46 @@
+.THIS {
+    padding: 20px;
+}
+
+.THIS .slds-visual-picker__figure {
+    width: 150px;
+    height: 150px;
+}
+
+.THIS .slds-is-not-selected > img {
+    padding: 20px;
+    width: 100%;
+}
+
+.THIS .filebox {
+    width: 600px;
+    margin: 20px;
+}
+
+.THIS .astrowrapper {
+    overflow: hidden;
+    width: 800px;
+    margin: 0 auto;
+}
+
+.THIS .warning {
+    padding: 10px;
+    clear: both;
+}
+
+.THIS .warning p {
+    padding: 5px;
+    font-size: 20px;
+}
+
+.THIS .astro {
+    float: left;
+    padding: 20px;
+}
+
+.THIS .finalstep {
+    float: left;
+}
+.THIS .finalstep p {
+    padding: 20px;
+}

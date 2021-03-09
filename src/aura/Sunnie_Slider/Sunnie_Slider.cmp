@@ -1,0 +1,24 @@
+<aura:component controller="Sunnie_ToggleController" implements="force:hasRecordId,flexipage:availableForRecordHome,force:appHostable,force:LightningQuickAction" access="global">
+    <aura:attribute name="title" type="String" default="Banana Ripeness"/>
+    <aura:attribute name="img" type="String" default="" />
+    <aura:attribute name="val" type="Integer" />
+    <aura:attribute name="max" type="Integer" default="5"/>
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="Product" type="String" default="Bananas"/>
+    <aura:attribute name="TendernessOrRipeness" type="String" default="Ripeness"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <lightning:card>
+        <div class="padding center">
+            <div class="slider">
+            	<lightning:slider label="" value="{!v.val}" min="0" max="{!v.max}" class="slide" onchange="{!c.updateVal}" />
+            </div>
+            <div class="text">
+                <strong>{!v.TendernessOrRipeness + ' Slider'}</strong>
+                <aura:if isTrue="{!v.img != ''}">
+                	<img src="{!v.img}" class="img" />
+                </aura:if>
+            </div>
+        </div>
+    </lightning:card>
+</aura:component>

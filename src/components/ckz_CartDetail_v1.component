@@ -1,0 +1,606 @@
+<!--
+ - Created by brandon.rogers on 2019-07-05.
+ -->
+
+<apex:component id="ckz_CartDetail_v1">
+    <script id="CKZ-CartDetailView" type="text/template">
+
+
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="title cc_title">{{pageLabelMap 'Component_CartDetail_Title'}}</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                {{> headerSection}}
+            </div>
+
+            <div class="col-sm-8 text-right">
+                <button class="btn btn-primary btn-sm continueShoppingButton cc_continue_shopping_button" name="" type="button">
+                    {{pageLabelMap 'Component_CartDetail_Btn_ContinueShopping'}}
+                </button>
+
+                {{#ifDisplay 'WL.PkrOn'}}
+                <button class="btn btn-default btn-sm cc_create_cart_wishlist" data-toggle="modal" data-target="#wishMod" name="" type="button">
+                    <i class="far fa-plus"></i>
+                    {{pageLabelMap 'Component_CartDetail_Btn_CreateWishlist'}}
+                    <i class="fas fa-caret-down"></i>
+                </button>
+                {{/ifDisplay}}
+
+                {{#if false }}
+                {{#ifDisplay 'C.EmailAnon'}}
+                <button type="button" class="btn btn-default btn-sm cc_email_cart_link_button" data-toggle="modal" data-target="#emailModal">
+                    <i class="far fa-paper-plane"></i>
+                    {{pageLabelMap 'Component_CartDetail_Btn_EmailCart'}}
+                </button>
+                {{/ifDisplay}}
+                {{else}}
+                {{#ifDisplay 'C.EnableEmailCart'}}
+                <button type="button" class="btn btn-default btn-sm cc_email_cart_link_button" data-toggle="modal" data-target="#emailModal">
+                    <i class="far fa-paper-plane"></i>
+                    {{pageLabelMap 'Component_CartDetail_Btn_EmailCart'}}
+                </button>
+                {{/ifDisplay}}
+                {{/if}}
+
+                <button type="button" class="btn btn-default btn-sm updateCartButton cc_update_cart_button">
+                    <i class="far fa-sync"></i>
+                    {{pageLabelMap 'Component_CartDetail_Btn_UpdateCart'}}
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="messagingSection-Error" role="alert" style="display: none"></div>
+                <div class="messagingAction-Error alert alert-danger" role="alert" style="display: none"></div>
+
+                <div class="messagingSection-Warning" role="alert" style="display: none"></div>
+                <div class="messagingAction-Warning alert alert-warning" role="alert" style="display: none"></div>
+
+                <div class="messagingSection-Info" role="alert" style="display: none"></div>
+                <div class="messagingAction-Info alert alert-info" role="alert" style="display: none"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="cart_items_container" class="cc_cart_item_container m-t-3">
+                    <div class="cart_item_list cc_cart_item_list">
+                        {{#if this.cartItems}}
+                        <div class="row cart_item_list_header hidden-xs">
+                            <div class="col-sm-7">
+                                <h4 class="m-b-0">{{pageLabelMap 'Component_CartDetail_ItemList_Item'}}</h4>
+                            </div>
+                            <div class="col-sm-2">
+                                <h4 class="m-b-0">{{pageLabelMap 'Component_CartDetail_ItemList_Quantity'}}</h4>
+                            </div>
+                            <div class="col-sm-3">
+                                <h4 class="m-b-0">{{pageLabelMap 'Component_CartDetail_ItemList_Price'}}</h4>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        {{#each this.cartItems.models}}
+                        <div class="cart_item wishFinder {{this.attributes.itemID}} cc_cart_item" data-sku="{{this.prodBean.sku}}">
+                            {{> cartItemsDesktop}}
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                </div>
+
+                {{> emailModal}}
+                {{> rfqModal}}
+                {{> wishModal}}
+                {{> actionsTotals}}
+            </div>
+        </div>
+
+        <div id="modalSec"></div>
+    </script>
+
+
+    <!-- CART ITEMS -->
+    <script id="CKZ-CartItemDetail-View-Desktop" type="text/template">
+        {{#with this.attributes}}
+        {{#ifEquals itemStatus 'Invalid'}}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="cc_invalid">
+                    <p class="item_title cc_item_title">
+                        {{#if displayProductBean.sku}}
+                        {{#ifEquals pricingType 'external'}}
+                        {{#if extName}}
+                        {{productLink displayProductBean 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name extName)}}
+                        {{else}}
+                        {{productLink displayProductBean 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name mockProduct.name)}}
+                        {{/if}}
+                        {{else}}
+                        {{productLink displayProductBean 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name mockProduct.name)}}
+                        {{/ifEquals}}
+                        {{else}}
+                        {{#ifEquals pricingType 'external'}}
+                        {{#if extName}}
+                        {{productLink mockProduct 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name extName)}}
+                        {{else}}
+                        {{productLink mockProduct 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name mockProduct.name)}}
+                        {{/if}}
+                        {{else}}
+                        {{productLink mockProduct 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name mockProduct.name)}}
+                        {{/ifEquals}}
+                        {{/if}}
+                    </p>
+
+                    {{#ifEquals pricingType 'external'}}
+                    {{#if extSKU}}
+                    <div class="sku cc_sku">
+                        <span class="cc_label">{{pageLabelMap 'SKU'}}</span>
+                        <span class="cc_value">{{extSKU}}</span>
+                    </div>
+                    {{else}}
+                    <div class="sku cc_sku">
+                        <span class="cc_label">{{pageLabelMap 'SKU'}}</span>
+                        <span class="cc_value">{{mockProduct.sku}}</span>
+                    </div>
+                    {{/if}}
+                    {{else}}
+                    <div class="sku cc_sku">
+                        <span class="cc_label">{{pageLabelMap 'SKU'}}</span>
+                        <span class="cc_value">{{mockProduct.sku}}</span>
+                    </div>
+                    {{/ifEquals}}
+
+                    {{#if showSubProdTerm}}
+                    <p class="subscriptionSummary cc_subscription_summary">
+                        {{insertTokens cartDisplayName displayName (price price) (price SubAmount) (price recurringPrice) (price recurringPriceSubAmount) (pageLabelPrefixMap 'Subscriptions_Frequency_' orderFrequencyUOM) (pageLabelPrefixMap 'Subscriptions_Frequency_' installmentFrequencyUOM) orderFrequency installmentFrequency installmentCount orderCount recurringPricePercentage upfrontPricePercentage}}
+                    </p>
+                    {{/if}}
+
+                    <button type="button" class="btn btn-default btn-sm removeItemButton cc_remove_item_button" data-dismiss="modal" aria-hidden="true" data-id="{{itemID}}" >{{pageLabelMap 'Action_Delete'}}</button>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="row">
+                    <div class="col-xs-3">
+                        {{productLink mockProduct 'cc_prod_link' image=(displayImage mediaWrapper 'cart img-responsive center-block m-b-1' alt=mockProduct.name dataId=this.mockProduct.sku)}}
+                    </div>
+
+                    <div class="col-xs-9">
+                        <p class="item_title cc_item_title">
+                            {{#if displayProductBean.sku}}
+                            {{#ifEquals pricingType 'external'}}
+                            {{#if extName}}
+                            {{productLink displayProductBean 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name extName)}}
+                            {{else}}
+                            {{productLink displayProductBean 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name mockProduct.name)}}
+                            {{/if}}
+                            {{else}}
+                            {{productLink displayProductBean 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name mockProduct.name)}}
+                            {{/ifEquals}}
+                            {{else}}
+                            {{#ifEquals pricingType 'external'}}
+                            {{#if extName}}
+                            {{productLink mockProduct 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name extName)}}
+                            {{else}}
+                            {{productLink mockProduct 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name mockProduct.name)}}
+                            {{/if}}
+                            {{else}}
+                            {{productLink mockProduct 'cc_prod_link' text=(displayProductName 'Aggregate_Display' displayProductBean.name mockProduct.name)}}
+                            {{/ifEquals}}
+                            {{/if}}
+                        </p>
+
+                        {{#ifEquals pricingType 'external'}}
+                        <div class="sku cc_sku">
+                            {{#if extSKU}}
+                            <span class="cc_label">{{pageLabelMap 'SKU'}}</span>
+                            <span class="cc_value">{{extSKU}}</span>
+
+                            {{else}}
+                            <span class="cc_label">{{pageLabelMap 'SKU'}}</span>
+                            <span class="cc_value">{{mockProduct.sku}}</span>
+                            {{/if}}
+                        </div>
+                        {{else}}
+                        <div class="sku cc_sku">
+                            <span class="cc_label">{{pageLabelMap 'SKU'}}</span>
+                            <span class="cc_value">{{mockProduct.sku}}</span>
+                        </div>
+                        {{/ifEquals}}
+
+                        {{#if price}}
+                        <h4 class="price cc_price">
+                            {{{price price}}} {{pageLabelMap mockProduct.UnitOfMeasure}}
+                        </h4>
+                        {{/if}}
+
+                        {{#if sellerName}}
+                        <p class="cc_sold_by">
+                            <span class="soldbylabel cc_sold_by_label">{{pageLabelMap 'Prod_SoldBy'}}</span>
+                            <span class="soldbyname cc_sold_by_name">{{sellerName}}</span>
+                        </p>
+                        {{/if}}
+
+                        {{#if showSubProdTerm}}
+                        <p class="cc_sub_prod_term">
+                            {{insertTokens cartDisplayName displayName (price price) (price SubAmount) (price recurringPrice) (price recurringPriceSubAmount) (pageLabelPrefixMap 'Subscriptions_Frequency_' orderFrequencyUOM) (pageLabelPrefixMap 'Subscriptions_Frequency_' installmentFrequencyUOM) orderFrequency installmentFrequency installmentCount orderCount  recurringPricePercentage upfrontPricePercentage}}
+                        </p>
+                        {{else}}
+                        {{#if this.isSubscription}}
+                        <p class="subscriptionSummary cc_subscription_summary">
+                            {{subscriptionSummary 'Cart_Subscription_' this.subscriptionFrequency mockProduct.sku itemTotal}}
+                        </p>
+                        {{/if}}
+                        {{/if}}
+
+                        <div class="cart-links">
+                            {{#if showIncludedItems }}
+                            {{#ifNotEquals pricingType "attrGroup" }}
+                            <a href="#included_items{{itemID}}" class="includedItemsLink cc_included_items_link" id="includedItemsLink{{itemID}}" data-desktop="true" data-toggle="modal" data-id="{{itemID}}">
+                                {{pageLabelMap 'CartInc_IncludedItems'}}
+                            </a>
+
+                            {{> includedDisplay}}
+                            {{/ifNotEquals}}
+                            {{/if}}
+
+                            {{#ifEquals pricingType "attrGroup" }}
+                            <a href="#attribute_items{{itemID}}" class="attributeItemsLink cc_attribute_items_link gp_attribute_items_link" id="attributeItemsLink{{itemID}}" data-desktop="true" data-toggle="modal" data-id="{{itemID}}">{{pageLabelMap 'Cart_AttributeItems'}}</a>
+                            {{> attributesDisplay}}
+                            {{/ifEquals}}
+                        </div>
+
+                        {{#each minorLines}}
+                        {{#if showSubProdTerm}}
+                        <p class="subscriptionSummary cc_subscription_summary">{{insertTokens cartDisplayName displayName (price price) (price SubAmount) (price recurringPrice) (price recurringPriceSubAmount) (pageLabelPrefixMap 'Subscriptions_Frequency_' orderFrequencyUOM) (pageLabelPrefixMap 'Subscriptions_Frequency_' installmentFrequencyUOM) orderFrequency installmentFrequency installmentCount orderCount recurringPricePercentage upfrontPricePercentage}}</p>
+                        {{/if}}
+                        {{/each}}
+
+                        <div class="messagingSection-{{itemID}}-Error" style="display: none"></div>
+                        <div class="messagingSection-{{itemID}}-Info alert-dismissible" style="display: none">
+                            <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#215;</span></button>
+                        </div>
+
+                        {{#ifContains this.pricingModifierTypes 'tiered'}}
+                        <div class="cc_prt_button_div cc_prt_button_div_cart">
+                            <a href="javascript:void(0);" class="cc_prt_button cc_prt_cart_button cc_collapse_button" data-id="{{itemID}}" data-toggle="collapse" data-target="#cc_prt_overflow_collapse_{{itemID}}" aria-expanded="false">
+                                            <span class='text-collapsed'>
+                                                {{pageLabelMap 'ProductPricingTiers_ShowMoreBtn'}}
+                                                <i class="fas fa-caret-down"></i>
+                                            </span>
+                                <span class='text-expanded'>
+                                                {{pageLabelMap 'ProductPricingTiers_HideBtn'}}
+                                                <i class="fas fa-caret-up"></i>
+                                            </span>
+                            </a>
+                        </div>
+                        {{/ifContains}}
+                    </div>
+                </div>
+
+                {{#ifContains this.pricingModifierTypes 'tiered'}}
+                <div class="row">
+                    <div class="col-md-9 col-md-offset-3">
+                        <div id="cc_prt_overflow_collapse_{{itemID}}" class="collapse cc_prt_div_outer cc_prt_div_cart_collapse_{{itemID}}"></div>
+                    </div>
+                </div>
+                {{/ifContains}}
+            </div>
+
+            <div class="col-sm-2">
+                <div class="quantity cc_quantity" data-id="{{itemID}}">
+                    {{#ifNotEquals cartItemType 'Coupon'}}
+                    <div class="plus_minus cc_plus-minus gp_quantity_block" data-id="{{itemID}}">
+                        {{> cartItemsQty}}
+                    </div>
+                    {{/ifNotEquals}}
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="price_block cc_price_block">
+
+
+
+
+                    <h4 class="price cc_price m-t-0">
+                        <!--<span class="cc_label">{{pageLabelMap 'CartInc_Total'}}</span>-->
+                        <!--<span class="cc_value">{{price itemTotal}}</span>-->
+                        {{price itemTotal}}
+                    </h4>
+
+                    {{#if absoluteDiscount}}
+                    <p class="savings cc_savings">
+                        <span class="cc_label">{{pageLabelMap 'YouSave'}}</span>
+                        <span class="cc_value">{{price absoluteDiscount}}</span>
+                    </p>
+                    {{/if}}
+                </div>
+
+                <div class="productDetailItemActions">
+                    {{#ifDisplay 'C.DsplComments'}}
+                    <div class="actionComments">
+                        <button type="button" class="btn btn-link btn-sm p-a-0" data-toggle="modal" data-target="#comments_{{itemID}}">
+                            <i class="far fa-comment"></i>
+                            {{pageLabelMap 'CartLineCommentLabel'}}
+                        </button>
+
+                        {{> cartItemComment}}
+                    </div>
+                    {{/ifDisplay}}
+
+                    {{#ifNotEquals pricingType "attrGroup" }}
+                    {{#ifNotEquals cartItemType "Coupon" }}
+                    {{#unless showSubProdTerm}}
+                    <div class="wishButtons cc_wish_buttons"></div>
+                    {{/unless}}
+
+                    <div class="actionRemove">
+                        <button type="button" class="btn btn-link btn-sm p-a-0 deleteItem removeItemButton cc_remove_item_button" data-id="{{itemID}}">
+                            <i class="far fa-times"></i>
+                            {{pageLabelMap 'Action_Delete'}}
+                        </button>
+                    </div>
+                    {{/ifNotEquals}}
+                    {{/ifNotEquals}}
+                </div>
+
+            </div>
+        </div>
+        <hr/>
+        {{/ifEquals}}
+        {{/with}}
+    </script>
+
+    <!-- WISHLIST -->
+    <script id="CKZ-AddtoWishlist-Desktop" type="text/template">
+        <div class="btn-group dropdown">
+            <button type="button" class="btn btn-link btn-sm dropdown-toggle p-a-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="far fa-plus"></i>
+                {{pageLabelMap 'AddtoWishlist'}}
+                <i class="fas fa-caret-down"></i>
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="dropWish">
+                {{#each this}}
+                <li><a href="javascript:void(0);" class="pickWish" data-id="{{sfid}}">{{{name}}}</a></li>
+                {{/each}}
+                <li role="separator" class="divider"></li>
+                <li>
+                    <div class="row center-block">
+                        <div class="col-xs-12">
+                            <div class="input-group input-group-sm">
+                                <input id="newWishList" type="text" class="form-control newListName" placeholder="{{pageLabelMap 'MyAccount_Name'}}">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default pickWish" data-id="-1" type="button">
+                                        <i class="far fa-check"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </script>
+
+
+    <!-- HEADER SECTION -->
+    <script id="CKZ-CartDetail-Header-View" type="text/template">
+        <!--<div class="row">
+            <div class="col-md-12">
+                <div class="messagingSection-Error" role="alert" style="display: none"></div>
+                <div class="messagingAction-Error alert alert-danger" role="alert" style="display: none"></div>
+
+                <div class="messagingSection-Warning" role="alert" style="display: none"></div>
+                <div class="messagingAction-Warning alert alert-warning" role="alert" style="display: none"></div>
+
+                <div class="messagingSection-Info" role="alert" style="display: none"></div>
+                <div class="messagingAction-Info alert alert-info" role="alert" style="display: none"></div>
+            </div>
+        </div>-->
+
+        <div class="row">
+            <div class="col-md-12">
+                <p class="cart_sort cc_cart_sort">
+                    <span class="cc_cart_sort_text">{{pageLabelMap 'Sort'}}</span>
+                    <a href="#" class="cart_sort_item cc_cart_sort_item" data-sort="name"><span class="label label-default cc_cart_sort_text">{{pageLabelMap 'Name'}}</span></a>
+                    <a href="#" class="cart_sort_item cc_cart_sort_item" data-sort="sku"><span class="label label-default cc_cart_sort_text">{{pageLabelMap 'SKU'}}</span></a>
+                    <a href="#" class="cart_sort_item cc_cart_sort_item" data-sort="dateAdded"><span class="label label-default cc_cart_sort_text">{{pageLabelMap 'Date_Added'}}</span></a>
+                </p>
+            </div>
+        </div>
+    </script>
+
+    <!-- CART ITEM QTY -->
+    <script id="CKZ-CartItemDetail-Qty-View" type="text/template">
+        {{#ifEquals pricingType 'external'}}
+        <div class="row cc_qty_control_row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <p class="cc_order_quantity">
+                        <!--<span class="cc_quantity_label">{{pageLabelMap 'CartInc_Qty'}}&#58;&#160;</span>-->
+                        <span class="cc_quantity">{{quantity}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        {{#ifNotEquals pricingType "attrGroup"}}
+        {{#if qtySkipIncrement}}
+        <div class="row cc_qty_control_row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group input-group-sm cc_input_group">
+                                    <span class="input-group-btn cc_input_group_btn">
+                                        <input type="button" value="{{pageLabelMap 'Prod_QtyDecrFF'}}" class="btn btn-default minusFF cc_minusff"/>
+                                        <input type="button" value="{{pageLabelMap 'Prod_QtyDecrSingle'}}" class="btn btn-default minus cc_minus"/>
+                                    </span>
+                        <input id="entry_{{itemID}}" type="text" readonly="true" name="qty" value="{{quantity}}" class="input-text entry plus_minus form-control cc_entry" maxlength="7" />
+                        <span class="input-group-btn cc_input_group_btn">
+                                        <input type="button" value="{{pageLabelMap 'Prod_QtyIncrSingle'}}" class="btn btn-default plus cc_plus">
+                                        <input type="button" value="{{pageLabelMap 'Prod_QtyIncrFF'}}" class="btn btn-default plusFF cc_plusff">
+                                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+
+        {{#ifEquals qtyIncrement 1}}
+        <div class="row cc_qty_control_row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group input-group-sm cc_input_group">
+                                    <span class="input-group-btn cc_input_group_btn">
+                                        <input type="button" value="{{pageLabelMap 'Prod_QtyDecrSingle'}}" class="btn btn-default minus cc_minus"/>
+                                    </span>
+                        <input id="entry_{{itemID}}" type="text" name="qty" value="{{quantity}}" class="input-text entry plus_minus form-control cc_entry" maxlength="7" />
+                        <span class="input-group-btn cc_input_group_btn">
+                                        <input type="button" value="{{pageLabelMap 'Prod_QtyIncrSingle'}}" class="btn btn-default plus cc_plus">
+                                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/ifEquals}}
+
+        <input type="hidden" name="qtyIncrement" value="{{qtyIncrement}}" class="item_qtyIncrement" />
+        <input type="hidden" name="qtySkipIncrement" value="{{qtySkipIncrement}}" class="item_qtySkipIncrement" />
+        {{else}}
+        {{#ifEquals pricingType 'attrGroup'}}
+        <div class="row cc_qty_control_row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <p class="cc_order_quantity">
+                        <!--<span class="cc_quantity_label">{{pageLabelMap 'CartInc_Qty'}}&#58;&#160;</span>-->
+                        <span class="cc_quantity">{{quantity}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {{/ifEquals}}
+        {{/ifNotEquals}}
+        {{/ifEquals}}
+    </script>
+
+
+    <!-- ACTION TOTALS -->
+    <script id="CKZ-CartDetail-ActionTotals-View" type="text/template">
+        <div class="row">
+            <div class="col-sm-4">
+                {{#ifStoreSetting 'Display_Cart_Coupon__c'}}
+                <h3 class="cc_title">{{pageLabelMap 'CartInc_discountCodes'}}</h3>
+
+                {{#if this.hasCoupon}}
+                <form id="couponClearForm" class="cc_coupon_clear_form">
+                    <div class="discount_code cc_discount_code">
+                        <div class="input-group cc_clear_coupon_code">
+                            <input type="text" id="couponAppliedId" name="couponAppliedId" class="form-control" value="{{pageLabelMap 'CartInc_AppliedCoupon'}} {{this.couponName}}" disabled/>
+                            <span class="input-group-btn">
+                                    <button id="clearCouponBtn" type="button" class="btn btn-default cc_clear_coupon">{{pageLabelMap 'CartInc_ClearCoupon'}}</button>
+                                </span>
+                        </div>
+                    </div>
+                </form>
+                {{else}}
+                <form id="couponAddForm" class="cc_coupon_add_form">
+                    <div class="discount_code cc_discount_code">
+                        <div id="couponAddError" class="cc_coupon_add_error"></div>
+                        <div class="couponMessagingSection-Error"></div>
+
+                        <div class="input-group input-group-sm m-b-1">
+                            <input type="text" id="addCouponId" name="couponId" class="form-control cc_add_coupon_id" placeholder="{{pageLabelMap 'CartInc_CouponPlaceholder'}}"/>
+                            <span class="input-group-btn">
+                                    <button id="addCouponBtn" type="button" class="btn btn-primary cc_add_coupon">{{pageLabelMap 'CartInc_ApplyCoupon'}}</button>
+                                </span>
+                        </div>
+                    </div>
+                </form>
+                {{/if}}
+                {{/ifStoreSetting}}
+            </div>
+
+            <div class="col-sm-4 col-sm-offset-4">
+
+                <div class="cc_action_totals checkout text-right m-b-3">
+                    {{#if subTotal}}
+                    <h3 class="ckz_subTotal m-b-2">
+                        <span class="cc_label">{{pageLabelMap 'CartInc_Subtotal'}}:</span>
+                        <span class="cc_value">{{{price subTotal}}}</span>
+                    </h3>
+                    {{/if}}
+
+                    {{#if this.totalInfo}}
+                    <p class="cart_total_amount cc_cart_total_amount">{{this.totalInfo}}</p>
+                    {{/if}}
+
+                    <div class="totalsmessagingSection cc_total_messaging_section"></div>
+
+                    <!-- APPLY DISCOUNTS -->
+                    {{#if false }}
+                    {{ else }}
+                    {{#ifStoreSetting 'AutoCalcPriceAdjust__c'}}
+                    {{else}}
+                    <!--<button type="button" class="btn btn-default btn-sm btn-block getExtPricingButton cc_get_ext_pricing_button">
+                        {{pageLabelMap 'CartInc_ApplyDiscounts'}}
+                    </button>-->
+                    {{/ifStoreSetting}}
+                    {{/if}}
+
+                    <!-- CHECKOUT -->
+                    {{#if this.cartItems}}
+                    {{#ifNotEquals this.cartItems.length 0}}
+                    {{#if this.allowCheckout}}
+                    {{#ifEquals this.preventCheckout false}}
+                    <button type="button" class="btn btn-primary btn-sm btn-block checkOutBtn cc_checkout_btn">
+                        {{pageLabelMap 'CartInc_Checkout'}}
+                    </button>
+                    {{/ifEquals}}
+                    {{/if}}
+                    {{/ifNotEquals}}
+                    {{/if}}
+
+                    <!-- REQUEST FOR QUOTE -->
+                    {{#if false }}
+                    {{#ifDisplay 'rfq.GuestUser'}}
+                    <!--<a href="#rfqModal" id="rfqLink" class="cc_rfq_link" data-toggle="modal">-->
+                    <button type="button" class="btn btn-default btn-sm btn-block cc_rfq_link_button" data-toggle="modal" data-target="#rfqModal">
+                        {{pageLabelMap 'CartRFQForm_Header'}}
+                    </button>
+                    <!--</a>-->
+                    {{/ifDisplay}}
+                    {{else}}
+                    {{#ifDisplay 'rfq.LoggedIn'}}
+                    <!--<a href="#rfqModal" id="rfqLink" class="cc_rfq_link" data-toggle="modal">-->
+                    <button type="button" class="btn btn-default btn-sm btn-block cc_rfq_link_button" data-toggle="modal" data-target="#rfqModal">
+                        {{pageLabelMap 'CartRFQForm_Header'}}
+                    </button>
+                    <!--</a>-->
+                    {{/ifDisplay}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.CartDetailView.desktop.tmpl = 'CKZ-CartDetailView';
+            CCRZ.uiProperties.CartDetailView.partials.headerSection = '#CKZ-CartDetail-Header-View';
+            CCRZ.uiProperties.CartDetailView.partials.cartItemsDesktop = '#CKZ-CartItemDetail-View-Desktop';
+            CCRZ.uiProperties.CartDetailView.partials.cartItemsQty = '#CKZ-CartItemDetail-Qty-View';
+            CCRZ.uiProperties.CartDetailView.partials.actionsTotals = '#CKZ-CartDetail-ActionTotals-View';
+
+            CCRZ.uiProperties.wishlistPickerModal.desktop.tmpl = 'CKZ-AddtoWishlist-Desktop';
+        });
+    </script>
+</apex:component>

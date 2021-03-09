@@ -1,0 +1,175 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!this}" action="{!c.dataChange}"/>
+    
+    <aura:attribute name="componentTitle" type="String" default="Einstein Discovery"/>    
+    <aura:attribute name="scoreLabel" type="String" default="OUTCOME SCORE"/>        
+    <aura:attribute name="scoreValue" type="String" default="62"/>        
+    <aura:attribute name="outcomeColor" type="String" default="0-25,25-75,75-100"/>
+
+    <aura:attribute name="section1Head" type="String" default="Leading Causes"/>
+    <aura:attribute name="section2Head" type="String" default="HOW TO IMPROVE THIS"/>
+    
+    <aura:attribute name="section11Text" type="String" />   
+    <aura:attribute name="section11Score" type="String"/>  
+    <aura:attribute name="section12Text" type="String" />   
+    <aura:attribute name="section12Score" type="String" />      
+    <aura:attribute name="section13Text" type="String" />   
+    <aura:attribute name="section13Score" type="String" />      
+    <aura:attribute name="section14Text" type="String"/>   
+    <aura:attribute name="section14Score" type="String"/>      
+    <aura:attribute name="section15Text" type="String"/>   
+    <aura:attribute name="section15Score" type="String"/>          
+    
+    <aura:attribute name="section21Text" type="String" />   
+    <aura:attribute name="section21Score" type="String" />  
+    <aura:attribute name="section22Text" type="String"/>   
+    <aura:attribute name="section22Score" type="String" />      
+    <aura:attribute name="section23Text" type="String" />   
+    <aura:attribute name="section23Score" type="String" />      
+    <aura:attribute name="section24Text" type="String"/>   
+    <aura:attribute name="section24Score" type="String"/>      
+    <aura:attribute name="section25Text" type="String"/>   
+    <aura:attribute name="section25Score" type="String"/>      
+    
+    
+    <article class="slds-card">
+        <div class="slds-grid slds-einstein-header slds-card__header">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-grid slds-grid_vertical-align-center slds-size_3-of-4 slds-medium-size_2-of-3">
+                    <div class="slds-media__body">
+                        <h2 class="component-title slds-card__header-link slds-text-heading_small" title="Einstein Discovery">
+                            {!v.componentTitle}
+                        </h2>
+                    </div>
+                </div>
+                <div class="slds-einstein-header__figure slds-size_1-of-4 slds-medium-size_1-of-3"></div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="section-holder">
+                <div class="predicted-CSAT slds-clearfix slds-p-around_small slds-border_bottom">
+                    <div class="slds-clearfix" style="display:flex;align-items:center;">
+                        <div aura:id="overallScore" class="slds-float_left slds-align_absolute-center" style="font-size: 25px; width: 30%;">
+                            <p>{!v.scoreValue}</p>
+                        </div>                     
+                        <div class="slds-float_left slds-p-left_small slds-text-title_caps" style="width: 100%;">
+                            <p style="line-height: 30px;">{!v.scoreLabel}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-holder">
+                <div class="negative slds-clearfix slds-p-around_small slds-border_bottom">
+                    <div class="slds-text-title_caps slds-m-around_medium">{!v.section1Head}</div>
+                    <aura:if isTrue="{!v.section11Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">
+                            <div aura:id="score1" class="slds-float_left slds-align_absolute-center" style="width: 30%">
+                                <p>{!v.section11Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section11Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.section12Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">
+                            <div aura:id="score2" class="slds-float_left slds-align_absolute-center" style="color:#04844b; width: 30%">
+                                <p>{!v.section12Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section12Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.section13Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">
+                            <div aura:id="score3" class="slds-float_left slds-align_absolute-center" style="color:#04844b; width: 30%">
+                                <p>{!v.section13Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section13Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.section14Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">
+                            <div aura:id="score4" class="slds-float_left slds-align_absolute-center" style="color:#04844b; width: 30%">
+                                <p>{!v.section14Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section14Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.section15Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">                            
+                            <div aura:id="score5" class="slds-float_left slds-align_absolute-center" style="width: 30%">
+                                <p>{!v.section15Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section15Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                </div>
+            </div>
+            <div class="section-holder">
+                <div class="positive slds-clearfix slds-p-around_small">
+                    <div class="slds-text-title_caps slds-m-around_medium">{!v.section2Head}</div>
+                    <aura:if isTrue="{!v.section21Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">                            
+                            <div aura:id="score6" class="slds-float_left slds-align_absolute-center" style="width: 30%">
+                                <p>{!v.section21Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section21Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.section22Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">                            
+                            <div aura:id="score7" class="slds-float_left slds-align_absolute-center" style="width: 30%">
+                                <p>{!v.section22Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section22Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.section23Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">                            
+                            <div aura:id="score8" class="slds-float_left slds-align_absolute-center" style="width: 30%">
+                                <p>{!v.section23Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section23Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.section24Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">                            
+                            <div aura:id="score9" class="slds-float_left slds-align_absolute-center" style="width: 30%">
+                                <p>{!v.section24Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section24Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.section25Text != null}">
+                        <div class="slds-clearfix slds-m-bottom_x-small">                            
+                            <div aura:id="score10" class="slds-float_left slds-align_absolute-center" style="width: 30%">
+                                <p>{!v.section25Score}</p>
+                            </div>
+                            <div class="slds-float_left slds-p-left_small" style="{!v.section11Score != null ? 'width:70%;' : 'width:auto;'}">
+                                <p>{!v.section25Text}</p>
+                            </div>
+                        </div>
+                    </aura:if>                    
+                </div>
+            </div>
+        </div>
+    </article>
+</aura:component>

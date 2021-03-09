@@ -1,0 +1,25 @@
+.THIS.dcHeader{
+    text-align:center;
+    position:relative;
+    color:#333;
+    display:block;
+    border-radius:5px;
+    border:1px solid #ddd;
+}
+.THIS .icon{
+    width:50px;
+    margin-bottom:10px;
+}
+.THIS h2{
+    color:#316BFF;
+    font-size:40px;
+    text-transform:uppercase;
+    margin-bottom:0px;
+    text-align:center;
+}
+.THIS p{
+    font-size:14px;
+}
+.THIS .padding{
+    padding:20px;
+}

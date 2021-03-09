@@ -1,0 +1,28 @@
+<apex:page id="ckz_BIB_ProductDetails_incl" sidebar="false" showHeader="false" standardStylesheets="false">
+
+    <c:ckz_PDP_Product />
+    <c:ckz_PDP_DynamicKit />
+    <c:ckz_PDP_AssortmentBuilder /> <!-- NEEDS SOME WORK -->
+    <c:ckz_PDP_Assembly />
+    <c:ckz_PDP_Aggregate />
+    <c:ckz_PDP_Bundle />
+    <c:ckz_PDP_Kit />
+
+    <c:ckz_PDP_InfoTabs />
+    <c:ckz_PDP_Wishlist />
+    <c:ckz_PDP_PricingTiers />
+    <c:ckz_PDP_ADC />
+    <c:ckz_PDP_IncludedItems />
+    <c:ckz_PDP_RelatedProducts /> <!-- SUPERSESSION IS IN HERE -->
+    <c:ckz_PDP_Sellers />
+    <c:ckz_PDP_Reviews />
+
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.pubSub.on('view:productDetailView:refresh', function (theView) {
+                // $('.ckz_productdetails .ckz_tmpl_OneCol_SDO .cc_main_container').toggleClass('container container-fluid');
+            });
+        });
+    </script>
+</apex:page>

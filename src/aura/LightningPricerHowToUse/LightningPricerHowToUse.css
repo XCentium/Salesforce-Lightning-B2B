@@ -1,0 +1,29 @@
+.THIS {
+}
+
+.THIS .ulCircle{
+    list-style: circle;
+}
+
+.THIS img{
+    max-width: 800px;
+    display: block;
+    margin:10px;
+}
+
+.THIS .titleMarginBottom {
+    margin-top:7px;
+    margin-bottom:7px;
+}
+
+.THIS .code {
+  font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+  margin-bottom: 10px;
+  overflow: visible!important;
+  width: auto;
+  padding: 5px;
+  background-color: #eee;
+  width: 650px;
+  padding-bottom: 20px;
+  max-height: 800px;
+}

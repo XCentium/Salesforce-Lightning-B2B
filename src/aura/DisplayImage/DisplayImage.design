@@ -1,0 +1,4 @@
+<design:component>
+    <design:attribute name="staticResourceName" label="Name of the Static Resource to show"/>
+    <design:attribute name="width" label="Width of image (100 = 100%)"/>
+</design:component>

@@ -1,0 +1,151 @@
+<apex:page standardcontroller="Case" extensions="SSE_ConsoleTweet" showHeader="false" >
+<title>SSE Console Tweet</title>
+    <div id="wrapper">
+        <div id="header">
+            Post a Tweet
+        </div>
+        
+        <div id="bodyDiv">
+            <apex:form >
+                <apex:actionFunction action="{!saveMyCase}" name="saveMyCase" rerender="out" oncomplete="afterPost('{!case.id}', {!stringLength});"/>
+                <apex:outputPanel id="out" >
+                    <div class="row-fluid" id="textContainer">
+                        <apex:inputField styleClass="tweetTextBox" value="{!socialPost.content}" onfocus="inputFocus(this)" onkeyup="update_chars_left(this);"/>
+                    </div>
+                </apex:outputPanel>
+            </apex:form>
+  
+            <div id="alerts">
+                <div class="alert alert-error" id="cantTweet">
+                    There is no twitter social persona for the contact associated with this case. 
+                </div>
+            </div>
+            
+            <div id="bot">
+                <div id="maxChars">140 Characters Remaining</div>
+                <div style="float:right;">
+                    <button type="button" onclick="saveMyCase();setCharacterCount({!stringLength});" id="cpbutton" >Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+    <apex:stylesheet value="{!URLFOR($Resource.bootstrap, '/bootstrap/css/bootstrap.min.css')}"/>
+    <apex:includeScript value="{!$Resource.jquery}"/>
+    <apex:includeScript value="/support/api/26.0/interaction.js"/>
+    
+    <style type="text/css">
+        #textContainer textarea {
+            height: 20px;
+            width: 469px;
+            font-size: 11px;
+            color: #888;
+            background: url('/resource/twitterImage') no-repeat 3px 3px;
+            background-size: 25px 20px;
+            padding-left: 35px;
+        }
+        
+        #wrapper {
+            width: 543px;
+            border: 1px solid #d4dadc;
+        }
+        
+        #header {
+            border-bottom: 1px solid #d4dadc;
+            padding: 7px 13px;
+            font-weight: bold;
+            font-size: 11px;
+            background: #F7F8F9;
+        }
+        
+        #bodyDiv {
+            padding: 20px 15px;
+        }
+        
+        #cpbutton, #articleButton {
+            background: #8ab529;
+            border: 1px solid #6c8049;
+            color: white;
+            padding: 4px 17px;
+        }
+        
+        #bot {
+            height: 25px;
+        }
+        
+        #bodyDiv form {
+            margin: 0 0 10px;
+        }
+        
+        #maxChars {
+            font-size: 11px;
+            text-align: right;
+            margin-top: -5px;
+            float: left;
+        }
+        
+        #cantTweet {
+            display: none;
+        }
+    </style>
+    
+    <script type="text/javascript">
+        sforce.interaction.entityFeed.onObjectUpdate();
+        
+        $(document).ready(function() {
+            setCharacterCount({!stringLength});
+        
+            if ({!cantTweet} == true) {
+                document.getElementById("cantTweet").style.display = "block";       // show alert msg
+                document.getElementsByClassName("tweetTextBox")[0].disabled = true;     // disable text box
+                
+                // disable buttons
+                disableButton("cpbutton");
+            }
+        });
+        
+        function afterPost(caseId, length) {
+            sforce.interaction.entityFeed.refreshObject(caseId, true, true, true);
+            setCharacterCount(length);
+        }
+        
+        function setCharacterCount(length) {
+            $('#maxChars').text(140 - length + " Characters Remaining");            // set character count
+        }
+        
+        function disableButton(buttonName) {
+            document.getElementById(buttonName).disabled = true;
+            document.getElementById(buttonName).style.background = "#EFEFEF";
+            document.getElementById(buttonName).style.color = "#7B7B7B";
+        }
+        
+        function inputFocus(i) {
+            if(i.value==i.defaultValue){ 
+                i.style.color="#000";
+                document.getElementsByClassName('tweetTextBox')[0].style.height = '7em';
+            }
+        }
+        
+        /* make sure text field does go over 140 characters */
+        function update_chars_left(target_input) {
+           var text_len = target_input.value.length;
+           
+           if (text_len >= 140) {
+               target_input.value = target_input.value.substring(0, 140); // truncate
+               $('#maxChars').text("0 Characters Remaining");
+           } else {
+               $('#maxChars').text(140 - text_len + " Characters Remaining");
+           }
+        }
+    </script>                
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

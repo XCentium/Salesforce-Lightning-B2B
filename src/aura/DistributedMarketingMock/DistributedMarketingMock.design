@@ -1,0 +1,11 @@
+<design:component>
+    <design:attribute name="logo" label="Primary Email Logo" Description="Template Image URL" default="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Restaurant/Logo/scotts-small.png" />
+
+    <design:attribute name="template1" label="Template 1 Image" Description="Image URL for Template 1 image" default="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Restaurant/distributedMarketing/template1.jpg" />
+    <design:attribute name="Template1Heading" label="Template 1 Heading" Description="Template Image URL" default="Join Us for Scott's Exclusive Event!" />
+    <design:attribute name="Template1Content" label="Template 1 Content" Description="Template Image URL" default="We are so excited to offer you access to our Exclusive Event just for Loyalty Members coming up. Scott's is debuting new menu items next Saturdsy and would like to invite you to the tasting." />
+    
+    <design:attribute name="template2" label="Template 2 Image" Description="Image URL for Template 1 image" default="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Restaurant/distributedMarketing/template2.jpg" />
+    <design:attribute name="Template2Heading" label="Template 3 Heading" Description="Template Image URL" default="Did you know we do carry-out?" />
+    <design:attribute name="Template2Content" label="Template 2 Content" Description="Template Image URL" default="We offer our full menu on carry out. Order within the next week to get 10% off your first carry-out order!" />
+</design:component>

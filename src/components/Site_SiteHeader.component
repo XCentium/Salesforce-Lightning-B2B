@@ -1,0 +1,67 @@
+<apex:component controller="SDOSiteController">
+
+<apex:outputPanel styleClass="pkbHeader" layout="block">
+    <h1><apex:outputLink value="{!homeUrl}"></apex:outputLink></h1>
+    <a href="/Public/Site_SiteHome" style="position: absolute; top: 4px; margin-left: 400px;">Public</a>
+    <a href="/Customers/Site_SiteHome" style="position: absolute; top: 4px; margin-left: 500px;">Customer</a>
+    <a href="/Partners/Site_SiteHome" style="position: absolute; top: 4px; margin-left: 600px;">Partner</a>
+    <img src="{!$Resource.UCIBanner}"/>
+    <div id="AppBodyHeader" class="bPageHeader">
+        <table class="tabsNewBar" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+                <td>
+                    <div class="tabNavigation pkbHeaderTabs">
+                        <table id="tabBar" class="tab" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                                <td class="{!IF     (BEGINS(LOWER($CurrentPage.Name),'site_sitehome'),   'selected currentTab',
+                                                 IF     (BEGINS(LOWER($CurrentPage.Name), 'unauthorized'), 'selected currentTab','')    )} " id="Home">
+                                    <div>
+                                        <a href="http://{!$Site.Domain}/{!$Site.Name}/Site_SiteHome">Home</a>
+                                    </div>
+                                </td>
+                                 <td class="{!IF(BEGINS(LOWER($CurrentPage.Name),'site_partners'),'selected currentTab','')} " id="Partners">
+                                    <div>
+                                        <a href="/Partners/Site_SiteHome">Partners</a>
+                                    </div>
+                                </td>
+                                 <td class="{!IF(BEGINS(LOWER($CurrentPage.Name),'site_customers'),'selected currentTab','')} " id="Customers">
+                                    <div>
+                                        <a href="/Customers/Site_SiteHome">Customers</a>
+                                    </div>
+                                </td>
+
+                                <td class="{!IF(BEGINS(LOWER($CurrentPage.Name),'site_knowledgehome'),'selected currentTab','')} " id ="Knowledge"
+                                >
+                                    <div>
+                                        <apex:outputLink value="{!productUrl}">Knowledge Base</apex:outputLink>
+                                    </div>
+                                </td>
+
+                                <td class="{!IF(BEGINS(LOWER($CurrentPage.Name),'site_ideas'),'selected currentTab','')} " id ="Community">
+                                    <div>
+                                        <apex:outputLink value="http://{!$Site.Domain}/{!$Site.Name}/Site_Ideas">Community</apex:outputLink>
+                                    </div>
+                                </td>
+
+                                <td class="{!IF(BEGINS(LOWER($CurrentPage.Name),'site_contactus'),'selected currentTab','')} " id = "ContactUs">
+                                    <div>
+                                        <apex:outputLink value="http://{!$Site.Domain}/{!$Site.Name}/Site_ContactUs">Contact Us</apex:outputLink>
+                                    </div>
+                                </td>
+                                <td class="{!IF(BEGINS(LOWER($CurrentPage.Name),'site_answers'),'selected currentTab','')} " id = "Answers">
+                                    <div>
+                                        <apex:outputLink value="http://{!$Site.Domain}/{!$Site.Name}/Site_Answers">Answers</apex:outputLink>
+                                    </div>
+                                </td>                                
+                            </tr>
+
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</apex:outputPanel>
+
+
+</apex:component>

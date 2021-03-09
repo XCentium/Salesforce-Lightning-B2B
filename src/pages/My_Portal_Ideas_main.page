@@ -1,0 +1,7 @@
+<!--PLEASE READ: If you override the automatically generated CSS, your Chatter Answers community might not function correctly.-->
+<apex:page language="en_US" showHeader="false" cache="true">
+<title>My Portal Idea Main</title>
+    <body>
+         <chatteranswers:allfeeds communityId="09a5Y000000Khhd"/>
+   </body>
+</apex:page>

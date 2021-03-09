@@ -1,0 +1,24 @@
+<design:component >
+	<design:attribute name="Title" label="Component Title"/>
+    
+    <design:attribute name="Text1" label="Activity 1" datasource="AddThis Share,Email Hard Bounce,Email Open,Email Resubscribe,Email Sent,Email Soft Bounce,Email Spam Complaint,Email Unsubscribe,Email Preferences Open,Event Attended,Event Registered,File Accessed,Form View,Form Error,Form Success,Landing Page View,Natural Search,Olark Live Chat,Opportunity Associated,Opportunity Created,Opportunity Lost,Opportunity Won,Paid Search,Priority Page View,Site Search,Tracked Link Clicked,Website Visit,Webinar Attended,Webinar Registered,Webinar Invited,Webinar Accepted,Webinar Absent,Wistia Video Viewed"/>
+    <design:attribute name="SubText1" label="SubText 1"/>
+    <design:attribute name="Date1" label="Time elapsed 1"/>
+    
+    <design:attribute name="Text2" label="Activity 2" datasource="AddThis Share,Email Hard Bounce,Email Open,Email Resubscribe,Email Sent,Email Soft Bounce,Email Spam Complaint,Email Unsubscribe,Email Preferences Open,Event Attended,Event Registered,File Accessed,Form View,Form Error,Form Success,Landing Page View,Natural Search,Olark Live Chat,Opportunity Associated,Opportunity Created,Opportunity Lost,Opportunity Won,Paid Search,Priority Page View,Site Search,Tracked Link Clicked,Website Visit,Webinar Attended,Webinar Registered,Webinar Invited,Webinar Accepted,Webinar Absent,Wistia Video Viewed"/>
+    <design:attribute name="SubText2" label="SubText 2"/>
+    <design:attribute name="Date2" label="Time elapsed 2"/>
+    
+    <design:attribute name="Text3" label="Activity 3" datasource="AddThis Share,Email Hard Bounce,Email Open,Email Resubscribe,Email Sent,Email Soft Bounce,Email Spam Complaint,Email Unsubscribe,Email Preferences Open,Event Attended,Event Registered,File Accessed,Form View,Form Error,Form Success,Landing Page View,Natural Search,Olark Live Chat,Opportunity Associated,Opportunity Created,Opportunity Lost,Opportunity Won,Paid Search,Priority Page View,Site Search,Tracked Link Clicked,Website Visit,Webinar Attended,Webinar Registered,Webinar Invited,Webinar Accepted,Webinar Absent,Wistia Video Viewed"/>
+    <design:attribute name="SubText3" label="SubText 3"/>
+    <design:attribute name="Date3" label="Time elapsed 3"/>
+    
+    <design:attribute name="Text4" label="Activity 4" datasource="AddThis Share,Email Hard Bounce,Email Open,Email Resubscribe,Email Sent,Email Soft Bounce,Email Spam Complaint,Email Unsubscribe,Email Preferences Open,Event Attended,Event Registered,File Accessed,Form View,Form Error,Form Success,Landing Page View,Natural Search,Olark Live Chat,Opportunity Associated,Opportunity Created,Opportunity Lost,Opportunity Won,Paid Search,Priority Page View,Site Search,Tracked Link Clicked,Website Visit,Webinar Attended,Webinar Registered,Webinar Invited,Webinar Accepted,Webinar Absent,Wistia Video Viewed"/>
+    <design:attribute name="SubText4" label="SubText 4"/>
+    <design:attribute name="Date4" label="Time elapsed 4"/>
+    
+    <design:attribute name="Text5" label="Activity 5" datasource="AddThis Share,Email Hard Bounce,Email Open,Email Resubscribe,Email Sent,Email Soft Bounce,Email Spam Complaint,Email Unsubscribe,Email Preferences Open,Event Attended,Event Registered,File Accessed,Form View,Form Error,Form Success,Landing Page View,Natural Search,Olark Live Chat,Opportunity Associated,Opportunity Created,Opportunity Lost,Opportunity Won,Paid Search,Priority Page View,Site Search,Tracked Link Clicked,Website Visit,Webinar Attended,Webinar Registered,Webinar Invited,Webinar Accepted,Webinar Absent,Wistia Video Viewed"/>
+    <design:attribute name="SubText5" label="SubText5"/>
+    <design:attribute name="Date5" label="Time elapsed 5"/>
+    
+</design:component>

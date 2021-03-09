@@ -1,0 +1,20 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >	
+    <aura:attribute name="URL" type="String"/>
+    <aura:attribute name="width" type="String" default="100%"/>
+    <aura:attribute name="height" type="String" default="500px"/>
+    <aura:attribute name="scrolling" type="String" default="auto"/>
+    <aura:attribute name="frameBorder" type="String" default="0"/>
+    <aura:attribute name="style" type="String" default=""/>
+    <aura:attribute name="sandbox" type="String" default="allow-scripts"/>
+    <aura:attribute name="PageTitle" type="String" default="Get Started"/>
+    
+    <div class=" border">
+        <div class="padding">
+            <h1>
+                <p>{!v.PageTitle}</p>
+            </h1>
+            <iframe src="{!v.URL}" 
+                width="{!v.width}" height="{!v.height}" type="text/html" frameborder="0" allowTransparency="true" style="border: 0"></iframe>
+    	</div>
+    </div>
+</aura:component>

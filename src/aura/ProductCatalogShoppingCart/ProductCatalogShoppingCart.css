@@ -1,0 +1,47 @@
+.THIS {
+    width: 100%;
+    height: 100%;
+}
+
+.THIS .container {
+    width: 100%;
+    height: 100%;
+    background: #F4F6F9;
+    border-radius: 20px;
+}
+
+.THIS .item-card {
+    background: #EEF1F6;
+    
+}
+
+.THIS .item-media {
+    background-color: white;  
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.THIS .item {
+    display:flex;
+    padding: 20px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.THIS .slds-icon.icon {
+    height: 30px;
+    width: 30px;
+    display: flex;
+    fill: #8999a5;
+}
+
+.THIS .removeButton.uiButton {
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}

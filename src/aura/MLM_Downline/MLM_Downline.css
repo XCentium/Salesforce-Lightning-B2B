@@ -1,0 +1,120 @@
+.THIS .box{
+    float:left;
+    border:1px solid #ddd;
+    margin:10px;
+    position:relative;
+    border-radius:4px;
+}
+.THIS .header-image{
+    height:45px;
+    border-radius:.25rem .25rem 0 0;    
+}
+.THIS .customer-image-container{
+    position: relative;
+    display: inline-block;
+    margin-top: -35px;
+    left:-10px;
+}
+.THIS .customer-avatar{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid white;
+}
+.THIS .padding{
+    padding:10px;
+}
+.THIS h3{
+    background:#0065CC;
+    border-bottom:1px solid #ddd;
+    padding:10px;
+    color:#fff;
+    font-weight:bold;
+}
+.THIS.clear,.THIS .clear{
+    clear:both;
+    float:none;
+}
+.THIS .slds-text-heading_small{
+    margin-top:-5px;
+    margin-left:-10px;
+    display:inline-block;
+}
+.THIS .xsmall{
+    display:inline-block;
+    top:-2px;
+    font-size:10px;
+    position:relative;
+    margin-left:10px;
+}
+.THIS .metric{
+    width:50%;
+    float:left;  
+    /*display:block;*/
+}
+@media (max-width: 1600px) {
+    .THIS .metric{
+        width:100%;
+        float:none;
+        clear:both;
+    }
+}
+.THIS .hide{
+    display:none;
+}
+.THIS .show{
+    display:block;
+}
+.THIS .parent-avatar{
+	width:100px;
+    height:100px;
+    border-radius:50%;
+}
+.THIS.parent{
+    margin:0 auto;
+    width:100px;
+    height:100px;
+    display:block;
+    text-align:center;
+    position:relative;
+    margin-bottom:20px;
+}
+.THIS .parentline{
+    position:absolute;
+    left:50%;
+    margin-left:-1px;
+    top:100%;
+    width:2px;
+    height:20px;
+    background-color:#ddd;
+    margin:0 auto;
+}
+.THIS.children{
+    border:1px solid #ddd;
+}
+.THIS .icon{
+    margin-right:10px;
+}
+.THIS .footer{
+    border-top:1px solid #ddd;
+    padding:10px 0;
+    font-size:14px;
+}
+.THIS .center{
+    text-align:center;
+}
+.THIS .shade {
+    background-color: #e8e8e8;
+}
+.THIS .cust360-icon {
+    width: 48px;
+    height: 48px;
+}
+.THIS .title-weight {
+    font-weight: 700;
+}
+.THIS.card-pull-margin{
+    margin-top: -1rem;
+    margin-left: -1rem;
+    margin-right: -1rem;   
+}

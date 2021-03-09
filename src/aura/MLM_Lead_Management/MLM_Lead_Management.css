@@ -1,0 +1,39 @@
+.THIS {
+}
+.THIS.padding{
+    padding:20px;
+}
+.THIS.listview{
+    border-bottom:1px solid #ddd;
+}
+.THIS a{
+    color:#7CD292;
+}
+.THIS h3{
+    color:#7CD292;
+    font-size:18px;
+}
+.THIS .listview:last-child{
+    border-bottom:none;
+}
+.THIS .center{
+    text-align:center;
+}
+.THIS .tasklink{
+   margin-right:10px;
+   display:inline-block;
+   padding:10px 10px 10px 0px;
+}
+.THIS .nostylebutton{
+    background-color:transparent!important;
+    border:none!important;
+    box-shadow:none;
+    padding:0px;
+    margin:5px;
+    display:inline-block;
+    float:left;
+}
+.THIS .nostylebutton img{
+    width:10px;
+    height:10px;
+}

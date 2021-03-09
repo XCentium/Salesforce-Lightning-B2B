@@ -1,0 +1,19 @@
+<aura:component description="ckz_OrderForm_ProductSearchFilter">
+
+    <aura:registerEvent name="productFilterChange" type="c:ckz_OrderForm_ProductFilterEvent"/>
+
+    <aura:attribute name="filterSfid" type="String" />
+    <aura:attribute name="filterName" type="String" />
+    <aura:attribute name="filterOptions" type="List" />
+    <aura:attribute name="filterValues" type="List" />
+
+    <lightning:checkboxGroup
+            aura:id="checkboxFilter"
+            name="Checkbox Group"
+            label="{!v.filterName}"
+            options="{!v.filterOptions}"
+            value="{!v.filterValues}"
+            onchange="{!c.handleFilterChange}"
+    />
+
+</aura:component>

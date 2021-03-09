@@ -1,0 +1,63 @@
+<aura:component implements="lightning:availableForFlowScreens" controller="ClientellingController" access="global"  >
+    <aura:attribute name="PaymentType" type="String" default=""/>
+    <aura:attribute name="OrderId" type="String"/>
+    <aura:attribute name="expYear" type="String" />
+    <aura:attribute name="expMonth" type="String" />
+    <aura:attribute name="ccNumber" type="String" />
+    <aura:attribute name="availableActions" type="String[]" />
+    <aura:registerEvent name="navigateFlowEvent" type="c:navigateFlow"/>
+    
+    <aura:if isTrue="{!v.PaymentType != ''}" >
+    	<c:FlowFooter availableActions="{!v.availableActions}" navigateFlowEvent="{!c.handleNavigate}"/>
+    </aura:if>
+    <div class="form"> 
+        <div class="padding">
+            <ui:inputSelect multiple="false" aura:id="payment" label="Choose a payment option" change="{!c.onSelectChange}">
+                <ui:inputSelectOption text="" label="--" value=""/>
+                <ui:inputSelectOption text="Default" label="Default Payment" value="Default"/>
+                <ui:inputSelectOption text="CC" label="Credit Card" value="CC"/>
+            </ui:inputSelect>
+        </div>
+    </div>
+    <aura:if isTrue="{!v.PaymentType == 'CC'}" >
+        <div class="clear"></div>
+        <div class="form">     
+            <h3>
+                <div class="padding">
+                	Please Enter Credit Card Details
+                </div>
+            </h3>
+            <div class="padding">
+                <label>Credit Card Number</label>
+                <ui:inputSecret label="" value="{!v.ccNumber}" updateOn="keyup"/>
+                <div class="clear"></div>
+                <br/>
+                <label>Expiration Date</label>
+                <div class="exp">
+                    <div class="padding">
+                        <ui:inputSelect multiple="false" aura:id="CCMonth" value="{!v.expMonth}" label="Month">
+                            <ui:inputSelectOption text="01" label="01"/>
+                            <ui:inputSelectOption text="02" label="02"/>
+                            <ui:inputSelectOption text="03" label="03"/>
+                            <ui:inputSelectOption text="04" label="04"/>
+                            <ui:inputSelectOption text="05" label="05"/>
+                            <ui:inputSelectOption text="06" label="06"/>
+                            <ui:inputSelectOption text="07" label="07"/>
+                            <ui:inputSelectOption text="08" label="08"/>
+                            <ui:inputSelectOption text="09" label="09"/>
+                            <ui:inputSelectOption text="10" label="10"/>
+                            <ui:inputSelectOption text="11" label="11"/>
+                            <ui:inputSelectOption text="12" label="12"/>
+                        </ui:inputSelect>
+                    </div>
+                </div>
+                <div class="exp">
+                    <div class="padding">
+                        <ui:inputText label="Year" class="field" value="{!v.expYear}" updateOn="click"/>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,92 @@
+<apex:page showHeader="false" sidebar="false" standardController="Case" extensions="CreateArticleFromCaseController">
+    <style>
+        #content{
+            text-align: center;
+            font-family: 'SalesforceSans-Regular',Helvetica,Arial,sans-serif;
+            font-size: 14px;            
+        }
+        #cen{
+            width: 80%;
+            margin: auto;
+        }
+        #btnDiv{
+            width: 100px;
+            margin: auto;
+        }
+        #okBtn{
+            margin-top: 15px;
+            width: 100px;
+            height: 30px;
+            border-color: #e0e5ee;
+            color: #fff;
+            background: #0070d2;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: normal;            
+            text-align: center;
+            line-height: 30px;
+        }
+        .banner{
+            width: 100%;
+            height: 30px;
+            display: none;          
+            border-radius: 4px;         
+            padding: 15px;          
+            line-height: 30px;          
+            margin-top: 15px;
+            min-width: 474px;       
+        }
+        #errorDiv{          
+            color: #a94442;
+            background-color: #f2dede;          
+            border-color: #ebccd1;          
+        }
+        #successDiv{
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+        
+        @media screen and (max-width: 610px) {
+            #successDiv{
+                line-height: 22px;
+                height: 40px;
+            }
+        }
+    </style>
+
+    <div id="content">
+        <div>Would you like to create a Knowledge Article from this Case?</div>
+
+        <div id="btnDiv">
+            <div id="okBtn">Create Article</div>
+        </div>
+
+        <div id="cen">
+            <div id="errorDiv" class="banner"><b>Error!</b> Duplicate article found!  You have already created an article from this case.</div>
+            <div id="successDiv" class="banner"><b>Success!</b> A new article has been created and added to the Knowledge Base.</div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script type='text/javascript' src='/canvas/sdk/js/publisher.js'></script>
+
+    <script>
+        $(function(){           
+            $('#okBtn').click(function(){
+                CreateArticleFromCaseController.createArticle('{!$currentpage.parameters.Id}', function(result,event){
+                    if(event.status){
+                        $('#errorDiv').hide();
+                        $('#successDiv').fadeIn('slow');                        
+                        Sfdc.canvas.publisher.publish({name : 'publisher.refresh', payload : {feed:true}});                     
+                    }
+                    else{   
+                        $('#successDiv').hide();                    
+                        $('#errorDiv').fadeIn('slow');
+                    }
+                });
+            });
+        });
+    </script>
+</apex:page>

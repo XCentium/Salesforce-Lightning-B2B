@@ -1,0 +1,5 @@
+<design:component label="GilmoreLabs - FSL Scheduling Wrapper">
+    <design:attribute name="saID" label="Service Appointment ID" description="The ID of the service appointment to get candidates for" />
+    <design:attribute name="numheight" label="Height of embedded VF page" description="The height (in pixels) of the embedded page. Default is 550." />
+    <design:attribute name="candidates" label="Get Candidates" description="If selected, the scheduling will show the candidates screen. If not, it will scheduling using Appointment booking." />
+</design:component>

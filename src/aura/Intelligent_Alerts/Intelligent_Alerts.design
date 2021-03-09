@@ -1,0 +1,7 @@
+<design:component>
+	<design:attribute name="ObjectId" description="Base Object ID Used with Maps. Find this by navigating to Installed Packages - Salesforce Maps - Configurator and select Account. SCroll to the MapIt List View Code and find the Base Object Id" />
+    <design:supportedFormFactors>
+        <design:supportedFormFactor type="Small"/>
+        <design:supportedFormFactor type="Large"/>
+    </design:supportedFormFactors>
+</design:component>

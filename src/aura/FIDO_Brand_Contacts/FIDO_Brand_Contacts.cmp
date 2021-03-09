@@ -1,0 +1,32 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="Industry" type="String" />
+    <aura:attribute name="Contacts" type="String[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="cardWrapper">
+        <aura:iteration items="{!v.Contacts}" var="contact">
+            <div class="card">
+                <div class="textleft">
+                    <div class="paddingsmall ">
+                        <div class="owner brandrecord">
+                            <h3 class="borderbottom smallh3">
+                                <div class="padding">
+                                    <aura:if isTrue="{!contact.profile_image_url__c != null}" >
+                                        <img src="{!contact.profile_image_url__c}" class="personaimg marginright" />
+                                        <aura:set attribute="else">
+                                            <lightning:icon iconName="standard:contact" size="medium" alternativeText=""/>   
+                                        </aura:set>
+                                    </aura:if>   
+                                    <span class="">{!contact.name}</span>
+                                </div>
+                            </h3>
+                            <div class="padding BrandDescSetHeight">
+                                {!contact.name} is a key contact used within our demo scripts. This contact has data staged to help support your demo.
+                            </div>
+                            <c:FIDO_Brand_AccountContact_Buttons contactname="{!contact.name}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aura:iteration>  
+    </div>
+</aura:component>

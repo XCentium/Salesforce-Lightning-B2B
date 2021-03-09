@@ -1,0 +1,48 @@
+<apex:page controller="PartnerPortalWelcomeController" showHeader="false" sidebar="false" standardStylesheets="true">
+
+<title>Partner Portal Sidebar</title>
+   <apex:panelGrid columns="2">
+   
+   
+        <apex:outputText value="{!$User.FirstName} {!$User.LastName}" />
+        <apex:outputLink value="/secur/logout.jsp" target="_top" id="logout" style="font-weight:bold;">logout</apex:outputLink>
+        
+   </apex:panelGrid>
+   <apex:panelGrid columns="1">
+        <apex:outputLink value="/{!PartnerUser.Contact.AccountId}" target="_top">My Company Profile</apex:outputLink>
+        <apex:outputLink value="/_ui/core/portal/PortalUserMyProfilePage/d" target="_top">My Profile</apex:outputLink>
+        <apex:outputLink value="/00Q/e" target="_top">New Deal Registration</apex:outputLink>
+   </apex:panelGrid>
+   <apex:panelGrid title="Channel Manager" columns="2">
+        <apex:outputLabel value="Channel Manager: " for="cm" />
+        <apex:outputLink value="mailto:{!PartnerUser.Contact.Account.Owner.Email}" id="cm">{!PartnerUser.Contact.Account.Owner.Name}</apex:outputLink>
+   </apex:panelGrid>
+   <apex:panelGrid title="My Stats" columns="2">     
+       
+        <apex:outputLink value="/006?fcf=00B5Y00000D3kpj" target="_parent">Deal Regs Expiring Next 30 Days</apex:outputLink>
+        <apex:outputText value="{!ExpiringDealRegs}" />
+        
+        
+        <apex:outputLink value="/00Q?fcf=00B5Y00000D3kpi" target="_parent">My Active Leads</apex:outputLink>
+        <apex:outputText value="{!ActiveLeads}" />
+   </apex:panelGrid>
+
+    <style>
+       
+       a, body {
+          font-size:11px;
+       }
+       
+       
+    </style>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

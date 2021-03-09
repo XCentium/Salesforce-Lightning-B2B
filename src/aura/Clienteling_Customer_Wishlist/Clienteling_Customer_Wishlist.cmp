@@ -1,0 +1,28 @@
+<aura:component controller="ClientellingController">
+	<aura:attribute name="ContactID" type="String"/>
+    <aura:attribute name="Wishlist" type="IDO_Wish_List__c[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:iteration var="wishlist" items="{!v.Wishlist}" indexVar="index"> 
+        <div class="panelthird ">
+                    <div class="slds-card">
+                        <div class="slds-media padding">
+                                <div class="profilepicture">
+                                    <lightning:icon iconName="standard:product" size="small" alternativeText="Indicates approval"/> 
+                                </div>
+                                <div class="slds-media__body">
+                                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">{!wishlist.Product__r.Name}</h1>
+                                </div>
+                                <div class="slds-no-flex">
+                                    <ui:outputCurrency aura:id="curr" value="{!wishlist.Product__r.Item_MSRP__c}" format="$##,##,###,###.00"/>
+                                </div>
+                        </div>
+                        <div class="padding newproductheight">
+                            <div class="centertext">SKU: {!wishlist.Product__r.ProductCode} </div>
+                            <img src="{!wishlist.Product__r.purl__c}"/>
+                            <aura:unescapedHtml value="{!wishlist.Product__r.Description}" />
+                        </div>
+                    </div>
+        	</div>
+    </aura:iteration>
+    <div class="clear"></div>
+</aura:component>

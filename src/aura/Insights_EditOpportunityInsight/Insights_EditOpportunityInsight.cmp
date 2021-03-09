@@ -1,0 +1,124 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    <aura:attribute name="insight" type="Map" default="{}"></aura:attribute>
+    <aura:attribute name="typeOptions" type="Map[]"></aura:attribute>
+    <aura:attribute name="trendTypeOptions" type="Map[]"></aura:attribute>
+    <aura:attribute name="reasonOptions" type="Map[]"></aura:attribute>
+    <aura:attribute name="disableSave" type="Boolean" default="true"></aura:attribute>
+    
+    <aura:handler name="change" value="{!v.insight}" action="{!c.handleValueChange}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <div class="action-body">
+        <div class="row">
+            <lightning:select aura:id="insightType"
+                              label="Type"
+                              value="{!v.insight.Type}">
+                <aura:iteration items="{!v.typeOptions}" var="option">
+                    <option value="{!option.value}" selected="{!option.selected}">{!option.label}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        
+        <div class="row">
+            <lightning:select aura:id="insightTrendType"
+                              label="Trend Type"
+                              value="{!v.insight.TrendType}">
+                <aura:iteration items="{!v.trendTypeOptions}" var="option">
+                    <option value="{!option.value}" selected="{!option.selected}">{!option.label}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        
+        <aura:if isTrue="{!v.insight.Type == 'ProspectUnresponsive' || v.insight.Type == 'NoCommunication'}">
+            <div class="row">
+                <lightning:input label="Days Since Expected Contact"
+                                 value="{!v.insight.ExpectedHeardWithinDays}"></lightning:input>
+            </div>
+            <div class="row">
+                <lightning:input label="Days Since Actual Contact"
+                                 value="{!v.insight.ActualHeardWithinDays}"></lightning:input>
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.insight.Type == 'CompetitorMentioned'}">
+            <div class="row">
+                <lightning:input label="Competition Name"
+                                 value="{!v.insight.CompetitorName}"></lightning:input>
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.insight.Type == 'CompetitorMentioned' || v.insight.Type == 'ContactLeaving'}">
+            <div class="row">
+                <lightning:input label="Contact Name"
+                                 value="{!v.insight.ContactName}"></lightning:input>
+            </div>
+            <div class="row">
+                <lightning:input label="Contact Title"
+                                 value="{!v.insight.ContactTitle}"></lightning:input>
+            </div> 
+        </aura:if>
+        
+        <aura:if isTrue="{!v.insight.Type == 'WinningUnlikely'
+                         || v.insight.Type == 'DealSlowing'
+                         || v.insight.Type == 'DealBoosting'
+                         || v.insight.Type == 'TimeConsumingOpportunity'
+                         || v.insight.Type == 'CloseDateOverdue'
+                         }">
+            <div class="row">
+                <lightning:select aura:id="insightReason"
+                                  label="Type"
+                                  value="{!v.insight.Reason}">
+                    <aura:iteration items="{!v.reasonOptions}" var="option">
+                        <option value="{!option.value}" selected="{!option.selected}">{!option.label}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{! v.insight.Reason == 'WinningUnlikelyMissingKey' 
+                         || v.insight.Reason == 'WinningUnlikelyEmailFrequency'
+                         || v.insight.Reason == 'WinningUnlikelyEmailSentiment'
+                         || v.insight.Reason == 'WinningUnlikelyActivity'
+                         }">
+            <div class="row">
+        	<lightning:input type="date" label="Opportunity Close Date" 
+                             value="{!v.insight.CloseDate}" />
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.insight.Type == 'TaskOverdue'}">
+            <div class="row">
+                <lightning:input type="date" label="Task Due Date" 
+                                 value="{!v.insight.TaskDue}" />
+            </div>
+        </aura:if>
+        
+        
+        <aura:if isTrue="{! v.insight.Type == 'CompetitorMentioned' 
+                         || v.insight.Type == 'ContactLeaving' 
+                         || v.insight.Type == 'TaskOverdue'
+                         || v.insight.Type == 'ProspectRaisedAnIssue'
+                         || v.insight.Type == 'AmountMentioned'
+                         || v.insight.Type == 'AmountOutlier'
+                         }">
+            <div class="row">
+                <c:Utility_Lookup aura:id="lookup" 
+                                  searchTerm="{! v.insight.Activity }"
+                                  lookupObject="Task" 
+                                  lookupField="Subject" 
+                                  filters="{! 'WhatId = \'' + v.recordId + '\'' }"
+                                  boundValue="{! v.insight.Activity }"></c:Utility_Lookup>
+            </div>
+        </aura:if>
+    </div>
+    
+    <div class="action-footer">
+        <div class="row">
+            <lightning:button label="Back" class="column" variant="neutral" onclick="{!c.goBack}"></lightning:button>
+            <lightning:button label="Save" class="column flex-right" variant="brand" 
+                              onclick="{!c.handleSave}"
+                              disabled="{!v.disableSave}" ></lightning:button>
+        </div>
+    </div>
+</aura:component>

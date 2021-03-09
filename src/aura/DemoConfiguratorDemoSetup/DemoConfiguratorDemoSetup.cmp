@@ -1,0 +1,174 @@
+<aura:component access="global" controller="DemoConfigurator" implements="force:appHostable">
+	<aura:attribute name="Spinner" type="boolean" /> 
+    <aura:attribute name="SpinnerOnOff" type="boolean" />
+    <aura:attribute name="BaseURL" type="String"  />
+    <aura:attribute name="Dashboards" type="SObject[]"  />
+    <aura:attribute name="DemoSettings" type="IDO_DemoSettings__c[]"  />
+    <aura:attribute name="mobilephone" type="String" default='' />
+    
+    <aura:attribute name="PhoneError" type="String"/>
+    <aura:attribute name="Persona" type="String"/>
+    <aura:attribute name="enableIoT" type="Boolean" default="false"  />
+    <aura:attribute name="enableCloudCraze" type="Boolean" default="false"  />
+    <aura:attribute name="enableFieldSales" type="Boolean" default="false"  />
+	<aura:attribute name="enableLiveMessage" type="Boolean" default="false"  />
+    <aura:attribute name="enableRequired" type="Boolean" default="false"  />
+    <aura:attribute name="IsFinished" type="Boolean" default="false"  />
+    <aura:attribute name="whichone" type="String"  />
+    <aura:attribute name="FSLDate" type="String" />
+    <aura:attribute name="iotEmail" type="String" />
+    <aura:attribute name="LVEmail" type="String" />
+    <aura:attribute name="SessionId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+        <div class="items"> 
+        	<aura:iteration items="{!v.DemoSettings}" var="setting">
+            	<div class="configwrapper">
+                	<div class="config">
+                    	<div class="configleft">
+                        	<div class="icon">
+                            	<label class="slds-checkbox_toggle slds-grid">
+                                	<aura:if isTrue="{!setting.Enablement_Type__c != 'Button'}">
+                                        <aura:if isTrue="{!setting.Enabled__c}">
+                                            <input name="checkbox-toggle-1" disabled="disabled" type="checkbox" aria-describedby="checkbox-toggle-1" id="{!setting.DeveloperName__c}" checked="{!setting.Enabled__c}" aura:id="requiredtoggle" onchange="{!c.toggleChange}" value="{!setting.DeveloperName__c}" />
+                                            <aura:set attribute="else">
+                                                <input name="checkbox-toggle-1" type="checkbox" aria-describedby="checkbox-toggle-1" id="{!setting.DeveloperName__c}" checked="{!setting.Enabled__c}" aura:id="requiredtoggle" onchange="{!c.toggleChange}" value="{!setting.DeveloperName__c}" />    
+                                            </aura:set>
+                                        </aura:if>  
+                                        <input name="checkbox-toggle-1" type="checkbox" aria-describedby="checkbox-toggle-1" id="{!setting.DeveloperName__c}" checked="{!setting.Enabled__c}" aura:id="requiredtoggle" onchange="{!c.toggleChange}" value="{!setting.DeveloperName__c}" />
+                                            <span id="checkbox-toggle-1" class="slds-checkbox_faux_container" aria-live="assertive">
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-checkbox_on">Enabled</span>
+                                                <span class="slds-checkbox_off">Disabled</span>
+                                            </span>
+                                    	<aura:set attribute="else">
+                                            <div class="center">
+                                            	<lightning:button aura:id="{!setting.DeveloperName__c}" name="{!setting.DeveloperName__c}" label="Run Setup" onclick="{!c.toggleChange}"/>
+                                        	</div>
+                                        </aura:set>
+                                    </aura:if>
+                                	</label> 
+                            	</div>
+                            </div>
+                            <div class="configright">
+                            	<div class="slds-form-element">
+                                	<h1><strong>{!setting.Name}</strong></h1>
+                                    <aura:if isTrue="{!setting.Enabled__c}">
+                                        <div class="checkmarkul">
+                                        	<aura:unescapedHtml value="{!setting.Description__c}" /> 
+                                        </div>
+                                   		<aura:set attribute="else">
+                                            <aura:unescapedHtml value="{!setting.Enablement_Description__c}" />
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                        	</div>
+                        <div class="clear"></div>
+                    	</div>
+                	</div>
+            	</aura:iteration> 
+        	<div class="clear"></div>
+        </div>
+    	<aura:if isTrue="{!v.Spinner}">
+            <div aura:id="spinnerId" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+    	</aura:if>
+    <div id="iframe_parent"></div>
+    <div id="iframe_dataflow"></div>
+    <div id="iframe_waveurl"></div>
+    
+    <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+    <!-- Phone Number Input -->
+        <section role="dialog" aura:id="InputPhoneNumber" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Please Input your mobile phone number</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="padding">
+                        <ui:inputSelect label="Which Contact will you be demo'ing with?" value="{!v.Persona}" class="single" aura:id="InputSelectSingle" change="{!c.onSingleSelectChange}">
+                                <ui:inputSelectOption text="" value=""/>
+                            	<ui:inputSelectOption text="Rachel Morris (Retail)" value="Rachel Morris"/>
+                                <ui:inputSelectOption text="Olivia Buyer (CG)" value="Olivia Buyer"/>
+                        </ui:inputSelect>
+                        <strong>You will be demoing as {!v.Persona}</strong>
+                        <aura:if isTrue="{!v.Persona != ''}">
+                            <hr/>
+                            <ui:inputText label="Enter Your Mobile Phone Number" class="field" value="{!v.mobilephone}" required="true" updateOn="keyup"/>
+                            <aura:if isTrue="{!v.mobilephone != ''}">
+                                <strong>The Phone of {!v.Persona} will be set to {!v.mobilephone}</strong>
+                                <aura:set attribute="else">
+                                    <strong>Please input your full phone number including your country code</strong>
+                                </aura:set>
+                            </aura:if>
+                            <hr/>
+                            <ui:inputText label="Enter Your Work Email Address" class="field" value="{!v.LVEmail}" required="true" updateOn="keyup"/>
+                            <strong>The contact email address for {!v.Persona} will be updated to your work email.</strong>
+                        </aura:if>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <aura:if isTrue="{!and (v.mobilephone != '',v.Persona != '',v.LVEmail != '')}">
+                    	<button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}">Update</button>
+                    </aura:if>
+                </footer>
+            </div>
+        </section>
+    <!-- FSL Modal -->
+        <section role="dialog" aura:id="FSLModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Dialog Title</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="padding">
+						<ui:inputDate aura:id="FSLDate" label="Date to Restore the Demo Data"
+                           class="slds-input"
+                           labelClass="slds-form-element__label"
+                           value="{!v.FSLDate}"
+                           displayDatePicker="true" />
+                        <strong>Always create demo data for the Monday on the week after the scheduled demo</strong>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <aura:if isTrue="{!v.FSLDate != ''}">
+                    	<button class="slds-button slds-button_brand" onclick="{!c.CloseFSLDialog}">Update</button>
+                    </aura:if>
+                </footer>
+            </div>
+        </section>
+    <!-- Iot Modal -->
+        <section role="dialog" aura:id="IoTModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Dialog Title</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="padding">
+						<ui:inputText label="Enter Your Work Email Address" class="field" value="{!v.iotEmail}" required="true" updateOn="keyup"/>
+                        <strong>IoT Orchestrations send an email notification about low inventory. Please enter the email you'd like these notifications to go to.</strong>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <aura:if isTrue="{!v.FSLDate != ''}">
+                    	<button class="slds-button slds-button_brand" onclick="{!c.CloseIoTDialog}">Update</button>
+                    </aura:if>
+                </footer>
+            </div>
+        </section>
+    
+    
+</aura:component>

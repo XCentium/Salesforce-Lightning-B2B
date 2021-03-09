@@ -1,0 +1,33 @@
+<apex:component controller="Community_User_Profile_Controller">
+    <apex:includeScript value="{!URLFOR($Resource.SDO_jqueryui192, '/js/jquery-1.8.3.js')}"/>
+   
+    <style type="text/css" media="all">
+        @import url("{!$Site.prefix}/apex/Community_Widget_CSS_Override");
+    </style>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log("User Profile Widget Ready!");
+        });
+    </script>
+    
+    <div class="widget_outer">
+        <div class="widget_inner">
+            <div class="widget_header">
+                <div>My Profile</div>
+            </div>
+            <div class="widget_body">
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td><apex:image value="{!u.SmallPhotoUrl}" styleClass="img-circle"/></td>
+                            <td><apex:outputLink value="{!$Site.prefix}/_ui/core/userprofile/UserProfilePage?u={!u.ID}">{!u.Name}</apex:outputLink></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="widget_footer">
+            </div>
+        </div>
+    </div>
+</apex:component>

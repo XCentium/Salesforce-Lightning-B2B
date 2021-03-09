@@ -1,0 +1,48 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="ContactRecentOrders">
+    <aura:handler name="init" value="{!this}" action="{!c.GetProducts}"/>
+    <aura:attribute name="ReturnedProduct" type="Product2[]"/>
+    <aura:attribute name="IconBackground" type="String" default="#7D9ED4"/>
+    <aura:attribute name="Label" type="String" default="Recent Purchases"/>
+    <aura:attribute name="lim" type="String" default="10"/>
+    <lightning:card >
+        	<div class="padding">
+                <div class="slds-card__header slds-grid" data-aura-rendered-by="4292:0">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate" data-aura-rendered-by="4293:0">
+                        <div class="slds-media__figure" data-aura-rendered-by="4294:0">
+                            <div class="extraSmall forceEntityIcon" style="{!'background-color:' + v.IconBackground}" data-aura-rendered-by="5664:0" data-aura-class="forceEntityIcon">
+                                <span data-aura-rendered-by="5667:0" class="uiImage" data-aura-class="uiImage">
+                                    <img data-aura-rendered-by="5665:0" src="/img/icon/t4v35/standard/orders_120.png" class="icon " alt="Statements" title="Statements" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="slds-media__body" data-aura-rendered-by="4295:0">
+                            <h2 id="header_4285:0" data-aura-rendered-by="4296:0">
+                            	<span class="slds-text-heading--small slds-truncate slds-m-right--xx-small" title="Statements" data-aura-rendered-by="4298:0">
+                                	{!v.Label}
+                                </span>
+                            </h2>
+                        </div>
+                    </header>
+                </div>                
+                <div class="product">
+                    <aura:if isTrue="{!not(empty(v.ReturnedProduct))}">
+                        <lightning:carousel disableAutoScroll="false" disableAutoRefresh="false" scrollDuration = "3">
+                            <aura:iteration var="product" items="{!v.ReturnedProduct}" indexVar="index"> 
+                                <lightning:carouselImage src="{!product.purl__c}"
+                                                      header="{!product.Name}"
+                                                      description="{!product.Description}"
+                                                      alternativeText="Reload Image">
+                                </lightning:carouselImage>
+                            </aura:iteration>
+                        </lightning:carousel>
+                    <aura:set attribute="else">
+                       <h2>No Orders Yet!</h2>
+					</aura:set> 
+                    </aura:if>
+                </div>
+            </div>
+        <div class="slds-modal__footer" >
+            <lightning:button variant="brand" label="View All" onclick="{!c.ViewOrders}"/>
+        </div>
+    </lightning:card>
+</aura:component>

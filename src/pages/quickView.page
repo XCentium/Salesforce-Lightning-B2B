@@ -1,0 +1,95 @@
+<apex:page controller="quickViewController" sidebar="false" >
+<!-- ********************************** -->
+        
+        <script type="text/javascript">
+        
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-49393906-1']);
+          _gaq.push(['_setDomainName', 'force.com']);
+          _gaq.push(['_setAllowLinker', true]);
+          _gaq.push(['_trackPageview']);
+        
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        
+        </script> 
+ 
+<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"/>-->
+<apex:includeScript value="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"/>
+
+<apex:form >
+<!-- uncomment for passing attributes from picklists into JQuery Highlight script
+  <apex:outputLabel for="selectUsers" value="User Name + Id"/>
+  <apex:SelectList id="selectUsers" value="{!plUser}" size="1">
+          <apex:selectOptions id="UserPicklist" value="{!Users}"></apex:selectOptions>
+      </apex:SelectList>
+      
+      <br/>
+  <apex:outputLabel for="selectReport" value="Report Name + Id"/>
+  <apex:SelectList id="selectReports" value="{!plReport}" size="1">
+          <apex:selectOptions id="ReportPicklist" value="{!Report}"></apex:selectOptions>
+      </apex:SelectList> -->
+  <apex:SectionHeader title="Quick View: Event Log Files"/> 
+      <div align="top"></div>
+  <apex:pageBlock id="GoResultsPageBlock" title="Log Query Results" >  
+      <apex:outputLabel for="selectELFs" value="Date + Type"/>
+      <apex:SelectList id="selectELFS" value="{!plELF}" size="1" style="width:400px">
+          <apex:selectOptions id="ELFPicklist" value="{!Elfs}"></apex:selectOptions>
+      </apex:SelectList>
+      <apex:commandButton action="{!Go}" value="   Go!   " id="go" styleClass="btnPrimary"
+                                                                        rerender="GoResultsPageBlock"/>
+      &nbsp;
+      <apex:commandLink action="{!Convert}" value="Convert Ids" id="convert" 
+                                                                        rerender="GoResultsPageBlock"/>
+      
+      &nbsp;
+      <apex:outputLink disabled="{!isExportLinkDisabled}" value="/apex/exportELF" target="_blank">Export
+          <apex:param name="id" value="{!plELF}"/>
+      </apex:outputLink>
+   <apex:outputPanel id="GoResultsOutputPanel" >
+    <table title="CSV Output" border="1" width="100%">
+       <apex:repeat value="{!GoResults}" var="row"   >
+           <tr>
+               <apex:repeat value="{!row}" var="cell" >
+                   <td> {!cell} </td>
+               </apex:repeat>
+           </tr>
+       </apex:repeat>
+     </table>
+  </apex:outputPanel>
+  </apex:pageBlock>
+  
+
+<!-- ***************************************************************
+  <apex:pageBlock id="logInfo" title="Log Quick View">
+  <table title="Log Quick View" border="1" width="100%">
+       <thead>
+           <tr>
+               <th>Id</th>
+               <th>LogDate</th>
+               <th>CreatedDate</th>
+               <th>EventType</th>
+               <th>LogFileLength</th>
+               <th>LogFile</th>
+           </tr>
+       </thead>
+       <tbody>
+           <apex:repeat var="log" value="{!logFileInfo}">
+           <tr>
+               <td>{!log.id}</td>
+               <td>{!log.logdate}</td>
+               <td>{!log.createdDate}</td>
+               <td>{!log.eventtype}</td>
+               <td>{!log.logfilelength}</td>
+               <td><apex:outputLink value="https://na1-blitz04.soma.salesforce.com/services/data/v29.0/sobjects/EventLogFile/{!log.id}/LogFile"> {!log.logfile}</apex:outputLink></td>
+           </tr>
+       </apex:repeat>
+       </tbody>
+       </table>
+      </apex:pageBlock>
+       *************************************************************** -->
+  </apex:form>
+</apex:page>

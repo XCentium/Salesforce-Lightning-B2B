@@ -1,0 +1,131 @@
+<aura:component >
+    <aura:attribute name="iconType" type="string" required="true" description="This is the type of icon that should be rendered." />
+    <aura:attribute name="description" type="string" default="" description="This is the description of the icon." />
+    <aura:attribute name="spanClass" type="string" default="" description="This is the override for the span class." />
+    <aura:attribute name="class" type="string" default="" description="This is the class to override the icon." />
+    <aura:attribute name="assistiveText" type="string" description="This is assistive text that can be used if needed." />
+    <aura:attribute name="strengthLevel" type="string" description="This is the strength level for the strength icons." />
+    
+    <!-- Trend Icons -->
+    <aura:if isTrue="{!v.iconType == 'trendDown'}">
+        <span data-slds-trend="down" class="{!v.spanClass != '' ? v.spanClass : 'slds-icon-trend slds-is-animated'}" title="{!v.description}">
+            <c:dynamicSvg viewbox="0 0 16 16" childItems="[{'path' : {'class' : 'slds-icon-trend__arrow', 'd':'M.75 8H11M8 4.5L11.5 8 8 11.5'}}, 
+                                                   {'circle' : {'class' :'slds-icon-trend__circle', 'cy' : '8', 'cx' : '8', 'r' : '7.375', 'transform' : 'rotate(-28 8 8) scale(-1 1) translate(-16 0)'}}]">
+            </c:dynamicSvg>
+        </span>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.iconType == 'trendUp'}">
+        <span data-slds-trend="up" class="{!v.spanClass != '' ? v.spanClass : 'slds-icon-trend slds-is-animated'}" title="{!v.description}">
+            <c:dynamicSvg viewbox="0 0 16 16" childItems="[{'path' : {'class' : 'slds-icon-trend__arrow', 'd':'M.75 8H11M8 4.5L11.5 8 8 11.5'}}, 
+                                                   {'circle' : {'class' :'slds-icon-trend__circle', 'cy' : '8', 'cx' : '8', 'r' : '7.375', 'transform' : 'rotate(-28 8 8) scale(-1 1) translate(-16 0)'}}]">
+            </c:dynamicSvg>
+        </span>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.iconType == 'trend'}">
+        <span data-slds-trend="neutral" class="{!v.spanClass != '' ? v.spanClass : 'slds-icon-trend slds-is-animated'}" title="{!v.description}">
+            <c:dynamicSvg viewbox="0 0 16 16" childItems="[{'path' : {'class' : 'slds-icon-trend__arrow', 'd':'M.75 8H11M8 4.5L11.5 8 8 11.5'}}, 
+                                                   {'circle' : {'class' :'slds-icon-trend__circle', 'cy' : '8', 'cx' : '8', 'r' : '7.375', 'transform' : 'rotate(-28 8 8) scale(-1 1) translate(-16 0)'}}]">
+            </c:dynamicSvg>
+        </span>
+    </aura:if>
+    
+    <!-- Ellie -->
+     <aura:if isTrue="{!v.iconType == 'ellie'}">
+        <span class="{!v.spanClass != '' ? v.spanClass : 'slds-icon-ellie slds-is-animated'}" title="{!v.description}">
+            <c:dynamicSvg viewbox="0 0 280 14" childItems="[{'circle' : {'cx' : '7', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '7', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '21', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '21', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '35', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '35', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '49', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '49', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '63', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '63', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '77', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '77', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '91', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '91', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '105', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '105', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '119', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '119', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '133', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '133', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '147', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '147', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '161', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '161', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '175', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '175', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '189', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '189', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '203', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '203', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '217', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '217', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '231', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '231', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '245', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '245', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '259', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '259', 'cy' : '7', 'r' : '3'}}, 
+                                                    {'circle' : {'cx' : '273', 'cy' : '7', 'r' : '4'}}, 
+                                                    {'circle' : {'cx' : '273', 'cy' : '7', 'r' : '3'}}]">
+            </c:dynamicSvg>
+        </span>
+    </aura:if>
+    
+    <!-- eq -->
+    <aura:if isTrue="{!v.iconType == 'eq'}">
+        <div class="{!v.spanClass != '' ? v.spanClass : 'slds-icon-eq slds-is-animated'}" title="{!v.description}">
+            <div class="slds-icon-eq__bar"></div>
+            <div class="slds-icon-eq__bar"></div>
+            <div class="slds-icon-eq__bar"></div>
+        </div>
+        <span class="slds-assistive-text">{!v.assistiveText}</span>
+    </aura:if>
+    
+    <!-- Scores -->
+    <aura:if isTrue="{!v.iconType == 'positive' || v.iconType == 'negative'}">
+        <span data-slds-state="{!v.iconType}" class="{!v.spanClass != '' ? v.spanClass : 'slds-icon-score'}" title="{!v.description}">
+            <c:dynamicSvg viewbox="0 0 5 5" class="slds-icon-score__positive" childItems="[{'circle' : {'cy' : '50%', 'cx' : '50%', 'r' : '1.875'}}]">
+            </c:dynamicSvg>
+            <c:dynamicSvg viewbox="0 0 5 5" class="slds-icon-score__negative" childItems="[{'circle' : {'cy' : '50%', 'cx' : '50%', 'r' : '1.875'}}]">
+            </c:dynamicSvg>
+            <span class="slds-assistive-text">{!v.assistiveText}</span>
+        </span>
+    </aura:if>
+
+     <!-- Strength -->
+    <aura:if isTrue="{!v.iconType == 'strength'}">
+        <span data-slds-strength="{!v.strengthLevel}" class="{!v.spanClass != '' ? v.spanClass : 'slds-icon-strength'}" title="{!v.description}">
+            <c:dynamicSvg viewbox="0 0 27 7" childItems="[{'circle' : {'cx' : '3.5', 'cy' : '3.5', 'r' : '3.025'}}, 
+                                                   {'circle' : {'cx' : '13.5', 'cy' : '3.5', 'r' : '3.025'}}, 
+                                                   {'circle' : {'cx' : '23.5', 'cy' : '3.5', 'r' : '3.025'}}]">
+            </c:dynamicSvg>
+            <span class="slds-assistive-text">{!v.assistiveText}</span>
+        </span>
+    </aura:if>
+    
+    
+    <!-- Waffle -->
+    <aura:if isTrue="{!v.iconType == 'waffle'}">
+        <button class="slds-button slds-icon-waffle_container" title="{!v.description}">
+            <span class="{!v.spanClass != '' ? v.spanClass : 'slds-icon-waffle'}">
+                <span class="slds-r1"></span>
+                <span class="slds-r2"></span>
+                <span class="slds-r3"></span>
+                <span class="slds-r4"></span>
+                <span class="slds-r5"></span>
+                <span class="slds-r6"></span>
+                <span class="slds-r7"></span>
+                <span class="slds-r8"></span>
+                <span class="slds-r9"></span>
+            </span>
+            <span class="slds-assistive-text">{!v.assistiveText}</span>
+        </button>
+    </aura:if>
+</aura:component>

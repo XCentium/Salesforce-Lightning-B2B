@@ -1,0 +1,20 @@
+<aura:component implements="lightning:availableForFlowScreens,force:lightningQuickActionWithoutHeader,force:hasRecordId" controller="ClientellingController">
+    <aura:attribute name="availableActions" type="String[]" />
+    <aura:registerEvent name="navigateFlowEvent" type="c:navigateFlow"/>
+    <ltng:require scripts="{!join(',',$Resource.SignatureCapture + '/JavaScript/jQuery1.7.2.js', 
+                           $Resource.DE_SigPad + '/signature_pad-1.5.3/signature_pad.js',
+                           $Resource.DE_SigPad + '/signature_pad-1.5.3/signature_pad.min.js')}" 
+                  	afterScriptsLoaded="{!c.doInit}"/>
+    
+    <aura:attribute name="recordId" type="String" />
+    <c:FlowFooter availableActions="{!v.availableActions}" navigateFlowEvent="{!c.handleNavigate}"/>
+
+    <div class="wrapper">
+        <span id="sig" class="lab">Signature:</span>
+        <canvas id="signature-pad" class="signature-pad" width="500" height="200"></canvas>
+    </div>
+    <div class="butts">
+	    <button class="slds-button slds-button--brand" id="save" onclick="{!c.saveThis}">Save</button>
+    </div>
+	
+</aura:component>

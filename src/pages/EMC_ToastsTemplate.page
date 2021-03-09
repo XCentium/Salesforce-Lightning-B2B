@@ -1,0 +1,16 @@
+<apex:page sidebar="false" standardStylesheets="false" showHeader="false" docType="html-5.0">
+    <div class="slds-notify_container">
+            <div ng-repeat="toast in toasts" ng-show="toast.shown" class="slds-notify slds-notify_toast {{'slds-theme_' + toast.type}}">
+                <span class="slds-assistive-text">{{toast.type}}</span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small" ng-bind-html="trustHtml(toast.message)"></h2>
+                </div>
+                <button ng-click="toast.dismiss()" class="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse">
+                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                        <use xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+            </div>
+        </div>
+</apex:page>

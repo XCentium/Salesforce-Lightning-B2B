@@ -1,0 +1,54 @@
+<aura:component controller="MarketingCloudEngagementHistoryCtrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="selCustomSetting" type="String"/> 
+    <aura:attribute name="tableHeader" type="String"/> 
+    <aura:attribute name="colHeaders" type="List[]"/> 
+    <aura:attribute name="records" type="List[]"/>
+    <aura:attribute name="iconName" type="String" default="custom:custom19"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--<div class="slds-box">-->
+    
+    
+    <lightning:card variant="Narrow" iconName="{!v.iconName}" class="slds-card_boundary">
+        <aura:set attribute="title">
+            <b>{!(v.tableHeader +' (' +v.records.length+ '+)' )}</b>
+        </aura:set>
+        <aura:set attribute="actions">
+            <lightning:button label="New"/>
+        </aura:set>
+        <aura:set attribute="footer">
+            <a href="#">View All</a>
+        </aura:set>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <aura:iteration items="{!v.colHeaders}" var="colHeader">
+                        <th>{!colHeader}</th>
+                    </aura:iteration>
+                    <th><!--col header for button menu--></th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <aura:iteration items="{!v.records}" var="record">
+                    <tr>
+                        <aura:if isTrue="{!v.selCustomSetting == 'Journeys'}">  
+                            <td><a href="#">{!record.Name_of_Communication__c}</a></td>
+                            <td>{!record.Channel__c}</td>
+                            <td><ui:outputDate value="{!record.Date_Sent__c}" format="MM/DD/YYYY"/></td>
+                        </aura:if>
+                        <aura:if isTrue="{!v.selCustomSetting == 'Individual Email Results'}">
+                            <td><a href="#">{!record.Email_Name__c}</a></td>
+                            <td><ui:outputDate value="{!record.Date_Sent__c}" format="MM/DD/YYYY"/></td>
+                            <td><ui:outputCheckbox value="{!record.Opened__c}"/></td>
+                            <td><ui:outputCheckbox value="{!record.Clicked__c}"/></td>
+                            <td><ui:outputCheckbox value="{!record.Bounced__c}"/></td>
+                        </aura:if>
+                        <td><lightning:buttonMenu/></td>
+                    </tr>
+                </aura:iteration>
+                
+            </tbody>
+        </table>
+    </lightning:card>
+    
+</aura:component>

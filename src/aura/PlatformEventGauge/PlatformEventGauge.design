@@ -1,0 +1,11 @@
+<design:component label="Platform Events - Gauge">
+     <design:attribute name="title" label="Chart Title" default="Platform Event Gauge" />	
+  <design:attribute name="eventName" label="Platform Event Name"  datasource="apex://rm_EventDesignPicklist"/>
+      <design:attribute name="deviceId" label="Device Key Field" required="false" default=""/>
+    <design:attribute name="selectedField" label="Platform Event Field"  />
+    <design:attribute name="height" label="Component Height"  default="300px"/>
+    <design:attribute name="max" label="Maximum value " default="100"/>
+    <design:attribute name="defaultColorOrder" label="Reverse default color spectrum" datasource="Yes, No" default="No"/>
+    <design:attribute name="colorBreaks" label="Custom breakpoints for each color (default: 30, 50, 70, 90)"/>	
+    <design:attribute name="customColors" label="Custom hex value for each breakpoint (default: #FF0000, #F97600, #F6C600, #60B044)"/>
+</design:component>

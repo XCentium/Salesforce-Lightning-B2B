@@ -1,0 +1,38 @@
+.THIS .header-section {
+    display: inline-block; 
+    width: 50%; 
+    text-align: center; 
+    line-height: 90px;
+    font-size: 1.5em;
+}
+
+.THIS .header-label {
+    font-weight: bold;
+}
+
+.THIS .header-value {
+    color: #1170c9; 
+}
+
+.THIS .full-width {
+    width: 100%;
+}
+
+.THIS .slds-vertical-tabs {
+    border-radius: 0px;
+    border: none;
+    background-clip: padding-box;
+}
+
+.THIS .slds-page-header {
+    border: 1px solid #d9dbdd;
+}
+
+.THIS .edit-tabs {
+    background-color: transparent;
+}
+
+
+.THIS .icon-wrap.img {
+    width:100%; max-height:90px;
+}

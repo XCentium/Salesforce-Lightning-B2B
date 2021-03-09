@@ -1,0 +1,235 @@
+<aura:component controller="LightningProductPricer" implements="force:appHostable" access="global"> 
+    
+    <aura:attribute name="CmpSampleCode" type="string"/>
+    <aura:attribute name="CtrlSampleCode" type="string"/>
+    <aura:attribute name="orgInfo" type="Map"/>
+    <aura:attribute type="String" name="statsImgSrc_load" default=""/>
+     
+    
+    <aura:handler name="render" value="{!this}" action="{!c.doRender}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    
+    <lightning:card title="Welcome to Lightning Pricer">
+       
+    <div class="slds">
+  	<div class="slds-p-horizontal_medium">
+     
+   
+    
+   <lightning:tabset selectedTabId="one">
+       
+       
+        <lightning:tab label="How to use" id="one" >
+           <div class="slds-p-horizontal_small">
+            <div  class="videoContainer" style="margin-bottom:15px">
+                <div class="titleMarginBottom"><u class="slds-text-title_caps">Desktop demo video</u></div>
+           		<iframe class="my_iframe" aura:id="UserGuideVideo" width="840" height="472" src="https://www.youtube.com/embed/_sVTtdlfNJo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
+            </div>
+               
+           <div  class="videoContainer" style="margin-bottom:15px">
+                <div class="titleMarginBottom"><u class="slds-text-title_caps">Mobile app demo video</u></div>
+           		<iframe class="my_iframe" aura:id="UserGuideVideo" width="840" height="650" src="https://www.youtube.com/embed/6YUaMC1snJA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
+            </div>   
+            
+            <div   style="margin-bottom:15px">                
+                <div class="titleMarginBottom"><u class="slds-text-title_caps">Shortcuts for Desktop</u></div>
+                <p>Some keyboard shortcuts can be used in the component to be even more productive!</p>    
+                <ul class="slds-list_dotted">
+                      <li>
+                        Press <b>"Enter"</b> key in any section field will redirect you to product search
+                      </li>
+                      <li>
+                        Press <b>"Ctrl-n"</b> in a product search field to create a new section
+                      </li>
+                 </ul>
+     		</div> 
+           </div>     
+        </lightning:tab>
+        
+       
+       
+       <lightning:tab label="Quick setup" id="two">
+            <div class="slds-p-horizontal_small" style="margin-bottom:15px">   
+            <p class="slds-text-title_caps titleMarginBottom"><u>Quick setup for Desktop</u></p>
+            
+            <ul class="slds-list_dotted">
+                <li>Add 'Lightning Pricer' lightning component to Salesforce&nbsp;standard opportunity, quote, or order object (It won't work on Salesforce CPQ quote object).&nbsp;
+                <img src="{!$Resource.PricerHowTo + '/setAppBuilder.jpg'}"/>   
+                </li>
+            </ul>
+            </div>
+            <div class="slds-p-horizontal_small" style="margin-bottom:15px">   
+            <p class="slds-text-title_caps titleMarginBottom"><u>Quick setup for Salesforce 1</u></p>
+            
+            <ul class="slds-list_dotted">
+                <li>From Salesforce setup, go to Apps -> Mobile Apps -> Salesforce -> Salesforce Navigation and move 'Pricer' from available items to selected items .&nbsp;
+                <img src="{!$Resource.PricerHowTo + '/setMobileNav.jpg'}" style="border: 2px;border-style: ridge;"/>   
+                </li>
+                <li>From opportunity, quote, or order layouts, drag and drop the 'Pricer' quick action to the mobile actions layout area.&nbsp;
+                <img src="{!$Resource.PricerHowTo + '/setQA.jpg'}" />   
+                </li>
+            </ul>
+            </div>
+        </lightning:tab>
+       
+       	<lightning:tab label="Translate" id="three">
+            
+            <div class="slds-p-horizontal_small" style="margin-bottom:15px">      
+                <div class="titleMarginBottom"><u class="slds-text-title_caps">How to translate the component</u></div>
+                  <p>The component comes in English, French and Spanish but can easily be translated to any language!</p>
+                  <ul class="slds-list_dotted">
+                      <li>
+                        Go to setup -> Search for custom labels -> Create a custom list view filtered on "name contains Pricer"
+                          <br/>  
+                        <img src="{!$Resource.PricerHowTo + '/CustomLabels.jpg'}"/>    
+                      </li>
+                      <li>
+                        Click on each label and add a translation for your language
+                      </li>
+                      <li>You can use the same procedure for translating the product catalog. This time, you should create a custom list view filtered on "name contains catalog"</li>
+                 </ul>    
+            </div>   
+            
+        </lightning:tab>    
+            
+       
+        <lightning:tab label="Configure price rules" id="four">
+                <div class="slds-p-horizontal_small">
+                    <p>Price rules are optional but they will add value to your demo!</p>
+                    <div class="titleMarginBottom"><u class="slds-text-title_caps">Configuration Guide (Video)</u></div>
+                    
+                    <iframe width="840" height="472" src="https://www.youtube.com/embed/ng7SRr-iIH8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=''></iframe>
+                    <div class="titleMarginBottom"><u class="slds-text-title_caps">How to configure my pricing rules</u></div>
+                    <ul class="slds-list_dotted">
+                        <li><b>Update your <i>product</i> layout</b>
+                            <ul class="slds-list_dotted ulCircle">
+                                <li>Add <i>"Product quantity breaks",&nbsp;"Accounts special terms"</i>,<i>&nbsp;</i>and "<i>Products recommendations"</i>&nbsp; related lists to your product layout</li>
+                                <li>Add <i>"Quantity Increment" </i>and <i>"Product Cost"</i> fields&nbsp;</li>
+                            </ul>
+                            <img src="{!$Resource.PricerHowTo + '/productLayout.jpg'}"/>    
+                            </li>
+                            <li><b>&#8203;Update your <i>account</i> layout</b>
+                            <ul class="slds-list_dotted ulCircle">
+                                <li>Add "Product special terms" related list&nbsp;</li>
+                                <li>Add&nbsp;<b>&nbsp;</b><i>"Global discount on catalog" field&nbsp;</i></li>
+                            </ul>
+                            <img src="{!$Resource.PricerHowTo + '/accountLayout.jpg'}"/>      
+                        </li>
+                        <li>
+                            <b>On product record</b>
+                    
+                        <ul class="slds-list_dotted">
+                            <li><i>"Quantity increment"</i> field controls the min quantity and the allowed quantity increments for a given product in the pricer.</li>
+                            <li><i>"Product cost"</i> field represents how much it costed for your company to acquire or produce the product. It is used to calculate margins in the pricer</li>
+                            <li>"<i>Product quantity breaks</i>" related lists allows you to override the list price of a product based on a minimum quantity.&nbsp;&nbsp;&nbsp;</li>
+                            <li><i>"Account special terms" </i>related list allows you to override the price of this product for a given account no matter the quantity or original list price</li>
+                            <li>"Recommended products" allows you to trigger reccomendations of upsell products when the current product is added</li>
+                        </ul>
+                        </li>
+                        <li>
+                            <b>On account record</b>
+                        <ul class="slds-list_dotted">
+                            <li>Use "Global discount on catalog" field allow you to give an extra discount for this customer on all products</li>
+                            <li>"Product special terms" allow you to set a special price for a given product for this account. It will override all other pricing rules like catalog discount or quantity breaks.&nbsp;&nbsp;<br/>
+                            &nbsp;</li>
+                        </ul>
+                        </li>
+                    </ul>
+               </div> 
+        </lightning:tab>
+       
+       <lightning:tab label="Developers" id="five">
+                <div class="slds-p-horizontal_small">
+                    <div class="titleMarginBottom"><u class="slds-text-title_caps">Add a product to the pricer from an external component</u></div>
+                    
+                    <ul class="slds-list_dotted">
+                        <li><b>Sample component</b>
+                        <ul class="slds-list_dotted">
+                            <li>COMPONENT
+                                <div style="margin-bottom:15px">
+                                    <pre class="code">
+                                      <code >
+                                        {!v.CmpSampleCode}
+                                      </code>
+                                    </pre>                            
+                                </div>
+                            </li>
+                            <li>CONTROLLER
+                                <div style="margin-bottom:15px">
+                                    <pre class="code">
+                                      <code >
+                                        {!v.CtrlSampleCode}
+                                      </code>
+                                    </pre>                            
+                                </div>
+                            </li>
+                        </ul>    
+                        </li>
+                        
+                    </ul>
+               </div> 
+        </lightning:tab>
+       
+       <lightning:tab label="About" id="Six">
+           <div class="slds-p-horizontal_small">   
+	           <div style="margin-bottom:15px">
+                    <div class="titleMarginBottom"><p class="slds-text-title_caps"><u>Disclaimer</u></p></div>
+                  
+                        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning"
+                             style="width:unset; background-color:rgb(93, 216, 255);margin-top:5px;margin-bottom:15px" role="alert">
+                        <lightning:icon iconName="utility:warning" alternativeText="warning" size="small" class="slds-p-horizontal_medium" />   
+                          <h2>
+                            <b> 
+                             This app is not an official salesforce product - it is not officially tested or documented.
+                            </b>
+                          </h2>
+                        </div>        
+     			 </div>    
+           
+               
+                <div class="titleMarginBottom"> <u class="slds-text-title_caps">About &nbsp;</u></div><br/>
+                 <div >
+                 <img src="{!$Resource.LPRICERPDE}" style="float:left;height: 180px; margin:0 20px; margin-bottom: 20px;" />
+                 <p class="slds-p-bottom--x-small">Hi,</p>
+                 <p class="slds-p-bottom--x-small">This component was a side project from a Salesforce Solution Engineer in France ;-)</p>
+                 <p class="slds-p-bottom--x-small">However, I left the company on Sept 25th 2019 </p>  
+                 <p class="slds-p-bottom--x-small">Not sure I can help anymore but you can try to contact me!</p>
+                 <p>Pierre Delattre&nbsp;|&nbsp;<a href="mailto:pl.delattre@gmail.com">pl.delattre@gmail.com</a>&nbsp;|&nbsp;<a href="https://www.linkedin.com/in/pldelattre/">Linkedin/pldelattre</a></p>
+                 </div>
+               
+               
+               <div class="titleMarginBottom" style="clear:left;"> <u class="slds-text-title_caps">Version &nbsp;</u></div><br/>
+               <div style="clear: left;margin-left:20px;margin-bottom:20px">
+                   <p></p>
+                   <p>
+                       <span>    
+                           <span style="margin-right:10px"><b>Tool last update:</b></span>
+                           <span style="margin-right:20px">{!v.orgInfo.appVersion}</span>
+                       </span>    
+                       <span class="{!v.orgInfo.packageVersion=='unknown'?'slds-hide':''}">
+                           <span style="margin-right:10px"><b>Package version:</b></span>
+                           <span>{!v.orgInfo.packageVersion}</span>
+                       </span>
+                   </p>    
+               </div>  
+           
+           
+
+            
+             <br/>
+            &nbsp;
+            </div>   
+        </lightning:tab>
+       
+   	 </lightning:tabset>  
+        
+  <div>
+        <img src="{!v.statsImgSrc_load}" style="height:1px;width:1px;border:0;position:absolute; visibility:hidden;"/> 
+  </div> 
+   
+
+</div>
+</div>            
+</lightning:card>        
+    
+</aura:component>

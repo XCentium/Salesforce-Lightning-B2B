@@ -1,0 +1,82 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global"  >
+<lightning:avatar alternativeText="" size="slds-avatar_medium" src="" variant="square"></lightning:avatar>
+<div>
+    <lightning:layout class="slds-p-bottom_x-small" horizontalAlign="spread">
+        <lightning:layoutItem>
+            <div style="color: rgb(75, 202, 129); font-size: 0.8125rem;">
+                <p style="margin-left: 20px;"><strong>Badges</strong></p>
+            </div>
+        </lightning:layoutItem>
+        <lightning:layoutItem>
+            <div style="font-size: 0.8125rem;">
+                <p><strong>100 Earned (50 to next tier</strong><strong>)</strong></p>
+            </div>
+        </lightning:layoutItem>
+    </lightning:layout>
+    <lightning:progressBar variant="base" value="75" size="medium"></lightning:progressBar>
+    <lightning:layout class="slds-p-top_medium slds-p-bottom_x-small" horizontalAlign="spread">
+        <lightning:layoutItem>
+            <div style="color: rgb(75, 202, 129); font-size: 0.8125rem;">
+                <p style="margin-left: 20px;"><strong>Alpoints</strong></p>
+            </div>
+        </lightning:layoutItem>
+        <lightning:layoutItem>
+            <div style="font-size: 0.8125rem;">
+                <p><strong>49500</strong></p>
+            </div>
+        </lightning:layoutItem>
+    </lightning:layout>
+</div>
+<lightning:card title="Task Recommendations" variant="base">
+    <aura:set attribute="actions"></aura:set>
+    <div class="slds-card__body_inner">
+        <ul class="slds-has-dividers_around-space">
+            <li class="slds-item">
+                <lightning:layout horizontalAlign="spread" verticalAlign="center">
+                    <lightning:layoutItem>
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <lightning:dynamicIcon type="trend" option="up"></lightning:dynamicIcon>
+                            </div>
+                            <div class="slds-media__body">
+                                <div style="color: rgb(2, 128, 72); font-size: 0.8125rem;">
+                                    <p>New Product Positioning Task - 750 Alpoints; 1 Badge</p>
+                                </div>
+                                <div class="slds-text-title slds-text-color_default">Eligible to redeem a Dinner Experience at 50K Alpoints</div>
+                            </div>
+                            <div class="slds-media__figure slds-media__figure_reverse"></div>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem></lightning:layoutItem>
+                </lightning:layout>
+            </li>
+            <li class="slds-item">
+                <lightning:layout horizontalAlign="spread" verticalAlign="center">
+                    <lightning:layoutItem>
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <lightning:dynamicIcon type="trend" option="down"></lightning:dynamicIcon>
+                            </div>
+                            <div class="slds-media__body">
+                                <div style="color: rgb(194, 57, 52); font-size: 0.8125rem;">
+                                    <p>Alpine Display Inventory Lower than Visits for the Week</p>
+                                </div>
+                                <div class="slds-text-title slds-text-color_default">Inventory left - 6</div>
+                            </div>
+                            <div class="slds-media__figure slds-media__figure_reverse"></div>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem>
+                        <lightning:buttonGroup>
+                            <lightning:buttonMenu variant="border" menuAlignment="left" iconName="standard:post" iconSize="medium"></lightning:buttonMenu>
+                            <lightning:buttonMenu variant="border" menuAlignment="right" iconName="standard:call" iconSize="medium">
+                                <lightning:menuItem label="1(800)555-2342"></lightning:menuItem>
+                            </lightning:buttonMenu>
+                        </lightning:buttonGroup>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </li>
+        </ul>
+    </div>
+</lightning:card>
+</aura:component>

@@ -1,0 +1,46 @@
+<aura:component controller="knowledgeSearch_CT" implements="forceCommunity:availableForAllPageTypes">
+    <ltng:require styles="/resource/SLDS090_KQS1/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <aura:attribute name="h1Color" type="String" default="#393939" />
+    <aura:attribute name="bgimgURL" type="String" default="https://www.northerntrailoutfitters.com/dw/image/v2/BDPX_PRD/on/demandware.static/-/Library-Sites-NTO-SFRASharedLibrary/default/dw4cc45dcb/images/stories/stories-category-1680-400.jpg"/>
+    <aura:attribute name="HelpHeader" type="String" default="What can we help you with?" access="global" />
+    
+    <aura:handler event="aura:doneRendering" action="{!c.doneRendering}"/>
+    
+    <aura:attribute name="articles" type="KnowledgeArticleVersion[]"/>    
+    <aura:attribute name="searchKey" type="String" default=""/>  
+    <aura:attribute name="searchPlaceholder" type="String" default="Search Knowledge Articles..." />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="c:ArticleSearchKeyChange" action="{!c.searchKeyChange}"/>
+ 	
+    <div class="demo-only help-banner">
+
+        <div class="bgImage" style="{!'background-image:url(' + v.bgimgURL +')'}">
+            <div class="bgColor">
+           
+               <div class="slds-p-top_large slds-p-around_medium slds-text-align_center" >
+                   <div class="slds-container_large slds-container_center">
+                    <div class="contentTitle slds-text-align_center">
+                    <h1 style="{!'color:' + v.h1Color}">{!v.HelpHeader}</h1>
+                    </div>
+      
+        <c:ArticleSearchBar searchPlaceholder="{v.searchPlaceholder}" />
+        
+    </div>
+</div>
+</div>
+        </div>
+<div class="slds-container_large slds-container_center">
+        <h1 class="slds-p-top--small slds-text-align_center">Suggested Articles</h1>
+        <ul class="slds-p-right--medium slds-p-bottom--medium">
+            <aura:iteration items="{!v.articles}" var="a">
+                <!--SF1 URL {!'/one/one.app?#/sObject/'+ a.Id + '/view'}-->
+                <li class="article-title slds-truncate slds-p-vertical--small"><a href="{! $SfdcSite.pathPrefix + '/s/article/' + a.UrlName }"> {!a.Title}</a></li>      
+            </aura:iteration>
+        </ul>
+
+    </div>
+   
+  </div> 
+
+</aura:component>

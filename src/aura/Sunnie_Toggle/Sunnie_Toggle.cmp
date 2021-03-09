@@ -1,0 +1,82 @@
+<aura:component controller="Sunnie_ToggleController" implements="force:hasRecordId,flexipage:availableForRecordHome,force:appHostable,force:LightningQuickAction" access="global">
+    <aura:attribute name="glutenFree" type="Boolean" default="false"/>
+    <aura:attribute name="kosher" type="Boolean" default="false"/>
+    <aura:attribute name="vegetarian" type="Boolean" default="false"/>
+    <aura:attribute name="vegan" type="Boolean" default="false"/>
+    <aura:attribute name="crohns" type="Boolean" default="false"/>
+    <aura:attribute name="lowFat" type="Boolean" default="false"/>
+    <aura:attribute name="contactId" type="String"/>
+    <aura:attribute name="recordId" type="Id"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <lightning:card>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <label class="slds-checkbox_toggle slds-grid">
+                    <span class="slds-form-element__label slds-m-bottom_none">Gluten-Free?</span>
+                    <ui:inputCheckbox aura:id="glutenFree" value="{!v.glutenFree}" change="{!c.selectChange}"/>
+                    <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+                        <span class="slds-checkbox_faux"></span>
+                        <span class="slds-checkbox_on">Yes</span>
+                        <span class="slds-checkbox_off">No</span>
+                    </span>
+                </label>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <label class="slds-checkbox_toggle slds-grid">
+                    <span class="slds-form-element__label slds-m-bottom_none">Kosher?</span>
+                    <ui:inputCheckbox aura:id="kosher" value="{!v.kosher}" change="{!c.selectChange}"/>
+                    <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+                        <span class="slds-checkbox_faux"></span>
+                        <span class="slds-checkbox_on">Yes</span>
+                        <span class="slds-checkbox_off">No</span>
+                    </span>
+                </label>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <label class="slds-checkbox_toggle slds-grid">
+                    <span class="slds-form-element__label slds-m-bottom_none">Vegetarian?</span>
+                    <ui:inputCheckbox aura:id="vegetarian" value="{!v.vegetarian}" change="{!c.selectChange}"/>
+                    <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+                        <span class="slds-checkbox_faux"></span>
+                        <span class="slds-checkbox_on">Yes</span>
+                        <span class="slds-checkbox_off">No</span>
+                    </span>
+                </label>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <label class="slds-checkbox_toggle slds-grid">
+                    <span class="slds-form-element__label slds-m-bottom_none">Vegan?</span>
+                    <ui:inputCheckbox aura:id="vegan" value="{!v.vegan}" change="{!c.selectChange}"/>
+                    <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+                        <span class="slds-checkbox_faux"></span>
+                        <span class="slds-checkbox_on">Yes</span>
+                        <span class="slds-checkbox_off">No</span>
+                    </span>
+                </label>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <label class="slds-checkbox_toggle slds-grid">
+                    <span class="slds-form-element__label slds-m-bottom_none">Crohns/IBD?</span>
+                    <ui:inputCheckbox aura:id="crohns" value="{!v.crohns}" change="{!c.selectChange}"/>
+                    <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+                        <span class="slds-checkbox_faux"></span>
+                        <span class="slds-checkbox_on">Yes</span>
+                        <span class="slds-checkbox_off">No</span>
+                    </span>
+                </label>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <label class="slds-checkbox_toggle slds-grid">
+                    <span class="slds-form-element__label slds-m-bottom_none">Low-Fat?</span>
+                    <ui:inputCheckbox aura:id="lowFat" value="{!v.lowFat}" change="{!c.selectChange}"/>
+                    <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+                        <span class="slds-checkbox_faux"></span>
+                        <span class="slds-checkbox_on">Yes</span>
+                        <span class="slds-checkbox_off">No</span>
+                    </span>
+                </label>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

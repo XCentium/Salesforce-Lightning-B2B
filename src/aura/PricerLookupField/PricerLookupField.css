@@ -1,0 +1,44 @@
+.THIS {
+}
+
+
+@media (min-width: 10em) and (max-width:48em){
+.THIS .custom-static-position-small-screens {
+  position: static !important;
+}
+}
+
+.THIS .staticForNonDesktop{
+   position: static !important; 
+}
+
+
+.THIS .kbSelected {
+    background-color: #f4f6f9;
+}
+
+.THIS.lookupModal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9001;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s linear;
+    background:white;
+   transform: translate3d(0,0,0);
+}
+
+.THIS .modalContent {
+    position: relative;
+    transform: translate(0, 0);
+    transition: transform .1s linear,opacity .1s linear;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /*margin: 0 2rem;*/
+    height: 100%;
+    /*padding: 3rem 0;*/
+}

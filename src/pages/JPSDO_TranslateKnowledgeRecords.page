@@ -1,0 +1,8 @@
+<apex:page controller="JPSDO_TranslateKnowledgeRecords">
+    <apex:form >
+        <apex:commandButton value="Delete All Translation Records" action="{!deleteAllTranslationArticle}" rerender="myStatus" status="myStatus"/><br/>
+        <apex:commandButton value="publish All Draft Articles" action="{!publishAllDraftArticles}" rerender="myStatus" status="myStatus"/><br/>
+        <apex:commandButton value="Create Translation Records" action="{!TranslateKnowledge}" rerender="myStatus" status="myStatus"/><br/>
+    </apex:form>
+    <apex:actionStatus startText="requesting..." stopText="{!status}" id="myStatus"/>
+</apex:page>

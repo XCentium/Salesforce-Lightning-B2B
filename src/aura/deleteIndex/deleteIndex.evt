@@ -1,0 +1,4 @@
+<aura:event type="Component" access="global">
+    <aura:attribute name="index" type="Integer"></aura:attribute>
+    <aura:attribute name="payload" type="Object"></aura:attribute>
+</aura:event>

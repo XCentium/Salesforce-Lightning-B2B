@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>50.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>B2B Single-Page Checkout</masterLabel>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default,lightning__RecordPage,lightning__FlowScreen">
+            
+            <property name="cartId" type="String" label="Record ID" 
+            description="Enter or choose the unique variable that represents your cart or order summary ID." default="{!cartId}"/>
+            
+            <property name="effectiveAccountId" type="String" label="Effective Account Id" 
+            description="The ID of the account under which the user is acting (BETA)" />
+
+            <property name="makeComponentReadOnly" type="String" label="Make Component Read Only" 
+            description="Specify whether delivery information from the Delivery component is read-only (!SGlobalConstant.True) or editable (!SGlobalConstant.False)." default="{!$GlobalConstant.False}"/>
+
+            <property name="showDeliveryInstructions" type="String" label="Show Delivery Instructions" 
+            description="Specify whether users can provide additional shipping instructions during the checkout process (!SGlobalConstant.True) or not (!SGlobalConstant.False)." default="{!$GlobalConstant.True}"/>
+
+            <property name="showShippingAddresses" type="String" label="Show Shipping Addresses" 
+            description="Specify whether users can view the shipping address during the checkout process (!SGlobalConstant.True) or not (!SGlobalConstant.False)." 
+            default="{!$GlobalConstant.True}"/>
+
+            <property name="billingContactPointAddressId" type="String" label="Billing Contact Point Address Id" 
+            description="The address chosen from the Billing component to update." default="{!billingContactPointAddressId}" />
+
+            <property name="hideCardExpirationMonth" type="String" label="Hide Card Expiration Month" 
+            description="Specify whether to show or hide the Card Expiration Month on the Payment component. Valid values are hide (!SGlobalConstant.True) or show (!SGlobalConstant.False)." 
+            default="{!$GlobalConstant.False}" />
+
+            <property name="hideCardHolderName" type="String" label="Hide Card Holder Name" 
+            description="Specify whether to show or hide the Cardholder Name on the Payment component. Valid values are show (!SGlobalConstant.True) and hide (!SGlobalConstant.False)." 
+            default="{!$GlobalConstant.False}" />
+
+            <property name="hideCardType" type="String" label="Hide Card Type" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="hideCreditCardBillingAddress" type="String" label="Hide Credit Card Billing Address" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="hideCVV" type="String" label="Hide CVV" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="hideExpirationYear" type="String" label="Hide Expiration Year" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="hidePurchaseOrderBillingAddress" type="String" label="Hide Purchase Order Billing Address" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="paymentGatewayId" type="String" label="Payment Gateway ID" 
+            description="" default="{!paymentGatewayId}" />
+
+            <property name="purchaseOrderNumber" type="String" label="Purchase Order Number" 
+            description="The Buyer's purchase order number." 
+            default="{!poNumberValue}"/>
+
+            <property name="requireCardExpirationMonth" type="String" label="Require Card Expiration Month" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="requireCardExpirationYear" type="String" label="Require Card Expiration Year" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="requireCardType" type="String" label="Require Card Type" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="requireCardholderName" type="String" label="Require Cardholder Name" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="requireCreditCardBillingAddress" type="String" label="Require Credit Card Billing Address" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="requireCVV" type="String" label="Require CVV" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="requirePurchaseOrderBillingAddress" type="String" label="Require Purchase ORder Billing Address" 
+            description="" default="{!$GlobalConstant.False}" />
+
+            <property name="paymentType" type="String" label="Selected Payment Type" 
+            description="Specify which payment type is selected eg. PurchaseOrderNumber, CardPayment." default="PurchaseOrderNumber" />
+
+            <property name="shippingContactPointAddressId" type="String" label="Shipping Contact Point Address Id" 
+            description="The address chosen from the Shipping component to update." default="{!shippingContactPointAddressId}"/>
+
+            <property name="shippingInstructions" type="String" label="Shipping Instructions Value" 
+            description="The shipping instructions entered in the Delivery component to update." default="{!shippingInstructions}" />
+            
+            
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

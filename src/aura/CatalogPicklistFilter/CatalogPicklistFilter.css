@@ -1,0 +1,6 @@
+.THIS {
+}
+
+.THIS .preventBoldLabel legend {
+    font-weight: unset!important;
+}

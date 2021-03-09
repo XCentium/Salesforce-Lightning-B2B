@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="Mixpanel Update Event Message" access="global">
+    <aura:attribute name="token" type="String"></aura:attribute>
+    <aura:attribute name="operation" type="String"></aura:attribute>
+    <aura:attribute name="payload" type="Map"></aura:attribute>
+</aura:event>

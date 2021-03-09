@@ -1,0 +1,3 @@
+<design:component label="Call Script">
+	<design:attribute name="callscript" label="Call Script"/>
+</design:component>

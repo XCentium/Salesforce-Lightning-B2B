@@ -1,0 +1,46 @@
+.THIS {
+  background-color: #ffffff;
+  position: relative;
+  padding: 0;
+  background: rgb(255, 255, 255);
+  border-radius: 0.25rem !important;
+}
+
+.THIS .header-card {
+  border: none !important;
+  box-shadow: none !important;
+}
+.THIS .report-sel-fields {
+  padding-left: 12px !important;
+}
+
+.THIS .reportHide {
+  display: none;
+}
+
+.THIS .report-Tab-Fields {
+    display: none;
+}
+
+.THIS .reportData {
+  padding-left: 12px !important;
+}
+
+.THIS .c-container {
+  background-color: #ffffff;
+  border: 1px solid #d8dde6;
+  margin: 10px 0 20px 0;
+}
+
+.THIS .col-header {
+  background-color: #f2f2f3;
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid #d8dde6;
+}
+
+.THIS .col-data {
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid #d8dde6;
+}

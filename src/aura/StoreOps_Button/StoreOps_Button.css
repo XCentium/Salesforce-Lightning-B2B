@@ -1,0 +1,17 @@
+.THIS.StoreOpsButton,.THIS .StoreOpsButton{
+    width:100%!important;
+    margin-bottom:10px;
+    display:block;
+    text-align:left;
+    border:1px solid #ddd;
+    padding:20px;
+    font-size:22px;
+    font-weight:bold;
+    transition:ease all 0.4s;
+}
+.THIS.StoreOpsButton:hover,.THIS .StoreOpsButton:hover{
+ 	opacity:0.8;   
+}
+.THIS .icon{
+    margin-right:10px;
+}

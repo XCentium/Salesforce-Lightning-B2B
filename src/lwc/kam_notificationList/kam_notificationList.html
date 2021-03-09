@@ -1,0 +1,25 @@
+<template>
+	<lightning-card title="Notifications" icon-name="utility:notification">
+		<div class="slds-card__body_inner">
+			<!-- Start bear list -->
+			<template if:true={notifications.data}>
+				<lightning-layout multiple-rows="true" pull-to-boundary="small">
+					<template for:each={notifications.data} for:item="notification">
+						<lightning-layout-item key={notification.Id} size="12" class="slds-p-around_x-small">
+							<!-- Start bear tile -->
+							<c-notification-tile notification={notification} removed={removed} onremindme={handleRemoveEvent} ontonotification={handleNotificationView} ></c-notification-tile>
+							<!-- End bear tile -->
+						</lightning-layout-item>
+					</template>
+				</lightning-layout>
+			</template>
+			<!-- End bear list -->
+			<!-- Data failed to load -->
+			<template if:true={notifications.error}>
+				<div class="slds-text-color_error">
+					An error occurred while loading the bear list
+				</div>
+			</template>
+		</div>
+	</lightning-card>
+</template>

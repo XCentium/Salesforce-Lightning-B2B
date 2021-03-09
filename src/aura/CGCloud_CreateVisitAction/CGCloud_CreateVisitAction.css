@@ -1,0 +1,67 @@
+.THIS .padding{
+    padding:20px;
+}
+.THIS .userSelect{
+    margin:0 auto 10px auto;
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+.THIS .noborder{
+    border-bottom:none!important;
+}
+.THIS .alignRight,.THIS.alignRight{
+    text-align:right;
+}
+.THIS .flex-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.THIS .visit > * {
+  flex-grow: 1;
+}
+.THIS .textleft{text-align:left}
+.THIS .padding10{
+    padding:10px;
+}
+.THIS h3{font-weight:bold;margin-bottom:10px;}
+.THIS p{margin-bottom:10px;}
+.THIS .paddingbottomleftright{
+    padding:0px 20px 20px 20px;
+}
+.THIS .header-title-container{
+    border-bottom:1px solid #ddd;
+}
+.THIS .marginleft{
+    margin-left:10px;
+    position:relative;
+    top:2px;
+}
+.THIS .center{
+    text-align:center;
+}
+.THIS .inputvalue{
+    width:100px;
+    display:inline-block;
+    margin-right:5px;
+    position:relative;
+    top:1px;
+}
+.THIS .clear{clear:both;float:none;}
+.THIS .half{
+    width:50%;
+    flex-grow: 1;
+    float:left;
+}
+.THIS .visit{
+    border:1px solid #ddd;
+    border-radius:3px;
+}
+@media screen and (max-width: 960px) {
+  .THIS .half {
+    	float:none;
+        width:100%;
+        clear:both;
+        margin-bottom:10px;
+  }
+}

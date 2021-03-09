@@ -1,0 +1,24 @@
+<apex:page standardController="Account">
+    <table width="100%" style="font-family: arial; font-size: 12px;margin-top:5px;" cellpadding="1" cellspacing="0">
+<tr>
+<th style="background-color: #AAAAAA;color:#444;">Credit Area</th>
+<th style="background-color: #AAAAAA;color:#444;">Account Number</th>
+<th style="background-color: #AAAAAA;color:#444;">Name</th>
+<th style="background-color: #AAAAAA;color:#444;">Credit Limit</th>
+<th style="background-color: #AAAAAA;color:#444;">Credit Exposure</th>
+<th style="background-color: #AAAAAA;color:#444;">Currency</th>
+<th style="background-color: #AAAAAA;color:#444;">Credit Block?</th>
+<th style="background-color: #AAAAAA;color:#444;">Credit Used</th>
+</tr>
+<tr>        
+<td align="center" style="border:1px solid #AAAAAA;">US01</td>
+<td align="center" style="border:1px solid #AAAAAA;">000062636</td>
+<td align="center" style="border:1px solid #AAAAAA;">{!Account.Name}</td>
+<td align="center" style="border:1px solid #AAAAAA;">$750,000</td>
+<td align="center" style="border:1px solid #AAAAAA;">$21,986</td>
+<td align="center" style="border:1px solid #AAAAAA;">USD</td>
+<td align="center" style="border:1px solid #AAAAAA;">No</td>
+<td align="center" style="border:1px solid #AAAAAA;">$999.99</td>
+</tr>
+</table>
+</apex:page>

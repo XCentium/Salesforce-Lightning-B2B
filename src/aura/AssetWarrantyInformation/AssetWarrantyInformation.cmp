@@ -1,0 +1,19 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+	<aura:attribute name="today" type="String"/>
+    <aura:attribute name="startdate" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <lightning:card >
+        <div class="padding-left">
+    			<h2 class="header-title-container">
+                    <span class="slds-text-heading--small slds-truncate">Warranty Information</span>
+                </h2>
+        </div>
+        <div class="padding">
+        <ul class="warrantydetails">  	
+    		<li><strong>Status: </strong> Active</li>
+            <li><strong>Start Date: </strong> {!v.today}</li>
+            <li><strong>End Date: </strong> {!v.startdate}</li>
+        </ul> 
+        </div>
+    </lightning:card>
+</aura:component>

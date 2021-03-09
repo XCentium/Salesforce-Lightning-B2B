@@ -1,0 +1,32 @@
+<aura:component controller="Utility_LookupCtrl">
+    <aura:attribute name="placeholder" type="String" ></aura:attribute>
+    <aura:attribute name="lookupObject" type="String" default="User"></aura:attribute>
+	<aura:attribute name="lookupField" type="String" default="Name"></aura:attribute>
+    <aura:attribute name="searchTerm" type="String"></aura:attribute>
+    <aura:attribute name="filters" type="String"></aura:attribute>
+    <aura:attribute name="required" type="Boolean"></aura:attribute>
+	<aura:attribute name="boundValue" type="String"></aura:attribute>
+    
+    <aura:attribute name="isRunning" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="isShowing" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="lookupValues" type="Map[]" default="[]"></aura:attribute>
+    <aura:method name="clear" action="{!c.clear}"></aura:method>
+    
+    <div class="lookup-container">
+        <lightning:input class="lookup-search" 
+                         aura:id="searchTerm" 
+                         placeholder="{!v.lookupField}" 
+                         label="{!v.lookupObject}" 
+                         value="{!v.searchTerm}" 
+                         required="{!v.required}" 
+                         onchange="{!c.handleLookup}"></lightning:input>
+        
+        <aura:if isTrue="{!v.lookupValues.length > 0 &amp;&amp; v.isShowing == true}">
+            <div class="lookup-values">
+                <aura:iteration items="{!v.lookupValues}" var="lookupValue">
+                    <div class="lookup-value" data-value="{!lookupValue.value}" data-label="{!lookupValue.label}" onclick="{!c.handleLookupSelect}">{!lookupValue.label}</div>
+                </aura:iteration>
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

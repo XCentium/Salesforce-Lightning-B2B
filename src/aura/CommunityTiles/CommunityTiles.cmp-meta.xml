@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuraDefinitionBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>35.0</apiVersion>
+    <description>A replicated version of the 3*3 tiles in the Napili community that can be used to point to custom links.</description>
+</AuraDefinitionBundle>

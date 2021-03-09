@@ -1,0 +1,1 @@
+<apex:page standardController="case"> <wave:dashboard developerName="Service_Case_History_Sidebar1" height="850px" showTitle="false" filter="{'datasets' : {'ServiceCase': [ {'fields':['Id'], 'filter': { 'operator':'in', 'values': ['{!Case.Id}']} }]}}" /></apex:page>

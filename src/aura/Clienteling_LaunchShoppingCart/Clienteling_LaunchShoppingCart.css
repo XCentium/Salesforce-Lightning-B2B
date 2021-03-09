@@ -1,0 +1,16 @@
+.THIS .icon{
+    margin: 0.5em 0.2em 0.5em 0.5em;
+    position: relative;
+    bottom: 3px;
+}
+.THIS.slds-button_neutral{
+    width:120px!important;
+    float:right;
+    margin:0px 10px!important;
+}
+.THIS.alignRight button{
+    
+}
+.THIS .iconPerson {
+    margin-right: 0.5em !important;
+}

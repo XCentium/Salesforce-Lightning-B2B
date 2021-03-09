@@ -1,0 +1,71 @@
+<apex:component id="ckz_CO_LLI_Payment_RP" controller="ckz_ctrl_RewardsPointsCheckout">
+
+    <!-- 2018-12-05 msobczak: Reward points -->
+    <script id="CKZ-CartPaymentSummary-Desktop-RP" type="text/template">
+        <div class="panel panel-default cc_panel cc_cart_summary">
+            <div class="panel-heading cart_summary_header cc_heading">
+                <h4 class="panel-title cc_title">
+                    {{pageLabelMap 'LLICheckOut_CartSummaryHeader'}}
+                </h4>
+            </div>
+            <div class="panel-body cc_body">
+                <div class="row summaryRow">
+                    <span class="col-xs-3 cc_label">{{pageLabelMap 'CartInc_Subtotal'}}</span>
+                    <span class="col-xs-3 cc_value price text-right">{{{price this.cartData.subtotalAmount}}}</span>
+                </div>
+
+                <div class="row summaryRow">
+                    <apex:outputText rendered="{!showPointsDollarValue}">
+                        <span class="col-xs-3 cc_label" style="color:rgb(204, 51, 51);">{{pageLabelMap 'RewardPointsValueApplied'}}</span>
+                        <span class="col-xs-3 cc_value text-right" style="color:rgb(204, 51, 51);">-${!pointsDollarValue}</span>
+                    </apex:outputText>
+                </div>
+
+                {{#ifStoreSetting 'Skip_Tax_Calculation__c'}}
+                &#160;
+                {{else}}
+                {{#if this.cartData.taxAmount}}
+                <div class="row summaryRow">
+                    <span class="col-xs-3 cc_label">{{pageLabelMap 'CheckOut_EstimatedTax'}}</span>
+                    <span class="col-xs-3 cc_value price text-right">{{{price this.cartData.taxAmount}}}</span>
+                </div>
+                {{/if}}
+                {{/ifStoreSetting}}
+                {{#ifStoreSetting 'Skip_Shipping_Calculation__c'}}
+                &#160;
+                {{else}}
+                {{#if this.cartData.shipAmount}}
+                <div class="row summaryRow">
+                    <span class="col-xs-3 cc_label">{{pageLabelMap 'CartInc_Shipping'}}</span>
+                    <span class="col-xs-3 cc_value price text-right">{{{price this.cartData.shipAmount}}}</span>
+                </div>
+                {{/if}}
+                {{/ifStoreSetting}}
+                <div class="row summaryRow">
+                    <span class="col-xs-3 cc_label">{{pageLabelMap 'CartInc_GrandTotal'}}</span>
+                    <span class="col-xs-3 cc_value price text-right">{{{price this.cartData.totalAmount}}}</span>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            // 2018-12-05 msobczak: Reward points
+
+            var rewardPtsEnabled = false;
+
+            if(CCRZ.pagevars.pageConfig["c.rewardpts"]) {
+                if(CCRZ.pagevars.pageConfig["c.rewardpts"] == "TRUE") {
+                    rewardPtsEnabled = true;
+                }
+            }
+
+            if(rewardPtsEnabled == false) {
+                return false;
+            }
+
+            CCRZ.uiProperties.LLIPaymentView.partial.cartPaymentSummary = '#CKZ-CartPaymentSummary-Desktop-RP';
+        });
+    </script>
+</apex:component>

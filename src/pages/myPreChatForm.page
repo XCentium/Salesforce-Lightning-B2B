@@ -1,0 +1,60 @@
+<apex:page >
+  <html>
+      <head>
+        <script type="text/javascript">
+            (function() { 
+              function handlePageLoad() {
+                var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+                document.getElementById('prechatForm').setAttribute('action',
+                decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+              } 
+              if (window.addEventListener) {
+                window.addEventListener('load', handlePageLoad, false);
+              } else { 
+                window.attachEvent('onload', handlePageLoad, false);
+              }
+            })(); 
+        </script>
+        </head>
+        <body>
+            <form method="post" id="prechatForm">
+             
+            <!-- Detail inputs -->
+            <input type="text" name="liveagent.prechat:contactFirstName" placeholder="First Name"/><br />
+            <input type="text" name="liveagent.prechat:contactLastName" placeholder="Last Name"/><br />
+            <input type="text" name="liveagent.prechat:contactEmail" placeholder="Email Address"/><br />
+             
+            <input type="text" name="liveagent.prechat:caseSubject" placeholder="What do you need help with?"/><br />
+             
+            <!-- Map the detail inputs to the Contact fields --> 
+            <input type="hidden" name="liveagent.prechat.findorcreate.map:Contact" value="FirstName,contactFirstName;LastName,contactLastName;Email,contactEmail;" />
+             
+            <!-- Try to find the Contact by email (exact match) -->
+            <input type="hidden" name="liveagent.prechat.findorcreate.map.doFind:Contact" value="Email,true;" />
+            <input type="hidden" name="liveagent.prechat.findorcreate.map.isExactMatch:Contact" value="Email,true;" />
+             
+            <!-- If the Contact is not found, then create one with the following fields set -->
+            <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:Contact" value="FirstName,true;LastName,true;Email,true;" />
+             
+            <!-- Save the Contact on the Live Chat Transcript's Contact Loookup -->
+            <input type="hidden" name="liveagent.prechat.findorcreate.saveToTranscript:Contact" value="Contact" />
+             
+            <!-- Show the Contact when it is found or created -->
+            <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:Contact" value="true" />
+             
+            <!-- Create a Case every time -->
+            <input type="hidden" name="liveagent.prechat:caseOrigin" value="Chat" />
+            <input type="hidden" name="liveagent.prechat.findorcreate.map:Case" value="Origin,caseOrigin;Subject,caseSubject;" />
+            <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:Case" value="Origin,true;Subject,true;" />
+            <input type="hidden" name="liveagent.prechat.findorcreate.saveToTranscript:Case" value="Case" />
+            <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:Case" value="true" />
+             
+            <!-- Link the Contact to the Case -->
+            <input type= "hidden" name="liveagent.prechat.findorcreate.linkToEntity:Contact" value="Case,ContactId" />
+             
+            <input type="submit" value="Submit" id="prechat_submit" />
+             
+            </form> 
+        </body>
+    </html>
+</apex:page>

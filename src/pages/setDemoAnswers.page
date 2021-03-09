@@ -1,0 +1,411 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+
+    <head>
+        <apex:slds />
+        <title>Checklist</title>
+        <!-- Move the styles into a CSS file -->
+        <style>
+        .space-above {
+            margin-top: 8px;
+        }
+        .loading {
+            padding-top: 100px;
+            width: 100%;
+            text-align: center;
+            z-index: 0;
+        }
+        .step#step-1 {
+            transform: translate(163px, 141px);
+        }
+
+        .step#step-2 {
+            transform: translate(151.5px, 209.5px);
+        }
+
+        .step#step-3 {
+            transform: translate(167px, 278px);
+        }
+
+        .step#step-4 {
+            transform: translate(136px, 346.5px);
+        }
+
+        .step#step-5 {
+            transform: translate(168px, 415px);
+        }
+            body {
+                margin: 0;
+                /*padding: 0;*/
+                overflow: hidden;
+                padding: 1.5rem;
+            }
+            
+            
+            .slds-scope .icon {
+                width: 160px;
+                max-height: 160px;
+                margin: 0px auto;
+            }
+            
+            .slds-scope img {
+                width: 24px;
+            }
+            
+            .slds-scope .slds-icon__container--circle, .slds-scope .slds-icon_container--circle {
+                padding: .2rem;
+            }
+
+            .slds-scope .inline-spinner {
+                position: relative;
+                width: 24px;
+                height: 13px;
+                display: inline-flex;
+                margin-top: 5px;
+            }
+            
+            .slds-scope .main-icon {
+                max-height: 96px;
+                max-height: 96px;
+                height: 96px;
+                width: auto;
+            }
+            
+            .slds-scope li {
+                height: 32px;
+                width: 20rem;
+            }
+            
+            .slds-scope .slds-m-left--small {
+            }
+            
+            .check-list-container {
+                height: 28rem;
+            
+            }
+            svg {
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 100%;
+                display:block;
+                width: 100%;
+                position: absolute;
+                top:0;
+                left:0;
+            }
+
+            svg text {
+                font-size: 1.05rem;
+                fill: #055ea7;
+            }
+
+            .step text {
+                fill:  #055ea7;
+                font-size: 0.9rem;
+                font-weight: bold;
+            }
+
+            .slds-scope .slds-icon {
+                fill: blue;
+            }
+           
+            .slds-scope .slds-icon-action-approval {
+                background-color: white;
+            }
+            
+            // Path styles
+            .solid-path {
+                stroke-dasharray: 5;
+                stroke: #499AE2;
+                //stroke-dasharray: 2000;
+                //stroke-dashoffset: 0;
+                //stroke-width: 1.5;
+                stroke: #FFFFFF;
+            }
+
+            .dash-path {
+                stroke-dasharray: 5;
+                stroke: #8dccf1;
+                stroke-width: 2.5;
+
+            }
+            
+            .step {
+            }
+             
+            .step .circle {
+                fill: #fff;          
+            }
+                
+            @keyframes pulse {
+                0% { stroke-width: 1; }
+                50% { stroke-width: 4; }
+                100%: { stroke-width: 1; }
+            }
+                            
+            .step.progress .circle {
+                stroke-width: 1;
+                stroke: #fff;
+                fill: #006dd5;
+                animation-name: pulse;
+                animation-duration: 2s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+            }
+
+            .step.fail .circle {
+                stroke-width: 6;
+                stroke: #FF8C00;
+                fill: rgb(0, 71, 153);
+            }
+
+            .step.warn .circle {
+                stroke-width: 4;
+                stroke: #FF8C00;
+            }
+
+            .step.complete .circle {
+                rx: 8;
+                ry: 8;
+            }
+            
+            .step.hidden {
+                display: none;
+            }
+
+            .circle.hidden {
+                display:none;
+            }
+            .hidden {
+                display:none;
+            }
+            .checkmark {
+                fill: #006dd5;
+                fill-opacity: 1;
+                stroke: none;
+                transform: translate(-359px, -428px)
+            }
+
+            .step .checkmark {
+                display: none;
+            }
+            
+            .step.progress .checkmark {
+                display: none;
+            }
+            
+            .step.complete .checkmark {
+                display: block;
+            }
+            
+            .checkmark__check {
+              transform-origin: 50% 50%;
+              stroke-dasharray: 48;
+              stroke-dashoffset: 48;
+              animation: stroke .3s $curve .8s forwards;
+            }
+
+            .check {
+              /*transform-origin: 10px 10px 10px;*/
+/*              height: 10px;
+              width: 10px;*/
+              fill: rgb(0, 71, 153);
+            }
+
+            .info-icon {
+                fill: white;
+            }
+
+            svg text.ie-bubble {
+                font-size: .75rem;
+                fill: white;
+            }
+
+            svg rect.ie-bubble-rect {
+                fill: #16325c;
+            }
+
+            svg ellipse.ie-circle {
+                fill: #34A0FF;
+                stroke-width: 2;
+                stroke: white;
+            }
+            svg ellipse.transparent-circle {
+                opacity: 0;
+            }
+
+
+
+        </style>    
+    </head>
+    <body>
+        <h1 id="loading" class="loading">Loading...</h1>
+        <div class="slds-scope">
+            <div class="slds-container--medium check-list-container container" id="container">
+
+                <svg id="whole-svg" xmlns="http://www.w3.org/2000/svg">
+                    <text text-anchor="middle" x="50%" y ="40" >Before we start, we'll need to check a few things.</text>
+            
+                    <path class="dash-path" fill="none" d="M 176.00,421.00
+           C 157.00,405.00 138.00,384.00 135.00,348.00
+             139.00,300.00 155.00,299.00 173.00,273.00
+             185.86,243.12 174.00,231.00 156.00,211.00
+             109.17,176.22 119.00,162.87 158.00,143.00"/> 
+             
+             <!-- IE error bubble for the first check -->
+             <rect x="480" y="117" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-1-ie"/>
+             <text x="487" y="135" class="ie-bubble hidden" id="bubble-1-ie-text">
+             </text>
+
+             <!-- error bubble for the first check -->
+             <foreignObject id="bubble-1" class="node hidden" x="480" y="112" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left-top" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+             <!-- IE error bubble for the second check -->
+             <rect x="480" y="77" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-2-ie"/>
+             <text x="487" y="95" class="ie-bubble hidden" id="bubble-2-ie-text">
+             </text>
+
+             <!-- error bubble for the second check -->
+             <foreignObject id="bubble-2" class="node hidden" x="475" y="75" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+             <!-- IE error bubble for the third check -->
+             <rect x="487" y="235" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-3-ie"/>
+             <text x="494" y="253" class="ie-bubble hidden" id="bubble-3-ie-text">
+             </text>
+
+             <!-- error bubble for the third check -->
+             <foreignObject id="bubble-3" class="node hidden" x="482" y="233" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+             <!-- IE error bubble for the fourth check -->
+             <rect x="477" y="290" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-4-ie"/>
+             <text x="484" y="308" class="ie-bubble hidden" id="bubble-4-ie-text">
+             </text>
+
+             <!-- error bubble for the fourth check -->
+             <foreignObject id="bubble-4" class="node hidden" x="472" y="288" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+             <!-- IE error bubble for the fifth check -->
+             <rect x="508" y="391" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-5-ie"/>
+             <text x="515" y="409" class="ie-bubble hidden" id="bubble-5-ie-text">
+             </text>
+
+             <!-- error bubble for the fifth check -->
+             <foreignObject id="bubble-5" class="node hidden" x="503" y="389" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin--left" role="tooltip">
+                         <div class="slds-popover__body">Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+             <!-- IE Information bubble at the bottom -->
+             <rect x="143" y="350" height="70" width="315" class="ie-bubble-rect hidden" id="bubble-error-ie"/>
+             <text x="150" y="365" class="ie-bubble hidden" id="bubble-error-text-ie">
+             </text>
+
+             <!-- Information bubble at the bottom -->
+             <foreignObject id="bubble-error" class="node hidden" x="140" y="350" width="400" height="300">
+                 <body xmlns="http://www.w3.org/1999/xhtml">
+                     <div class="slds-popover slds-popover--tooltip slds-nubbin" role="tooltip">
+                         <div class="slds-popover__body" id="bubble-error-text"></div>
+                     </div>
+                 </body>
+             </foreignObject>
+
+                <g class="step progress hidden" id="step-1">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"> 
+                    </ellipse>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text>
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-1" cx="290" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-1" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="270px" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-1" cx="290" cy="-2" rx="10" ry="10"></ellipse>
+                </g>
+
+                <g class="step progress hidden" id="step-2">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"/>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text>
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-2" cx="290" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-2" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="270px" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-2" cx="290" cy="-2" rx="10" ry="10"></ellipse>
+                </g>
+                
+                <g class="step progress hidden" id="step-3">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"/>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text>   
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-3" cx="290" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-3" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="270px" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-3" cx="290" cy="-2" rx="10" ry="10"></ellipse>           
+                </g>
+                
+                <g class="step progress hidden" id="step-4">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"/>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text> 
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-4" cx="310" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-4" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="290" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-4" cx="310" cy="-2" rx="10" ry="10"></ellipse>               
+                </g>
+                
+                <g class="step progress hidden" id="step-5">
+                    <ellipse class="circle" cx="0" cy="0" rx="10" ry="10"/>
+                    <use class="check hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval')}" width="3%" height="3%" x="-14px" y="-6px"></use>
+                    <text x="50" y="3"></text>  
+
+                    <ellipse class="ie-circle" id="info-icon-bubble-ie-5" cx="310" cy="-2" rx="9" ry="9"></ellipse>
+                    <use id="info-icon-bubble-5" class="info-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#info')}" width="4%" height="4%" x="290" y="-11px"></use>
+                    <ellipse class="transparent-circle hidden" id="transparent-circle-bubble-5" cx="310" cy="-2" rx="10" ry="10"></ellipse>                      
+                </g>
+                                                                                                
+                </svg>                
+             
+            
+                <div id="submessage" class="slds-align--absolute-center slds-m-vertical--small">
+                    &nbsp;
+                </div>                
+                                
+                <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center">
+                    <ul id="checklist" class=""/>
+                </div>
+            </div>
+
+        </div>                        
+        
+        <script type="text/javascript" src="/analytics/wave/sdk/js/40.0/wizard-min.js"></script>
+
+        <script type="text/javascript">
+            // Setting of demo variables here          
+        </script>
+    </body>
+</html>    
+</apex:page>

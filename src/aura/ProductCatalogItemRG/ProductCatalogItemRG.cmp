@@ -1,0 +1,36 @@
+<aura:component >
+    <aura:attribute name="sitePrefix" type="String"/>
+    <aura:attribute name="index" type="Integer"/>
+    <aura:attribute name="product" type="PricebookEntry"/>
+    <aura:attribute name="cart" type="Map[]"/>
+    <aura:attribute name="currentQty" type="Integer"/>
+    <aura:handler name="change" value="{!v.cart}" action="{!c.doInit}"/>
+    <aura:registerEvent name="AddToCartEvent" type="c:ProductCatalogAddToCartEvent" />
+    <div class="slds-tile slds-tile--board">
+        <aura:if isTrue="{!v.product.Product2.purl__c != '/servlet/servlet.FileDownload?file='}">
+        	<img class="slds-align--absolute-center image" src="{!v.product.Product2.purl__c}"/>
+            <aura:set attribute="else">
+            	<img class="slds-align--absolute-center image" src="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/General/noImage.png"/>
+            </aura:set>
+        </aura:if>
+        <h4 class="slds-truncate slds-align--absolute-center"><a href="javascript:void(0);">{!v.product.Product2.Name}</a></h4>
+        <div class="slds-tile__detail slds-text-body--small">
+            <p class="slds-text-heading--x-small description">{!v.product.Product2.Description}</p>
+            <section class="slds-clearfix slds-m-vertical--large">
+                <p class="slds-text-heading--small slds-float--right">
+                    
+                    <ui:outputCurrency value="{!v.product.UnitPrice}"/>
+                    
+                </p>
+            </section>
+            <fieldset class="slds-form--compound">
+            <div class="slds-form-element__row">
+                <lightning:input aura:id="prodQuantity" name="prodQuantity" label="Qty" minlength="1" maxlength="4" 
+                                 class="slds-form-element slds-size--1-of-2 qtyInput" value="{!v.currentQty}" placeholder="0" onfocus="{!c.clearQty}" />
+                <lightning:button class="slds-form-element slds-size--1-of-2" variant="brand" label="Add to Cart" 
+                                  onclick="{! c.addToCart }" value="{!v.product.Product2.Id}"/>
+            </div>
+            </fieldset>
+        </div>
+    </div>
+</aura:component>

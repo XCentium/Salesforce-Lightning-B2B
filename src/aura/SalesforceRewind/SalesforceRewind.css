@@ -1,0 +1,22 @@
+.THIS.container {
+  height:274px;
+}
+.THIS .content {
+  height:calc(100% - 49px);
+}
+
+.THIS .notificationRecords {  
+    font-size: 10pt;
+}
+
+.THIS .red {
+    color: red;
+}
+
+.THIS .green {
+    color: green;
+}
+
+.THIS .text_right {
+    text-align: left;
+}

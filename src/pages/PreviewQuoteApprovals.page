@@ -1,0 +1,4 @@
+<apex:page standardController="SBQQ__Quote__c" extensions="QuoteExtController"  action="{!onPreview}">
+<apex:pageMessages />
+<sbaa:approvalPreview approvals="{!approvals}"/>
+</apex:page>

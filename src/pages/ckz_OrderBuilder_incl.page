@@ -1,0 +1,8 @@
+<!--
+ - Created by brandon.rogers on 4/22/19.
+ -->
+
+<apex:page id="ckz_OrderBuilder_incl" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false" applyHtmlTag="false">
+    <div id="orderBuilderContainer"></div>
+    <c:ckz_OrderBuilder />
+</apex:page>

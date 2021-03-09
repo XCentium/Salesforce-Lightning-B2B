@@ -1,0 +1,124 @@
+<!--
+ - Created by brandon.rogers on 10/4/18.
+ -->
+
+<apex:component id="ckz_CO_LLI_OrderReview">
+    <script id="CKZ-Order-Review-LLI-Desktop" type="text/template">
+        <form id="reviewForm" class="form">
+            <div class="cc_shipping_review_lli">
+                <div class="row cc_message_row">
+                    <div class="col-xs-12">
+                        <div class="messagingSection-Error" style="display: none"></div>
+                        <div class="messagingSection-Info" style="display: none"></div>
+                        <div class="messagingSection-Warning" style="display: none"></div>
+                    </div>
+                </div>
+                <div class="row reviewInfo">
+                    <div class="col-sm-8 reviewGroups">
+                        {{#each this.cartData.ECartItemGroupsS.models}}
+                        {{#with this.attributes}}
+                        {{#if this.ECartItemsS}}
+                        <div class="panel panel-default cc_panel shippingGroupPanel{{sfid}}  cc_shipping_group_panel" data-id="{{sfid}}">
+                            <div class="panel-heading cc_heading">
+                                <h4 class="panel-title cc_title shipGoupTitle{{sfid}}">
+                                    <a role="button" data-toggle="collapse" data-target=".shipGroupBody{{sfid}}">
+                                        <span class="cc_label cc_label_groupheader">{{pageLabelMap 'LLICheckOut_GroupHeader'}}</span>
+                                        <span class="cc_label cc_xofy cc_xofy{{@index}}">{{XofY @index ../../this.cartData.ECartItemGroupsS.models}}</span>
+                                        <span class="cc_value">{{groupName}}</span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div class="panel-body collapse in cc_body shipGroupBody{{sfid}}">
+                                <div class="LLIshipOptions cc_lli_shipoptions">
+                                    <div class="addressEntry col-sm-6 cc_address_entry">
+                                        <label for="groupAddress" class="cc_ship_addr_header">{{pageLabelMap 'LLICheckOut_ShipAddrHeader'}}</label><br/>
+                                        <div id="groupAddress" class="groupAddress cc_group_address">
+                                            {{>addressDisplay this.shipTo}}
+                                        </div>
+                                    </div>
+                                    <div class="shipInfo col-sm-6 cc_ship_info">
+                                        {{#ifDisplay 'SO.DsplShipOptions'}}
+                                        {{#if shipMethod}}
+                                        <div class="ship_method cc_ship_method">
+                                            <label for="shipMethod" class="cc_shipping_method_label">{{pageLabelMap 'LLICheckOut_ShippingMethod'}}: </label>
+                                            <span id="shipMethod" class="reviewShipOptions cc_shipping_method">{{shipMethod}}</span>
+                                        </div>
+                                        {{#if shipAmount}}
+                                        <div class="ship_amount cc_ship_amount">
+                                            <label for="shipAmount" class="cc_shipping_amount_label">{{pageLabelMap 'LLICheckOut_ShippingAmount'}}: </label>
+                                            <span id="shipAmount" class="reviewShipOptions cc_shipping_amount">{{{price shipAmount}}}</span>
+                                        </div>
+                                        {{/if}}
+                                        {{/if}}
+                                        {{/ifDisplay}}
+
+                                        {{#ifDisplay 'SO.ShowReqDate'}}
+                                        {{#if requestDate}}
+                                        <div class="ship_req_date cc_ship_req_date">
+                                            <label for="reviewShipOptions" class="reviewShipOptions cc_review_ship_options_label">{{pageLabelMap 'LLICheckout_RequestedDeliveryDt'}}: </label>
+                                            <span id="reviewShipOptions" class="reviewShipOptions cc_review_ship_options">{{requestDate}}</span>
+                                        </div>
+                                        {{/if}}
+                                        {{/ifDisplay}}
+
+                                        {{#ifDisplay 'SO.DsplShipNotes'}}
+                                        {{#if note}}
+                                        <div class="ship_notes cc_ship_notes">
+                                            <label for="shippingNotes" class="cc_shipping_notes_label">{{pageLabelMap 'LLICheckOut_ShippingNotes'}}: </label>
+                                            <span id="shippingNotes" class="reviewShipOptions cc_shipping_notes">{{note}}</span>
+                                        </div>
+                                        {{/if}}
+                                        {{/ifDisplay}}
+                                    </div>
+                                </div>
+                                <div class="groupItems cc_group_items">
+                                    {{> cartItemDetailsReview productList=../../productList}}
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/with}}
+                        {{/each}}
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="summaryWidget">
+                            {{> cartReviewSummary}}
+                            {{#if this.termsList}}
+                            <div class="panel panel-default cc_panel cc_summary_widget">
+                                <div class="panel-body row cc_body">
+                                    <div class="termsContainer col-xs-12 cc_terms_container">
+                                        <div class="termsInner cc_terms_inner">
+                                            <h5>{{pageLabelMap 'Footer_TermsAndConditions'}}</h5>
+                                            {{#each this.termsList}}
+                                            <h6 class="cc_terms_title cc_title">{{this.title}}</h6>
+                                            <p class="cc_terms_body cc_body">{{unescape this.description}}</p>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+                                    <div class="checkbox col-xs-10 col-xs-offset-1">
+                                        <input id="termsAccept" class="termsAccept cc_terms_accept" type="checkbox"/>
+                                        <label for="termsAccept">{{pageLabelMap 'LLICheckout_TermsAccept'}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/if}}
+                            <div class="checkoutNav cc_checkout_nav">
+                                <input class="btn btn-default btn-sm processBack cc_process_back" type="button" value="{{pageLabelMap 'Back'}}" alt="{{pageLabelMap 'LLICheckOut_Back'}}"/>
+                                <input class="btn btn-default btn-sm processReview proceed disabled cc_proceed" type="button" disabled value="{{pageLabelMap 'LLICheckOut_Proceed'}}" alt="{{pageLabelMap 'LLICheckOut_Proceed'}}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="modalSec"></div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.LLIOrderReviewView.desktop.tmpl = 'CKZ-Order-Review-LLI-Desktop';
+        });
+    </script>
+</apex:component>

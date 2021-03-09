@@ -1,0 +1,309 @@
+<!--
+ - Created by brandon.rogers on 2/6/19.
+ -->
+
+<apex:component id="ckz_InvoicePayment_Multi">
+    <script id="CKZ-InvoicePayment-Multi" type="text/template">
+        <div class="panel panel-default cc_panel cc_invoice_payment m-t-1">
+
+            <div class="panel-body InvoicePayment_Multi_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_MyInvoices'}}</h2>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <button type="button" class="btn btn-default btn-sm myInvoices cc_my_invoices">{{pageLabelMap 'MyInvoices_MyInvoicesBtn'}}</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body cc_body cc_invoice_payment_content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="messagingSection-invoicepayment-Error" role="alert" style="display: none"></div>
+                        <div class="messagingAction-invoicepayment-Info" role="alert" style="display: none">
+                            <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&#215;</span></button>
+                        </div>
+                    </div>
+                </div>
+
+                {{#if this.loaded}}
+                    {{#ifGreater this.currencies.length 1}}
+                        <div class="row cc_invoice_payment">
+                            <div class="col-xs-12">
+                                <div class="invoiceFilterControls cc_invoice_filter_controls">
+                                    <form id="invoiceFilterForm" class="invoiceFilterForm cc_invoice_filter_form">
+                                        <label for="invoiceCurrency" class="cc_invoice_currency_label">{{pageLabelMap 'MyInvoices_SelectCurrencyLabel'}}</label>
+                                        <select id="invoiceCurrency" name="invoiceCurrency" value="{{this.currency}}" class="invoiceCurrency form-control cc_invoice_currency">
+                                            {{#each this.currencies}}
+                                                <option value="{{this}}" {{#ifEquals ../this.currency this}} selected {{/ifEquals}}>
+                                                    {{pageLabelMapMultiString 'priceDisplay_' this}}
+                                                </option>
+                                            {{/each}}
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {{/ifGreater}}
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table id="invoiceTable" class="table table-hover shopping_cart invoices cc_table  cc_invoices_table">
+                                    <thead>
+                                        <th class="cc_table_header invoiceHeader headerSort name cc_invoice_name" data-sortcriteria="Name">
+                                            <span class="cc_table_header_invoice_label_name">{{pageLabelMap 'MyInvoices_InvoiceName'}}</span>
+                                        </th>
+                                        <th class="cc_table_header invoiceHeader headerSort invoiceId cc_invoice_id" data-sortcriteria="InvoiceId">
+                                            <span class="cc_table_header_invoice_label_invoice)id">{{pageLabelMap 'MyInvoices_InvoiceId'}}</span>
+                                        </th>
+                                        <th class="cc_table_header invoiceHeader headerSort dateIssued cc_date_issued" data-sortcriteria="DateIssued">
+                                            <span class="cc_table_header_invoice_date_issued">{{pageLabelMap 'MyInvoices_Date'}}</span>
+                                        </th>
+                                        <th class="cc_table_header invoiceHeader headerSort dueDate cc_due_date" data-sortcriteria="DueDate">
+                                            <span class="cc_table_header_invoice_due_date">{{pageLabelMap 'MyInvoices_DueDate'}}</span>
+                                        </th>
+                                        <th class="cc_table_header invoiceHeader headerSort amount cc_amount" data-sortcriteria="Amount">
+                                            <span class="cc_table_header_invoice_amount">{{pageLabelMap 'MyInvoices_Amount'}}</span>
+                                        </th>
+                                        <th class="cc_table_header invoiceHeader headerSort paidAmount cc_paid_amount" data-sortcriteria="PaidAmount">
+                                            <span class="cc_table_header_invoice_paid_amount">{{pageLabelMap 'MyInvoices_PaidAmount'}}</span>
+                                        </th>
+                                        <th class="cc_table_header invoiceHeader headerSort type cc_type" data-sortcriteria="Type">
+                                            <span class="cc_table_header_invoice_type">{{pageLabelMap 'MyInvoices_Type'}}</span>
+                                        </th>
+                                        <th class="cc_table_header invoiceHeader headerSort status cc_status" data-sortcriteria="Status">
+                                            <span class="cc_table_header_invoice_status">{{pageLabelMap 'MyInvoices_Status'}}</span>
+                                        </th>
+                                        <th class="cc_table_header invoiceHeader headerSort actions cc_actions">
+                                            {{#unless @root.inPayment}}
+                                            <a href="javascript:void(0);" class="payAllFullLink cc_pay_all_full_link">{{pageLabelMap 'MyInvoices_PayFullAmounts'}}</a>
+                                            {{else}}
+                                            &#160;
+                                            {{/unless}}
+                                        </th>
+                                    </thead>
+
+                                    <tbody>
+                                    {{#each this.invoiceList}}
+                                    <tr class="myAccInvoiceRows {{this.status}} {{this.type}} {{this.sfid}} cc_my_acc_invoice_rows">
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_name">
+                                                <a href="javascript:void(0);" data-id="{{this.sfid}}" class="gotoInvoiceDetails cc_goto_invoice_details">{{this.name}}</a>
+                                            </span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_invoice_id">{{this.invoiceId}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_date_issued">{{this.dateIssuedStr}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_due_date">{{this.dueDateStr}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_amount">{{price this.amount this.currencyIsoCode}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_paid_amount">{{price this.paidAmount this.currencyIsoCode}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_type">{{pageLabelMapMultiString 'MyInvoices_Type_' this.type}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_status">{{pageLabelMapMultiString 'MyInvoices_Status_' this.status}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            {{#ifNotEquals type 'Summary'}}
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">{{pageLabelMapMultiString 'priceSymbol_' this.currencyIsoCode}}</span>
+                                                    <input type="number" step="any" name="pay" class="input-text entry form-control invoicePayAmount cc_invoice_pay_amount" data-id="{{this.sfid}}" data-amount="{{this.remainingAmount}}" value="{{invEnteredValue @root.entryValues this.sfid}}" {{#if @root.inPayment}}readonly{{/if}}/>
+                                                    {{#unless @root.inPayment}}
+                                                        <span class="input-group-btn">
+                                                            <a href="javascript:void(0);" class="btn btn-default payFullLink cc_pay_full_link" data-id="{{this.sfid}}" data-amount="{{this.remainingAmount}}">{{pageLabelMap 'MyInvoices_PayFullAmount' (price this.remainingAmount this.currencyIsoCode)}}</a>
+                                                        </span>
+                                                    {{else}}
+                                                    {{/unless}}
+                                                </div>
+                                            {{/ifNotEquals}}
+                                        </td>
+                                    </tr>
+
+                                    <tr class="errorRow {{this.status}} {{this.type}} {{this.sfid}} cc_error_row">
+                                        <td colspan="9">
+                                            <div class="field-error messagingSection-invoicepayment-{{this.sfid}}Error" style="display: none"></div>
+                                        </td>
+                                    </tr>
+
+                                    {{#each this.childInvoices}}
+                                    <tr class="myAccInvoiceRows childRow inactive {{../sfid}} {{this.status}} {{this.type}} cc_my_acc_invoice_rows cc_child_row">
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_name"><a href="javascript:void(0);" data-id="{{this.sfid}}" class="gotoInvoiceDetails cc_goto_invoice_details">{{this.name}}</a></span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_invoice_id">{{this.invoiceId}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_date_issued">{{this.dateIssuedStr}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_due_date">{{this.dueDateStr}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_amount">{{price this.amount this.currencyIsoCode}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_paid_amount">{{price this.paidAmount this.currencyIsoCode}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_type">{{pageLabelMapMultiString 'MyInvoices_Type_' this.type}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                            <span class="cc_col_status">{{pageLabelMapMultiString 'MyInvoices_Status_' this.status}}</span>
+                                        </td>
+                                        <td class="cc_table_col">
+                                                        <span class="cc_col_actions form-inline">
+                                                            {{#ifEquals type 'Debit'}}
+                                                                {{#ifNotEquals status 'Closed'}}
+                                                                    <span class="currencySymbol cc_currency_symbol">{{pageLabelMapMultiString 'priceSymbol_' this.currencyIsoCode}}</span>
+                                                                    <input type="text" name="pay" value="{{invEnteredValue @root.entryValues this.sfid}}" class="input-text entry invoicePayAmount cc_invoice_pay_amount" data-id="{{this.sfid}}" data-amount="{{this.remainingAmount}}" value="{{invEnteredValue @root.entryValues this.sfid}}" {{#if @root.inPayment}}readonly{{/if}}/>
+                                                                    <br/>
+                                                                    {{#unless @root.inPayment}}
+                                                                        <a href="javascript:void(0);" class="payFullLink cc_pay_full_link" data-id="{{this.sfid}}" data-amount="{{this.remainingAmount}}">{{pageLabelMap 'MyInvoices_PayFullAmount' (price this.remainingAmount this.currencyIsoCode)}}</a>
+                                                                    {{else}}
+                                                                        &#160;
+                                                                    {{/unless}}
+                                                                {{/ifNotEquals}}
+                                                            {{/ifEquals}}
+                                                        </span>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="errorRow {{this.status}} {{this.type}} {{this.sfid}} cc_error_row">
+                                        <td colspan="9">
+                                            <div class="field-error messagingSection-invoicepayment-{{this.sfid}}Error" style="display: none"></div>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                    {{/each}}
+                                    <tr class="totalRow cc_total_row text-right">
+                                        <td colspan="8"></td>
+                                        <td colspan="1">
+                                            <span class="totalPayAmountLabel cc_total_pay_amount_label">{{pageLabelMap 'MyInvoices_TotalPay'}}</span>
+                                            <span class="totalPayAmount cc_total_pay_amount"></span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cc_invoice_payment row">
+                        <div class="col-xs-12">
+                            <div class="invoiceContainer cc_invoice_container text-right">
+                                <button type="button" class="btn btn-default btn-sm editTotals cc_edit_totals" {{#unless @root.inPayment}}style="display:none;" {{/unless}}>
+                                    {{pageLabelMap 'MyInvoices_EditTotalBtn'}}
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm selectPayment cc_select_payment" {{#if @root.inPayment}}style="display:none;" {{/if}}>
+                                    {{pageLabelMap 'MyInvoices_SelectPaymentBtn'}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cc_invoice_payment row">
+                        <div class="col-xs-12">
+                            <div class="invoiceContainer invoicePaymentContainer cc_invoice_payment_container" {{#unless @root.inPayment}}style="display:none;" {{/unless}}>
+                            <div class="invoicePaymentTarget"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="modalSec"></div>
+            {{/if}}
+        </div>
+    </script>
+
+    <!-- PAYMENT PROCESSOR -->
+    <script id="CKZ-PaymentProcessor-Desktop" type="text/template">
+        <div class="cc_payment_processor_lli">
+
+            <div class="storedpayment-messagingSection-Error" role="alert" style="display: none"></div>
+            <div class="storedpayment-messagingSection-Warning" role="alert" style="display: none"></div>
+            <div class="storedpayment-messagingSection-Info" role="alert" style="display: none">
+                <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&#215;</span></button>
+            </div>
+
+            <!--<div class="paymentMidSection cc_payment_mid_section">{{pageLabelMap 'PaymentProcessor_MidSec'}}</div>-->
+
+            <div class="paymentTypesContainer cc_payment_types_container">
+                <ul class="nav nav-tabs cc_nav-tabs cc_nav-tabs-payment" role="tablist">
+                    <li role="presentation" class="active cc_nav-tabs_li">
+                        <a href="#tab-wallet" aria-controls="tab-wallet" role="tab" class="cc_nav-tabs_anchor" data-toggle="tab">{{pageLabelMap 'PaymentProcessor_MyWallet'}}</a>
+                    </li>
+                    {{#if this.paymentTypes}}
+                    {{#each this.paymentTypes}}
+                    <li role="presentation" class="cc_nav-tabs_li">
+                        <a href="#{{@key}}" aria-controls="{{@key}}" role="tab" class="cc_nav-tabs_anchor" data-toggle="tab">{{pageLabelMapMultiString 'PaymentProcessorTab_' @key}}</a>
+                    </li>
+                    {{/each}}
+                    {{/if}}
+                </ul>
+
+                <div class="tab-content cc_tab-content">
+                    <div role="tabpanel" class="cc_tab-pane tab-pane active" id="tab-wallet">
+                        <div class="paymentTypeContainer tab-wallet err cc_payment_type">
+                            {{#if true }}
+                            {{#ifDisplay 'WLT.Enabled'}}
+                            {{#if this.storedPayments}}
+                            <div class="cc_payment_processor_mywallet p-y-2">
+                                <div class="cc_stored_payments_container">
+                                    {{#each this.storedPayments}}
+                                    <div class="storedPaymentContainer {{this.accountType}} cc_stored_payment_container">
+                                                        <span class="storedPaymentSelector {{this.sfid}} cc_stored_payment_selector">
+                                                            <input type="radio" name="storedPaymentSelection" value="{{this.sfid}}" class="storedPaymentSelection {{this.sfid}}" data-id="{{this.sfid}}" {{#ifEquals @root.storedSelected this.sfid}}checked{{/ifEquals}}/>
+                                                        </span>
+
+                                        <span class="storedPaymentDisplay cc_stored_payment_display">
+                                                            {{pageLabelMapMultiString 'PaymentDisplay_' this.accountType this.accountType this.accountNumber this.subAccountNumber (pageLabelMapMultiString 'PaymentType_' this.paymentType) (pageLabelMapMultiString 'PaymentExpMonth_' this.expirationMonth) (pageLabelMap this.expirationYear) this.displayName}}
+                                                        </span>
+                                    </div>
+                                    {{/each}}
+
+                                    <div class="actionContainer cc_payment_action_container text-right">
+                                        <button type="button" class="btn btn-primary btn-sm useStoredPayment cc_use_stored_payment">{{pageLabelMap 'PaymentProcessor_UseStoredPayment'}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{/ifDisplay}}
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    {{#if this.paymentTypes}}
+                    {{#each this.paymentTypes}}
+                    <div role="tabpanel" class="cc_tab-pane tab-pane" id="{{@key}}">
+                        <div class="paymentTypeContainer {{@key}} err cc_payment_type">
+                            {{pageLabelMap 'Payment_LoadingPaymentType'}}
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.InvoicePaymentView.generic.desktop.tmpl = 'CKZ-InvoicePayment-Multi';
+            CCRZ.uiProperties.InvoicePaymentView.PaymentProcessor.desktop.tmpl = 'CKZ-PaymentProcessor-Desktop';
+        });
+    </script>
+
+</apex:component>

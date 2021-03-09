@@ -1,0 +1,104 @@
+<!--
+ - Created by brandon.rogers on 1/11/19.
+ -->
+
+<apex:component id="ckz_PDP_InfoTabs" controller="ckz_ctrl_ProductMedia">
+
+    <script id="CKZ-ProductDetail-TabContainer" type="text/template">
+        <div class="tabs_container cc_tabs_container cc_product_detail_container m-y-3">
+            <ul class="nav nav-tabs cc_nav-tabs" id="myTab">
+                {{#each this}}
+                <li role="presentation" class="{{#ifEquals @index 0}}active{{/ifEquals}} cc_li">
+                    <a href="#{{this.sectionID}}_{{this.grouping}}" data-toggle="tab">{{pageLabelMap this.sectionLabel}}</a>
+                </li>
+                {{/each}}
+                <li id="mediaTab" role="presentation" class="{{#ifEquals @index 0}}active{{/ifEquals}} cc_li">
+                    <a href="#mediaTabContent" data-toggle="tab">{{pageLabelMap 'Head_ContentProduct_Media'}}</a>
+                </li>
+            </ul>
+
+            <div class="tab-content cc_tab-content p-y-2">
+                {{#each this}}
+                <div role="tabpanel" class="tab-pane cc_tab-pane {{#ifEquals @index 0}} active {{/ifEquals}}" id="{{this.sectionID}}_{{this.grouping}}">
+                    <p class="{{this.sectionID}} cc_loading">Loading content...</p>
+                </div>
+                {{/each}}
+
+                <div role="tabpanel" class="tab-pane cc_tab-pane {{#ifEquals @index 0}} active {{/ifEquals}}" id="mediaTabContent">
+                    {!contentProductMedia}
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="CKZ-ProductDetail-MediaSection" type="text/template">
+        {{#eachMapEntry this.pageData}}
+        <div class="nvRow nvGroupRow cc_nv_group_row">
+            <h5 class="groupName cc_group_name">{{this.groupName}}</h5>
+            <table class="nvRow nvGroupRow cc_nv_group_row table table-striped table-condensed">
+                <tbody>
+                {{#each this}}
+                <tr>
+                    <th>
+                        <i class="far fa-file-pdf"></i>
+                        <a href="{{this.URI}}">
+                            <span class="value cc_value">{{this.productDescription}}</span>
+                        </a>
+                    </th>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/eachMapEntry}}
+    </script>
+
+    <script id="CKZ-ProductDetail-NameValueGroupedSection" type="text/template">
+        {{#eachMapEntry this.pageData}}
+        <div class="nvRow nvGroupRow cc_nv_group_row">
+            <h5 class="groupName cc_group_name">{{this.groupName}}</h5>
+            <table class="nvRow nvGroupRow cc_nv_group_row table table-striped table-condensed">
+                <tbody>
+                {{#each this}}
+                <tr class="nvRow cc_nv_row">
+                    <th>
+                        <span class="name cc_name1">{{this.name}}</span>
+                    </th>
+                    <th>
+                        <span class="value cc_value1">{{trim this.value}}</span>
+                    </th>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/eachMapEntry}}
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.tabSectionView.desktop.tmpl = 'CKZ-ProductDetail-TabContainer';
+            CCRZ.uiProperties.mediaSectionView.desktop.tmpl = 'CKZ-ProductDetail-MediaSection';
+            CCRZ.uiProperties.nameValGroupSectionView.desktop.tmpl = 'CKZ-ProductDetail-NameValueGroupedSection';
+
+            CCRZ.pubSub.on('view:productDetailView:refresh', function () {
+                var display = {!displayProductMedia};
+
+                if (display == false) {
+                    $("#mediaTabContent").hide();
+                    $("#mediaTab").hide();
+                }
+            });
+        });
+
+        Handlebars.registerHelper('trim', function (obj) {
+
+            if(obj === null) {
+                return null;
+            }
+            return obj.replace(/^0+/, '');
+        });
+    </script>
+
+
+</apex:component>

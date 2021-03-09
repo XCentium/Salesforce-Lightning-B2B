@@ -1,0 +1,31 @@
+<aura:component controller="Customer360Apex" implements="lightning:availableForFlowScreens,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="orderID" type="String" access="global"/>
+    <aura:attribute name="recentOrders" type="List" access="global"/>
+    <aura:attribute name="selectedId" type="String" access="global"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    <div class="slds-text-heading_small slds-grid slds-wrap slds-size_1-of-1 slds-p-top_small"> 
+        <div class="slds-text-heading_small slds-grid slds-wrap slds-size_1-of-1 slds-p-around_medium"> <lightning:icon iconName="utility:cart" size="x-small" class="slds-p-horizontal_small"/>Recent Purchases</div>
+        <!-- past 4 orders -->
+        <aura:iteration items="{!v.recentOrders}" var="order" >
+            <div class=" slds-size_1-of-4 slds-wrap slds-grid slds-p-horizontal_small " > 
+                <lightning:card class="slds-p-horizontal_small slds-size_1-of-1 slds-wrap slds-grid card-style">
+                    <div class="slds-size_1-of-1 slds-wrap slds-grid card-style">
+                        <div class="card-image slds-p-around_x-small slds-size_1-of-1 slds-grid slds-wrap slds-align_absolute-center" onclick="{!c.setCurrentId}" id="{!order.Id}" aura:id="{!order.Id}">
+                            <img src="{!order.Order_Image__c}" class="slds-size_1-of-1 slds-grid slds-wrap slds-align_absolute-center image-class slds-p-around_small" />
+                        </div>
+                        <div class="card-detail slds-p-around_x-small slds-size_1-of-1 slds-text-title_caps slds-clearfix slds-wrap order-detail ">
+                            <div class="slds-size_3-of-4 slds-text-title_caps slds-float_left slds-wrap" onclick="{!c.setCurrentId}" id="{!order.Id}" aura:id="{!order.Id}">{!order.Name}</div>
+                        </div>
+                        <div class="card-detail slds-p-around_x-small slds-size_1-of-1 slds-text-title_caps slds-clearfix slds-wrap order-detail ">
+                            <div class="card-amount slds-size_2-of-4 slds-text-body_small order-detail slds-text-title_caps slds-float_left slds-wrap" onclick="{!c.setCurrentId}" id="{!order.Id}" aura:id="{!order.Id}">${!order.TotalAmount}</div>
+                            <div class="slds-size_2-of-4 slds-text-body_small slds-float_right slds-wrap slds-grid slds-clearfix" onclick="{!c.setCurrentId}" id="{!order.Id}" aura:id="{!order.Id}"> 
+                                <lightning:formattedDateTime value="{!order.EffectiveDate}" year="2-digit" day="2-digit" month="2-digit"
+                                                             class="slds-size_1-of-1 slds-wrap slds-float_right formattedDate"/>
+                            </div>                            
+                        </div>               
+                    </div>
+                </lightning:card>
+            </div>
+        </aura:iteration>                
+    </div> 
+</aura:component>

@@ -1,0 +1,11 @@
+.THIS .invalidProduct{
+    background: #769ed9;
+    color: #fff;
+}
+
+.THIS .selectedProduct {
+    border: 2px solid #1589ee;
+}
+.THIS span.product {
+    padding-bottom: 5px;
+}

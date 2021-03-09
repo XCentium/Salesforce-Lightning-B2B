@@ -1,0 +1,295 @@
+<apex:page controller="FSLDemoToolsController" showheader="true" standardStylesheets="false" sidebar="false" showHeader="true" docType="html-5.0">
+                <div class="slds-tabs--default__content">  
+                        <div class="slds-align--absolute-center slds-size--2-of-3" style="font-size: larger;">
+                          PLEASE Note: The demo tools have been moved. Navigate to the Q Branch app and select the Demo Tools Tab. Scroll down to the Field Service Demo Builder option to gain access to the new tools.
+                        </div>
+                </div>
+ <!--  
+            <=== Resources ++>
+        <apex:includescript value="{!$Resource.FSL__angular150min}" />
+        <apex:includescript value="{!$Resource.FSLDemoToolsModule}" />
+        <=== / Resources ++>
+            <=== / Resources ++>
+        <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<===        <apex:slds /> ++>
+        <head>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNImkmz3Egi_Yx7ji4F8fg0J8FsNUGHXE&libraries=places"></script>
+            <style>
+                #map{
+                    width:100%;
+                    height:500px;
+                }
+                #address-input{
+                    background-color: #fff;
+                    padding: 0 11px 0 13px;
+                    width: 80%;
+                    height: 40px;
+                    font-size: 14px;
+                    border-color: red;
+                }
+
+                #geoCodeResponse{
+                    width: 100%;
+                    height: 35px;
+                    resize: none;
+                    background-color: white;
+                }
+                .tooltip{
+                    max-width: 100% !important;
+                }
+            </style>
+            <apex:slds />
+        </head>
+
+        <body class="slds-scope">
+            <div class="FSLDemoTools" ng-app="FSLDemoTools" ng-controller="FSLDemoToolsController" ng-init="init()">
+                <div class="slds-tabs--default">
+                    <ul class="slds-tabs--default__nav">
+                    <li class="slds-tabs--default__item slds-text-heading--label" ng-class="tabClasses[0]" ng-click="ChangeTab(0)">
+                            <a class="slds-tabs--default__link">How to Use</a>
+                        </li>
+                        <li class="slds-tabs--default__item slds-text-heading--label" ng-class="tabClasses[1]" ng-click="ChangeTab(1)">
+                            <a class="slds-tabs--default__link">Reset Data</a>
+                        </li>
+                        <li class="slds-tabs--default__item slds-text-heading--label" ng-class="tabClasses[2]" ng-click="ChangeTab(2)">
+                            <a class="slds-tabs--default__link">Location Mover</a>
+                        </li>
+                        <li class="slds-tabs--default__item slds-text-heading--label" ng-class="tabClasses[3]" ng-click="ChangeTab(3)">
+                            <a class="slds-tabs--default__link">Date Mover</a>
+                        </li>
+                        <li class="slds-tabs--default__item slds-text-heading--label" ng-class="tabClasses[4]" ng-click="ChangeTab(4)">
+                            <a class="slds-tabs--default__link">Timezone Mover</a>
+                        </li>
+                    </ul>
+
+                    <=== Start Working Spinner ++>
+                    <div class="slds-spinner_container ngcloak" ng-show="working">
+                        <div class="slds-spinner--brand slds-spinner slds-spinner--large" aria-hidden="false" role="alert">
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                    <===        End Working Spinner ++>
+
+        <=== Start Notifications ++>
+        <div class="slds-notify_container" ng-show="showSuccessNotification">
+          <div class="slds-notify slds-notify--toast slds-theme--success">
+            <button class="slds-button slds-button_success slds-text-heading--small " ng-click="showSuccessNotification=false;">{{successNotification}}</button>
+          </div>
+        </div>
+
+
+
+        <div class="slds-notify_container" ng-show="showErrorNotification">
+          <div class="slds-notify slds-notify--toast slds-theme--error">
+            <button class="slds-button slds-button_destructive slds-text-heading--small " ng-click="showErrorNotification=false;">{{errorNotification}}</button>
+          </div>
+        </div>
+        <=== End Notifications ++>
+
+
+                    <=== Start Warning Modal ++>
+                    <div ng-show="confirmMoveNotification" class="ngcloak">
+                        <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-open">
+                            <div class="slds-modal__container">
+                                <div class="slds-modal__header">
+                                    <h2 class="slds-text-heading--medium">Update Data</h2>
+                                    <p class="slds-m-top--x-small">Are you sure you want make these changes?<br/>
+                                    If something goes wrong this could corrupt the data.</p>
+                                </div>
+                                <div class="slds-modal__menu">
+                                <button class="slds-button slds-button--destructive" ng-click="startWorking()">I'm Sure, Go for it!</button>
+                                    <button class="slds-button slds-button--neutral" ng-click="confirmMoveNotification=false">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-backdrop slds-backdrop--open"></div>
+                    </div>
+                    <=== End Warning Modal ++>
+    
+<=== Start How to Tab ++>
+                <div class="slds-tabs--default__content" ng-show="showTab==0">  
+                        <div class="slds-align--absolute-center slds-size--2-of-3" style="font-size: larger;">
+                        <ol class="slds-list--ordered">
+                          <li><a ng-click="ChangeTab(1)">Reset and restore</a> the baseline demo data to the date you choose. All existing Service Appointments and their related Work Orders are deleted. You must run this step first and allow it to complete (approximately 5 minutes) before running the other steps. Your user must be in the Los Angeles Timezone and English(United States) locale. You can switch to your local timezone and locale after completion of this step.</li>
+                          <li><a ng-click="ChangeTab(2)">Move the location</a> of data to the location that is most relevant for the demo. This is especially important when using the mobile app.</li>
+                          <li><a ng-click="ChangeTab(3)">Move the dates</a> on the data to a later time. If a demo gets postponed or you want to run it again with preconfigured data.</li>
+                          <li><a ng-click="ChangeTab(4)">Update timezones</a> and the times on the data. All the baseline data is configured for Pacific Standard Time, when doing the demo in different timezones it's important to move to the relevant timezone.</li>
+                        </ol>
+                        </div>
+                </div>
+<=== End How to Tab ++>
+
+        <=== Start DataRestore Tab ++>
+                    <div id="tab-default-2" class="slds-tabs--default__content" ng-show="showTab==1">  
+                        <div class="slds-page-header slds-m-bottom--medium" role="banner">
+                            <div class="slds-media">
+                                <div class="slds-media__body">
+                                    <p class="slds-page-header__title slds-truncate slds-align-middle">Delete existing FSL data and restore original demo data</p>
+                                    <p class="slds-text-body--medium slds-page-header__info">All Service Appointments, Resource Absences and Capacities will be DELETED. Service Territories and Service Territory Members will be restored the their original locations.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-m-bottom--medium slds-popover slds-popover--tooltip slds-nubbin--bottom-left tooltip" role="tooltip" id="help" style="">
+                              <div class="slds-popover__body"> Always create demo data for the Monday on the week after the scheduled demo
+                            </div>
+                            </div>
+
+
+                            <label class="slds-form-element__label">Date to Restore the Demo Data</label>
+                            <div class="slds-form-element__control">
+                                <input id="text-input-01" class="slds-input" type="date" ng-model="dateForDataRestore" style="text-align:center;"/>
+                            </div>
+                        </div>
+                        <button class="slds-button slds-button--destructive slds-size--1-of-3 slds-m-top--medium slds-m-bottom--medium" id="restoreDataButton" ng-click="confirmMove('restore')" ng-disabled="working || dateForDataRestore==''">{{dataRestoreButtonStatus}}</button>
+                    </div>
+
+                    <===    End DataRestore Tab ++>
+
+                    <=== Location Mover Tab Start ++>
+                    <div id="tab-default-1" class="slds-tabs--default__content slds-show" ng-show="showTab==2">
+                        <===Start Info Banner++>
+                        <div class="slds-page-header slds-m-bottom--medium">
+                            <div class="slds-media">
+                                <div class="slds-media__body">
+                                    <p class="slds-page-header__title slds-truncate slds-align-middle">Geolocations will be updated to new location on:</p>
+                                    <p class="slds-text-body--medium slds-page-header__info">Service Appointments, Resource Absences, Service Territory Members and the Service Territory</p>
+                                    <p>&nbsp;</p>
+                                    <p class="slds-text-body--medium slds-page-header__info">Please use google maps first to obtain the lat/long of the new location. You will need to paste those values into the fields below.</p>                         
+                                    <p class="slds-text-body--medium slds-page-header__info">For example, the latitude and longitude for 1 Market St San Francisco is = 37.7940118,-122.397139.  Please enter 6 decimal places and the minus sign for negative numbers.</p>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <=== End Info Banner ++>
+
+                        <fieldset class="slds-form--compound">
+                            <div class="form-element__group">
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <label class="slds-form-element__label" for="select-01">Service Territory</label>
+                                        <div class="slds-form-element__control">
+                                            <div class="slds-select_container">
+                                                <select class="slds-select"  ng-options="location.Name for location in locations" ng-model="selectedLocation" ng-change="locationChange()">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <label class="slds-form-element__label">New Service Territory Name</label>
+                                        <div class="slds-form-element__control">
+                                            <input id="text-input-44" class="slds-input" type="text" ng-model="locationNameModel" />
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <label class="slds-form-element__label">New Latitude</label>
+                                        <div class="slds-form-element__control">
+                                            <input id="text-input-45" class="slds-input" type="double" ng-model="locationNewLatitude" />
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <label class="slds-form-element__label">New Longitude</label>
+                                        <div class="slds-form-element__control">
+                                            <input id="text-input-46" class="slds-input" type="double" ng-model="locationNewLongitude" />
+                                        </div>
+                                    </div>                                    
+                                  </div>
+                            </div>
+                        </fieldset>
+
+                        <button class="slds-button slds-button--destructive slds-align--absolute-center slds-size--1-of-3 slds-m-top--medium slds-m-bottom--medium" id="moveLocationButton" ng-click="confirmMove()" ng-disabled="working || locationNameModel=='' || selectedLocation==undefined || locationNewLatitude==0 || locationNewLongtitude==0">{{locationButtonStatus}}</button>
+
+                        <=== Map ++>
+                   <===     <input id="address-input" class="slds-input" type="text" placeholder="Enter Address Here First" ng-disabled="working" />
+++>
+                                  <div id="map"></div> 
+
+                    <===    <textarea id="geoCodeResponse" class="slds-textarea" ng-disabled="true">The selected address is: {{placehold}}  </textarea> ++>
+                    </div>
+                    <===End Location Mover Tab++>
+
+            <=== Date Mover Tab Start ++>
+                    <div id="tab-default-2" class="slds-tabs--default__content slds-show" ng-show="showTab==3">
+                        <===Start Info Banner++>
+                        <div class="slds-page-header slds-m-bottom--medium">
+                            <div class="slds-media">
+                                <div class="slds-media__body">
+                                    <p class="slds-page-header__title slds-truncate slds-align-middle">Number of days will be added to date fields on:</p>
+                                    <p class="slds-text-body--medium slds-page-header__info">Service Appointments, Resource Absences and Capacities</p>
+                                </div>
+                            </div>
+                        </div>
+                        <=== End Info Banner ++>
+
+                        <div class="slds-form-element slds-size--1-of-3">
+                            <label class="slds-form-element__label">Add Number of Days (Add or subtract 7 days or more)</label>
+                            <div class="slds-form-element__control">
+                                <input id="text-input-01" class="slds-input" type="number" ng-model="numofdaysModel" style="text-align:center;"/>
+                            </div>
+                        </div>
+                        <button class="slds-button slds-button--destructive slds-size--1-of-3 slds-m-top--medium slds-m-bottom--medium" id="moveDatesButton" ng-click="confirmMove('moveDates')" ng-disabled="working || numofdaysModel=='' || numofdaysModel==0">{{moveDatesButtonStatus}}</button>
+                    </div>
+                    </div>
+                    <===Date Mover Tab++>
+
+                    <=== Time Zone Tab Start ++>
+                    <div id="tab-default-2" class="slds-tabs--default__content slds-show" ng-show="showTab==4">
+                        <===Start Info Banner++>
+                        <div class="slds-page-header slds-m-bottom--medium">
+                            <div class="slds-media">
+                                <div class="slds-media__body">
+                                    <p class="slds-page-header__title slds-truncate slds-align-middle">Change the Timezone of the Service Territory</p>
+                                    <p class="slds-text-body--medium slds-page-header__info">Your User's timezone and the Service Territory timezone will be updated. Service Appointments and Resource Absences in that Service Territory will be adjusted</p>
+                                </div>
+                            </div>
+                        </div>
+                        <=== End Info Banner ++>
+
+                <fieldset class="slds-form--compound">
+                            <div class="form-element__group">
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <label class="slds-form-element__label" for="select-01">Service Territory</label>
+                                        <div class="slds-form-element__control">
+                                            <div class="slds-select_container">
+                                                <select class="slds-select"  ng-options="location.Name for location in locations" ng-model="selectedLocationTZmodel" ng-change="locationChangeTZ()">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <label class="slds-form-element__label">Timezone<===  for Related Operating Hours: {{selectedLocationTZmodel.OperatingHoursName}} ++></label>
+                                        <div class="slds-form-element__control">
+                                            <select class="slds-select"  ng-options=" timezone.label for timezone in timezones track by timezone.value" ng-model="locationTZModel" ng-change="TimezoneChanged()">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                            <button class="slds-button slds-button--destructive slds-size--1-of-3 slds-align--absolute-center slds-m-top--medium slds-m-bottom--medium" id="moveHoursButton" ng-click="confirmMove('moveTZ')" ng-disabled="working || !tzChanged">{{moveTZButtonStatus}}</button>
+                            </div>
+                        </fieldset>
+</div>
+<div style="    text-align: right;font-size: x-small;">V2</div>
+</div>
+                    <===Time Zone Mover Tab++>
+
+        </body>
+        </html>
+
+        <script>
+            var RemoteActions = {
+                GetLocations: '{!$RemoteAction.FSLDemoToolsController.GetLocations}',
+                ChangeLocation: '{!$RemoteAction.FSLDemoToolsController.ChangeLocation}',
+                MoveDates: '{!$RemoteAction.FSLDemoToolsController.MoveDates}',
+                UpdateTimezones: '{!$RemoteAction.FSLDemoToolsController.UpdateTimezones}',
+                RestoreData: '{!$RemoteAction.FSLDemoToolsController.RestoreData}',
+                GetUserTz: '{!$RemoteAction.FSLDemoToolsController.GetUserTz}',
+                GetOperatingHours: '{!$RemoteAction.FSLDemoToolsController.GetOperatingHours}',
+                GetTimeZones: '{!$RemoteAction.FSLDemoToolsController.GetTimeZones}'
+            };
+        </script> -->
+</apex:page>

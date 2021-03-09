@@ -1,0 +1,30 @@
+<apex:page showHeader="false" sidebar="false" applyBodyTag="false" applyHtmlTag="false" >
+    
+    <style>
+        .timeline {
+            width: 100%;
+        }
+    </style>
+    
+    <a class="twitter-timeline" 
+       href="https://twitter.com/{!$CurrentPage.parameters.username}" 
+       data-widget-id="{!$CurrentPage.parameters.widgetId}"
+       data-screen-name="{!$CurrentPage.parameters.username}"
+       data-chrome="noheader nofooter noborders noscrollbar">
+        Tweets by @{!$CurrentPage.parameters.username}
+    </a>
+
+
+    <script>
+        !function(d,s,id){ 
+            var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+            if(!d.getElementById(id)){
+                js=d.createElement(s);
+                js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js,fjs);
+            }
+        }
+        (document,"script","twitter-wjs");
+    </script>
+    
+</apex:page>

@@ -1,0 +1,4 @@
+<design:component>
+	<design:attribute name="ContactFirstName" default="" label="Contact First Name" description="" />
+    <design:attribute name="ContactLastName" default="" label="Contact Last Name" description="" />
+</design:component>

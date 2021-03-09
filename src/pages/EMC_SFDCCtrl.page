@@ -1,0 +1,266 @@
+<apex:page contentType="application/javascript">
+    function SFDCCtrl($http){
+        const self = this;
+        const _version = 'v45.0'
+        const _base = window.location.origin + '/services/data/' + _version;
+        const _config = {'headers': {"Authorization": "Bearer "+session, "Content-Type": "application/json"}}
+        const verbose = false;
+        
+        this.query = function(queryString){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                config['params'] = {
+                    'q': queryString
+                }
+                
+                $http.get(_base + '/query/', config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:query', query: queryString, res: res})
+                        resolve(res)
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:query', query: queryString, err:err})
+                        reject(err)
+                    }
+                )
+            })
+        }
+    
+        this.toolingQuery = function(queryString){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                config['params'] = {
+                    'q': queryString
+                }
+                
+                $http.get(_base + '/tooling/query/', config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:toolingQuery', query: queryString, res: res})
+                        resolve(res)
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:toolingQuery', query: queryString, err:err})
+                        reject(err)
+                    }
+                )
+            })
+        }
+
+        this.get = function(path){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                let route = _base + path;
+                
+                $http.get(route, config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:get', route: route, res: res})
+                        resolve(res);
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'ERROR:SFDC:get', route: route, err: err})
+                        reject(err);
+                    }
+                )
+            })
+        }
+    
+        this.getPath = function(path){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                
+                $http.get(path, config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:get', route: route, res: res})
+                        resolve(res);
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'ERROR:SFDC:get', route: route, err: err})
+                        reject(err);
+                    }
+                )
+            })
+        }
+    
+        this.getFromRoot = function(path){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                let route = window.location.origin + path;
+                
+                $http.get(route, config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:get', route: route, res: res})
+                        resolve(res);
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'ERROR:SFDC:get', route: route, err: err})
+                        reject(err);
+                    }
+                )
+            })
+        }
+    
+
+        this.post = function(path, data){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                let route = _base + path;
+                
+                $http.post(route, config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:get', route: route, res: res})
+                        resolve(res);
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'ERROR:SFDC:get', route: route, res: res})
+                        reject(err);
+                    }
+                )
+            })
+        }
+
+        this.patch = function(path, data){
+
+        }
+
+        this.put = function(path, data){
+            
+        }
+
+        this.delete = function(sobject, recordId){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                let route = _base + '/sobjects/' + sobject + '/' + recordId
+                
+                
+                $http.delete(route, config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:delete', route: route, res: res})
+                        resolve(res)
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'ERROR:SFDC:delete', route: route, err:err})
+                        reject(err)
+                    }
+                )
+            })
+        }
+
+        this.getRecord = function(sobj, recordId, fields){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                let route = _base + '/sobjects/' + sobj + '/' + recordId;
+                fields = fields.join(',');
+                config['params'] = {
+                    'fields': fields
+                }
+                
+                $http.get(route, config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:query', route: route, res: res})
+                        resolve(res)
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'ERROR:SFDC:query', route: route, err:err})
+                        reject(err)
+                    }
+                )
+            })
+        }
+        
+        this.upsert = function(sobject, record, unupdateableField, unwriteableFields){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                let route = _base + '/sobjects/' + sobject;
+                let method = '';
+                let rec = Object.assign({}, record);
+
+                if(rec.hasOwnProperty('Id')){
+                    route += '/' + rec.Id;
+                    delete rec['Id'];
+                    
+                    unupdateableField.map(function(unupdateableField){
+                        if(rec.hasOwnProperty(unupdateableField)) delete rec[unupdateableField];
+                    })
+                    
+                    method = 'patch';
+                } else {
+                    unwriteableFields.map(function(unWriteableField){
+                        if(rec.hasOwnProperty(unWriteableField)) delete rec[unWriteableField];
+                    })
+                    method = 'post'
+                }
+                
+                //delete all rest attributes
+                if(rec.hasOwnProperty('attributes')){
+                    delete rec['attributes'];
+                }
+
+                rec = angular.toJson(rec);
+                
+                $http[method](route, rec, config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:upsert', route: route, res: res})
+                        resolve(res)
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'ERROR:SFDC:upsert', route: route, err:err})
+                        reject(err)
+                    }
+                )
+            })
+        }
+
+        this.upsertMultiple = function(sobject, records, unupdateableField, unwriteableFields){
+            let promises = [];
+
+            records.map(function(record){
+                promises.upsert(self.delete(sobject, recordId, unupdateableField, unwriteableFields))
+            })
+            
+            return Promise.all(promises);
+        }
+
+
+        this.deleteMultiple = function(sobject, recordIds){
+            let promises = [];
+
+            recordIds.map(function(recordId){
+                promises.push(self.delete(sobject,recordId))
+            })
+
+            return Promise.all(promises);
+        }
+
+        this.massInsert = function(records){
+            return new Promise(function(resolve,reject){
+                let config = _config;
+                let route = _base + '/composite/sobjects';
+                let body = {
+                    allOrNone: false,
+                    records: records
+                };
+
+                $http.post(route, body, config)
+                .then(
+                    function(res){
+                        if(verbose) console.log({message: 'SUCCESS:SFDC:upsert', route: route, res: res})
+                        resolve(res)
+                    },
+                    function(err){
+                        if(verbose) console.log({message: 'ERROR:SFDC:upsert', route: route, err:err})
+                        reject(err)
+                    }
+                )
+            })
+        }
+    }
+</apex:page>

@@ -1,0 +1,52 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+	<h2 class="h2">Earn Your Status</h2>
+    <div class="third">
+        <div class="padding">
+        	<img src='{!$Resource.MLMChart2}' class="chart" />
+        </div>
+    </div>
+    <div class="twothird">
+       <div class="padding">
+           <div class="row">
+                <h4 class="title">Estimated SV</h4>
+                <span class="value">105</span>
+           </div>
+           <div class="row">
+                <h4 class="title">Estimated PSQV</h4>
+               <span class="value">4436</span>
+           </div>
+           <div class="row">
+                <h4 class="title">Next Steps</h4>
+                <strong>Hit 100 SV to get commissions for this month. Hit 600 PSQV to qualify for Gold.</strong>
+           </div>
+       </div> 
+    </div>
+    <div class="clear"></div>
+    
+    <h2 class="h2">CURRENT PROGRESS</h2>
+    <div class="third">
+        <div class="padding">
+        	<img src='{!$Resource.MLMChart1}' class="chart" />
+        </div>
+    </div>
+	<div class="twothird">
+       <div class="padding">
+           <div class="row">
+                <h4 class="title">Qualification Title</h4>
+                <strong>SILVER</strong>
+                <span class="value">Current </span>
+           </div>
+           <div class="row">
+                <h4 class="title">Highest Title Ever</h4>
+                <strong>PLATINUM</strong>
+                <span class="value">04/2018</span>
+           </div>
+           <div class="row">
+                <h4 class="title">Paid-as Title</h4>
+                <strong>GOLD</strong>
+                <span class="value">06/2018</span>
+           </div>
+       </div> 
+    </div>
+    <div class="clear"></div>
+</aura:component>

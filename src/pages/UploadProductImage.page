@@ -1,0 +1,12 @@
+<apex:page sidebar="true" showHeader="true" standardController="Product2" extensions="UploadProductImageController">
+    <apex:form >
+        <apex:sectionHeader title="Set Product Image" subtitle="{!Product2.Name}"/>
+        <apex:pageBlock title="Set Product Image">
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Save Image" action="{!upsertImage}"/>
+                <apex:commandButton value="Cancel" action="{!Cancel}"/>
+            </apex:pageBlockButtons>
+            <apex:inputFile value="{!fileData}" fileName="{!fileName}" contentType="{!fileContentType}"></apex:inputFile>
+        </apex:pageBlock>
+    </apex:form> 
+</apex:page>

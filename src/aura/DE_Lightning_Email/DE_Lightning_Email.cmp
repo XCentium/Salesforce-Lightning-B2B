@@ -1,0 +1,81 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:availableForFlowScreens" access="global" controller="DE_EmailTemplateClx">
+    <aura:attribute type="String" name="TemplateName" />
+    <aura:attribute type="EmailTemplate[]" name="templates"/>
+    <aura:attribute type="String" name="caseid" />
+    <aura:attribute type="String" name="contactid"  />
+    <aura:attribute type="String" name="templateId" />
+    <aura:attribute type="string" name="TemplateBody" default="" />
+    <aura:attribute name="mailDetails" type="object"/>
+    <aura:attribute type="string" name="toAddress"/>
+    <aura:attribute type="String" name="responseDetail"/>
+    <aura:attribute type="boolean" name="myCheckbox"/>
+    <aura:attribute type="boolean" name="saveDraft" default="true"/>
+    <aura:attribute type="boolean" name="toggleDisable" default="true"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:handler name="change" value="{!v.caseid}" action="{!c.doInit}"/>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col" style="max-width: 60%;">
+            <span> 
+                <lightning:card  title="{!v.TemplateName}">
+                    <aura:set attribute="actions">
+                        <lightning:button label="Save Draft" onclick="{!c.createFD}" disabled="{!v.saveDraft}"/>
+                    </aura:set>
+                    <p class="slds-p-horizontal_small">
+                        <lightning:select aura:id="select" name="select" label="Select Letter Template"  onchange="{!c.onChange}">
+                            <option text="Select" value=""/>
+                            <aura:iteration items="{!v.templates}" var="option">
+                                <option text="{!option.Name}" value="{!option.Id}"/>
+                            </aura:iteration>
+                        </lightning:select>
+                        <lightning:inputRichText value="{!v.TemplateBody}" placeholder="Please select a letter template"/>
+                    </p>
+                </lightning:card>
+            </span>
+        </div>
+        <div class="slds-col">
+            <span>
+                <lightning:card title="Enclosures and Reimbursements">
+                    <lightning:input type="toggle"
+                                     label="Add Coupon/Bank Card?"
+                                     name="toggle"
+                                     checked="{!v.myCheckbox}"
+                                     onchange="{!c.displayFC}"
+                                     disabled="{!v.toggleDisable}"
+                                     class="mytoggle"
+                                     messageToggleInactive="Please save draft"
+                                     />
+                    
+                    <p class="slds-p-horizontal_small">
+                        <aura:if isTrue="{!v.myCheckbox}">
+                            <lightning:recordEditForm
+                                                     
+                                                      onsubmit="{!c.handleSubmit}"
+                                                      onsuccess="{!c.handleSuccess}"
+                                                      recordId="{!v.responseDetail}"
+                                                      objectApiName="Response_Detail__c">
+                                <!-- the messages component is for error messages -->
+                                <lightning:messages />
+                                <div class="myCheckbox">
+                               		<lightning:inputField fieldName="Product_Reimbursement__c"/>
+                                </div>
+                                <lightning:inputField fieldName="Bank_Card_Amount__c" />
+                                <lightning:inputField fieldName="Coupon_Type__c" />
+                                
+                                <lightning:inputField fieldName="Other_Enclosures__c" />
+                                 
+                                
+                                <div class="slds-m-top_medium">
+                                    <lightning:button disabled="{!v.disabled}"  type="submit" name="save" label="Save" />
+                                </div>
+                            </lightning:recordEditForm>
+                            
+                        </aura:if>
+                    </p>
+                </lightning:card></span>
+        </div>
+        
+    </div>
+    
+    
+    
+</aura:component>

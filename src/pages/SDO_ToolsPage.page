@@ -1,0 +1,286 @@
+<apex:page controller="SDO_Tools" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" showHeader="false">
+	<!--
+	<apex:composition template="SDO_ToolsLayout">
+        <apex:define name="_toolspage">
+        -->
+        	<div class="page-content" data-tab="home">
+        		 <p>
+                    Each of these tools help you set up your SDO in a different way. Some of them require you to authenticate to our heroku app before using them. If you haven't already, 
+
+                    <span style="cursor:pointer;" id="authenticate" class=" navLink btn-green" href="https://sdo-tools.herokuapp.com/auth/salesforce?returnURL=/auth/successful" data-search="authenticate" data-name="Authenticate" data-width="" data-height=""  >
+                            <span>Authenticate Here.</span>
+                    </span>
+
+                    Click on a tile to learn more about the tool you're curious about.
+                </p>
+                <div >
+        			<h3>Top Tools</h3>
+                    <div class="tiles">
+                    <apex:repeat value="{!favorites}" var="t">
+                        <div id="{!t.id}" class="navLink tile top {!IF(len(t.name) > 25,'double','')}"  href="{!t.url__c}" data-search="{!t.Name}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}" >
+                            <!-- <apex:image styleclass="gold007" value="{!$Resource.gold007}"/> -->
+                            <div class="tile-body">
+                                <i class="fa {!IF(t.fa_icon_name__c != null,t.fa_icon_name__c,'fa-gear')}"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    <span style="cursor:pointer;">
+                                        {!t.Name} 
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:repeat>
+                    </div>
+
+        		</div>
+
+                <!-- 
+                <div >
+                    <h3>Most Popular Demo Components</h3>
+                    <div class="tiles">
+                    <apex:repeat value="{!favorites}" var="t">
+                        <div id="{!t.id}" class="navLink tile dc {!IF(len(t.name) > 25,'double','')}"  href="{!t.url__c}" data-search="{!t.Name}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}" >
+                            <div class="tile-body">
+                                <i class="fa {!IF(t.fa_icon_name__c != null,t.fa_icon_name__c,'fa-gear')}"></i>
+                            </div>
+                            <div class="tile-object">
+                                <div class="name">
+                                    <span style="cursor:pointer;">
+                                        {!t.Name} 
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:repeat>
+                    </div>
+                </div>
+                -->
+
+        		<div>
+                
+
+	        		<h3>
+	                    Sales Cloud Tools
+	                </h3>
+	                <div class="tiles">
+	                	<apex:repeat value="{!salesTools}" var="t">
+	                		<div id="{!t.id}" class="navLink tile {!IF(len(t.name) > 25,'double','')}"  href="{!t.url__c}" data-search="{!t.Name}" data-cloud="{!t.product_cloud__c}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}" >
+	                			<div class="tile-body">
+	                				<i class="fa {!IF(t.fa_icon_name__c != null,t.fa_icon_name__c,'fa-gear')}"></i>
+	                			</div>
+	                			<div class="tile-object">
+	                				<div class="name">
+	                					<span style="cursor:pointer;">
+                                            {!t.Name} 
+                                        </span>
+	                				</div>
+	                			</div>
+	                		</div>
+	                	</apex:repeat>
+	                </div>
+                    <h3>
+                        Service Cloud Tools
+                    </h3>
+                    <div class="tiles">
+                        <apex:repeat value="{!serviceTools}" var="t">
+                            <div id="{!t.id}" class="navLink tile {!IF(len(t.name) > 25,'double','')}"  href="{!t.url__c}" data-search="{!t.Name}" data-cloud="{!t.product_cloud__c}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}" >
+                                <div class="tile-body">
+                                    <i class="fa {!IF(t.fa_icon_name__c != null,t.fa_icon_name__c,'fa-gear')}"></i>
+                                </div>
+                                <div class="tile-object">
+                                    <div class="name">
+                                        <span style="cursor:pointer;">
+                                            {!t.Name} 
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:repeat>
+                    </div>
+                    <apex:outputPanel rendered="{!marketingTools.size > 0}">
+                        <h3>
+                            Marketing Cloud Tools
+                        </h3>
+                        <div class="tiles">
+                            <apex:repeat value="{!marketingTools}" var="t">
+                                <div id="{!t.id}" class="navLink tile {!IF(len(t.name) > 25,'double','')}"  href="{!t.url__c}" data-search="{!t.Name}" data-cloud="{!t.product_cloud__c}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}" >
+                                    <div class="tile-body">
+                                        <i class="fa {!IF(t.fa_icon_name__c != null,t.fa_icon_name__c,'fa-gear')}"></i>
+                                    </div>
+                                    <div class="tile-object">
+                                        <div class="name">
+                                            <span style="cursor:pointer;">
+                                                {!t.Name} 
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:repeat>
+                        </div>
+                    </apex:outputPanel>
+                    <h3>
+                        Platform Tools
+                    </h3>
+                    <div class="tiles">
+                        <apex:repeat value="{!platformTools}" var="t">
+                            <div id="{!t.id}" class="navLink tile {!IF(len(t.name) > 25,'double','')}"  href="{!t.url__c}" data-search="{!t.Name}" data-cloud="{!t.product_cloud__c}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}" >
+                                <div class="tile-body">
+                                    <i class="fa {!IF(t.fa_icon_name__c != null,t.fa_icon_name__c,'fa-gear')}"></i>
+                                </div>
+                                <div class="tile-object">
+                                    <div class="name">
+                                        <span style="cursor:pointer;">
+                                            {!t.Name} 
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:repeat>
+                    </div>
+                    <h3>
+                        Analytics Cloud Tools
+                    </h3>
+                    <div class="tiles">
+                        <apex:repeat value="{!analyticsTools}" var="t">
+                            <div id="{!t.id}" class="navLink tile {!IF(len(t.name) > 25,'double','')}"  href="{!t.url__c}" data-search="{!t.Name}" data-cloud="{!t.product_cloud__c}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}" >
+                                <div class="tile-body">
+                                    <i class="fa {!IF(t.fa_icon_name__c != null,t.fa_icon_name__c,'fa-gear')}"></i>
+                                </div>
+                                <div class="tile-object">
+                                    <div class="name">
+                                        <span style="cursor:pointer;">
+                                            {!t.Name} 
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:repeat>
+                    </div>
+                    <h3>
+                        Community Cloud Tools
+                    </h3>
+                    <div class="tiles">
+                        <apex:repeat value="{!communityTools}" var="t">
+                            <div id="{!t.id}" class="navLink tile {!IF(len(t.name) > 25,'double','')}"  href="{!t.url__c}" data-search="{!t.Name}" data-cloud="{!t.product_cloud__c}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}" >
+                                <div class="tile-body">
+                                    <i class="fa {!IF(t.fa_icon_name__c != null,t.fa_icon_name__c,'fa-gear')}"></i>
+                                </div>
+                                <div class="tile-object">
+                                    <div class="name">
+                                        <span style="cursor:pointer;">
+                                            {!t.Name} 
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:repeat>
+                    </div>
+                    <h3>
+                        Other Tools
+                    </h3>
+                    <div class="tiles">
+                        <apex:repeat value="{!otherTools}" var="t">
+                            <div id="{!t.id}" class="navLink tile {!IF(len(t.name) > 25,'double','')}"  href="{!t.url__c}" data-search="{!t.Name}" data-cloud="{!t.product_cloud__c}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}" >
+                                <div class="tile-body">
+                                    <i class="fa {!IF(t.fa_icon_name__c != null,t.fa_icon_name__c,'fa-gear')}"></i>
+                                </div>
+                                <div class="tile-object">
+                                    <div class="name">
+                                        <span style="cursor:pointer;">
+                                            {!t.Name} 
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:repeat>
+                    </div>
+                </div>
+
+
+
+        	</div>
+        	<script>
+        		/*
+                sales cloud     :: #5eb4ff
+                service cloud   :: #8b2ecd
+                marketing cloud :: #f4650a
+                platform        :: #171c8f
+                analytics cloud :: #009a7e
+                community cloud :: #f5c400
+                other :: #E74C3C
+                */
+
+
+
+        		$(document).ready(function(){
+        			var tiles = document.getElementsByClassName('tile');
+        			var i;
+                    console.log($('.tile[data-cloud]').attr('data-cloud'));
+                    $('.tile[data-cloud]').each(function(i,v) {
+                       $(v).attr('data-cloud',$(v).attr('data-cloud').toLowerCase()); 
+
+                    });
+                    
+                    
+                    
+                    $('.tile').each(function(i,v) {
+                       var cloudName = $(v).attr("data-cloud");
+                       if(cloudName == "sales cloud"){
+                        $(v).css('background-color', '#5eb4ff');
+                       } else if(cloudName == "service cloud"){
+                        $(v).css('background-color', '#8b2ecd');
+                       } else if(cloudName == "marketing cloud"){
+                        $(v).css('background-color', '#f4650a');
+                       }  else if(cloudName == "platform"){
+                        $(v).css('background-color', '#171c8f');
+                       }  else if(cloudName == "analytics cloud"){
+                        $(v).css('background-color', '#009a7e');
+                       }  else if(cloudName == "community cloud"){
+                        $(v).css('background-color', '#f5c400');
+                       }  else {
+                        $(v).css('background-color', '#E74C3C');
+                       }
+                    });
+
+
+
+
+                    
+        			for(i=0;i<tiles.length;i++){
+        				var t = tiles[i];
+        				if(t.className.indexOf('cloud') != -1) {
+                           //do nothing! wahooo
+                           t.style.background = '#fff';
+                        } else if (t.className.indexOf('top') != -1){   
+                            t.style.background = '#333';
+                        } else if (t.className.indexOf('dc') != -1){   
+                            t.style.background = '#95a5a6';
+                        }else {
+                            //t.className += " " + getColor(i);  
+                        }
+                        
+        			}
+                    
+        		});
+
+        		function getColor(i){
+        			// 7 colors
+        			var colors = [
+	        			'bg-green',
+		        		'bg-red-intense',
+		        		'bg-green-meadow',
+		        		'bg-purple-studio',
+		        		'bg-blue-madison',
+		        		'bg-yellow-lemon',
+		        		'bg-blue-steel'
+        			];
+        			var index = i%7;
+        			return colors[index];
+        		}
+        	</script>
+       <!-- 
+        </apex:define>
+    </apex:composition>
+    -->
+</apex:page>

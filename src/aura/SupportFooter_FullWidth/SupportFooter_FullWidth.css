@@ -1,0 +1,49 @@
+.THIS {
+        
+            color: #393939;
+        }
+
+        .THIS .wrapper {
+           
+            margin: 0 auto;
+        }
+
+        .THIS .slds-text-heading_small {
+            font-weight: bold;
+            color: rgb(9, 127, 179);
+        }
+
+        .THIS .icon {
+            background: #ffffff;
+            width: 45px;
+            height: 45px;
+            line-height: 46px;
+            font-size: 24px;
+            text-align: center;
+            border-radius: 50%;
+            margin: 0 auto;
+            color: rgb(9, 127, 179);
+            transition: all ease .3s;
+
+        }
+
+ .THIS .icon:hover,  .THIS .icon:hover a {
+            background: #D6F0FA;
+            color: #ffffff !important;
+        }
+
+
+
+        .THIS .open-ticket,
+        .THIS .call-us {
+            border-right: 1px solid #bbbbbb;
+        }
+
+        @media (max-width: 48em) {
+
+            .THIS .open-ticket,
+            .THIS .call-us {
+                border-right: 0px solid #ABABAB;
+            }
+
+        }

@@ -1,0 +1,84 @@
+<template>
+	<div class="slds-grid slds-gutters slds-wrap">
+		<!-- CARD NAME -->
+		<div class="slds-col slds-size_1-of-1">
+			<lightning-input
+				type="text"
+				label="Name on Card"
+				value={nameOnCard}
+				placeholder="Enter a name..."
+				onchange={handleNameChange}
+			></lightning-input>
+		</div>
+
+		<!-- CARD TYPE -->
+		<div class="slds-col slds-size_1-of-1">
+			<lightning-combobox
+				name="cardType"
+				label="Card Type"
+				value={cardType}
+				placeholder="Select a card type..."
+				options={ccOptions}
+				onchange={handleCardTypeChange}
+			></lightning-combobox>
+		</div>
+
+		<!-- CARD NUMBER -->
+		<div class="slds-col slds-size_2-of-3">
+			<lightning-input
+				type="text"
+				label="Card Number"
+				value={cardNumber}
+				placeholder="Enter a card number..."
+				onchange={handleCardNumberChange}
+			></lightning-input>
+		</div>
+
+		<!-- CVV -->
+		<div class="slds-col slds-size_1-of-3">
+			<lightning-input
+				type="text"
+				label="CVV"
+				value={cvv}
+				placeholder="CVV"
+				onchange={handleCVVChange}
+			></lightning-input>
+		</div>
+
+		<!-- EXP MONTH -->
+		<div class="slds-col slds-size_1-of-2">
+			<lightning-combobox
+				name="expiryMonth"
+				label="Expiry Month"
+				value={expiryMonth}
+				options={months}
+				placeholder="MM"
+				onchange={handleExpiryMonthChange}
+			></lightning-combobox>
+		</div>
+
+		<!-- EXP YEAR -->
+		<div class="slds-col slds-size_1-of-2">
+			<lightning-combobox
+				name="expiryYear"
+				label="Expiry Year"
+				value={expiryYear}
+				options={years}
+				placeholder="YYYY"
+				onchange={handleExpiryYearChange}
+			></lightning-combobox>
+		</div>
+
+		<!-- BILLING ADDRESS -->
+		<div class="slds-col slds-size_1-of-1">
+			<lightning-combobox
+				name="billingAddress"
+				label="Billing Address"
+				value={selectedAddress}
+				options={options}
+				onchange={handleBillingAddressChange}
+			></lightning-combobox>
+		</div>
+
+	</div>
+</template>

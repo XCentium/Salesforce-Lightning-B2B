@@ -1,0 +1,38 @@
+<aura:component controller="FIDO" >
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="OrgId" type="String" />
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="UserEmail" type="String"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="fullwidthWrapper">
+        <aura:if isTrue="{!v.ScreenChoice == 'Updates'}">
+            <c:FIDO_SingleRecord_Announcement OrgName="{!v.OrgName}" UserEmail="{!v.UserEmail}" IndustryName="{!v.IndustryName}" Industry="{!v.Industry}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Settings="{!v.Settings}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.ScreenChoice == 'Personas'}">
+            <c:FIDO_SingleRecord_Personas OrgName="{!v.OrgName}" UserEmail="{!v.UserEmail}" IndustryName="{!v.IndustryName}" Industry="{!v.Industry}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Settings="{!v.Settings}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.ScreenChoice == 'Scripts'}">
+            <c:FIDO_SingleRecord_Scripts OrgName="{!v.OrgName}" UserEmail="{!v.UserEmail}" IndustryName="{!v.IndustryName}" Industry="{!v.Industry}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Settings="{!v.Settings}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.ScreenChoice == 'Partners'}">
+            <c:FIDO_SingleRecord_Partners OrgName="{!v.OrgName}" UserEmail="{!v.UserEmail}" IndustryName="{!v.IndustryName}" Industry="{!v.Industry}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Settings="{!v.Settings}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.ScreenChoice == 'Features'}">
+            <c:FIDO_SingleRecord_OrgFeature OrgName="{!v.OrgName}" UserEmail="{!v.UserEmail}" IndustryName="{!v.IndustryName}" OrgId="{!v.OrgId}" Industry="{!v.Industry}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Settings="{!v.Settings}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.ScreenChoice == 'Customizations'}">
+            <c:FIDO_SingleRecord_Customizations OrgName="{!v.OrgName}" UserEmail="{!v.UserEmail}" IndustryName="{!v.IndustryName}" Industry="{!v.Industry}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Settings="{!v.Settings}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.ScreenChoice == 'Resources'}">
+            <c:FIDO_SingleRecord_Resources  Industry="{!v.Industry}" UserEmail="{!v.UserEmail}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Settings="{!v.Settings}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.ScreenChoice == 'Videos'}">
+            <c:FIDO_SingleRecord_Videos OrgName="{!v.OrgName}" UserEmail="{!v.UserEmail}" IndustryName="{!v.IndustryName}" Industry="{!v.Industry}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Settings="{!v.Settings}"/>
+        </aura:if>
+    </div> 
+</aura:component>

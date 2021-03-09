@@ -1,0 +1,10 @@
+<design:component label="Platform Events - Chart">
+ <design:attribute name="title" label="Chart Title" default="Monitor Events" />
+     <design:attribute name="eventName" label="Platform Event Name" required="true"  datasource="apex://rm_EventDesignPicklist"/>
+    <design:attribute name="deviceId" label="Device Key Field" required="false" default=""/>
+    <design:attribute name="selectedField" label="Platform Event Field"  />
+    <design:attribute name="showHistorical" label="Show Historical Data" />
+    <design:attribute name="height" label="Component Height"  default="300px"/>
+     <design:attribute name="color" label="Chart Color"  default="rgba(15, 8, 200, 0.4)"/>
+    <design:attribute name="objectName" label="Custom Object Name (Optional)" default=""/>
+</design:component>

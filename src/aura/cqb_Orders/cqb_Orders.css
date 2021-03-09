@@ -1,0 +1,14 @@
+.THIS .recordButton:focus{
+    outline:none !important;
+    box-shadow:none !important;
+}
+.THIS h3{
+    font-size:16px;
+    font-weight:bold;
+}
+.THIS.center{
+    text-align:center;
+}
+.THIS.padding{
+    padding:20px;
+}

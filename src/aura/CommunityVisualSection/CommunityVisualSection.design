@@ -1,0 +1,16 @@
+<design:component label="Community Visual Section">
+	<design:attribute name="Title1" label="Section Title" description="Enter the title text you want to appear in the block" />
+    <design:attribute name="Link1" label="Button Link" description="Enter in the target url for the button. For internal links only enter what follows the '/s/'. ('https://sdodemo-main-14e454a4fb6.force.com/audiophiles/s/groups' becomes 'groups'). For external links enter in the entire url (ex: 'https://www.google.com/')"/>
+    <design:attribute name="buttonText" label="Button Text" description="What would you like the text in the button to be?" default="Learn More"/>
+    <design:attribute name="Content1" label="Content" description="Enter the text you'd like to display in the block."/>
+    
+    <design:attribute name="boxpadding" label="Box Padding" description="How much padding would you like inside your block? Default is 40" default="40"/>
+	<design:attribute name="titleColor" label="Title Text Color" description="What color would you like your title text to be? White: #ffffff | Black #000000" default="#ffffff"/>
+	<design:attribute name="textColor" label="Text Color" description="What color would you like your text to be? White: #ffffff | Black #000000" default="#ffffff"/>
+    
+    
+    <design:attribute name="Image1" label="Static Resource Background Image" description="After uploading your desired image as a static resource enter the name of the resource here."/>
+    <design:attribute name="ExternalImage" label="External Background Image" description="Reference an external image here for your background image. Leave the Static Resource blank if you input here."/>
+    <design:attribute name="backgroundColor" label="Background Color" description="What would you like the background color of the block to be? White: #ffffff | Black #000000" default="#000000"/>
+	<design:attribute name="backgroundImageOpacity" label="Background Image Opacity" description="Do you want to fade the image? Fully Shown: 1 | Not Show: 0" default="0.5"/>
+</design:component>

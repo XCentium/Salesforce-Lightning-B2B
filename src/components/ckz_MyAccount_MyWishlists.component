@@ -1,0 +1,230 @@
+<!--
+ - Created by brandon.rogers on 1/28/19.
+ -->
+
+<apex:component id="ckz_MyAccount_MyWishlists">
+
+    <script id="CKZ-MyAccount-MyWishlists" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_mywishlist m-t-1">
+            <div class="panel-body MyAccount_MyWishlists_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_MyWishlist'}}</h2>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <button type="button" class="btn btn-default btn-sm createTemplate cc_create_template">
+                            {{pageLabelMap 'Action_CreateWishlist'}}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="panel-body MyAccount_MyWishlists">
+
+                <div class="orderPaginationSec"></div>
+
+                <div class="table-responsive">
+                    <table id="cartTable" class="table table-hover cc_table cc_mywishlist_table">
+                        <thead>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_name">{{pageLabelMap 'MyAccount_Name'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_date">{{pageLabelMap 'MyCartsInc_LastUpdate'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_active">{{pageLabelMap 'Heading_Active'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_actions">{{pageLabelMap 'MyCartsInc_Actions'}}</span>
+                        </th>
+                        </thead>
+                        <tbody>
+                        {{#each this}}
+                        <tr class="cc_table_row">
+                            <td class="cc_table_col">
+                                <a href="#" data-id="{{sfid}}" class="gotoDetails cc_goto_details">{{name}}</a>
+                            </td>
+                            <td class="cc_table_col">
+                                <span class="cc_col_date">{{lastModifiedDateStr}}</span>
+                            </td>
+                            <td class="cc_table_col">
+                                <span class="cc_col_active">{{isActive}}</span>
+                            </td>
+                            <td class="cc_table_col" nowrap="true">
+                                <div class="button-group cc_button_group">
+                                    <input type="button" class="clone btn btn-default btn-sm cc_clone" data-id="{{sfid}}" value="{{pageLabelMap 'Action_Clone'}}"/>
+
+                                    {{#if isRO}}
+                                        &#160;
+                                    {{else}}
+                                        <input type="button" class="btn btn-default btn-sm openModal cc_edit" data-id="{{sfid}}" value="{{pageLabelMap 'Action_Edit'}}"/>
+                                    {{/if}}
+
+                                    {{#if isActive}}
+                                    &#160;
+                                    {{else}}
+                                    {{#if isRO}}
+                                    &#160;
+                                    {{else}}
+                                    <input type="button" class="btn btn-default btn-sm delete cc_delete" data-id="{{sfid}}" value="{{pageLabelMap 'Action_Delete'}}"/>&#160;
+                                    {{/if}}
+                                    {{/if}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="MyAccount_MyWishlists_modalSec"></div>
+
+            </div>
+        </div>
+    </script>
+
+    <script id="CKZ-MyAccount-MyWishlistDetails" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_mywishlists_container m-t-1">
+
+            <div class="panel-body MyAccount_MyWishlistDetails_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_MyWishlist'}}</h2>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <!--<button type="button" class="btn btn-default btn-sm createTemplate cc_create_template pull-right">
+                            {{pageLabelMap 'Action_CreateWishlist'}}
+                        </button>-->
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-body MyAccount_MyWishlistDetails">
+                <div class="well cc_wishlist_heading">
+                    <h3 class="panel-title cc_title">{{pageLabelMap 'CheckOut_GeneralInformation'}}</h3>
+                    <h4 class="cc_wishlist_name">{{this.name}}</h4>
+                    {{#if this.note}}
+                    <p class="cc_wishlist_note_label">{{pageLabelMap 'Field_Notes'}}&#58;</p>
+                    <p class="cc_wishlist_note">{{this.note}}</p>
+                    {{/if}}
+                    <p class="cc_wishlist_active">
+                        <span class="cc_wishlist_active_label">{{pageLabelMap 'Heading_Active'}}&#58;</span>
+                        <span class="cc_wishlist_active_value">{{this.isActive}}</span>
+                    </p>
+                </div>
+
+                {{#each this.itemData}}
+                <div class="row cc_wishlist_item">
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                {{productLink this.prodBean 'cc_prod_link' image=(displayImage this.mediaWrapper 'accountWish img-responsive' alt=this.prodBean.name dataId=this.prodBean.sku)}}
+                            </div>
+
+                            <div class="col-xs-10">
+                                <p class="item_title cc_wishlist_item_title">
+                                    {{productLink this.prodBean 'cc_prod_link'}}
+                                </p>
+
+                                <div class="sku cc_sku small">
+                                    {{#ifDisplay 'WL.DsplAddtlSku'}}
+                                    <span class="cc_value">{{this.prodBean.sku}}</span>
+                                    {{/ifDisplay}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        {{#if this.showPricing}}
+                        {{#ifDisplay 'WL.DsplPricing' }}
+                        {{#if this.price}}
+                        <div class="price_block cc_price_block">
+                            <h4 class="price cc_price m-t-0">
+                                <span class="value cc_value">{{{price this.price}}}</span>
+                            </h4>
+                        </div>
+                        {{/if}}
+
+                        {{#if this.isTierPriced}}
+                        <div class="cc_prt_tool_tip_div cc_prt_tool_tip_div_mywl" data-toggle="tooltip" title="{{pageLabelMap 'ProductPricingTiers_VolumeHover'}}">
+                            <span class="cc_prt_tool_tip_text cc_prt_tool_tip_text_mywl">{{pageLabelMap 'ProductPricingTiers_VolumePricing'}}</span>
+                        </div>
+                        {{/if}}
+                        {{/ifDisplay}}
+
+                        {{#ifDisplay 'WL.DsplAvlb'}}
+                        {{#ifEquals this.inventory 0}}
+                        <div class="inventory cc_inventory">
+                            <span class="cc_label">{{pageLabelMap 'ProductDetail_NotAvailable1'}}</span>
+                            <span class="cc_value">{{pageLabelMap 'ProductDetail_NotAvailable2'}}</span>
+                        </div>
+                        {{/ifEquals}}
+                        {{/ifDisplay}}
+
+                        <input type="hidden" value="{{this.inventory}}" id="qtyAvail_{{this.prodBean.id}}" name="qtyAvail_{{this.prodBean.id}}"/>
+                        {{/if}}
+
+                        <div class="wishButtons cc_wish_buttons"></div>
+
+                        {{#if ../isRO}}
+                        &#160;
+                        {{else}}
+                        <button type="button" class="btn btn-link btn-sm deleteItem cc_delete p-a-0" data-id="{{uid}}" data-pid="{{parentId}}">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                            {{pageLabelMap 'Action_Delete'}}
+                        </button>
+                        {{/if}}
+                    </div>
+                </div>
+                <hr/>
+                {{/each}}
+            </div>
+        </div>
+    </script>
+
+    <!-- WISHLIST -->
+    <script id="CKZ-AddtoWishlist-Desktop" type="text/template">
+        <div class="btn-group dropdown">
+            <button type="button" class="btn btn-link btn-sm dropdown-toggle p-a-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-plus"></i>
+                {{pageLabelMap 'AddtoWishlist'}}
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="dropWish">
+                {{#each this}}
+                <li><a href="javascript:void(0);" class="pickWish" data-id="{{sfid}}">{{{name}}}</a></li>
+                {{/each}}
+                <li role="separator" class="divider"></li>
+                <li>
+                    <div class="row center-block">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <input id="newWishList" type="text" class="form-control newListName" placeholder="{{pageLabelMap 'MyAccount_Name'}}">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default pickWish" data-id="-1" type="button">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.myWishlistsView.desktop.tmpl = 'CKZ-MyAccount-MyWishlists';
+            CCRZ.uiProperties.wishlistDetailsView.desktop.tmpl = 'CKZ-MyAccount-MyWishlistDetails';
+            CCRZ.uiProperties.wishlistDetailsView.editModal.selector = '#MyAccount_MyWishlists_modalSec';
+            CCRZ.uiProperties.wishlistPickerModal.desktop.tmpl = 'CKZ-AddtoWishlist-Desktop';
+        });
+    </script>
+</apex:component>

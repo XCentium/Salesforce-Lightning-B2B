@@ -1,0 +1,13 @@
+<aura:component  implements="force:hasRecordId,force:hasSObjectName,force:lightningQuickActionWithoutHeader" access="global">
+	<aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="sObjectName" type="String" />
+    
+    <aura:if isTrue="{!$Browser.formFactor!='DESKTOP'}">   
+        <c:PricerGrid recordId="{!v.recordId}"
+                      sObjectName='{!v.sObjectName}'
+                      source="quickAction"/>   
+    </aura:if>
+    <aura:if isTrue="{!$Browser.formFactor=='DESKTOP'}">  
+      <div>This quick action can only be run in Salesforce mobile application</div>  
+	</aura:if>    
+</aura:component>

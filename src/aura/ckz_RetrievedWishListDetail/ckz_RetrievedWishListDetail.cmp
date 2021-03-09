@@ -1,0 +1,149 @@
+<aura:component description="ckz_RetrievedWishListDetail">
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <aura:attribute name="childCart" type="Map" required="false"/>
+
+    <aura:attribute name="cartId" type="String"/>
+    <aura:attribute name="cartEncryptedId" type="String"/>
+
+    <aura:attribute name="currentCartId" type="String" default="{!v.childCart.sfid}"/>
+    <aura:attribute name="currentCartName" type="String" default="{!v.childCart.sfdcName}"/>
+    <aura:attribute name="currentCartEncryptedId" type="String" default="{!v.childCart.encryptedId}"/>
+
+    <aura:attribute name="isSelected" type="Boolean" default="{!v.childCart.isSelected}"/>
+
+    <aura:registerEvent name="startingObjectSelected" type="c:ckz_StartingObjectSelectedEvent"/>
+
+    <aura:registerEvent name="gotoDataEntry" type="c:ckz_OrderForm_GotoDataEntryEvent"/>
+
+
+    <!-- TABLE LAYOUT -->
+    <aura:if isTrue="{! $Browser.formFactor == 'DESKTOP' &amp;&amp; (v.useCardLayout == false) }">
+
+        <tr>
+            <th scope="row">
+                <div class="slds-truncate" title="{!v.childCart.name}">{!v.childCart.name}</div>
+            </th>
+
+            <td>
+                <div class="slds-truncate" title="{!v.childCart.lastModifiedDateStr}">{!v.childCart.lastModifiedDateStr}</div>
+            </td>
+
+            <!-- Cart Products -->
+            <td>
+                <div class="slds-truncate" title="">
+                    <ul>
+                        <aura:iteration items="{!v.childCart.cartItemsList}" var="cartItem">
+                            <p><img src="{!cartItem.thumbnailImage.URI}" width="65" height="65" class="slds-m-around--xx-small" />
+                            {!cartItem.productName}
+                            </p>
+                        </aura:iteration>
+                    </ul>
+                </div>
+            </td>
+
+            <td class="slds-cell-wrap">
+
+                <lightning:button aura:id="select"
+                                  label="{! v.isSelected ? 'Selected' : 'Select' }"
+                                  variant="brand"
+                                  onclick="{!c.selectCart}"
+                                  disabled="{!v.isSelected}"/>
+
+                <aura:if isTrue="{!v.isSelected}">
+                    <lightning:button aura:id="gotoNext"
+                                      label="Next"
+                                      variant="brand"
+                                      onclick="{!c.handleGotoDataEntry}"
+                    />
+                </aura:if>
+
+            </td>
+
+        </tr>
+
+    </aura:if>
+
+    <!-- CARD LAYOUT -->
+    <aura:if isTrue="{! $Browser.formFactor != 'DESKTOP' || (v.useCardLayout == true) }">
+
+        <article class="{! v.isSelected ? 'slds-card slds-card_boundary slds-m-bottom_small selectedProduct' : 'slds-card slds-card_boundary slds-m-bottom_small' }">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+
+                        <!-- put icon here -->
+                        <lightning:icon iconName="standard:template" alternativeText="Wish Lists"/>
+
+                        <span class="slds-icon_container slds-icon-standard-orders" title="Wish List">
+                            <span class="slds-assistive-text">Name {!v.childCart.name}</span>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <span>{!v.childCart.name}</span>
+                            <!--<span class="slds-badge slds-float_right">{!v.childCart.cartStatus}</span>-->
+                        </h2>
+                    </div>
+
+                </header>
+
+            </div>
+
+            <div class="slds-card__body">
+
+
+                <!-- Last Modified -->
+                <div class="slds-p-vertical_xx-small slds-p-horizontal_large slds-clearfix">
+                    <div class="slds-float_left">Last Modified:</div>
+                    <div class="slds-float_right">{!v.childCart.lastModifiedDateStr}</div>
+                </div>
+
+                <!-- Products -->
+                <div class="slds-p-vertical_xx-small slds-p-horizontal_large">
+
+                    <ul class="">
+                        <aura:iteration items="{!v.childCart.cartItemsList}" var="cartItem">
+
+                                <li class="slds-m-vertical_x-small">
+
+                                    <div class="product">
+                                        <img src="{!cartItem.thumbnailImage.URI}" width="65" height="65" class="slds-m-around--xx-small" />
+                                        <span>{!cartItem.productName}</span>
+                                    </div>
+                                </li>
+
+                        </aura:iteration>
+                    </ul>
+                </div>
+            </div>
+
+            <footer class="slds-card__footer">
+                <div class="">
+
+                    <lightning:button aura:id="selectCart"
+                                      label="{! v.isSelected ? 'Selected' : 'Select' }"
+                                      class=""
+                                      variant="brand"
+                                      onclick="{!c.selectCart}"
+                                      disabled="{!v.isSelected}"/>
+
+                    <aura:if isTrue="{!v.isSelected}">
+                        <lightning:button aura:id="gotoNext"
+                                          label="Next"
+                                          class=""
+                                          variant="brand"
+                                          onclick="{!c.handleGotoDataEntry}"
+                        />
+                    </aura:if>
+
+                </div>
+            </footer>
+        </article>
+
+    </aura:if>
+
+</aura:component>

@@ -1,0 +1,29 @@
+<aura:component >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    <aura:attribute name="index" type="Integer"></aura:attribute>
+    <aura:attribute name="reason" type="Object"></aura:attribute>
+    <aura:attribute name="reasonOptions" type="Object[]"></aura:attribute>
+    <aura:registerEvent name="deleteReason" type="c:deleteReason"/>
+    
+    <div class="reason-container slds-box slds-form slds-form_compound">
+        <lightning:buttonIcon class="close" variant="bare" iconName="utility:close" size="small" onclick="{!c.deleteReason}"></lightning:buttonIcon>
+        <fieldset class="slds-form-element">
+            <div class="slds-form-element__group">
+                <div class="slds-form-element__row">
+                    
+                    <lightning:select class="slds-size_1-of-4" value="{!v.reason.intensityLevel}" aura:id="confidence" label="Intensity" onchange="{!c.confidenceChangeHandler}">
+                        <option value="HIGH_POS">Positive</option>
+                        <option value="HIGH_NEG">Negative</option>
+                    </lightning:select>
+                    
+                    <lightning:select class="slds-size_3-of-4" label="Reason Text" value="{!v.reason.title.label}" aura:id="formatString" onchange="{!c.formatStringChangeHandler}">
+                    	<aura:iteration items="{!v.reasonOptions}" var="reasonOption">
+                        	<option value="{!reasonOption.label}">{!reasonOption.formatString}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                    
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</aura:component>

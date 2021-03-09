@@ -1,0 +1,81 @@
+<!--
+ - Updated by brandon.rogers on 2020-08-07
+ -->
+
+<apex:page id="ckz_BIB_ProductList_incl" sidebar="false" showHeader="false" standardStylesheets="false">
+
+    <!-- PLP 2.0 -->
+    <c:ckz_ProductListHeader />
+    <c:ckz_ProductListFilter />
+    <c:ckz_ProductItemGrid />
+    <c:ckz_ProductItemList />
+    <!-- <c:ckz_ProductItemListDataTable /> -->
+    <c:ckz_ProductCompare />
+
+    <!-- UNCOMMENT FOR DATA TABLE LIST VIEW -->
+
+    <!-- TODO: Lets have 4 columns:
+        Quantity, Remainder, Total, End Date
+        Also maybe you can shorten or even remove the descirption... too big. -->
+
+    <!-- 
+    <script id="CKZ-Product-List-Page-View" type="text/template">
+        <div class="productListHeader cc_page_header row"></div>
+        <div class="productListContent cc_results_list row">
+            <div class="col-sm-12">
+                <table id="CKZ-PLP-PRODLIST" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>{{pageLabelMap 'ckz_PLP_ProductName'}}</th>
+                            <th nowrap>{{pageLabelMap 'ckz_PLP_SKU'}}</th>
+                            <th>{{pageLabelMap 'ckz_PLP_ShortDesc'}}</th>
+                            <th class="text-right" nowrap>{{pageLabelMap 'ckz_PLP_Price'}}</th>
+                            <th>{{pageLabelMap 'ckz_PLP_QtyToDate'}}</th>
+                            <th>{{pageLabelMap 'ckz_PLP_Qty'}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="ckzProductListTableContent"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="productListFooter cc_results_footer row"></div>
+        <div class="compareTray"></div>
+    </script> 
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css"></link>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    -->
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            // UNCOMMENT FOR DATA TABLE LIST VIEW
+            /* CCRZ.uiProperties.productListPageView.desktop.tmpl = "CKZ-Product-List-Page-View";
+
+            CCRZ.pubSub.on("view:productListPageView:refresh", function (viewRef) {
+                console.log("ckz_BIB_ProductList_incl: productListPageView:refresh");
+                $('#CKZ-PLP-PRODLIST').DataTable({
+                    "searching": false,
+                    "paging": false,
+                    "info": false,
+                    "columns": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        { "orderable": false },
+                        { "orderable": false }
+                    ]
+                });
+
+            }); */
+
+            CCRZ.pubSub.on("view:productItemsView:refresh", function (viewRef) {
+                console.log("ckz_BIB_ProductList_incl:productItemsView:refresh");
+
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        });
+    </script>
+</apex:page>

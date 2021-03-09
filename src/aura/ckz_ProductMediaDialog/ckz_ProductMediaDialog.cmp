@@ -1,0 +1,157 @@
+<aura:component description="ckz_ProductMediaDialog">
+
+    <aura:attribute name="productId" type="String" required="true"/>
+
+    <aura:attribute name="recordId" type="String" required="false"/>
+
+    <aura:attribute name="sObjectName" type="String" default="ccrz__E_ProductMedia__c"/>
+
+    <aura:registerEvent name="recordSavedEvent" type="c:ckz_ProductMediaSaveEvent"/>
+
+    <aura:attribute name="saved" type="Boolean" default="false" access="private"/>
+
+    <!--use boolean attribute for Store true/false value,
+    make default to "false" so modal box are not display on the load of component.
+    -->
+    <aura:attribute name="isOpen" type="boolean" default="false" access="public"/>
+
+    <!--Use aura:if tag to display Model Box, on the bese of conditions. [isOpen boolean attribute] -->
+    <aura:if isTrue="{!v.isOpen}">
+
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container">
+
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                            onclick="{! c.closeModel }"
+                            alternativeText="close"
+                            variant="bare-inverse"
+                            class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        <aura:if isTrue="{!(v.recordId == null || v.recordId == '')}">
+                            Create Product Media
+                        </aura:if>
+
+                        <aura:if isTrue="{!(v.recordId != null &amp;&amp; v.recordId != '')}">
+                            Edit Product Media
+                        </aura:if>
+                    </h2>
+                </header>
+
+                <lightning:recordEditForm
+                        aura:id="recordEditForm"
+                        onsubmit="{!c.onSubmit}"
+                        onsuccess="{!c.onSuccess}"
+                        onload="{!c.onLoad}"
+                        recordId="{!v.recordId}"
+                        objectApiName="{!v.sObjectName}" density="comfy" class="newSpecForm">
+
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+
+                        <!-- the messages component is for error messages -->
+                        <lightning:messages/>
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:outputField fieldName="Name"/>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__Enabled__c" aura:id="enabled"/>
+                            </div>
+
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__AltMessage__c"/>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__Locale__c"/>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__Product__c" aura:id="product"/>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__MediaType__c"/>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__EndDate__c" dateStyle="short"/>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__ProductDescription__c"/>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__Sequence__c" aura:id="sequence"/>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__ProductMediaSource__c" aura:id="mediaSource"/>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__StartDate__c" dateStyle="short"/>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__StaticResourceName__c" aura:id="isComparable"/>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2"></div>
+
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__FilePath__c"/>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2"></div>
+
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ccrz__URI__c"/>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <div class="slds-grid">
+                            <div class="slds-col"></div>
+
+                            <div class="slds-col slds-size_1-of-10 slds-p-right_small">
+                                <lightning:button name="cancel" label="Cancel" title="Cancel" onclick="{! c.closeModel}"/>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-10">
+                                <lightning:button variant="brand" type="submit" name="save" label="Save"/>
+                            </div>
+                        </div>
+                    </footer>
+
+                </lightning:recordEditForm>
+
+            </div>
+
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+    </aura:if>
+</aura:component>

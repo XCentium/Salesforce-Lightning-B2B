@@ -1,0 +1,20 @@
+.THIS .test {
+    justify-content: space-between;
+}
+
+.THIS .slds-table {
+    background-color: #F4F6F9 !important;
+}
+
+.THIS .slds-icon-action-approval {
+    background-color: #10c972;
+}
+
+.THIS .warranty {
+	margin-top: -10px;
+    margin-left: 40px;
+}
+
+.THIS .warranty:hover {
+    background-color: none;
+}

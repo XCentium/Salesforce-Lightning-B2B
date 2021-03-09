@@ -1,0 +1,62 @@
+<aura:component description="ckz_RetrievedWishLists">
+
+    <ltng:require scripts="{!$Resource.ckz_OrderForm_Utilities}" afterScriptsLoaded="{!c.scriptsLoaded}" />
+
+    <aura:attribute name="childCarts" type="List" required="false"/>
+
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <aura:attribute name="wishListsHeader" type="String"/>
+
+    <div class="slds-var-m-around_small">
+
+        <div class="slds-text-heading_large slds-m-bottom_small">{!v.wishListsHeader}</div>
+
+        <!-- TABLE VIEW -->
+        <aura:if isTrue="{! $Browser.formFactor == 'DESKTOP' &amp;&amp; (v.useCardLayout == false) }">
+
+            <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout">
+                <thead>
+                <tr class="slds-text-heading_label">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Name">Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Last Modified Date">Last Modified Date</div>
+                    </th>
+
+                    <th scope="col">
+                        <div class="slds-truncate" title="Products">Products</div>
+                    </th>
+
+                    <th scope="col">
+                        <div class="slds-truncate" title="Actions">Actions</div>
+                    </th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                <aura:iteration items="{!v.childCarts}" var="retrievedCart">
+
+                    <c:ckz_RetrievedWishListDetail childCart="{!retrievedCart}" cartId="{!v.cartId}" cartEncryptedId="{!v.cartEncryptedId}" useCardLayout="{!v.useCardLayout}"/>
+
+                </aura:iteration>
+                </tbody>
+            </table>
+
+        </aura:if>
+
+        <!-- CARD VIEW -->
+        <aura:if isTrue="{! $Browser.formFactor != 'DESKTOP' || (v.useCardLayout == true) }">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <aura:iteration items="{!v.childCarts}" var="retrievedCart">
+                    <div class="slds-col slds-small-size_12-of-12 slds-large-size_6-of-12">
+                        <c:ckz_RetrievedWishListDetail childCart="{!retrievedCart}" cartId="{!v.cartId}" cartEncryptedId="{!v.cartEncryptedId}" useCardLayout="{!v.useCardLayout}" />
+                    </div>
+                </aura:iteration>
+            </div>
+        </aura:if>
+    </div>
+
+</aura:component>

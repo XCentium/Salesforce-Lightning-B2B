@@ -1,0 +1,6 @@
+<design:component label="Launch Button to Modal">
+    <design:attribute name="url" label="Full or Relative URL" />
+    <design:attribute name="buttonLabel" label="Launch Button Label" />
+    <design:attribute name="contName" label="" />
+    <design:attribute name="ContactID" label="Contact ID" />
+</design:component>

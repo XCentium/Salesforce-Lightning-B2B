@@ -1,0 +1,242 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="SearchType" type="String" /> 
+    <aura:attribute name="SearchPhrase" type="String" /> 
+    <aura:attribute name="ComponentTitle" type="String" />
+    <aura:attribute name="ModalSelection" type="String" />
+    <aura:attribute name="Filter" type="String"/>
+    <aura:attribute name="Partners" type="String[]"/>
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="MenuOpenClose" type="String" default='close'/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.Filter}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.ScreenChoice}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.SearchPhrase}" action="{!c.init}"/>
+    
+    <aura:if  isTrue="{!or(v.recid == '', v.recid == null)}" >
+        <div class=" textleft">
+            <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType != 'All')}">
+                <div class="paddingleftright">
+                    <h3 class="searchHeader">Search Results for: {!v.SearchPhrase}</h3>
+                </div>
+            </aura:if>
+            <aura:iteration items="{!v.Partners}" var="partner">
+                <aura:if isTrue="{!partner.isactive__c  == true}">
+                    <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType != 'All')}">   
+                        <c:FIDO_IfContains items="{!partner.name}"  items2="{!partner.description__c}" element="{!v.SearchPhrase}">
+                            <div class="owner">
+                                <h3 class="borderbottom">
+                                    <div class="padding">
+                                        <aura:if isTrue="{!partner.logo_url__c != null}">
+                                            <div class="partnerlogoimg" >
+                                                <div class="partnerlogoimginner" style="{!'background-image:url('+ partner.logo_url__c +' )'}"></div>
+                                            </div>
+                                            <span class="marginleft partnerName ">{!partner.name}</span>
+                                            <aura:set attribute="else">
+                                                <span class="marginleft partnerName ">{!partner.name}</span>
+                                            </aura:set>
+                                            <div class="sharebutton"> 
+                                                <button class="slds-button" aura:id="{!partner.id}" id="{!partner.id}" onclick="{!c.ShareableURL}">
+                                                    <lightning:icon iconName="utility:share" size="x-small"/>  
+                                                </button>
+                                            </div>
+                                        </aura:if>
+                                        <lightning:buttonMenu  aura:id="menu" class="partnerMenu FilterMenu smallMenu" onselect="{! c.partnerSelect }" alternativeText="Show menu">
+                                            <aura:if isTrue="{!partner.app_exchange_url__c  != null}">
+                                                <lightning:menuItem value="{!partner.app_exchange_url__c}" label="App Exchange"  />
+                                            </aura:if>
+                                            <aura:if isTrue="{!partner.chatter_group_url__c != null}">
+                                                <lightning:menuItem value="{!partner.chatter_group_url__c}" label="Chatter"  />
+                                            </aura:if>
+                                            <aura:if isTrue="{!partner.website__c != null}">
+                                                <lightning:menuItem value="{!partner.website__c}" label="Website" />
+                                            </aura:if>
+                                        </lightning:buttonMenu>
+                                    </div>    
+                                </h3>
+                                <div class="padding">
+                                    <div class="textleft">
+                                        <aura:if isTrue="{!and(partner.excerpt__c != '', partner.excerpt__c != null)}">
+                                            <ui:outputRichText value="{!partner.excerpt__c}"/>
+                                            <aura:set attribute="else">
+                                                <ui:outputRichText value="{!partner.description__c}"/>
+                                            </aura:set>
+                                        </aura:if>
+                                        <button class="slds-button" aura:id="{!partner.id}" id="{!partner.id}" onclick="{!c.seeMore}">
+                                            <span class="bluelink">Learn More</span>
+                                        </button>
+                                        <aura:if isTrue="{!partner.contact_email__c != null}">
+                                            <div class="textleft paddingtop partneremail">
+                                                <span class="slds-text-title_caps slds-has-dividers_right">Contact Email: </span> <a href="{!partner.contact_email__c}">{!partner.contact_email__c}</a>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{!partner.landing_page_url__c != null}">
+                                            <div class="textleft partneremail">
+                                                <span class="slds-text-title_caps slds-has-dividers_right">Demo Kit: </span> <a href="{!partner.landing_page_url__c}">{!partner.landing_page_url__c}</a>
+                                            </div>
+                                        </aura:if>
+                                    </div>
+                                </div>  
+                                <c:FIDO_Partners_Scripts PartnerId="{!partner.demo_partner__c}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" />
+                            </div>
+                        </c:FIDO_IfContains>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.Filter != ''}">  
+                                <aura:if isTrue="{!partner.clouds_supporting__c != null}">
+                                    <c:FIDO_IfContains items="{!partner.clouds_supporting__c}" items2="{!partner.clouds_supporting__c}" element="{!v.Filter}">
+                                        <div class="owner">
+                                            <h3 class="borderbottom">
+                                                <div class="padding">
+                                                    <aura:if isTrue="{!partner.logo_url__c != null}">
+                                                        <div class="partnerlogoimg" >
+                                                            <div class="partnerlogoimginner" style="{!'background-image:url('+ partner.logo_url__c +' )'}"></div>
+                                                        </div>
+                                                        <span class="marginleft partnerName">{!partner.name}</span>
+                                                        <aura:set attribute="else">
+                                                            <span class="marginleft partnerName">{!partner.name}</span>
+                                                        </aura:set>
+                                                        <div class="sharebutton"> 
+                                                            <button class="slds-button" aura:id="{!partner.id}" id="{!partner.id}" onclick="{!c.ShareableURL}">
+                                                                <lightning:icon iconName="utility:share" size="x-small"/>  
+                                                            </button>
+                                                        </div>
+                                                    </aura:if>
+                                                    <lightning:buttonMenu  aura:id="menu" class="partnerMenu FilterMenu smallMenu" onselect="{! c.partnerSelect }" alternativeText="Show menu">
+                                                        <aura:if isTrue="{!partner.app_exchange_url__c  != null}">
+                                                            <lightning:menuItem value="{!partner.app_exchange_url__c}" label="App Exchange"  />
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!partner.chatter_group_url__c != null}">
+                                                            <lightning:menuItem value="{!partner.chatter_group_url__c}" label="Chatter"  />
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!partner.website__c != null}">
+                                                            <lightning:menuItem value="{!partner.website__c}" label="Website" />
+                                                        </aura:if>
+                                                    </lightning:buttonMenu>
+                                                </div>    
+                                            </h3>
+                                            <div class="padding">
+                                                <div class="textleft">
+                                                    <aura:if isTrue="{!and(partner.excerpt__c != '', partner.excerpt__c != null)}">
+                                                        <ui:outputRichText value="{!partner.excerpt__c}"/>
+                                                        <aura:set attribute="else">
+                                                            <ui:outputRichText value="{!partner.description__c}"/>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                    <button class="slds-button" aura:id="{!partner.id}" id="{!partner.id}" onclick="{!c.seeMore}">
+                                                        <span class="bluelink">Learn More</span>
+                                                    </button>
+                                                    <aura:if isTrue="{!partner.contact_email__c != null}">
+                                                        <div class="textleft paddingtop partneremail">
+                                                            <span class="slds-text-title_caps slds-has-dividers_right">Contact Email: </span> <a href="{!partner.contact_email__c}">{!partner.contact_email__c}</a>
+                                                        </div>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!partner.landing_page_url__c != null}">
+                                                        <div class="textleft partneremail">
+                                                            <span class="slds-text-title_caps slds-has-dividers_right">Demo Kit: </span> <a href="{!partner.landing_page_url__c}">{!partner.landing_page_url__c}</a>
+                                                        </div>
+                                                    </aura:if>
+                                                </div>
+                                            </div>  
+                                            <c:FIDO_Partners_Scripts PartnerId="{!partner.demo_partner__c}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" />
+                                        </div>
+                                    </c:FIDO_IfContains>
+                                </aura:if>
+                                <aura:set attribute="else">
+                                    <div class="owner">
+                                        <h3 class="borderbottom">
+                                            <div class="padding">
+                                                <aura:if isTrue="{!partner.logo_url__c != null}">
+                                                    <div class="partnerlogoimg" >
+                                                        <div class="partnerlogoimginner" style="{!'background-image:url('+ partner.logo_url__c +' )'}"></div>
+                                                    </div>
+                                                    <span class="marginleft partnerName">{!partner.name}</span>
+                                                    <aura:set attribute="else">
+                                                        <span class="marginleft partnerName">{!partner.name}</span>
+                                                    </aura:set>
+                                                    <div class="sharebutton"> 
+                                                        <button class="slds-button" aura:id="{!partner.id}" id="{!partner.id}" onclick="{!c.ShareableURL}">
+                                                            <lightning:icon iconName="utility:share" size="x-small"/>  
+                                                        </button>
+                                                    </div>
+                                                </aura:if>
+                                                <lightning:buttonMenu  aura:id="menu" class="partnerMenu FilterMenu smallMenu" onselect="{! c.partnerSelect }" alternativeText="Show menu">
+                                                    <aura:if isTrue="{!partner.app_exchange_url__c  != null}">
+                                                        <lightning:menuItem value="{!partner.app_exchange_url__c}" label="App Exchange"  />
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!partner.chatter_group_url__c != null}">
+                                                        <lightning:menuItem value="{!partner.chatter_group_url__c}" label="Chatter"  />
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!partner.website__c != null}">
+                                                        <lightning:menuItem value="{!partner.website__c}" label="Website" />
+                                                    </aura:if>
+                                                </lightning:buttonMenu>
+                                            </div>    
+                                        </h3>
+                                        <div class="padding">
+                                            <div class="textleft">
+                                                <aura:if isTrue="{!and(partner.excerpt__c != '', partner.excerpt__c != null)}">
+                                                    <ui:outputRichText value="{!partner.excerpt__c}"/>
+                                                    <aura:set attribute="else">
+                                                        <ui:outputRichText value="{!partner.description__c}"/>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <button class="slds-button" aura:id="{!partner.id}" id="{!partner.id}" onclick="{!c.seeMore}">
+                                                    <span class="bluelink">Learn More</span>
+                                                </button>
+                                                <aura:if isTrue="{!partner.contact_email__c != null}">
+                                                    <div class="textleft paddingtop partneremail">
+                                                        <span class="slds-text-title_caps slds-has-dividers_right">Contact Email: </span> <a href="{!partner.contact_email__c}">{!partner.contact_email__c}</a>
+                                                    </div>
+                                                </aura:if>
+                                                <aura:if isTrue="{!partner.landing_page_url__c != null}">
+                                                    <div class="textleft partneremail">
+                                                        <span class="slds-text-title_caps slds-has-dividers_right">Demo Kit: </span> <a href="{!partner.landing_page_url__c}">{!partner.landing_page_url__c}</a>
+                                                    </div>
+                                                </aura:if>
+                                            </div>
+                                        </div>  
+                                        <c:FIDO_Partners_Scripts PartnerId="{!partner.demo_partner__c}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" />
+                                    </div>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                </aura:if>
+            </aura:iteration>
+        </div>
+        <aura:set attribute="else">
+            <c:FIDO_SingleRecord OrgName="{!v.OrgName}" IndustryName="{!v.IndustryName}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" Industry="{!v.Industry}" />
+        </aura:set>
+    </aura:if>
+    <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+    <section role="dialog" aura:id="ShareModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Share Content</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="padding">
+                    <div class="padding center">
+                        <h3 class="borderbottom">Share these instructions</h3>
+                        <div class="paddingtopbottom">
+                            To access this IDO Information, paste the below URL into a browser and replace the YOURDOMAIN in the URL with your Org's Domain.<br/><br/>
+                            <a href="{!v.ShareableURL}" target="_blank">
+                                <strong>https://<strong>YOURDOMAIN</strong>.lightning.force.com{!v.ShareableURL}</strong>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}">Close</button>
+            </footer>
+        </div>
+    </section>
+</aura:component>

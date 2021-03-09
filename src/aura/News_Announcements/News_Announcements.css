@@ -1,0 +1,31 @@
+.THIS {
+}
+.THIS .slds-max-medium-table--stacked-horizontal td {
+    text-align: left !important;
+}
+.THIS .toggle{
+     display: none;
+}
+.THIS .show{
+     display: block;
+}
+.THIS .hide{
+     display: none;
+}
+.THIS .noOutline:focus {
+    outline: none; /* overrides chrome default focus outline */
+}
+.THIS.wrapper{
+    border:1px solid #f4f4f4;
+    border-radius:4px;
+}
+
+.THIS .titleText{
+    text-transform : uppercase;
+    font-size: 1em;
+    font-weight: bold;
+    padding-left: 1rem;
+}
+.THIS a:focus {
+    outline :none !important;
+}

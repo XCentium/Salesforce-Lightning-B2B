@@ -1,0 +1,165 @@
+<!--
+ - Created by brandon.rogers on 4/16/19.
+ -->
+
+<apex:page id="ckz_pmt_ACH_New" controller="ckz_ctrl_pmt_ACH_New" applyHtmlTag="false" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false">
+
+    <script id="MyAccount-MyWalletACH-Both" type="text/template">
+
+        <div class="panel panel-default cc_panel myWalletCCOuterContainer m-t-1">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2 class="title">{{pageLabelMap 'Pmt_ACH_New_Title'}}</h2>
+                        <p class="small">{{pageLabelMap 'Pmt_ACH_New_Instructions'}}</p>
+
+                        <div class="ach_error_messages_section" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <form id="newACHForm" action="" class="newForm" forceSSL="true">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="displayName">{{pageLabelMap 'Pmt_ACH_Name'}}</label>
+                                        <input type="text" name="displayName" id="displayName" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="routingNumber">{{pageLabelMap 'Pmt_ACH_RoutingNumber'}}</label>
+                                        <input type="text" name="routingNumber" id="routingNumber" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="accountNumber">{{pageLabelMap 'Pmt_ACH_AccountNumber'}}</label>
+                                        <input type="text" name="accountNumber" id="accountNumber" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="isEnabled" id="isEnabled"/>
+                                            {{pageLabelMap 'Component_MyWallet_CC_isEnabled'}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="text-right">
+                                        <input type="button" class='btn btn-default btn-sm cancelACH' id="cancelACH" value="{{pageLabelMap 'MyWallet_Cancel'}}"/>
+                                        <input type="button" class='btn btn-primary btn-sm saveACH' id="saveACH" value="{{pageLabelMap 'MyWallet_SaveToWall'}}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            CCRZ.models.StoredPaymentsACHModel = CCRZ.CloudCrazeModel.extend({
+                className: "ckz_ctrl_pmt_ACH_New",
+                saveACHNumber: function (ccData, callback) {
+                    this.invokeContainerLoadingCtx($('body'), "saveACHNumber", JSON.stringify(ccData),
+                        function (response) {
+                            if (response && response.success) {
+                                callback();
+                            }
+                        },
+                        {nmsp: false}
+                    );
+                },
+            });
+
+            CCRZ.views.StoredPaymentsACHView = CCRZ.CloudCrazeView.extend({
+                viewName: "StoredPaymentsACHView",
+                templateDesktop: CCRZ.util.template("MyAccount-MyWalletACH-Both"),
+                templatePhone: CCRZ.util.template("MyAccount-MyWalletACH-Both"),
+                init: function () {
+                    this.render();
+                },
+                events: {
+                    "click #saveACH": "saveNewACHNumber",
+                    "click #cancelACH": "cancelNewACHNumber"
+                },
+                initValidation: function () {
+                    $('#newACHForm').validate({
+                        invalidHandler: function (event, validator) {
+                            CCRZ.handleValidationErrors(event, validator, 'ach_error_messages_section', false);
+                        },
+                        rules: {
+                            accountNumber: {required: true},
+                            routingNumber: {required: true},
+                            displayName: {required: true}
+                        },
+                        messages: {
+                            accountNumber: {required: 'Account Number is required'},
+                            routingNumber: {required: 'ABA Number is required'},
+                            displayName: {required: 'Name on Account is required'}
+                        },
+                        errorPlacement: function (error, element) {
+                        }
+                    });
+                },
+                renderDesktop: function () {
+                    $(CCRZ.uiProperties.StoredPaymentsPOView.phone.selector).empty();
+                    this.setElement($(CCRZ.uiProperties.StoredPaymentsPOView.desktop.selector));
+                    this.$el.html(this.templateDesktop({}));
+                },
+                renderPhone: function () {
+                    $(CCRZ.uiProperties.StoredPaymentsPOView.desktop.selector).empty();
+                    this.setElement($(CCRZ.uiProperties.StoredPaymentsPOView.phone.selector));
+                    this.$el.html(this.templatePhone({}));
+                },
+                postRender: function () {
+                    this.initValidation();
+                },
+                cancelNewACHNumber: function () {
+                    myWallet();
+                },
+                saveNewACHNumber: function () {
+                    if ($('#newACHForm').valid()) {
+                        var formData = form2js("newACHForm", '.', false, function (node) {
+                        }, false);
+
+                        formData.accountType = 'ach';
+                        //formData.accountNumber = formData.accountNumber.substr(formData.accountNumber.length - 4);
+
+                        formData.isEnabled = formData.isEnabled != null ? true : false;
+                        this.model.saveACHNumber(formData, function () {
+                            myWallet();
+                        });
+                    }
+                }
+            });
+
+            CCRZ.paymentViews = CCRZ.paymentViews || {};
+            CCRZ.paymentViews.cc = new CCRZ.views.StoredPaymentsACHView({
+                model: new CCRZ.models.StoredPaymentsACHModel
+            });
+        });
+    </script>
+
+</apex:page>

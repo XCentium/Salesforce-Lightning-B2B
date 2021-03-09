@@ -1,0 +1,64 @@
+<!--
+ - Created by scheck on 11/5/18.
+ -->
+
+<aura:component description="qtc_QuickDebit" controller="qtc_QuickCreditDebitCTRL" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId"
+    access="global">
+
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    <aura:attribute name="redirect" type="Boolean" default="true" />
+    <aura:attribute name="totalAmount" type="Decimal" default="0" />
+
+    <article class="slds-card slds-card_boundary">
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner variant="brand" alternativeText="Updating" />
+        </aura:if>
+
+        <div class="slds-card__header slds-grid">
+
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <lightning:icon iconName="custom:custom45" alternativeText="Debit Line Creator" />
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-text-heading_small">Debit Creator</span>
+                    </h2>
+                </div>
+            </header>
+
+            <div class="slds-no-flex">
+                <div class="slds-no-flex">
+                    <div class="slds-form-element">
+                        <label class="slds-checkbox_toggle slds-grid">
+                            <span class="slds-form-element__label slds-m-bottom_none">Go to Allocation?</span>
+                            <ui:inputCheckbox name="checkbox-toggle-pretty" value="{!v.redirect}" />
+                            <span id="checkbox-toggle-pretty" class="slds-checkbox_faux_container" aria-live="assertive">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-checkbox_on">Yes</span>
+                                <span class="slds-checkbox_off">No</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <hr />
+
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-grid_vertical-align-end">
+                <div class="slds-col">
+                    <ui:inputCurrency value="{!v.totalAmount}" label="Debit Amount:" />
+                </div>
+                <div class="slds-col slds-p-left_small">
+                    <lightning:button label="New Debit" title="New Debit" onclick="{! c.newDebit }" />
+                </div>
+            </div>
+        </div>
+
+    </article>
+
+</aura:component>

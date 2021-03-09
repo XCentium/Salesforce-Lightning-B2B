@@ -1,0 +1,2 @@
+<apex:page StandardController="Order" extensions="Q2CBillNow" action="{!billNow}">
+</apex:page>

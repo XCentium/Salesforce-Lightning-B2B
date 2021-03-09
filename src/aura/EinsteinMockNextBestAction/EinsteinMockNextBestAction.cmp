@@ -1,0 +1,114 @@
+<aura:component extends="c:EinsteinWrapperCard" controller="EinsteinMockNextBestAction" implements="flexipage:availableForRecordHome,force:hasRecordId,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <ltng:require styles="/resource/SLDS0120/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <ltng:require scripts="/resource/jquery, /resource/ED_CaseJS" afterScriptsLoaded="{!c.doInit}"	/>
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    <aura:attribute name="ObjectChoice" type="String" default="Case"/>
+    <aura:attribute name="Contact" type="Contact[]" />
+    <aura:attribute name="Case" type="Case[]" />
+    <aura:attribute name="DefaultTitle1" type="String" />
+    <aura:attribute name="DefaultTitle2" type="String" />
+    <aura:attribute name="DefaultDescription1" type="String" />
+    <aura:attribute name="DefaultDescription2" type="String" /> 
+    <aura:attribute name="ButtonLink1" type="String" /> 
+    <aura:attribute name="ButtonLink2" type="String" /> 
+    <aura:attribute name="ButtonText1" type="String" /> 
+    <aura:attribute name="ButtonText2" type="String" /> 
+    <aura:attribute name="recId" type="String" /> 
+    <aura:if isTrue="{!v.ObjectChoice == 'Contact'}">
+        <aura:iteration var="contact" items="{!v.Contact}" indexVar="index"> 
+            <div class="recommendation">
+                <div class="padding">
+                    <span class="title">
+                        <aura:if isTrue="{!contact.RecommendationTitle1__c == null}">
+                            {!v.DefaultTitle1}
+                            <aura:set attribute="else">
+                              {!contact.RecommendationTitle1__c}
+                            </aura:set>
+                        </aura:if>
+                    </span>
+                    <div class="center">
+                        <aura:if isTrue="{!contact.RecommendationTitle1__c == null}">
+                            <p>{!v.DefaultDescription1}</p>
+                            <lightning:button label="{!v.ButtonText1}" onclick="{!c.GoToLink1}" variant="brand"/>
+                            <aura:set attribute="else">
+                                <lightning:button label="{!contact.ButtonText1}" variant="brand" onclick="{!c.GoToLink1}"/>
+                            </aura:set>
+                        </aura:if>
+                        
+                        <a href="javascript:void(0);">No Thanks</a>
+                    </div>
+                </div>
+            </div>
+            <div class="recommendation">
+                <div class="padding">
+                    <span class="title">
+                        <aura:if isTrue="{!contact.RecommendationTitle2__c == null}">
+                            {!v.DefaultTitle2}
+                            <aura:set attribute="else">
+                              {!contact.RecommendationTitle2__c}
+                            </aura:set>
+                        </aura:if>
+                    </span>
+                    <div class="center">
+                        <aura:if isTrue="{!contact.RecommendationTitle2__c == null}">
+                            <p>{!v.DefaultDescription2}</p>
+                            <lightning:button label="{!v.ButtonText2}" variant="brand" onclick="{!c.GoToLink2}"/>
+                            <aura:set attribute="else">
+                                <lightning:button label="{!contact.ButtonText2}" variant="brand" onclick="{!c.GoToLink2}"/>
+                            </aura:set>
+                        </aura:if>
+                        
+                        <a href="javascript:void(0);">No Thanks</a>
+                    </div>
+                </div>
+            </div>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.ObjectChoice == 'Case'}">
+        <aura:iteration var="case" items="{!v.Case}" indexVar="index"> 
+            <div class="recommendation">
+                <div class="padding">
+                    <span class="title">
+                        <aura:if isTrue="{!case.RecommendationTitle1__c == null}">
+                            {!v.DefaultTitle1}
+                            <aura:set attribute="else">
+                              {!case.RecommendationTitle1__c}
+                            </aura:set>
+                        </aura:if>
+                    </span>
+                    <div class="center">
+                        <aura:if isTrue="{!case.RecommendationTitle1__c == null}">
+                            <lightning:button label="{!v.ButtonText1}" variant="brand" onclick="{!c.GoToLink1}"/>
+                            <aura:set attribute="else">
+                                <lightning:button label="{!case.ButtonText1}" variant="brand" onclick="{!c.GoToLink1}"/>
+                            </aura:set>
+                        </aura:if>
+                        
+                        <a href="javascript:void(0);">No Thanks</a>
+                    </div>
+                </div>
+            </div>
+            <div class="recommendation">
+                <div class="padding">
+                    <span class="title">
+                        <aura:if isTrue="{!case.RecommendationTitle2__c == null}">
+                            {!v.DefaultTitle2}
+                            <aura:set attribute="else">
+                              {!case.RecommendationTitle2__c}
+                            </aura:set>
+                        </aura:if>
+                    </span>
+                    <div class="center">
+                        <aura:if isTrue="{!case.RecommendationTitle2__c == null}">
+                            <lightning:button label="{!v.ButtonText2}" variant="brand" onclick="{!c.GoToLink2}"/>
+                            <aura:set attribute="else">
+                                <lightning:button label="{!case.ButtonText2}" variant="brand" onclick="{!c.GoToLink2}"/>
+                            </aura:set>
+                        </aura:if>
+                        <a href="javascript:void(0);">No Thanks</a>
+                    </div>
+                </div>
+            </div>
+        </aura:iteration>
+    </aura:if>
+</aura:component>

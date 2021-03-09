@@ -1,0 +1,71 @@
+<apex:page standardController="Case">
+                    <title>Case Contact Detail </title>
+
+    <apex:stylesheet value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/CSS/HVEMStyle.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/CSS/HVEMEmailEditorComponentStyle.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/CSS/HVEMCaseConversationComponentStyle.css')}" />
+    
+    <apex:includeScript value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/JavaScript/HVEMEmailEditorComponent.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/JavaScript/HVEMCommon.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ArtOfPossibleStaticResources,'/HVEM_StaticResource/JavaScript/HVEMCaseConversation.js')}" />
+
+<style>
+
+
+body .bPageBlock, body #bodyCell .bResource .secondaryPalette, body .secondaryPalette.bPageBlock, body .overlayDialog .secondaryPalette.bPageBlock, body .individualPalette .secondaryPalette.bPageBlock, body .bodyDiv .genericTable, body .genericPageBlockTable, body .bodyDiv .bSubBlock, body .bComponentBlock .bPageBlock, body .bMyDashboard .bPageBlock, body.rlHoverFrame .bPageBlock, body.subjectSelectionPopup div.choicesBox, body.lookupTab .secondaryPalette.bPageBlock, body.popupTab .secondaryPalette.bPageBlock, body.UserTagStatsPage .secondaryPalette.bPageBlock {
+    background-color: #F8F8F8 !important;
+    border-bottom: 1px solid #EAEAEA;
+    border-left: 1px solid #EAEAEA;
+    border-radius: 1px 1px 1px 1px;
+    border-right: 1px solid #EAEAEA;
+    border-bottom: 1px solid #EAEAEA;
+}
+
+</style>
+
+
+<apex:pageBlock id="thePageBlock">
+    <apex:form >
+        <table class="hvemBasicPanel hvemControlPanel" border="0" height="100%" width="100%">
+            <tr>
+                <td width="30%">
+                    <social:profileViewer entityId="{!case.contactId}"/>
+                </td>
+                <td width="70%">
+<apex:pageBlockSection columns="1">
+                    <apex:outputField id="title" label="Title" value="{!case.Contact.Title}"/>
+                    <apex:outputField id="status" label="Email" value="{!case.Contact.Email}"/>
+                    <apex:outputField id="priority" label="Phone" value="{!case.Contact.Phone}"/>
+<!--                    <apex:outputField id="birthdate" label="Birthdate" value="{!case.Contact.Birthdate}"/>  -->
+<!--                    <label>Mailing Address</label>   -->
+                    <apex:outputField id="street" label="Street" value="{!case.Contact.MailingStreet}"/>
+                    <apex:outputField id="city" label="City" value="{!case.Contact.MailingCity}"/>
+<!--                    <label for="state">, </label> -->
+                    <apex:outputField id="state" label="State" value="{!case.Contact.MailingState}"/>
+<!--                    <label for="zip">  </label> -->
+                    <apex:outputField id="zip" label="Zip" value="{!case.Contact.MailingPostalCode}"/>
+
+</apex:pageBlockSection>
+
+                </td>
+            </tr>
+        </table>
+    </apex:form>
+</apex:pageBlock>
+    <apex:relatedList subject="{!case.ContactId}" list="Cases">
+        <apex:facet name="body">
+            
+        </apex:facet>
+    </apex:relatedList>
+    
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

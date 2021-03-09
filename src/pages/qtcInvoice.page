@@ -1,0 +1,356 @@
+<apex:page standardController="blng__Invoice__c" showHeader="false" sidebar="false" title="{!blng__Invoice__c.Name}">
+<html>
+    <body style="font-family: helvetica; width: 1024px; margin-left:auto; margin-right:auto;">
+        <table style="width: 100%;">
+            <tr style="width: 100%;">
+                <td style="width: 50%;">
+                    <img height="50px" src="{!$Setup.Q2C_Demo_Settings__c.Company_Image_URL__c}" alt="{!$Setup.Q2C_Demo_Settings__c.Company_Name__c}" />
+                </td>
+                <td style="width: 35%; text-align: right; color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; font-weight: bold; font-size: 2em; vertical-align: middle;">INVOICE</td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr style="width: 100%;">
+                <td style="width: 50%;">
+                    <table>
+                        <tr>
+                            <td>{!$Setup.Q2C_Demo_Settings__c.Company_Name__c}</td>
+                        </tr>
+                        <tr>
+                            <td>{!$Setup.Q2C_Demo_Settings__c.Company_Street__c}, {!$Setup.Q2C_Demo_Settings__c.Company_State__c} {!$Setup.Q2C_Demo_Settings__c.Company_Postal_Code__c}</td>
+                        </tr>
+                        <tr>
+                            <td>{!$Setup.Q2C_Demo_Settings__c.Company_Phone__c}</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>{!$Setup.Q2C_Demo_Settings__c.Company_Email__c}</td>
+                        </tr>
+                    
+                    </table>
+                </td>
+                <td style="width: 50%;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="width: 100%;">
+                            <td style="width: 75%; text-align: right;">DATE</td>
+                            <td style="width: 25%; text-align: center; border: 1px solid black;">
+                                
+                                <apex:outputText value="{0, date, M/d/y}">
+                                    <apex:param value="{!blng__Invoice__c.blng__InvoiceDate__c}" />
+                                </apex:outputText>
+                                
+                            </td>
+                        </tr>
+                        <tr style="width: 100%;">
+                            <td style="width: 75%; text-align: right;">INVOICE NO.</td>
+                            <td style="width: 25%; text-align: center; border: 1px solid black;">{!blng__Invoice__c.Name}</td>
+                        </tr>
+                        <tr style="width: 100%;">
+                            <td style="width: 75%; text-align: right;">CUSTOMER NO.</td>
+                            <td style="width: 25%; text-align: center; border: 1px solid black;">32573</td>
+                        </tr>
+                        <tr style="width: 100%;">
+                            <td style="width: 75%; text-align: right;">DUE ON</td>
+                            <td style="width: 25%; text-align: center; border: 1px solid black; background: #ddd;">
+                                
+                                <apex:outputText value="{0, date, M/d/y}">
+                                    <apex:param value="{!blng__Invoice__c.blng__DueDate__c}" />
+                                </apex:outputText>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <br />
+
+        <table style="width: 50%;">
+            <tr style="width: 100%;">
+                <td style="border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; background-color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; color: #fff; font-weight: bold;">BILL TO</td>
+            </tr>
+            <tr style="width: 100%;">
+                <td>{!blng__Invoice__c.blng__BillToContact__r.Name}</td>
+            </tr>
+            <tr style="width: 100%;">
+                <td>{!blng__Invoice__c.blng__BillToContact__r.MailingStreet}</td>
+            </tr>
+            <tr style="width: 100%;">
+                <td>{!blng__Invoice__c.blng__BillToContact__r.MailingCity} {!blng__Invoice__c.blng__BillToContact__r.MailingState}, {!blng__Invoice__c.blng__BillToContact__r.MailingPostalCode}</td>
+            </tr>
+            <tr style="width: 100%;">
+                <td>{!blng__Invoice__c.blng__BillToContact__r.email}</td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c};" cellpadding="2">
+            <tr style="width: 100%;">
+                <th style="width: 30%; border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; background-color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; color: #fff; font-weight: bold;">PRODUCT</th>
+                <th style="width: 15%; border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; background-color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; color: #fff; font-weight: bold; text-align: center;">Charge Type</th>
+                <th style="width: 15%; border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; background-color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; color: #fff; font-weight: bold; text-align: center;">BILL FREQUENCY</th>
+                <th style="width: 15%; border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; background-color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; color: #fff; font-weight: bold; text-align: center;">SERVICE PERIOD</th>
+                <th style="width: 10%; border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; background-color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; color: #fff; font-weight: bold; text-align: center;">QUANTITY</th>
+                <th style="width: 15%; border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; background-color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; color: #fff; font-weight: bold; text-align: center;">UNIT PRICE</th>
+                <th style="width: 15%; border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; background-color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; color: #fff; font-weight: bold; text-align: center;">NET AMOUNT</th>
+            </tr>
+            <apex:variable var="c" value="{!1}" />
+            
+            <apex:repeat value="{!blng__Invoice__c.blng__InvoiceInvoiceLines__r}" var="line">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>{!line.blng__Product__r.Name}</td>
+                    <td style="text-align: center;">{!line.blng__OrderProduct__r.SBQQ__ChargeType__c}</td>
+                    <td style="text-align: center;">{!line.blng__OrderProduct__r.SBQQ__BillingFrequency__c}</td>
+                    <td style="text-align: center;">
+                        
+                        <apex:outputText value="{0, date, M/d/y} - {1, date, M/d/y}" rendered="{!NOT(ISBLANK(line.blng__EndDate__c))}">
+                                <apex:param value="{!line.blng__StartDate__c}" />
+                                <apex:param value="{!line.blng__EndDate__c}" />
+                        </apex:outputText>
+                        
+                    </td>
+                    <td style="text-align: center;">{!line.blng__Quantity__c}</td>
+                    <td style="text-align:right;">
+                        {!blng__Invoice__c.Currency_Symbol__c}
+                        <apex:outputText value="{0,number,###,###,###,##0.00}">
+                            <apex:param value="{!line.blng__UnitPrice__c}" />
+                        </apex:outputText>
+                        
+                    </td>
+                    <td style="text-align:right;">
+                        {!blng__Invoice__c.Currency_Symbol__c}
+                        <apex:outputText value="{0,number,###,###,###,##0.00}">
+                            <apex:param value="{!line.blng__TotalAmount__c}" />
+                        </apex:outputText>
+                        
+                    </td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:repeat>
+            
+            <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+  
+            <apex:outputText rendered="{!IF(c < 10, true ,false)}">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:outputText>
+
+            <apex:outputText rendered="{!IF(c < 10, true ,false)}">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:outputText>
+
+            <apex:outputText rendered="{!IF(c < 10, true ,false)}">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:outputText>
+
+            <apex:outputText rendered="{!IF(c < 10, true ,false)}">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:outputText>
+
+            <apex:outputText rendered="{!IF(c < 10, true ,false)}">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:outputText>
+
+            <apex:outputText rendered="{!IF(c < 10, true ,false)}">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:outputText>
+
+            <apex:outputText rendered="{!IF(c < 10, true ,false)}">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:outputText>
+
+            <apex:outputText rendered="{!IF(c < 10, true ,false)}">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:outputText>
+
+            <apex:outputText rendered="{!IF(c < 10, true ,false)}">
+                <apex:variable var="color" value="{!IF(MOD(c,2)=0,'fff','eee')}"/>
+                <tr style="background-color: #{!color}">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <apex:variable var="c" value="{!c+1}" />
+            </apex:outputText>
+
+
+
+        </table>
+        <br />
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="width: 100%;">
+                <td style="width: 70%;">&nbsp;</td>
+                <td style="width: 15%; font-weight: bold;">SUBTOTAL</td>
+                <td style="width: 15%; text-align: right;">
+                    
+                    {!blng__Invoice__c.Currency_Symbol__c}
+                        <apex:outputText value="{0,number,###,###,###,##0.00}">
+                        <apex:param value="{!blng__Invoice__c.blng__Subtotal__c}" />
+                    </apex:outputText>
+                    
+                </td>
+            </tr>
+            <tr style="width: 100%;">
+                <td style="width: 70%;">&nbsp;</td>
+                <td style="width: 15%; font-weight: bold;">TAX</td>
+                <td style="width: 15%; text-align: right;">
+                        {!blng__Invoice__c.Currency_Symbol__c}
+                        <apex:outputText value="{0,number,###,###,###,##0.00}">
+                        <apex:param value="{!blng__Invoice__c.blng__TaxAmount__c}" />
+                    </apex:outputText>
+                    
+                </td>
+            </tr>
+            <tr style="width: 100%;">
+                <td style="width: 70%;">&nbsp;</td>
+                <td style="width: 15%; font-weight: bold; border-bottom :3px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c};">OTHER</td>
+                <td style="width: 15%; text-align: right; border:1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; border-bottom-width: 3px;"></td>
+            </tr>
+            <tr style="width: 100%;">
+                <td style="width: 70%;">&nbsp;</td>
+                <td style="width: 15%; font-weight: bold;">TOTAL</td>
+                <td style="width: 15%; text-align: right; font-weight: bold; background:#ddd;">
+                    
+                    {!blng__Invoice__c.Currency_Symbol__c}
+                        <apex:outputText value="{0,number,###,###,###,##0.00}">
+                        <apex:param value="{!blng__Invoice__c.blng__TotalAmount__c}" />
+                    </apex:outputText>
+                    
+                </td>
+            </tr>
+            <tr style="width: 100%;">
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr style="width: 100%;">
+                <td style="width: 70%;">&nbsp;</td>
+                <td style="width: 30%; text-align: center;" colspan="2">Make All Checks Payable to:</td>
+            </tr>
+
+            <tr style="width: 100%;">
+                <td style="width: 70%;">&nbsp;</td>
+                <td style="width: 30%; text-align: center;" colspan="2">{!$Organization.Name}</td>
+            </tr>
+            <tr style="width: 100%;">
+                <td style="width: 70%;">&nbsp;</td>
+                <td style="width: 30%; text-align: center;" colspan="2">
+                    <!--<a href="Payment_Site_URL__c" target="_blank">PAY ONLINE</a>-->
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 50%; border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; border-collapse: collapse;">
+            <tr style="width: 100%;">
+                <td style="border: 1px solid #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; background-color: #{!$Setup.Q2C_Demo_Settings__c.Company_Primary_Color__c}; color: #fff; font-weight: bold;">COMMENTS</td>
+            </tr>
+            <tr style="width: 100%;">
+                <td>&nbsp;</td>
+            </tr>
+            <tr style="width: 100%;">
+                <td>&nbsp;</td>
+            </tr>
+            <tr style="width: 100%;">
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+        <p style="text-align: center;">If you have any questions about this invoice, please contact</p>
+        <p style="text-align: center;">{!$Setup.Q2C_Demo_Settings__c.Company_Name__c} at {!$Setup.Q2C_Demo_Settings__c.Company_Phone__c}</p>
+        <p style="text-align: center; font-weight: bold;">Thank You For Your Business!</p>
+
+    </body>
+</html>
+</apex:page>

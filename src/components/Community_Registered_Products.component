@@ -1,0 +1,55 @@
+<apex:component controller="Community_Registered_Products_Controller">
+   
+    <apex:includeScript value="{!URLFOR($Resource.SDO_jqueryui192, '/js/jquery-1.8.3.js')}"/>
+    
+   
+    <style type="text/css" media="all">
+        @import url("{!$Site.prefix}/apex/Community_Widget_CSS_Override");
+    </style>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log("My Registered Products Widget Ready!");
+            insertImage();
+        });
+        function insertImage()
+        {
+            
+            var index = 0;
+            <apex:repeat value="{!MyRegisteredProducts}" var="p">
+                $(".myImage:eq("+index+")").html('{!p.Image__c}');
+                
+                $(".myImage:eq("+index+") img").addClass('myImageIcon');
+                index++;
+            </apex:repeat>
+            
+            var i = $(".myImageIcon");
+            for(var x=0;x<i.length;x++)
+                $(i[x]).attr('src',''+$(i[x]).attr('src'));
+                
+            
+        }
+    </script>
+    
+    <div class="widget_outer">
+        <div class="widget_inner">
+            <div class="widget_header">
+                <div>My Registered Products</div>
+            </div>
+            <div class="widget_body">
+                <table class="table table-condensed">
+                    <tbody>
+                        <apex:repeat value="{!MyRegisteredProducts}" var="p">
+                            <tr>
+                                <td class="myImage"></td>
+                                <td><apex:outputLink value="/{!p.Id}">{!p.Name}</apex:outputLink></td>
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </div>
+            <div class="widget_footer">
+            </div>
+        </div>
+    </div>
+</apex:component>

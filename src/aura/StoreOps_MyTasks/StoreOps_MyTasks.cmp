@@ -1,0 +1,16 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+    <aura:attribute name="myBool" type="Boolean" default="true"/>
+    <aura:attribute name="Task1" type="String" default="New Arrivals End Cap Setup"/>
+    <aura:attribute name="Task2" type="String" default="New Catalog Trail"/>
+    <aura:attribute name="Task3" type="String" default="Final Clearance Markdowns"/>
+    <aura:attribute name="Task4" type="String" default="Reschedule Jen Taylor Appt"/>
+	<div class="box maxheight">
+    	<div class="padding">
+        	<h2>Today's Tasks</h2>
+            <c:StoreOps_MyTasks_Task taskIcon="action:new_task" taskLabel="{!v.Task1}" taskStatus="Not Started"  IconSize="xx-small" />
+            <c:StoreOps_MyTasks_Task taskIcon="action:new_task" taskLabel="{!v.Task2}" taskStatus="Not Started"  IconSize="xx-small" />
+            <c:StoreOps_MyTasks_Task taskIcon="action:new_task" taskLabel="{!v.Task3}" taskStatus="In Progress"  IconSize="xx-small" />
+            <c:StoreOps_MyTasks_Task taskIcon="action:change_record_type" taskLabel="{!v.Task4}" taskStatus="Completed"  IconSize="xx-small" />
+        </div>
+    </div>
+</aura:component>

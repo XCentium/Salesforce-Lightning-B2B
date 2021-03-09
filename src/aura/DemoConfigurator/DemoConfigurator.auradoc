@@ -1,0 +1,6 @@
+<aura:documentation>
+	<aura:description>Handle RCG IDO Setup Steps</aura:description>
+	<aura:example name="ComponentName" ref="DemoConfigurator" label="Label">
+		Component Developed by Jesse Chase | jchase@salesforce.com. This component handles many of the RCG IDO Setup Steps that were manually setup before.
+	</aura:example>
+</aura:documentation>

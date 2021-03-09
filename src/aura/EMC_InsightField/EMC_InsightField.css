@@ -1,0 +1,19 @@
+.THIS {
+    margin-bottom: 1em;
+}
+
+.THIS .hidden {
+    display:none;
+}
+
+.THIS .lookups {
+    position: absolute;
+    background: #fff;
+    z-index: 5;
+    width: 100%;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0 0 3px 3px;
+    box-shadow: 1px 1px 1px rgba(0,0,0,.1);
+}

@@ -1,0 +1,37 @@
+<apex:component controller="SDOSiteController">
+<div class = "PPSignUp">
+    <div class="sidebarModule">
+        <form base_target="_top" method="post" name="signup">
+                <input type="hidden" value="" name="startURL"/> 
+                <input type="hidden" value="" name="loginURL"/>
+                <input type="hidden" value="true" name="useSecure"/>
+                 <input type="hidden" value="{!OrgID}" name="orgId"/> 
+                 <input type="hidden" value="{!PPortalID}" name="portalId"/> 
+                 <input type="hidden" value="2" name="loginType"/> 
+                 <input type="hidden" value="signupAction" name="action"/>
+        <div class="sidebarModuleHeader">
+       
+                Don't Have a Partner Portal Account? <br/> 
+          
+        </div>
+        <div class="sidebarModuleBody">
+            
+            <table cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                    <tr>
+                        <td><label for="username"><b>Enter your email address to register.:</b></label></td>
+                    </tr>
+                    <tr>    
+                        <td><input style="width: 162px;" type="text" class="email" maxlength="80" size="25" name="signupEmail"/></td> <br/>
+                  </tr>
+                  <tr>
+                    <td class="pbButtonb" align="right" style="padding-top: 6px;"><input type="submit" value="Submit" class="btn"/></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        </form>
+     </div>
+</div>
+</apex:component>

@@ -1,0 +1,6 @@
+<aura:documentation>    
+    <aura:description>
+        <p>Clienteling App created by Jesse Chase | jchase@salesforce.com | 2018</p>
+    </aura:description>
+	<aura:example name="ClientelingApp" ref="ClientelingApp" label="Label"></aura:example>
+</aura:documentation>

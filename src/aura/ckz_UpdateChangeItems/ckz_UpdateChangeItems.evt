@@ -1,0 +1,10 @@
+<!--
+ - Created by msobczak on 11/16/2018.
+ -->
+
+<aura:event type="COMPONENT" description="ckz_UpdateChangeItems">
+    <aura:attribute name="cart_item_sfid" type="String" />
+    <aura:attribute name="sku" type="String" />
+    <aura:attribute name="qty" type="Integer" />
+    <aura:attribute name="orig_qty" type="Integer" />
+</aura:event>

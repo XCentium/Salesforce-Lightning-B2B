@@ -1,0 +1,3 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global" >
+    <img class="singleimage" src="{!$Resource.MLMJourneyBuilder}"  />
+</aura:component>

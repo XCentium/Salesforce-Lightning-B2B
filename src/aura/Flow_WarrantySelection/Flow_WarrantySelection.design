@@ -1,0 +1,5 @@
+<design:component >
+	<design:attribute name="ProductId" label="Product Id"/>
+    <design:attribute name="OrderId" label="Order Id"/>
+    <design:attribute name="pricebookid" label="Pricebook Id"/>
+</design:component>

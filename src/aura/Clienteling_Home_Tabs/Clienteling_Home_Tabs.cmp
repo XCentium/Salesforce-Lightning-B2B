@@ -1,0 +1,66 @@
+<aura:component implements="force:appHostable">
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+     <div class="slds">
+     <div class="slds-tabs--scoped">
+        <ul class="slds-tabs--scoped__nav" role="tablist">
+           <aura:if isTrue="{!setting.Enable_Sales_Leaderboard__c == true}">
+           	   <li aura:id="t1" class="slds-tabs--scoped__item slds-text-title--caps slds-active" title="your tab 1" role="presentation" onclick="{! c.tabOneAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" id="tab-scoped-1__item">{!setting.Leaderboard_Label__c}</a></li>
+               <li aura:id="t2" class="slds-tabs--scoped__item slds-text-title--caps" title="your tab 2" role="presentation" onclick="{! c.tabTwoAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-2" id="tab-scoped-2__item">{!setting.Chatter_Label__c}</a></li>
+           <aura:set attribute="else">
+               <li aura:id="t2" class="slds-tabs--scoped__item slds-text-title--caps slds-active" title="your tab 2" role="presentation" onclick="{! c.tabTwoAction}"><a class="slds-tabs--scoped__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-2" id="tab-scoped-2__item">{!setting.Chatter_Label__c}</a></li>    
+           </aura:set>
+           </aura:if>
+        </ul>
+        <aura:if isTrue="{!setting.Enable_Sales_Leaderboard__c == true}">
+            <div aura:id="tab1" class="slds-tabs--scoped__content slds-show" role="tabpanel" aria-labelledby="tab-scoped-1__item">
+                <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+                    <thead>
+                        <tr class="slds-text-title_caps">
+                            <th scope="col">
+                                <div class="slds-truncate" title="Opportunity Name">Associate</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Status">Amount Sold</div>
+                            </th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                     <tr>
+                        <td><img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/UserImages/Clienteling/user3pic.png" class="smallrounded"/> Jesse Chase</td>  
+                        <td><ui:outputCurrency aura:id="curr" value="12400" format="¤#,##0.00;(¤#,##0.00)"/></td>
+                     </tr>
+                     <tr>
+                        <td><img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/UserImages/Clienteling/user2pic.jpeg" class="smallrounded"/> Alex Knot</td>  
+                        <td><ui:outputCurrency aura:id="curr" value="9650" format="¤#,##0.00;(¤#,##0.00)"/></td>
+                     </tr>
+                     <tr>
+                        <td><img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/UserImages/Clienteling/user4pic.jpeg" class="smallrounded"/>Lauren Lindsay</td>  
+                        <td><ui:outputCurrency aura:id="curr" value="8745" format="¤#,##0.00;(¤#,##0.00)"/></td>
+                     </tr>
+                     <tr>
+                        <td><img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/UserImages/Clienteling/andypic.png" class="smallrounded"/> Andy Associate</td>  
+                        <td><ui:outputCurrency aura:id="curr" value="8450" format="¤#,##0.00;(¤#,##0.00)"/></td>
+                     </tr>
+                     <tr>
+                        <td><img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/UserImages/Clienteling/user1pic.jpeg" class="smallrounded"/> Danny Dalton</td>  
+                        <td><ui:outputCurrency aura:id="curr" value="7200" format="¤#,##0.00;(¤#,##0.00)"/></td>
+                     </tr>
+                 </tbody>
+                </table>
+             </div>  
+         </aura:if>
+         <aura:if isTrue="{!setting.Enable_Sales_Leaderboard__c == true}">
+             <div aura:id="tab2" class="slds-tabs--scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-2__item">
+                 <c:Clienteling_Chatter/>
+             </div>
+             <aura:set attribute="else">
+             	<div aura:id="tab2" class="slds-tabs--scoped__content slds-show" role="tabpanel" aria-labelledby="tab-scoped-2__item">
+                     <c:Clienteling_Chatter/>
+                </div>   
+             </aura:set>
+         </aura:if>
+  		</div>
+    </div>
+    </aura:iteration>
+</aura:component>

@@ -1,0 +1,156 @@
+<apex:page standardController="Order"  >
+	<script type="text/javascript">
+    	var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <head>
+    	<style>
+    		#container{
+    			display:none;
+    		}
+    	</style>
+    </head>
+    <body>
+    	<div id="container">
+	    	 <apex:form >
+	    	 	<apex:sectionHeader title="New Order" subtitle="New Order"/>
+		        <apex:pageBlock title="New Order" mode="edit">
+		            <apex:pageBlockButtons >
+		                <apex:commandButton action="{!save}" value="Save"/>
+		                <apex:commandButton action="{!cancel}" value="Cancel"/>
+		            </apex:pageBlockButtons>
+		            <apex:pageBlockSection title="Order Information" columns="2">
+		                <apex:inputField value="{!order.accountId}"/>
+		                <apex:inputField value="{!order.status}"/>
+		                <apex:inputField value="{!order.EffectiveDate}"/>
+		                <apex:inputField value="{!order.DB_Days__c}"/>
+		            </apex:pageBlockSection>
+		            <apex:pageBlockSection title="Customer Information" columns="2">
+		                <apex:inputField value="{!order.BillingStreet}"/>
+		                <apex:inputField value="{!order.BillingCity}"/>
+		                <apex:inputField value="{!order.BillingState}"/>
+		                <apex:inputField value="{!order.BillingPostalCode}"/>
+
+		                <apex:inputField value="{!order.ShippingStreet}"/>
+		                <apex:inputField value="{!order.ShippingCity}"/>
+		                <apex:inputField value="{!order.ShippingState}"/>
+		                <apex:inputField value="{!order.ShippingPostalCode}"/>
+		            </apex:pageBlockSection>
+		            <apex:pageBlockSection title="Shipping Information" columns="2">
+		            	<apex:inputField value="{!order.Shipping_Method__c}"/>
+		            	<apex:inputField value="{!order.Tracking_ID__c}"/>
+		            </apex:pageBlockSection>
+		            <apex:pageBlockSection title="Shipping Information" columns="2">
+		            	<apex:inputField value="{!order.OpportunityId}"/>
+		            	<apex:inputField value="{!order.QuoteId}"/>
+		            </apex:pageBlockSection>
+		        </apex:pageBlock>
+		    </apex:form>
+	    </div>
+    </body>
+
+
+
+
+	<script src="/soap/ajax/33.0/connection.js" type="text/javascript"></script>
+	<apex:includeScript value="/support/console/33.0/integration.js"/>
+	<apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery.min.js')}"/>
+	<script type="text/javascript">
+        var newOrderId = '';
+
+        $(document).ready(function(){
+	        if (sforce.console.isInConsole()) {
+				var result = sforce.connection.query("select id,name from profile where id = \'{!$User.ProfileId}\' limit 1");
+				var records = result.getArray("records");
+				var profileRecord = records[0];
+				console.log(profileRecord);
+				//check to see if current user is olivia order
+				if(profileRecord.Name == 'Order Specialist - Custom' ) {
+					//create a new order, associated with the template order and open the catalog
+					var order = new sforce.SObject("Order");
+					
+					//set the pricebook to be the the one that has 'Default Order Pricebook = true, must be active.'
+					var test11 = sforce.connection.query('select id,name,Default_Order_Pricebook__c from Pricebook2 where Default_Order_Pricebook__c = true');
+					var records11 = test11.getArray("records");
+					var pricebook = records11[0];
+					order.Pricebook2id = pricebook.Id;
+
+					var urlAccountId = '{!$CurrentPage.parameters.retURL}';
+					urlAccountId = urlAccountId.substring(1,16);
+					console.log('URL STRING from act btn:'+urlAccountId);
+					if(urlAccountId.substring(0,3) == '001'){
+						order.AccountId = urlAccountId;
+					}else {
+						//removing hard coded id
+						//order.AccountId = "0015Y00002bSvzE";
+						var r1 = sforce.connection.query('select id, name from account where name = \'Unknown Customer\' limit 1');
+						var r2 = r1.getArray("records");
+						if(r2.length > 0) {
+							var account = r2[0];
+							order.AccountId = account.Id;
+						}else {
+							console.log('could not attach an accont to the order - dummy account name may have been changed.');
+						}
+					}
+					
+					order.Status="Draft";
+					order.EffectiveDate = new Date().toISOString();
+					var result = sforce.connection.create([order]);
+					if (result[0].getBoolean("success")) {
+					    console.log(result[0]);
+					    console.log("new order created with id " + result[0].id);
+
+					    newOrderId = result[0].id;
+						testOpenPrimaryTab(result[0].id,'');
+						testCloseTab();
+					} else {
+					  alert("failed to create order " + result[0]);
+					}
+				}else {
+					//open tab with default new order entry page
+					$('#container').show();
+				}
+
+	           } else {
+	           		//not in console go to default new order creation page
+	                console.log('Creating a new order');
+	                $('#container').show();
+	        }
+    	});
+
+         function testOpenPrimaryTab(orderId,orderNumber) {
+            //Open a new primary tab with the salesforce.com home page in it
+            sforce.console.openPrimaryTab(null, '/'+orderId, true, 
+                'Order ' + orderNumber, openSuccess, 'salesforceTab');
+        }
+        
+        var openSuccess = function openSuccess(result) {
+            //Report whether opening the new tab was successful
+            if (result.success == true) {
+                sforce.console.setTabIcon('/img/icon/orderBell16.png',result.id);
+                console.log('Primary tab successfully opened, order id : ' + newOrderId + ' tab Id : ' + result.id);
+		    	/*
+		    	window.setTimeOut(function(){
+		    		result2 = sforce.connection.retrieve("OrderNumber", "Order", [newOrderId]);
+		    		sforce.console.setTabTitle('Order ' + result2[0].OrderNumber , result.id)
+		    		console.log('set the order number!');
+		    	},500);
+			    sforce.console.setTabIcon('/img/icon/orderBell16.png',result.id);
+			    */
+            } else {
+                console.log('Primary tab cannot be opened');
+            }
+        };
+
+		function testCloseTab() {
+            //First find the ID of the current tab to close it
+            sforce.console.getEnclosingTabId(closeSubtab);
+        }
+        
+        var closeSubtab = function closeSubtab(result) {
+            //Now that we have the tab ID, we can close it
+            var tabId = result.id;
+            sforce.console.closeTab(tabId);
+        };
+
+	</script>
+</apex:page>

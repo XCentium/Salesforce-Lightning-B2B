@@ -1,0 +1,6 @@
+<design:component>
+    <design:attribute Description="Toggle Label" Name="ToggleLabel" />
+    <design:attribute Description="Description of what is being enabled/Disabled" Name="UseCaseDescription" />
+    <design:attribute Description="API Name of Permission Set" Name="PermissionSetApiName" />
+    <design:attribute Description="URL to a script or documentation. Likely should link out to Solution Central" Name="ExternalUrl" />
+</design:component>

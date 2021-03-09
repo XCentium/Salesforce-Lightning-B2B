@@ -1,0 +1,4 @@
+<design:component>
+    <design:attribute name="taskListString" label="Task List 1"/>
+    <design:attribute name="taskListString2" label="Task List 2"/>
+</design:component>

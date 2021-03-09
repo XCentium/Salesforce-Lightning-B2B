@@ -1,0 +1,175 @@
+.THIS.tabItem {
+    border-bottom: 3px solid #1589EE;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-content: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    -webkit-align-items: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    white-space: nowrap;
+    position: relative;
+    max-width: 15rem;
+    height: 2.5rem;
+}
+.THIS.tabItem.isActive,.THIS.tabItem:hover {
+    outline: 0;
+    border-radius: 0;
+    background-color: #f7f9fb;
+    border-bottom: 3px solid #075ae2;
+    margin-bottom: -3px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.THIS.tabItem.isActive {
+    box-shadow: inset -1px 0 0 #d8dde6,inset 1px 0 0 #d8dde6;
+    border-bottom-color: #f7f9fb;
+}
+.THIS.tabItem.isActive:before {
+    background-color: #075ae2;
+}
+.THIS.tabItem.isActive:before, .THIS.tabItem.isActive:after {
+    content: '';
+    width: 100%;
+    height: 3px;
+    display: block;
+    background: #075ae2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+/* For the label inside the button */
+.THIS.tabItem .tabItem {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-content: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    padding: 0 .75rem;
+    min-width: 0%;
+    color: inherit;
+    text-decoration: none;
+}
+.THIS.tabItem.isActive .tabItem {
+	font-weight: bold;
+}
+
+
+/* DROPDOWN CHEVRON WORK*/
+.THIS .dropdownTriggerContainer {
+    outline: none;
+    position:relative;
+    height: 14px;
+    top: 12px;
+    left: -4px;
+    margin-right: 12px;
+}
+.THIS .slds-icon.dropdownTrigger {
+    height: 14px;
+    width: 14px;
+    display: flex;
+    color: #16325c;
+}
+.THIS .slds-icon.dropdownTrigger:hover {
+    fill: #54698d;
+    color: #54698d;
+}
+.THIS .slds-icon.dropdownTrigger {
+    fill: #16325c;
+    color: #16325c;
+}
+.THIS .forceIcon:before {
+    font-family: "forceIconFontNew";
+    content: attr(data-icon);
+    speak: none;
+    text-rendering: auto;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* DROPDOWN PROPER WORK */
+.THIS .uiPopupTrigger {
+    height: 2rem;
+}
+.THIS .uiMenuList--default.menu--nubbin-top:before {
+    background: #fff;
+}
+.THIS .uiMenuList--default.menu--nubbin-top:before {
+    width: 1rem;
+    height: 1rem;
+    position: absolute;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    content: "";
+    background-color: rgb(255, 255, 255);
+    left: 50%;
+    top: -.5rem;
+    margin-left: -.5rem;
+}
+.THIS .uiMenuList--default.menu--nubbin-top:after {
+    background: rgb(255, 255, 255);
+    box-shadow: -1px -1px 0 0 rgba(0, 0, 0, 0.16);
+    z-index: -1;
+}
+.THIS .uiMenuList--default.menu--nubbin-top:after {
+    width: 1rem;
+    height: 1rem;
+    position: absolute;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    content: "";
+    background-color: rgb(255, 255, 255);
+    left: 50%;
+    top: -.5rem;
+    margin-left: -.5rem;
+}
+.THIS .uiMenuList--default.uiMenuList {
+    background: #fff;
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,.16);
+    border: 1px solid rgb(216, 221, 230);
+    border-radius: .25rem;
+    padding: .75rem 0 .5rem;
+    float: left;
+    position: absolute;
+    min-width: 100px;
+    max-width: 400px;
+    left: 50%;
+    -webkit-transform: translateX(calc(-50% - 10px));
+    -ms-transform: translateX(calc(-50% - 10px));
+    transform: translateX(calc(-50% - 10px));
+    margin-top: .5rem;
+}
+.THIS .uiMenuList--default .uiMenuItem>a, .THIS .uiMenuList--default .uiMenuItem>span {
+    height: inherit;
+}
+.THIS .uiMenuList--default .uiMenuItem>a:hover, .THIS .uiMenuList--default .uiMenuItem>a:focus, .THIS .uiMenuList--default .uiMenuItem>span:hover, .THIS .uiMenuList--default .uiMenuItem>span:focus {
+    color: inherit;
+    outline: 0;
+    text-decoration: none;
+    background-color: #f4f6f9;
+    border-radius: 0;
+}

@@ -1,0 +1,59 @@
+<aura:component controller="EMC_ScoreController" implements="force:lightningQuickActionWithoutHeader,c:MixpanelInterface,force:hasRecordId" extends="c:Mixpanel" access="global">
+	<aura:handler name="init" value="{!this}" action="{!c.onInit}"></aura:handler>
+    <aura:attribute name="recordId" type="String"></aura:attribute>
+    <aura:attribute name="sessionId" type="string"></aura:attribute>
+    <aura:attribute name="saving" type="boolean" default="false"></aura:attribute>
+    
+    <aura:attribute name="lead" type="Object"></aura:attribute>
+    <aura:attribute name="leadFields" type="Object[]"></aura:attribute>
+    <aura:attribute name="leadFieldsMap" type="Object"></aura:attribute>
+    
+    <aura:attribute name="scoreIntelligence" type="Object" default="{'Score': 0}"></aura:attribute>
+    <aura:attribute name="leadIQConfig" type="Object"></aura:attribute>
+    <aura:attribute name="insights" type="Object[]"></aura:attribute>
+    <aura:attribute name="modelFactors" type="Object[]"></aura:attribute>
+    <aura:attribute name="modelFactorInsights" type="Object[]"></aura:attribute>
+    
+    <aura:attribute name="deletedModelFactors" type="Object[]"></aura:attribute>
+    <aura:attribute name="deletedInsights" type="Object[]"></aura:attribute>
+    <aura:handler name="deleteIndex" event="c:deleteIndex" action="{!c.deleteIndex}"/>
+    
+    <iframe class="hidden" src="/apex/VisualforceREST"></iframe>
+    
+    <div class="container">
+        <div aura:id="spinner">
+            <lightning:spinner variant="brand" size="large"/>
+        </div>
+        <div class="main slds-scope">
+            <div class="slds-form slds-m-bottom_small">
+                <div class="slds-form-element">
+                    <lightning:input type="number" required="true" label="Score" min="0" max="99" value="{!v.scoreIntelligence.Score}" />
+                </div>
+            </div>
+            
+            <div class="slds-text-title_caps slds-m-bottom_x-small">
+                Insights
+            </div>
+            
+            <aura:iteration items="{!v.modelFactorInsights}" var="modelFactorInsight" indexVar="idx">
+                <c:EMC_LeadReason modelFactor="{!modelFactorInsight.modelFactor}"
+                                  insight="{!modelFactorInsight.insight}"
+                                  factor1="{!modelFactorInsight.Factor1}"
+                                  factor2="{!modelFactorInsight.Factor2}"
+                                  leadValues="{!v.lead}"
+                                  leadFields="{!v.leadFields}"
+                                  leadFieldsMap="{!v.leadFieldsMap}"
+                                  index="{!idx}"></c:EMC_LeadReason>
+            </aura:iteration>
+            
+            <aura:if isTrue="{!v.modelFactorInsights.length &lt; 5}">
+                <div class="slds-text-align_center add" href="javascript:void(0)" onclick="{!c.addInsight}">Add</div>
+            </aura:if>
+        </div>
+        
+        <div class="button-container slds-clearfix slds-p-top_x-small">
+            <lightning:button class="slds-button slds-button_neutral slds-float_left" onclick="{!c.cancel}">Cancel</lightning:button>
+            <lightning:button class="slds-button slds-button_brand slds-float_right" disabled="{!v.saving}" onclick="{!c.save}">Save</lightning:button>
+        </div>
+    </div>
+</aura:component>

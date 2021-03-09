@@ -1,0 +1,36 @@
+<aura:component description="ckz_OrderFormPanel"
+                implements="force:appHostable,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,lightning:availableForFlowScreens,force:lightningQuickActionWithoutHeader,force:hasRecordId"
+                controller="ckz_OrderFormPanelController" >
+
+    <aura:attribute name="recordId" type="String" />
+
+    <!-- 2019-09-05  msobczak: added -->
+    <aura:attribute name="defaultStorefront" type="String" />
+
+    <aura:attribute name="useCardLayout" type="Boolean" default="false" />
+
+    <aura:attribute name="parameters" type="Map" />
+
+    <aura:attribute name="newCartFirstScreenChoice" type="String" default="Empty cart" />
+
+
+    <aura:registerEvent name="renderPanel" type="c:ckz_OrderFormRenderPanelEvent" />
+    <aura:handler name="renderPanel" action="{!c.renderPanel}" />
+
+
+    <aura:attribute name="step" type="Integer" default="1" />
+
+    <aura:attribute name="showSpinner" type="Boolean" default="true"></aura:attribute>
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+
+    <div class="c-container">
+        <aura:if isTrue="{!v.showSpinner}">
+            <div class="slds-spinner_container">
+                <lightning:spinner alternativeText="Loading" size="medium" />
+            </div>
+        </aura:if>
+        {!v.body}
+    </div>
+
+</aura:component>

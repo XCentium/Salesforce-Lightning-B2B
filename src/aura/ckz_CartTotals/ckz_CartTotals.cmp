@@ -1,0 +1,40 @@
+<aura:component description="ckz_CartTotals">
+
+    <aura:attribute name="totalAmount" type="Decimal" required="true" />
+    <aura:attribute name="totalQuantity" type="Integer" required="true" />
+
+    <article class="slds-card">
+
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+    
+                    <!-- put icon here -->
+                    <lightning:icon iconName="utility:cart" alternativeText="Cart Summary" />
+    
+                    <span class="slds-icon_container" title="item">
+                        <span class="slds-assistive-text">Cart Summary</span>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span>Cart Summary</span>
+                    </h2>
+                </div>
+    
+            </header>
+        </div>
+
+        <div class="slds-card__body slds-card__body_inner">
+
+            <p class="slds-p-horizontal--small">{!v.totalQuantity} item(s)</p>
+
+            <p class="slds-p-horizontal--small">
+                Grand Total: <lightning:formattedNumber value="{!v.totalAmount}" style="currency"/>
+            </p>
+    
+        </div>
+        
+    </article>
+
+</aura:component>

@@ -1,0 +1,22 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+   <lightning:carousel>
+     <lightning:carouselImage
+        src = "https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/StoreOps/Carousel1.jpg"
+        header = "Welcome Back!"
+        description = "Welcome Back to work. Lets keep COVID-19 Cleaning as our highest priority."
+        alternativeText = "">
+    </lightning:carouselImage>
+    <lightning:carouselImage
+        src = "https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/StoreOps/Carousel2.jpg"
+        header = "Required Learning Trail"
+        description = "We have published a new required learning trail."
+        alternativeText = "">
+    </lightning:carouselImage>
+    <lightning:carouselImage
+        src = "https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/StoreOps/Carousel3.jpg"
+        header = "Store Opening/Closing Process"
+        description = "We have a new opening and closing process. Please follow the suggested steps."
+        alternativeText = "">
+    </lightning:carouselImage>
+   </lightning:carousel>
+</aura:component>

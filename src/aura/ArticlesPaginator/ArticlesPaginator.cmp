@@ -1,0 +1,21 @@
+<aura:component >
+
+    <aura:attribute name="page" type="integer"/>
+    <aura:attribute name="pages" type="integer"/>
+    <aura:attribute name="total" type="integer"/>
+    
+    <div class="container" style="text-align: center !important;">
+        <div class="left">
+            <aura:renderIf isTrue="{!v.page > 1}">
+                <button onclick="{!c.previousPage}">Previous</button>
+            </aura:renderIf>
+        </div>
+        <div class="center">{!v.total} articles • page {!v.page} / {!v.pages}</div>
+        <div class="right">
+            <aura:renderIf isTrue="{!v.page &lt; v.pages}">
+                <button onclick="{!c.nextPage}">Next</button>
+            </aura:renderIf>
+        </div>
+	</div>
+    
+</aura:component>

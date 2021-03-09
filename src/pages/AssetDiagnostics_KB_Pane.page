@@ -1,0 +1,88 @@
+<apex:page standardController="Contact" tabstyle="Case" extensions="tierOneCallScriptCon" showHeader="false" sidebar="false">
+                    <title>Asset Diagnostics KB Pane</title>
+
+    <apex:includeScript value="/support/console/22.0/integration.js"/>
+    <script type="text/javascript">
+
+        function openSubtabs() {
+            var openSubtabsFunction =
+                function openSubtabsFunction(result) {
+                    if ("{!caseID}" !== "") {
+                        sforce.console.openSubtab(result.id,'/{!caseID}',false,'Case: {!caseNumber}'); 
+
+                    }
+                }
+            sforce.console.getEnclosingPrimaryTabId(openSubtabsFunction);
+        }
+        function testCloseTab() {
+            //First find the ID of the current tab to close it
+            sforce.console.getEnclosingTabId(closeSubtab);
+        }
+        var closeSubtab = function closeSubtab(result) {
+            //Now that we've got the tab ID, we can close it
+            var tabId = result.id;
+            sforce.console.closeTab(tabId);
+        };
+        function defaultTabTitle() {
+            //Set the current tab's title
+            sforce.console.setTabTitle('Diagnose Issue');
+        }
+        var pageLoad = window.onload;        
+            window.onload = function() { 
+            if (pageLoad) { 
+                pageLoad();
+            }
+            defaultTabTitle();
+        }
+        
+        /* Added per SSE-12978 request by Robin Callender - START */
+            /*
+            var caseRedirect = '{!tierOneInterview.varLastStepAfterCase}';
+            
+            if(caseRedirect == 'lastStep'){
+                
+                //window.location = '/{!tierOneInterview.varCaseID}';
+                sforce.console.focusSubtabById(caseTabId); 
+                //var currentTabId = sforce.console.getEnclosingTabId();
+                //alert(currentTabId);
+
+            }
+            */
+            
+        /* Added per SSE-12978 request by Robin Callender - END */
+        
+    </script>
+    <style>.bPageBlock .detailList .dataCol {width:80%;}</style>
+    <table width="100%">
+        <tr>
+            <td width="65%" valign="top">
+                <flow:interview name="GoldStandDiagnosev2" interview="{!tierOneInterview}" finishLocation="/{!contact.Id}" >
+                    <apex:param name="varContactID" value="{!contact.Id}"/>
+                    <apex:param name="varVFPageName" value="ContactSuggestedKBComp"/>
+                    <apex:param name="varAgentFirstName" value="{!$User.FirstName}"/>
+                    <apex:param name="varAgentLastName" value="{!$User.LastName}"/>
+                    <apex:param name="varOrgName" value="{!$User.CompanyName}"/>
+                </flow:interview>
+            </td>
+            <td width="35%" valign="top">
+            <div style="margin-top: 8px;">
+                <iframe name="sideframe" id="sideframe"
+                        src="/apex/{!VFPageName}?id={!contact.Id}&subject={!searchString}&dim1={!firstDim}&dim2={!secondDim}&dim3={!thirdDim}"
+                        frameborder="0" width="100%" height="500px"
+                        onload="openSubtabs()">
+                </iframe>
+            </div>
+            </td>
+        </tr>
+    </table>  
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

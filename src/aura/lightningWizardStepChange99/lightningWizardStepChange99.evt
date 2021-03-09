@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="Step change event">
+    <aura:attribute name="type" type="string" description="accept values: next,previous"></aura:attribute>
+</aura:event>

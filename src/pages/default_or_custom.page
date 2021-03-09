@@ -1,0 +1,443 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+    <head>
+        <apex:slds />
+        <title>Welcome</title>
+        <!-- Move the styles into a CSS file -->
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            
+            .hidden {
+                display:none;
+            }
+            
+            .slds-scope .page-title {
+            
+            }
+
+            .slds-scope .page-title input {
+                border: 0px none;
+                border-bottom: 1px solid #C8D6E2;
+            }
+            
+            .slds-scope .item {
+                width: 300px;
+                height: 300px;
+                border: 1px solid #DAE3EB;
+                border-radius: 5px;
+            }
+            
+            
+            .slds-scope .item .icon {
+                width: 280px;
+                height: 160px;
+                margin: 0px auto;
+                background-repeat: no-repeat;
+                background-size: auto 120px;
+                background-position: center center;                
+            }
+            
+            
+            .slds-scope .item img {
+                width: 100%;
+            }
+            
+            .slds-scope .item .label {
+                font-weight: 700;
+            }
+
+
+            svg {
+                height: 100%;
+                display:block;
+                width: 100%;
+                position: absolute;
+                top:0;
+                left:0;
+            }
+
+            svg text {
+                font-size: 1.05rem;
+            }
+
+/*            @keyframes popupleft {
+                0% {
+                    transform: translate(150px, 450px);
+                }
+                100% {
+                    transform: translate(150px, 90px);
+                }
+            }
+
+            .pop-up.left {
+                animation-name: popupleft;
+                animation-duration: .75s;
+                animation-iteration-count: 1;
+                animation-timing-function: linear;
+            }
+
+            @keyframes popupright {
+                0% {
+                    transform: translate(505px, 450px);
+                }
+                100% {
+                    transform: translate(505px, 90px);
+                }
+            }
+
+            .pop-up.right {
+                animation-name: popupright;
+                animation-duration: 1.5s;
+                animation-iteration-count: 1;
+                animation-timing-function: linear;
+            }*/
+
+            .big-button {
+                fill: none;
+                pointer-events: all;
+                stroke: #DAE3EB;
+            }
+
+            .big-button.left {
+                transform: translate(201px, 90px);
+            }
+
+            .big-button.right {
+                transform: translate(511px, 90px);
+            }
+
+            .hovering:hover {
+                stroke: #70ACE0;
+                cursor: pointer;
+
+            }
+                        
+            .big-button.selected {
+                stroke: #0071D2;
+            }
+
+            .big-button text {
+                font-size: 0.8rem;
+                fill: black;
+                stroke: none;
+            }
+
+            text.warning {
+                font-size: 0.8rem;
+                fill: #D85F5B;
+                stroke: none;
+            }
+
+            .big-button text.description {
+                fill: #5C7A99;
+            }
+
+            .hovering image.hover-image {
+                display:none;
+            }
+
+            .hovering:hover image.hover-image {
+                display: inline;
+            }
+
+            .hovering.selected image.hover-image {
+                display: inline;
+            }
+
+            .hovering image.nohover-image {
+                display:inline;
+            }
+
+            .hovering:hover image.nohover-image {
+                display: none;
+            }
+            
+            .hovering.selected image.nohover-image {
+                display: none;
+            }
+            .warning-icon {
+                fill: #DA6662;
+                stroke-width: 0px;
+            }
+        </style>    
+    </head>
+    <body>
+        <div class="slds-scope">
+            <div class="slds-container--medium check-list-container container" id="container">
+                <svg  xmlns="http://www.w3.org/2000/svg">
+                    <text text-anchor="middle" x="50%" y="50" >Choose how you would like to create Sales Analytics</text>
+                    <image y="262" width="60%" height="60%" xlink:href="{!$Resource.mountain}"/>
+                    <g class="pop-up big-button left hovering" data-auto-configure="true" id="button-left">
+                        <use id="warning-icon-default" class="warning-icon hidden" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#warning')}" x="10px" y="15px" width="4%" height="4%"></use>
+                        <rect width="280" height="250" rx="5" ry="5"/>
+                        <image x="63" y="55" width="153" height="105" class="nohover-image" xlink:href="{!$Resource.default_grey}"/>
+                        <image id="default-image" x="63" y="55" width="153" height="105" class="nohover-image" xlink:href="{!$Resource.default}"/>
+                        <image id="default-image-mouseover" x="63" y="55" width="153" height="105" class="hover-image" xlink:href="{!$Resource.default_mouseover}"/>
+                        <text text-anchor="middle" x="140" y="193" >Basic</text>
+                        <text text-anchor="middle" class="description" x="140" y="218">Use standard settings.</text>
+                        <text text-anchor="middle" class="description" x="140" y="235" width="581" height="88">Recommended for first-time user.</text>
+                    </g>
+
+                    <g class="pop-up big-button right hovering" data-auto-configure="false" id="button-right">
+                        <rect width="280" height="250" rx="5" ry="5"/>
+                        <image x="66" y="55" width="148" height="116" class="nohover-image" xlink:href="{!$Resource.custom}"/>
+                        <image x="66" y="55" width="148" height="116" class="hover-image" xlink:href="{!$Resource.custom_mouseover}"/>
+                        <text text-anchor="middle" x="140" y="193" >Custom</text>
+                        <text text-anchor="middle" class="description" x="140" y="218">Choose settings that reflect</text>
+                        <text text-anchor="middle" class="description" x="140" y="235">how you prefer to view data.</text>
+                    </g>
+                    <text text-anchor="left" x="200" y="360" id="access-warning-text" class="warning"></text>
+                </svg>    
+            </div>
+        </div>
+
+        
+        <script type="text/javascript" src="/analytics/wave/sdk/js/40.0/wizard-min.js"></script>
+
+<script>
+function removeElement(elementId) {
+    var elem = document.getElementById(elementId);
+    return elem.parentNode.removeChild(elem);
+}
+function disableDefault(){
+    // delete the colored images for default
+    removeElement('default-image');
+    removeElement('default-image-mouseover');
+
+    // show the warning icon
+    removeClass(document.getElementById('warning-icon-default'), 'hidden');
+    // show the red text
+    var warningText = "The Analytics Integration User doesn't have access to the following fields required for standard settings: ";
+    var infoMessages = wizardMetadata.variableDefinitions['DefaultsVisibleMessages'].computedValue.replace(/\n/g, ', ');;
+    var textElement = document.getElementById('access-warning-text');
+    assignLongText(null, textElement, warningText + infoMessages, 48)
+
+    // get rid of the click event
+    var button = document.getElementById('button-left');
+    button.removeEventListener('click', handleItemSelect);
+    
+    // get rid of the hovering stuff
+    removeClass(button, 'hovering');
+}
+
+function addEventListeners(){
+    var button = document.getElementById('button-left');
+    button.addEventListener('click', handleItemSelect);
+    var button2 = document.getElementById('button-right');
+    button2.addEventListener('click', handleItemSelect);
+}
+
+function assignLongText(rectElement, textElement, texts, charWidth){
+    var LINE_PADDING = 16;
+    // remove all lines in the text
+    while (textElement.firstChild) {
+        textElement.removeChild(textElement.firstChild);
+    }
+
+    var x = textElement.getAttribute('x');
+    var y = parseInt(textElement.getAttribute('y'));
+    var initialY = y;
+    var textList = Array.isArray(texts) ? texts : [texts];
+    // each item in the list goes to a separate line
+    for (var i = 0; i < textList.length; i++) {
+        // go through the text
+        var text = textList[i];
+        var rest = text;
+        do {  
+            if (rest.length <= charWidth){
+                // we're done
+                line = rest;
+                rest = '';
+            } else {
+                // take charWidth substring and find last space in it
+                var iSpace = rest.lastIndexOf(' ', charWidth);
+                var line = rest.substring(0, iSpace);
+                if (! line){
+                    // no space in rest
+                    line = rest;
+                    rest = '';
+                }
+                rest = rest.substring(iSpace).trim();
+            }      
+            // for each line create a span
+            // create the span
+            var svgTSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            svgTSpan.setAttribute('x', x);
+            svgTSpan.setAttribute('y', y);
+            y += LINE_PADDING;
+
+            // text for the span
+            var tSpanTextNode = document.createTextNode(line);
+            svgTSpan.appendChild(tSpanTextNode);
+
+            // add it to the text
+            textElement.appendChild(svgTSpan);
+        } while (rest !== '')   
+    };
+
+    // set the height of the background rect
+    if (rectElement){
+        rectElement.setAttribute('height', y - initialY + 10);
+    }
+}
+
+function hasClass(ele, cls) {
+    var classes = ele.getAttribute('class');
+    var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+    return reg.test(classes);
+}
+
+function addClass(ele, cls) {
+    var clses = Array.isArray(cls) ? cls : [cls];
+    for (var i = 0; i < clses.length; i++) {
+        var c = clses[i];
+        if (! hasClass(ele, c)) {
+            var existing = ele.getAttribute('class');
+            ele.setAttribute('class', existing+" "+c);
+        }
+    };
+}
+
+function removeClass(ele, cls) {
+    if (hasClass(ele, cls)) {
+        var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+        var classes = ele.getAttribute('class');
+        var newClasses = classes.replace(reg, ' ');
+        ele.setAttribute('class', newClasses);
+    }
+}
+
+// Note that the SLDS sizes are smaller than the wizard counterparts
+var containerSizeClasses = {
+    "small": ["slds-container--medium"],
+    "medium": ["slds-container--large"],
+    "large": ["slds-container--x-large"]
+};
+
+var wizardMetadata = null;
+
+function setSize(size) {
+    for (var key in containerSizeClasses) {
+        var container = document.querySelector("#container");
+        removeClass(container, containerSizeClasses[key].join("\",\""));
+    }
+    var c2 = document.querySelector("#container");
+    addClass(c2, containerSizeClasses[size].join("\",\""));
+}
+
+function selectItem(autoconfig) {
+    var selected = document.querySelectorAll(".selected");
+    for (var i = 0; i < selected.length; i++) {
+        e = selected[i];
+        removeClass(e, 'selected');
+    };
+    
+    addClass(document.querySelector("[data-auto-configure='" + autoconfig + "']"),"selected");
+}
+
+function handleItemSelect(el) {
+    var autoConfigure = el.currentTarget.getAttribute("data-auto-configure");
+    
+    selectItem(autoConfigure);
+    
+    //autoConfigure = autoConfigure === "true" ? true : false;
+    Controller.update({name: "autoconfig", value: autoConfigure}, function(variables) {
+        console.warn("update returned: ", variables);
+    });
+}
+
+function ieBs(){
+    // for each g find its style and re-assign the transformation
+    var steps = document.querySelectorAll("[id^='button']");
+    for (var i = 0; i < steps.length; i++) {
+        var g = steps[i];
+        var transform= getComputedStyle(g).getPropertyValue('transform');
+        g.setAttribute('transform', transform);
+    };
+}
+
+function addLoadEvent(func) { 
+    var oldonload = window.onload; 
+    if (typeof window.onload != 'function') { 
+        window.onload = func; 
+    } 
+    else { 
+        window.onload = function() { 
+            if (oldonload) { 
+                oldonload(); 
+            } 
+            func(); 
+        } 
+    } 
+}     
+
+
+
+(function (global, wave) {
+    "use strict";
+    var metadata = {};
+    
+    var methods = {
+    
+        ready: function(size, callback) {
+            size = size || "small";
+            var visible = false;
+            wave.wizard.publish({name : 'wizard.ready',  "payload" : {size : size, banner: {visible: visible}}, callback : function (response) {                            
+                var payload = response.payload;
+                metadata = {
+                    page : payload.page,
+                    variableDefinitions : payload.variableDefinitions,
+                    values : payload.initialValues
+                };
+                if (callback instanceof Function) {
+                    callback(metadata);
+                }                    
+            }});
+        },
+        update: function (payload, callback) {
+            wave.wizard.publish({
+                name : 'wizard.update',  
+                payload : payload, 
+                callback : function (response) {
+                    var variables = response.payload;
+                    if (callback instanceof Function) {
+                        callback(variables);
+                    }
+                }
+            });
+        }                    
+    };
+    
+    if (!global.Controller) {
+        global.Controller = {};
+    }
+    
+    global.Controller = methods;
+    
+} (window, Wave));
+
+addLoadEvent(function() {
+    var size = "medium";
+    setSize(size);
+    Controller.ready(size, function(metadata) {
+        wizardMetadata = metadata;    
+        console.warn("metadata: ", metadata);
+        ieBs();
+        addEventListeners();
+        selectItem(metadata.values.autoconfig);
+        if (! metadata.values.DefaultsVisible){
+            // integration user doesn't have access to all fields
+            disableDefault();
+        }
+    });
+});            
+
+              
+</script>
+    </body>
+</html>    
+</apex:page>

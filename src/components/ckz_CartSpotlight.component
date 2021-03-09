@@ -1,0 +1,144 @@
+<!--
+ - Created by brandon.rogers on 1/24/19.
+ -->
+
+<apex:component id="ckz_CartSpotlight">
+    <script id="CKZ-Spotlight-Desktop" type="text/template">
+
+        {{#if this.Spotlight}}
+        <div class="cc_spotlight_products">
+            {{#if this.crossSell}}
+            <div class="ckz_heading_embellished">
+                <h3>{{pageLabelMap 'CrossSell_AlsoConsider'}}</h3>
+            </div>
+            {{else}}
+            <div class="ckz_heading_embellished">
+                <h3>{{pageLabelMap 'Spotlight_Title'}}</h3>
+            </div>
+            {{/if}}
+
+            <div class="row">
+                {{#each_upto this.Spotlight 4}}
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
+                            <div class="row">
+                                <div class="col-xs-4 col-md-12">
+                                    <div class="spotlightProdImage m-t-1">
+                                        <a href="javascript:void(0);" class="productName cc_product_name_img" data-id="{{this.mockProduct.sku}}">
+                                            {{displayImage this.mediaWrapper 'spotlight img-responsive center-block' alt=this.mockProduct.name dataId=this.mockProduct.sku}}
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-8 col-md-12">
+                                    <div class="spotlightProdName m-t-1">
+                                        <a href="javascript:void(0);" class="productName cc_product_name" data-id="{{this.mockProduct.sku}}">{{this.mockProduct.name}}</a>
+                                    </div>
+
+                                    <div class="spotlightProdSku m-t-1">
+                                        {{this.mockProduct.sku}}
+                                    </div>
+
+                                    <div class="spotlightProdPrice m-t-1">
+                                        {{#if this.showNewSubscriptionSelection}}
+                                            {{pageLabelMap 'Prod_SpotLightPrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}
+                                            <i class="far fa-arrow-right"></i>
+                                        {{else}}
+                                        {{#if this.maxPrice}}
+                                        {{#ifbothPricesZero this.minPrice this.maxPrice}}
+                                        {{displayRangePrice 'ProductDetails_PriceRangeFormat' this.minPrice this.maxPrice}}
+                                        {{/ifbothPricesZero}}
+                                        {{else}}
+                                        {{#if this.displayPrice}}
+                                        {{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}
+                                        <i class="far fa-arrow-right"></i>
+                                        {{else}}
+                                        {{price this.price}}
+                                        {{/if}}
+                                        {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each_upto}}
+            </div>
+        </div>
+        {{/if}}
+
+        {{#if this.Featured}}
+        <div class="cc_featured_products">
+            {{#if this.crossSell}}
+            <div class="ckz_heading_embellished">
+                <h3>{{pageLabelMap 'CrossSell_AlsoConsider'}}</h3>
+            </div>
+            {{else}}
+            <div class="ckz_heading_embellished">
+                <h3>{{pageLabelMap 'Featured_Title'}}</h3>
+            </div>
+            {{/if}}
+
+            <div class="row">
+                {{#each_upto this.Featured 4}}
+                <div class="col-md-3">
+
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
+
+                            <div class="row">
+                                <div class="col-xs-4 col-md-12">
+                                    <div class="featuredProdImage">
+                                        <a href="javascript:void(0);" class="productName cc_product_name_img" data-id="{{this.mockProduct.sku}}">
+                                            {{displayImage this.mediaWrapper 'featured img-responsive center-block' alt=this.mockProduct.name dataId=this.mockProduct.sku}}
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-xs-8 col-md-12">
+                                    <div class="featuredProdName m-t-1">
+                                        {{this.mockProduct.name}}
+                                    </div>
+
+                                    <div class="featuredProdSku m-t-1">
+                                        {{this.mockProduct.sku}}
+                                    </div>
+
+                                    <div class="featuredProdPrice m-t-1">
+                                        {{#if this.showNewSubscriptionSelection}}
+                                        {{pageLabelMap 'Prod_FeaturedPrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}
+                                        <i class="far fa-arrow-right"></i>
+                                        {{else}}
+                                        {{#if this.maxPrice}}
+                                        {{#ifbothPricesZero this.minPrice this.maxPrice}}
+                                        {{displayRangePrice 'ProductDetails_PriceRangeFormat' this.minPrice this.maxPrice}}
+                                        {{/ifbothPricesZero}}
+                                        {{else}}
+                                        {{#if this.displayPrice}}
+                                        {{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}
+                                        <i class="far fa-arrow-right"></i>
+                                        {{else}}
+                                        {{price this.price}}
+                                        {{/if}}
+                                        {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each_upto}}
+            </div>
+        </div>
+        {{/if}}
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.spotlightView.desktop.tmpl = 'CKZ-Spotlight-Desktop';
+            CCRZ.uiProperties.spotlightView.desktop.selector = '.ckz-wish-template';
+        });
+    </script>
+</apex:component>

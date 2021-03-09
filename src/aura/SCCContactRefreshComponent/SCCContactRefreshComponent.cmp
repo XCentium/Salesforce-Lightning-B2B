@@ -1,0 +1,54 @@
+<aura:component controller="SCCContactRefreshComponentController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global">
+    <ltng:require styles="/resource/cssFiles/font-awesome.min.css" scripts="/resource/jQueryFiles3/jquery/jquery-3.3.1.min.js" afterScriptsLoaded="{!c.afterScriptsLoaded}"/>
+
+    <aura:attribute name="checkRecords" type="Boolean" default="false"/>
+    <aura:attribute name="customerDetails" type="List"/>
+    <aura:attribute name="syncstatus" type="String"/>
+
+    <aura:if isTrue="{!v.checkRecords}">
+        <article class="slds-card">
+            <lightning:spinner class="slds-hide" alternativeText="Processing.." title="Processing.." aura:id="spnr" variant="brand" size="medium" />
+            <div class="slds-page-header">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <lightning:icon iconName="standard:customers" size="medium" alternativeText="Specified Orders"/>
+                    </div>
+                    <div class="slds-media__body" style="min-width:auto !important">
+                        <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Customer Details">
+                            Customer Details
+                        </h1>
+                        <p class="slds-text-body_small slds-line-height_reset">
+                            Commerce Cloud
+                        </p>
+                    </div>
+                    <div class="slds-media__body" style="text-align: right">
+                        <!--suppress HtmlDeprecatedAttribute -->
+                        <p class="slds-text-body_small slds-line-height_reset" align="center">
+                            {!v.syncstatus}
+                        </p>
+                    </div>
+                    <div class="slds-media__body" style="text-align: right;">
+                        <lightning:button variant="neutral" label="Sync" iconName="utility:sync" iconPosition="right" onclick="{!c.openSyncCust}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-vertical" style="border-top: 0;">
+                    <aura:iteration items="{!v.customerDetails}" var="customer">
+                        <tr class="slds-text-title_caps">
+                            <!--suppress HtmlDeprecatedAttribute -->
+                            <td scope="col">
+                                <b>{!customer.name}</b>
+                            </td>
+                            <!--suppress HtmlDeprecatedAttribute -->
+                            <td scope="col">
+                                {!customer.value}
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </table>
+            </div>
+        </article>
+    </aura:if>
+
+</aura:component>

@@ -1,0 +1,6 @@
+<design:component label="Product Catalog">
+	<design:attribute name="title" label="Title" description="Title shown above catalog, leave blank to omit title."/>
+    <design:attribute name="pricebook" label="Price Book" description="Name of the price book to display in this catalog. Uses 'Standard Price Book' by default, only Active price books are valid."/>
+	<design:attribute name="taxPercentage" label="Tax Percentage" description="Percentage of Subtotal to be Taxed"/>
+    <design:attribute name="shipping" label="Shipping Cost" description="Total Shipping Cost added to Final Order"/>
+</design:component>

@@ -1,0 +1,34 @@
+.THIS .feed{
+    overflow-y: scroll;
+    z-index: 2;
+    
+}
+.THIS {
+    position: relative;
+}
+.THIS .activity-icon {
+    background-color: #FFC043; 
+}
+.THIS .slds-media__figure {
+    z-index: 1;
+}
+
+.THIS ul li h3{
+    padding-bottom: 2px;
+}
+
+.THIS ul li p{
+    padding-bottom: 4px;
+}
+
+.THIS .slds-media--timeline:before {
+    z-index: 1;
+}
+
+.THIS .slds-media--timeline:before {
+    z-index: 1;
+}
+
+.THIS .slds-timeline__icon {
+    background-color: white;
+}

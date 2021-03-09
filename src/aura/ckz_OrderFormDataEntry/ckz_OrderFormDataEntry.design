@@ -1,0 +1,16 @@
+<design:component>
+    <design:attribute name="userId" label="User ID" />
+    <design:attribute name="contactId" label="Contact ID" />
+    <design:attribute name="selectedStorefront" label="Selected Storefront" />
+    <design:attribute name="locale" label="Locale" />
+    <design:attribute name="orderType" label="Order Type" />
+    <design:attribute name="selectedOrder" label="Selected Order" />
+    <design:attribute name="selectedOrderId" label="Selected Order Id" />
+    <design:attribute name="cartId" label="Cart Id" />
+    <design:attribute name="cartEncryptedId" label="Cart Encrypted Id" />
+    <design:attribute name="accountId" label="Account ID" />
+    <design:attribute name="userName" label="User name" />
+    <design:attribute name="accountGroupName" label="Account Group Name" />
+    <design:attribute name="orderItems" label="Order Items" />
+
+</design:component>

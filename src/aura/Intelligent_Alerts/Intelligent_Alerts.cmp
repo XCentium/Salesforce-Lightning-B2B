@@ -1,0 +1,66 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="IntelligentAlerts" >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="selectedAlert" type="String" />
+    <aura:attribute name="ObjectId" type="String" />
+    <aura:attribute name="Alerts" type="Intelligent_Alert__c[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+	<lightning:quickActionAPI aura:id="quickActionAPI"/>     
+	<aura:if isTrue="{!not(empty(v.Alerts))}">
+        <div role="dialog" tabindex="-1" aria-labelledby="header43" aura:id="Modalbox" class="slds-modal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <button class="slds-button slds-modal__close " title="Close" onclick="{!c.closeModal}">
+                        <lightning:icon class="close-icon" iconName="utility:close" size="x-small"/>
+                    </button>
+                    <h2 id="header43" class="slds-text-heading--medium">Suggested Action</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium slds-is-relative">
+                    <div>
+                        <c:Intellegent_Alerts_Action ObjectId="{!v.ObjectId}" Alerts="{!v.Alerts}" accId="{!v.recordId}" recordId="{! v.selectedAlert }" />
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="slds-backdrop " aura:id="Modalbackdrop"></div>
+        <lightning:card title="Intelligent Alerts" variant="base">
+            <div class="slds-card__body_inner">
+                <aura:iteration var="alert" items="{!v.Alerts}" indexVar="index"> 
+                    <lightning:layout class="slds-p-bottom_x-small" horizontalAlign="spread" verticalAlign="center">
+                        <div class="paddingtopbottom">
+                            <lightning:layoutItem>
+                                <lightning:layout multipleRows="true">
+                                    <lightning:layoutItem size="2">
+                                        <img class="slds-p-around_x-small" src="{!alert.Product__r.purl__c}"></img>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem size="10">
+                                        <lightning:tile label="{!alert.Product__r.Name}">
+                                            <aura:set attribute="media"></aura:set>
+                                            <div style="font-size: 0.8125rem;"><strong>{!alert.Name}</strong></div>
+                                            <div style="font-size: 0.8125rem;">{!alert.Description__c}</div>
+                                        </lightning:tile>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                                <lightning:layout class="slds-wrap" multipleRows="true">
+                                    <lightning:layoutItem size="2"></lightning:layoutItem>
+                                    <lightning:layoutItem size="10">
+                                        <lightning:layout verticalAlign="center">
+                                            <lightning:layoutItem>
+                                                
+                                                <button class="slds-button slds-button_neutral" id='{!alert.Id}' onclick="{!c.openmodal}" >
+                                                    + Learn More
+                                                </button>
+                                                
+                                            </lightning:layoutItem>
+                                            <lightning:layoutItem><a href="javascript:void(0);" class="slds-m-left_small slds-text-link">Dismiss</a></lightning:layoutItem>
+                                        </lightning:layout>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </lightning:layoutItem>
+                        </div>
+                    </lightning:layout>
+                </aura:iteration>
+            </div>
+        </lightning:card>
+    </aura:if>
+</aura:component>

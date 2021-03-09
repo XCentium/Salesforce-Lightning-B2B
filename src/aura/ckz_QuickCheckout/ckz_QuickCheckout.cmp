@@ -1,0 +1,204 @@
+<aura:component description="ckz_QuickCheckout" controller="ckz_QuickCheckoutController">
+
+    <!-- 2019-09-20  msobczak: added -->
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <!-- Common attributes -->
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="userId" type="String" access="global"/>
+    <aura:attribute name="contactId" type="String" access="global"/>
+    <aura:attribute name="accountId" type="String" access="global"/>
+    <aura:attribute name="locale" type="String" access="global"/>
+    <aura:attribute name="currencyCode" type="String" access="global" default="USD"/>
+    <aura:attribute name="selectedStorefront" type="String" access="global"/>
+    <aura:attribute name="orderType" type="String" access="global"/>
+    <aura:attribute name="selectedOrder" type="String" access="global"/>
+    <aura:attribute name="selectedOrderId" type="String" access="global"/>
+    <aura:attribute name="cartId" type="String" access="global"/>
+    <aura:attribute name="cartEncryptedId" type="String" access="global"/>
+    <aura:attribute name="selectedObjectName" type="String" access="global" default=""/>
+    <aura:attribute name="cartStatus" type="String" access="global" default=""/>
+    <aura:attribute name="accountGroupName" type="String"/>
+    <aura:attribute name="userName" type="String"/>
+    <aura:attribute name="accountName" type="String"/>
+    <aura:attribute name="orderItems" type="List" default="[]"/>
+    <aura:attribute name="newCartFirstScreenChoice" type="String" default="Empty cart" />
+
+    <aura:attribute name="cartValidated" type="Boolean" default="false"/>
+    <aura:attribute name="quoteRequired" type="Boolean" access="global" default="false"/>
+
+    <aura:attribute name="totalAmount" type="Decimal"/>
+    <aura:attribute name="totalQuantity" type="Integer"/>
+
+    <aura:attribute name="selectedShippingAddress" type="Map" access="global"/>
+    <aura:attribute name="selectedBillingAddress" type="Map" access="global"/>
+    <aura:attribute name="paymentOptions" type="List"/>
+    <aura:attribute name="paymentMethodMap" type="Map"/>
+    <aura:attribute name="selectedPaymentOption" type="String"/>
+
+    <aura:attribute name="orderPlaced" type="Boolean" default="false"/>
+    <aura:attribute name="orderId" type="String"/>
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <aura:registerEvent name="renderPanel" type="c:ckz_OrderFormRenderPanelEvent"/>
+
+    <aura:handler name="quickCheckoutDialogEvent" event="c:ckz_QuickCheckoutDialogEvent"
+            action="{!c.handleQuickCheckoutDialogEvent}"/>
+
+    <aura:handler event="aura:waiting" action="{!c.waiting}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}"/>
+    <aura:attribute name="HideSpinner" type="Boolean" default="true"/>
+
+    <!-- updated when the cart is updated -->
+    <aura:attribute name="pageMessages" type="List" default="[]"/>
+
+    <aura:attribute name="isOpen" type="Boolean" default="false"/>
+
+
+    <aura:renderIf isTrue="{!v.HideSpinner}">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+            <span class="slds-assistive-text">Loading, Please Wait...</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </aura:renderIf>
+
+    <c:ckz_OrderNotSubmittedDialog isOpen="{!v.isOpen}"/>
+
+    <div class="slds-grid slds-gutters slds-wrap">
+        <div class="slds-col slds-size_12-of-12">
+            <article class="slds-card slds-m-around_small">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Checkout">
+                                    <span>Checkout</span>
+                                </a>
+                            </h2>
+                        </div>
+                    </header>
+                </div>
+
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <div class="slds-col slds-size_12-of-12">
+                            <div class="pageMessages">
+
+                                <aura:if isTrue="{!(v.pageMessages.length > 0)}">
+                                    <ul>
+                                        <aura:iteration items="{!v.pageMessages}" var="msg">
+                                            <li>
+                                                <c:ckzMessageDisplay severity="{!msg.severity}" message="{!msg.message}"/>
+                                            </li>
+                                        </aura:iteration>
+                                    </ul>
+                                </aura:if>
+
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-small-size_12-of-12 slds-medium-size_3-of-12">
+                            <c:ckz_CartTotals totalAmount="{!v.totalAmount}" totalQuantity="{!v.totalQuantity}"/>
+                        </div>
+
+                        <div class="slds-col slds-small-size_12-of-12 slds-medium-size_3-of-12">
+                            <c:ckz_AddressDetails addressType="Shipping" addressDetails="{!v.selectedShippingAddress}"/>
+                        </div>
+
+                        <div class="slds-col slds-small-size_12-of-12 slds-medium-size_3-of-12">
+                            <c:ckz_AddressDetails addressType="Billing" addressDetails="{!v.selectedBillingAddress}"/>
+                        </div>
+
+                        <div class="slds-col slds-small-size_12-of-12 slds-medium-size_3-of-12">
+
+                            <article class="slds-card">
+                                <div class="slds-card__header slds-grid">
+                                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                        <div class="slds-media__figure">
+                                            <span class="slds-icon_container slds-icon-standard-client" title="client">
+                                            <lightning:icon iconName="standard:client" alternativeText="Item"/>
+                                            <span class="slds-assistive-text">client</span>
+                                            </span>
+                                        </div>
+                                        <div class="slds-media__body">
+                                            <h2 class="slds-card__header-title">
+                                                <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Payment">
+                                                    <span>Payment</span>
+                                                </a>
+                                            </h2>
+                                        </div>
+                                    </header>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <aura:if isTrue="{!(v.paymentOptions != null)}">
+                                        <lightning:select aura:id="selectPaymentMethod"
+                                                name="paymentMethods"
+                                                label="Select a Payment Method"
+                                                value="{! v.selectedPaymentOption }"
+                                                disabled="{! v.orderPlaced }"
+                                                required="true">
+                                            <option value="">-- Select One--</option>
+                                            <aura:iteration items="{!v.paymentOptions}" var="pm">
+                                                <option value="{!pm.value}" text="{!pm.label}"></option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </aura:if>
+                                </div>
+                                <footer class="slds-card__footer">
+                                    <aura:if isTrue="{!v.orderPlaced == false}">
+
+                                        <lightning:button aura:id="placeOrder"
+                                                label="Place Order"
+                                                class="slds-m-top--medium"
+                                                variant="brand"
+                                                disabled="{! v.selectedPaymentOption == null || v.selectedPaymentOption == ''}"
+                                                onclick="{!c.handleSubmitOrder}"/>
+                                    </aura:if>
+                                </footer>
+                            </article>
+
+
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <div class="slds-grid slds-gutters slds-wrap">
+        <div class="slds-col slds-size_12-of-12 slds-text-align_right">
+            <div class="action-footer slds-clearfix">
+                <aura:if isTrue="{!v.orderPlaced == false}">
+
+                    <lightning:button aura:id="doPrevious"
+                            label="Previous"
+                            class="slds-m-around_small"
+                            variant="neutral"
+                            onclick="{!c.handleNavigatePrev}"
+                    />
+                </aura:if>
+
+                <lightning:button aura:id="startOver"
+                        label="Start Over"
+                        class="slds-m-around_small"
+                        variant="neutral"
+                        onclick="{!c.handleNavigateStartOver}"
+                />
+            </div>
+        </div>
+    </div>
+
+    <!-- Don't display these links for mobile -->
+    <aura:if isTrue="{! $Browser.formFactor == 'DESKTOP'}">
+        <aura:if isTrue="{!(v.cartValidated == false &amp;&amp; v.quoteRequired == true)}">
+            <a href="{! '/' + v.cartId}" target='_blank'>Click here to open the cart record</a>
+        </aura:if>
+
+        <aura:if isTrue="{!(v.orderPlaced == true &amp;&amp; v.orderId != null)}">
+            <a href="{! '/' + v.orderId}" target='_blank'>Click here to open the order record</a>
+        </aura:if>
+    </aura:if>
+
+</aura:component>

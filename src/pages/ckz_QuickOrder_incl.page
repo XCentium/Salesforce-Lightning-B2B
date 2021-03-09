@@ -1,0 +1,26 @@
+<!--
+ - Created by brandon.rogers on 2019-07-18.
+ -->
+
+<apex:page id="ckz_QuickOrder_incl" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false" applyHtmlTag="false">
+
+    <!-- Sidebar -->
+    <div class="wrapper">
+        <div id="sidebar">
+
+            <div id="dismiss">
+                <i class="fal fa-times fa-2x"></i>
+            </div>
+
+            <div class="sidebarMiniCart hide">
+                <apex:insert name="MiniCartBox"/>
+            </div>
+
+        </div>
+    </div>
+
+    <apex:insert name="MiniQuickOrderBox"/>
+
+    <c:ckz_QuickOrder />
+
+</apex:page>

@@ -1,0 +1,3 @@
+<design:component label="Post Idea">
+    <design:attribute name="listingTitle" label="Page Header" Description="Post Idea page header"/>
+</design:component>

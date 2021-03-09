@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="products" type="Product2[]"/>
+</aura:event>

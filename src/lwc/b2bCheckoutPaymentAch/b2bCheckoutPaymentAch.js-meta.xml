@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>50.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>B2B Checkout Payment ACH</masterLabel>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default,lightning__FlowScreen">
+            <property name="nameOnAccount" type="String" label="Name on Account" description=""/>
+            <property name="accountNumber" type="String" label="Account Number" description=""/>
+            <property name="routingNumber" type="String" label="Routing Number" description=""/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

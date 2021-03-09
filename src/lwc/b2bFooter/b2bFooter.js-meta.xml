@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>50.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>B2B Commerce Footer</masterLabel>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="showImage" type="Boolean" default="true" label="Show Image" />
+            <property name="imgUrl" type="String" default="" label="Enter Image URL" />
+            <property name="imgHeight" type="String" default="60px" label="Enter Image Height" />
+            <property name="backgroundColor" label="Background Color" type="Color" default="#ececec" />
+            <property name="textColor" label="Text Color" type="Color" default="#000" />
+
+            <property name="ctaText" type="String" default="Call to Action Text" label="Call to Action Text" />
+
+            <property name="colOneHeading" type="String" default="Column One Heading" label="Column One Heading" />
+            <property name="colOneLinkOneText" type="String" default="Link1" label="Column One Link One Text" />
+            <property name="colOneLinkOneURL" type="String" default="#" label="Column One Link One URL" />
+            <property name="colOneLinkTwoText" type="String" default="Link2" label="Column One Link Two Text" />
+            <property name="colOneLinkTwoURL" type="String" default="#" label="Column One Link Two URL" />
+            <property name="colOneLinkThreeText" type="String" default="Link3" label="Column One Link Three Text" />
+            <property name="colOneLinkThreeURL" type="String" default="#" label="Column One Link Three URL" />
+            <property name="colOneLinkFourText" type="String" default="Link4" label="Column One Link Four Text" />
+            <property name="colOneLinkFourURL" type="String" default="#" label="Column One Link Four URL" />
+            <property name="colOneLinkFiveText" type="String" default="Link5" label="Column One Link Five Text" />
+            <property name="colOneLinkFiveURL" type="String" default="#" label="Column One Link Five URL" />
+
+            <property name="colTwoHeading" type="String" default="Column Two Heading" label="Column Two Heading" />
+            <property name="colTwoLinkOneText" type="String" default="Link1" label="Column Two Link One Text" />
+            <property name="colTwoLinkOneURL" type="String" default="#" label="Column Two Link One URL" />
+            <property name="colTwoLinkTwoText" type="String" default="Link2" label="Column Two Link Two Text" />
+            <property name="colTwoLinkTwoURL" type="String" default="#" label="Column Two Link Two URL" />
+            <property name="colTwoLinkThreeText" type="String" default="Link3" label="Column Two Link Three Text" />
+            <property name="colTwoLinkThreeURL" type="String" default="#" label="Column Two Link Three URL" />
+            <property name="colTwoLinkFourText" type="String" default="Link4" label="Column Two Link Four Text" />
+            <property name="colTwoLinkFourURL" type="String" default="#" label="Column Two Link Four URL" />
+            <property name="colTwoLinkFiveText" type="String" default="Link5" label="Column Two Link Five Text" />
+            <property name="colTwoLinkFiveURL" type="String" default="#" label="Column Two Link Five URL" />
+
+            <property name="colThreeHeading" type="String" default="Column Three Heading" label="Column Three Heading" />
+            <property name="colThreeLinkOneText" type="String" default="Link1" label="Column Three Link One Text" />
+            <property name="colThreeLinkOneURL" type="String" default="#" label="Column Three Link One URL" />
+            <property name="colThreeLinkTwoText" type="String" default="Link2" label="Column Three Link Two Text" />
+            <property name="colThreeLinkTwoURL" type="String" default="#" label="Column Three Link Two URL" />
+            <property name="colThreeLinkThreeText" type="String" default="Link3" label="Column Three Link Three Text" />
+            <property name="colThreeLinkThreeURL" type="String" default="#" label="Column Three Link Three URL" />
+            <property name="colThreeLinkFourText" type="String" default="Link4" label="Column Three Link Four Text" />
+            <property name="colThreeLinkFourURL" type="String" default="#" label="Column Three Link Four URL" />
+            <property name="colThreeLinkFiveText" type="String" default="Link5" label="Column Three Link Five Text" />
+            <property name="colThreeLinkFiveURL" type="String" default="#" label="Column Three Link Five URL" />
+
+            <property name="socialFacebook" type="Boolean" default="true" label="Facebook" />
+            <property name="socialFacebookLink" type="String" default="Your Facebook Page Name" label="Facebook Page Name" description="ex: https://www.facebook.com/PAGENAME" />
+
+            <property name="socialTwitter" type="Boolean" default="true" label="Twitter" />
+            <property name="socialTwitterLink" type="String" default="Your Twitter Handle" label="Twitter Handle" description="ex: https://twitter.com/HANDLE" />
+
+            <property name="socialLinkedin" type="Boolean" default="true" label="Linkedin" />
+            <property name="socialLinkedinLink" type="String" default="Your Profile URL" label="Linkedin Profile URL" description="ex: https://www.linkedin.com/company/YOUR-PROFILE-URL" />
+
+            <property name="socialInstagram" type="Boolean" default="true" label="Instagram" />
+            <property name="socialInstagramLink" type="String" default="Your Instagram Username" label="Instagram Username" description="ex: https://www.instagram.com/USERNAME" />
+
+            <property name="socialYoutube" type="Boolean" default="true" label="Youtube" />
+            <property name="socialYoutubeLink" type="String" default="Your Channel ID" label="Youtube Channel ID" description="ex: https://www.youtube.com/channel/CHANNEL-ID" />
+
+            <property name="showExpCloudLogo" type="Boolean" default="false" label="Experience Cloud Logo" />
+
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

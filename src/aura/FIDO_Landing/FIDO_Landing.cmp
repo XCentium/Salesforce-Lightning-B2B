@@ -1,0 +1,620 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="IndustryName" type="String" default=''/>
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="SearchPhrase" type="String"  /> 
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="OrgId" type="String" />
+    <aura:attribute name="IndustryInfo" type="String[]"/>
+    <aura:attribute name="Announcements" type="String[]"/>
+    <aura:attribute name="Personas" type="String[]"/>
+    <aura:attribute name="Scripts" type="String[]"/>
+    <aura:attribute name="Brands" type="String[]"/>
+    <aura:attribute name="Features" type="String[]"/>
+    <aura:attribute name="Resources" type="String[]"/>
+    <aura:attribute name="Partners" type="String[]"/>
+    <aura:handler name="change" value="{!v.OrgId}" action="{!c.onOrgIdChange}"/>
+    <aura:handler name="change" value="{!v.ScreenChoice}" action="{!c.ScreenChoiceChange}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="paddingtop20">
+        <aura:iteration items="{!v.Settings}" var="setting">
+            <div class="owner">
+                <aura:iteration items="{!v.IndustryInfo}" var="industry" >
+                    <aura:if isTrue="{!and(industry.headerimage__c != '',industry.headerimage__c != NULL)}">
+                        <div class="landingHeader" style="{! 'background-image:url(' +  industry.headerimage__c  + ');'}">
+                            <div class="center">
+                                <div class="centerVertically">
+                                    <h1>{!v.IndustryName}</h1>
+                                    <div class="SearchLanding">
+                                        <ui:inputText label="" class="searchbox" value="{!v.SearchPhrase}" updateOn="change" placeholder="Search for resources" />
+                                        <button class="slds-button searchbtn" onclick="{!c.GlobalSearch}">
+                                            <lightning:icon iconName="utility:search" size="xx-small"/>
+                                        </button> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <aura:set attribute="else">
+                            <div class="landingHeader" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/headers/default.jpg)">
+                                <div class="center">
+                                    <div class="centerVertically">
+                                        <h1>{!v.IndustryName}</h1>
+                                        <div class="SearchLanding relative">
+                                            <ui:inputText label="" class="searchbox" value="{!v.SearchPhrase}" updateOn="change" placeholder="Search for resources" />
+                                            <button class="slds-button searchbtn" onclick="{!c.GlobalSearch}">
+                                                <lightning:icon iconName="utility:search" size="xx-small"/>
+                                            </button> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </aura:iteration>
+                <div class="landingWelcome">
+                    <div class="center">
+                        <div class="paddingtopbottom60">
+                            <h1>Get to Know the Demo Org</h1>
+                            <div class="blueborderbottom margin0auto"></div>
+                            <p class="threequarterscentered importantText">This tool documents everything you need to be successful with your demo org. We add documentation to this tool regularly, so make sure to check back with every new org you create.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="center">
+                    <div class="landingTopics paddingleftright">
+                        <div class="forth">
+                            <div class="overviewpadding">
+                                <div class="whitebg border">
+                                    <div class="centerVertically">
+                                        <div class="padding textleft">
+                                            <lightning:icon class="brandicon" iconName="utility:palette" size="large"/>
+                                            <h3>Learn the Brand</h3>
+                                            <p>Learn about your fictitious brand that will be used through all of our demo scripts. 
+                                                This Org includes logos and branding guidelines.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="forth">
+                            <div class="overviewpadding">
+                                <div class="whitebg border">
+                                    <div class="centerVertically">
+                                        <div class="padding textleft">
+                                            <lightning:icon class="brandicon" iconName="utility:description" size="large"/>
+                                            <h3>Learn the Content</h3>
+                                            <p>The Content section will showcase all of the available demo scripts that this demo org supports. 
+                                                Learn about great starting points.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="forth">
+                            <div class="overviewpadding">
+                                <div class="whitebg border">
+                                    <div class="centerVertically">
+                                        <div class="padding textleft">
+                                            <lightning:icon class="brandicon" iconName="utility:setup" size="large"/>
+                                            <h3>Customize It</h3>
+                                            <p>We know you will need to customize the available demo scripts. 
+                                                Utilize the customizations section to help you with build. 
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="forth">
+                            <div class="overviewpadding">
+                                <div class="whitebg border">
+                                    <div class="centerVertically">
+                                        <div class="padding textleft">
+                                            <lightning:icon class="brandicon" iconName="utility:knowledge_base" size="large"/>
+                                            <h3>Explore Resources</h3>
+                                            <p>We know your job is demanding. We also have a number of other resources you can utilize to help you be successful. 
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="spacer40px"></div>
+                <aura:if isTrue="{!setting.hide_news_page__c  != true}">
+                    <aura:if isTrue="{!not(empty(v.Announcements))}">
+                        <div class="landingNews whitebg">
+                            <div class="half">
+                                <div class="padding80">
+                                    <div class="">
+                                        <h1>Updates</h1>
+                                        <div class="blueborderbottom"></div>
+                                        <p>So much excitement at Salesforce! Here is how you keep up on the current happenings with this Demo Org! Make sure to check this section with every new demo org as we will push announcements often.
+                                        </p>
+                                        <div class="center">
+                                            <div class="paddingtopbottom">
+                                                <button class="slds-button slds-button_neutral" onclick="{!c.toAllNews}">
+                                                    View All
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="half bluebg">
+                                <div class="padding8020">
+                                    <div class="cardWrapper">
+                                        <aura:if isTrue="{!not(empty(v.Announcements))}"> 
+                                            <aura:iteration items="{!v.Announcements}" var="ann" indexVar="idx">
+                                                <aura:if isTrue="{!lessthan(idx,2)}">
+                                                    <div class="cardhalf landingCard"> 
+                                                        <div class="owner marginbottom marginleftright">
+                                                            <aura:if isTrue="{!and(ann.image__c != '',ann.image__c != null)}">
+                                                                <div class="videoTitle" style="{!'background-image:url(' + ann.image__c + ');'}">
+                                                                </div>
+                                                                <aura:set attribute="else">
+                                                                    <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);'}">
+                                                                    </div>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                            <div class="padding">
+                                                                <h3 class="blacktext">{!ann.name}</h3>
+                                                                <div class="blueborderbottom"></div>
+                                                                <div class="padding">
+                                                                    {!ann.excerpt__c}
+                                                                </div>
+                                                                <div class="padding center">
+                                                                    <button class="slds-button slds-button_neutral"  aura:id="{!ann.id}" id="{!ann.id}" onclick="{!c.toSingleNews}">
+                                                                        Learn More
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+                                            </aura:iteration>
+                                        </aura:if>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </aura:if>
+                </aura:if>
+                
+                <div class="landingBrand">
+                    <aura:iteration items="{!v.Brands}" var="brand">
+                        <aura:if isTrue="{!brand.background_image__c }">
+                            <div class="half brandbg whitetext height400" style="{!'background-image:url(' + brand.background_image__c + ');'}">
+                                <div class="centerVertically">
+                                    <div class="center">
+                                        <div class="padding">
+                                            <img src="{!brand.logo__c}" class="brandlogo"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <aura:set attribute="else">
+                                <div class="half brandbg whitetext height400" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/headers/mountains.jpeg);">
+                                    <div class="centerVertically">
+                                        <div class="center ">
+                                            <div class="padding">
+                                                <img src="{!brand.logo__c}" class="brandlogo"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                    </aura:iteration>
+                    <div class="half whitebg height400">
+                        <div class="centerVertically">
+                            <div class="">
+                                <h1>Brand</h1>
+                                <div class="blueborderbottom"></div>
+                                <aura:iteration items="{!v.Settings}" var="setting">
+                                    <div class="marginbottom">
+                                        <div class="floatleft relative brandiconwrapper">
+                                            <lightning:icon class="brandsmallicon" iconName="action:add_contact" size="x-small"/>
+                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" >
+                                                <div class="slds-popover__body">Personas</div>
+                                            </div>
+                                        </div>
+                                        <aura:if isTrue="{!setting.show_brand_accounts__c == true}">
+                                            <div class="floatleft relative brandiconwrapper">
+                                                <lightning:icon class="brandsmallicon" iconName="action:new_account" size="x-small"/>
+                                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" >
+                                                    <div class="slds-popover__body">Accounts</div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{!setting.show_brand_pricebook__c == true}">
+                                            <div class="floatleft relative brandiconwrapper">
+                                                <lightning:icon class="brandsmallicon" iconName="action:new_notebook" size="x-small"/>
+                                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" >
+                                                    <div class="slds-popover__body">Pricebook</div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{!setting.show_brand_apps__c == true}">
+                                            <div class="floatleft relative brandiconwrapper">
+                                                <lightning:icon class="brandsmallicon" iconName="action:dial_in" size="x-small"/>
+                                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" >
+                                                    <div class="slds-popover__body">Apps</div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{!setting.show_brand_communities__c == true}">
+                                            <div class="floatleft relative brandiconwrapper">
+                                                <lightning:icon class="brandsmallicon" iconName="action:web_link" size="x-small"/>
+                                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" >
+                                                    <div class="slds-popover__body">Communities</div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{!setting.show_brand_leads__c == true}">
+                                            <div class="floatleft relative brandiconwrapper">
+                                                <lightning:icon class="brandsmallicon" iconName="action:new_lead" size="x-small"/>
+                                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" >
+                                                    <div class="slds-popover__body">Leads</div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{!setting.show_brand_opportunities__c == true}">
+                                            <div class="floatleft relative brandiconwrapper">
+                                                <lightning:icon class="brandsmallicon" iconName="action:new_opportunity" size="x-small"/>
+                                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" >
+                                                    <div class="slds-popover__body">Opportunities</div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{!setting.show_brand_cases__c == true}">
+                                            <div class="floatleft relative brandiconwrapper">
+                                                <lightning:icon class="brandsmallicon" iconName="action:new_case" size="x-small"/>
+                                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" >
+                                                    <div class="slds-popover__body">Cases</div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{!setting.show_brand_action_plans__c == true}">
+                                            <div class="floatleft relative brandiconwrapper">
+                                                <lightning:icon class="brandsmallicon" iconName="action:follow" size="x-small"/>
+                                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" >
+                                                    <div class="slds-popover__body">Action Plans</div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                        <div class="clear"></div>
+                                    </div>
+                                </aura:iteration>
+                                <aura:iteration items="{!v.Brands}" var="brand">
+                                    <p><ui:outputRichText value="{!brand.description__c}"/></p>
+                                </aura:iteration>
+                                <div class="center">
+                                    <div class="paddingtopbottom">
+                                        <button class="slds-button slds-button_neutral" onclick="{!c.toAllBrands}">
+                                            Learn More
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <aura:if isTrue="{!not(empty(v.Personas))}">
+                    <div class="landingPersonas">
+                        <div class="bluebgfeatured">
+                            <div class="padding80">
+                                <div class="whitetext">
+                                    <h1>Featured Personas</h1>
+                                    <div class="blueborderbottom marginbottom40"></div>
+                                    <div class="cardWrapper">
+                                        <aura:iteration items="{!v.Personas}" var="persona"  indexVar="idx">
+                                            <aura:if isTrue="{!persona.featured__c == true}">
+                                                <div class="cardforth">
+                                                    <div class="owner marginbottom marginleftright">
+                                                        <div class="padding">
+                                                            <img src="{!persona.user_image_url__c}" class="personaimgbig" />
+                                                            <h3 class="blacktext">{!persona.name}</h3>
+                                                            <div class="blueborderbottom"></div>
+                                                        </div>
+                                                        <div class="paddingleftright personaContent">
+                                                            <div class="textleft">
+                                                                {!persona.excerpt__c}
+                                                            </div>
+                                                            <aura:if isTrue="{!and(persona.clouds__c != null,persona.clouds__c != '')}">
+                                                                <div>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Analytics"> 
+                                                                        <span class="slds-badge">Analytics Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Commerce"> 
+                                                                        <span class="slds-badge">Commerce Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Community"> 
+                                                                        <span class="slds-badge">Community Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Integration"> 
+                                                                        <span class="slds-badge">Integration Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Marketing"> 
+                                                                        <span class="slds-badge">Marketing Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Sales"> 
+                                                                        <span class="slds-badge">Sales Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Service"> 
+                                                                        <span class="slds-badge">Service Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Consumer Goods"> 
+                                                                        <span class="slds-badge">Consumer Goods Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Financial"> 
+                                                                        <span class="slds-badge">Financial Services Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Manufacturing"> 
+                                                                        <span class="slds-badge">Manufacturing Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                    <c:FIDO_IfContains items="{!persona.clouds__c}" element="Health"> 
+                                                                        <span class="slds-badge">Health Cloud</span>
+                                                                    </c:FIDO_IfContains>
+                                                                </div>
+                                                            </aura:if>
+                                                        </div>
+                                                        <div class="paddingtopbottom">
+                                                            <div class="center">
+                                                                <button class="slds-button slds-button_neutral" aura:id="{!persona.id}" id="{!persona.id}" onclick="{!c.toSinglePersona}">
+                                                                    View
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                        </aura:iteration>
+                                    </div>
+                                    <div class="center">
+                                        <div class="paddingtopbottom">
+                                            <button class="slds-button slds-button_neutral buttonnobgwhite" onclick="{!c.toAllPersonas}">
+                                                View All
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                
+                
+                <div class="landingBrand">
+                    <div class="half whitebg height400">
+                        <div class="centerVertically">
+                            <h1>Scripts</h1>
+                            <div class="blueborderbottom"></div>
+                            <p>Demo Orgs offer you the unique ability to have a starting point for your demo opportunity. You chose this demo org as your base and now you can take advantage of the demo scripts section to understand all the great content that is available to you.
+                            </p>
+                            <div class="center">
+                                <div class="paddingtopbottom">
+                                    <button class="slds-button slds-button_neutral" onclick="{!c.toAllScripts}">
+                                        View All
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="half bluebg">
+                        <div class="">
+                            <div class="padding8020">
+                                <div class="cardWrapper">
+                                    <aura:iteration items="{!v.Scripts}" var="script"  indexVar="idx">
+                                        <aura:if isTrue="{!script.featured__c == true}">
+                                            <div class="cardhalf landingCard">
+                                                <div class="owner marginbottom marginleftright">
+                                                    <aura:if isTrue="{!and(script.script_image__c != '',script.script_image__c != null)}">
+                                                        <div class="videoTitle" style="{!'background-image:url(' + script.script_image__c + ');'}">
+                                                        </div>
+                                                        <aura:set attribute="else">
+                                                            <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);'}">
+                                                            </div>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                    <div class="padding personaContent">
+                                                        <h3 class="blacktext">{!script.name}</h3>
+                                                        <div class="blueborderbottom"></div>
+                                                        <div class="textleft">
+                                                            {!script.excerpt__c}
+                                                        </div>
+                                                    </div>
+                                                    <div class="paddingtopbottom">
+                                                        <div class="center">
+                                                            <button class="slds-button slds-button_neutral" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.toSingleScript}">
+                                                                View
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                
+                <aura:if isTrue="{!setting.hide_partners_page__c != true}">
+                    <div class="landingPartners whitebg">
+                        <div class="half bluebg ">
+                            <div class="padding8020">
+                                <div class="paddingleftright">
+                                    <div class="cardWrapper">
+                                        <aura:if isTrue="{!not(empty(v.Partners))}"> 
+                                            <aura:iteration items="{!v.Partners}" var="partner" indexVar="idx">
+                                                <aura:if isTrue="{!partner.isactive__c  == true}">
+                                                    <aura:if isTrue="{!partner.featured__c == true}">
+                                                        <div class="cardhalf landingCard">
+                                                            <div class="owner marginbottom marginleftright">
+                                                                <div class="padding personaContent">
+                                                                    <aura:if isTrue="{!and(partner.logo_url__c != '',partner.logo_url__c != null)}">
+                                                                        <img src="{!partner.logo_url__c}" class="featuredpartnerlogo" />
+                                                                    </aura:if>
+                                                                    <h3 class="blacktext">{!partner.name}</h3>
+                                                                    <div class="blueborderbottom"></div>
+                                                                    <div class="textleft">
+                                                                        {!partner.excerpt__c}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="paddingtopbottom">
+                                                                    <div class="center">
+                                                                        <button class="slds-button slds-button_neutral" aura:id="{!partner.id}" id="{!partner.id}" onclick="{!c.toSinglePartner}">
+                                                                            View
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </aura:if>
+                                                </aura:if>
+                                            </aura:iteration>
+                                        </aura:if>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="half height400">
+                            <div class="centerVertically">
+                                <div class="">
+                                    <h1>ISV Partners</h1>
+                                    <div class="blueborderbottom"></div>
+                                    <p>We work with ISV Partners to fill any gaps that may exist in the Salesforce platform. View the list of available ISV demo's we have worked with in this Org.
+                                    </p>
+                                    <div class="center">
+                                        <div class="paddingtopbottom">
+                                            <button class="slds-button slds-button_neutral" onclick="{!c.toAllPartners}">
+                                                View All
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!setting.hide_customizations_page__c != true}">
+                    <aura:if isTrue="{!not(empty(v.Features))}">
+                        <div class="landingCustomizations">
+                            <div class="bluebgfeatured">
+                                <div class="padding80">
+                                    <div class="whitetext">
+                                        <h1>Featured Customizations</h1>
+                                        <div class="blueborderbottom marginbottom40"></div>
+                                        <div class="cardWrapper">
+                                            <aura:iteration items="{!v.Features}" var="feature"  indexVar="idx">
+                                                <aura:if isTrue="{!feature.featured__c == true}">
+                                                    <div class="cardforth">
+                                                        <div class="owner marginbottom marginleftright">
+                                                            <aura:if isTrue="{!feature.image__c != null}" >        
+                                                                <div class="videoTitle" style="{!'background-image:url(' + feature.image__c + ');'}"></div>
+                                                                <aura:set attribute="else">
+                                                                    <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);'}">
+                                                                    </div>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                            <div class="padding">
+                                                                <div class="videoDescription">
+                                                                    <h3 class="blacktext">{!feature.name}</h3>
+                                                                    <div class="blueborderbottom"></div>
+                                                                    <div class="paddingtopbottom">
+                                                                        <ui:outputRichText value="{!feature.excerpt__c }"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="center">
+                                                                    <button class="slds-button slds-button_neutral" aura:id="{!feature.id}" id="{!feature.id}" onclick="{!c.toSingleCustomization}">
+                                                                        Learn More
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+                                            </aura:iteration>
+                                        </div>
+                                        <div class="center">
+                                            <div class="paddingtopbottom">
+                                                <button class="slds-button slds-button_neutral buttonnobgwhite" onclick="{!c.toAllCustomizations}">
+                                                    View All
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:if>
+                </aura:if>
+                <aura:if isTrue="{!setting.hide_resources_page__c != true}">
+                    <div class="landingContact whitebg ">
+                        <div class="half height400">
+                            <div class="centerVertically">
+                                <h1>Resources</h1>
+                                <div class="blueborderbottom"></div>
+                                <p>Our Goal is for you to be successful. The Resoures area provides you additional resources that may be of help to you to do just that. This section includes everything from FAQs to Chatter Groups that you should be following.</p>
+                                <div class="center">
+                                    <div class="paddingtopbottom">
+                                        <button class="slds-button slds-button_neutral" onclick="{!c.toAllContacts}">
+                                            Learn More
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="half bluebg">
+                            <div class="padding8020">
+                                <div class="">
+                                    <aura:if isTrue="{!not(empty(v.Resources))}"> 
+                                        <div class="cardWrapper">     
+                                            <aura:iteration items="{!v.Resources}" var="resource" indexVar="idx">
+                                                <aura:if isTrue="{!resource.type__c == 'IDO Owner'}">
+                                                    <div class="cardhalf landingCard">
+                                                        <div class="owner marginbottom marginleftright">
+                                                            <div class="paddingtoprightleft">
+                                                                <aura:if isTrue="{!resource.image__c != ''}">
+                                                                    <img src="{!resource.image__c}" class="personaimgbig" />
+                                                                </aura:if>
+                                                            </div>
+                                                            <div class="paddingbottomrightleft">
+                                                                <div class="videoDescription">
+                                                                    <h3 class="blacktext">{!resource.name}</h3>
+                                                                    <div class="blueborderbottom"></div>
+                                                                    <div class="paddingtopbottom">
+                                                                        <ui:outputRichText value="{!resource.description__c}"/>
+                                                                    </div>
+                                                                    <aura:if isTrue="{!resource.email__c != null}">
+                                                                        <strong>Contact Info: </strong> <a href="{! 'mailto:' + resource.email__c}">{!resource.email__c}</a>
+                                                                    </aura:if>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+                                            </aura:iteration>
+                                        </div>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </aura:if>
+            </div> 
+        </aura:iteration>
+    </div>
+</aura:component>

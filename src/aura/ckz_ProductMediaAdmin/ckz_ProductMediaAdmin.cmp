@@ -1,0 +1,71 @@
+<aura:component controller="ckz_ProductMediaAdminCtrl" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+
+    <aura:attribute name="mediaTypeOptions" type="String[]" default="Product Images (all three),Product Image,Product Image Thumbnail,Product Search Image,Alternate Images,Alternate Thumbnails,Assembly Guides,Datasheets,Flash Files,JPG Image,Media,Owner's Manuals,Safety Documents,Sales Brochures,SVG Interactive Diagram"/>
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="mediaType" type="String" />
+    <aura:attribute name="uri" type="String" />
+
+    <aura:attribute name="productName" type="String" />
+
+    <aura:handler event="aura:waiting" action="{!c.waiting}" phase="capture"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}" phase="capture"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+
+    <aura:handler name="recordSavedEvent" event="c:ckz_ProductMediaSaveEvent" action="{!c.handleRecordSaveEvent}" />
+
+    <aura:attribute name="reloadData" type="Boolean" default="false" />
+
+    <aura:renderIf isTrue="{!v.showSpinner}">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+            <span class="slds-assistive-text">Loading, Please Wait...</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </aura:renderIf>
+    
+    <div class="slds-has-cushion">
+        <p class="slds-card__header-title slds-truncate slds-m-right--xx-small"><strong>Product Media Maintenance</strong></p>
+        <div class="clear"></div>
+
+        <div class="slds-grid slds-wrap slds-grid_vertical-align-end slds-p-top_medium">
+            <div class="slds-col">
+                <div class="slds-p-right_medium">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <lightning:input name="URI" aura:id="mediaURI" label="URI" value="{!v.uri}" maxlength="255" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+       
+        <div class="slds-col">
+            <div class="slds-p-right_medium">
+                <div class="slds-form-element">
+                    <lightning:select aura:id="selectMediaType" name="mediaType" required="false" onchange="{! c.handleMediaTypeChange}" label="Media Type">
+                        <option value="">-- Select One --</option>
+                        <aura:iteration items="{! v.mediaTypeOptions}" var="mt">
+                            <option value="{!mt}">{!mt}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                  
+                </div>
+            </div>
+        </div>
+        <div class="slds-col">
+            <div class="slds-text-align_left slds-grid">
+                <div class="slds-col">
+
+                    <lightning:button label="Save" variant="neutral" onclick="{!c.handleSave}" class="slds-button_brand" />
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+ </div>
+
+    <c:ckz_ProductMediaTable productId="{!v.recordId}" reloadData="{!v.reloadData}"/>
+
+</aura:component>

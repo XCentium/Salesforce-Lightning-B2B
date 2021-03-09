@@ -1,0 +1,18 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+    <aura:attribute name="URL" type="String" />
+    <aura:attribute name="Label" type="String" />
+    <aura:attribute name="Icon" type="String" default="" />
+    <aura:attribute name="IconSize" type="String" default="x-small"/>
+    <aura:attribute name="buttonBackgroundColor" type="String" default="#ffffff"/>
+     <aura:attribute name="buttonTextColor" type="String" default="#547AAF"/>
+    <aura:if isTrue="{!v.Label !=''}">
+        <aura:if isTrue="{!v.URL !=''}">
+            <button class="StoreOpsButton" onclick="{!c.goToURL}" style="{!'background-color:' + v.buttonBackgroundColor +';color:' + v.buttonTextColor}">
+                <aura:if isTrue="{!v.Icon !=''}">
+                    <lightning:icon iconName="{!v.Icon}" class="icon" size="{!v.IconSize}" alternativeText=""/>
+                </aura:if>
+                {!v.Label}
+            </button>
+        </aura:if>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,151 @@
+<!--
+ - Created by brandon.rogers on 2019-08-19.
+ -->
+
+<apex:component id="ckz_QuickOrder_HP">
+    <script id="CKZ-QuickOrder" type="text/template">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ckz_heading_embellished">
+                    <h3 data-toggle="collapse" data-target="#ckzQuickOrderHP" style="cursor: pointer;" onclick="collapseRotate(this);">
+                        <span data-toggle="tooltip" data-placement="right" title="{{pageLabelMap 'CollapseLabel'}}">
+                            {{pageLabelMap 'QuickOrder'}}
+                            <i class="fal fa-angle-down"></i>
+                        </span>
+                    </h3>
+                </div>
+
+                <div class="row ckz_CartUpload collapse in" id="ckzQuickOrderHP">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <!--<h4 class="quickOrder-Title text-center m-t-0 m-b-2">
+                                            <i class="far fa-bolt"></i>
+                                            {{pageLabelMap 'QuickOrder'}}
+                                        </h4>-->
+                                        <p class="quickOrder-Caption">
+                                            {{pageLabelMap 'QuickOrder_QuickOrderBoxCaption'}}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <hr/>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <form id="skuQtyForm" class="form-horizontal cc_form_sku_qty">
+                                            <div class="quickOrderRow cc_quick_order_row"></div>
+                                        </form>
+
+                                        <button class="btn btn-dashed btn-sm btn-block addMore cc_addmore m-y-1" type="submit">
+                                            <i class="far fa-plus"></i>
+                                            {{pageLabelMap 'QuickOrder_AddMore'}}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <button class="btn btn-primary btn-sm btn-block addToCart cc_addtocart m-y-1" type="submit">
+                                            <i class="far fa-shopping-cart"></i>
+                                            {{pageLabelMap 'QuickOrder_AddToCart'}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            CCRZ.uiProperties.QuickOrderView.desktop.tmpl = 'CKZ-QuickOrder';
+
+            CCRZ.pubSub.on('view:QuickOrderView:refresh', function (theView) {
+                console.log("ckz_QuickOrder: QuickOrderView:refresh");
+
+                //CCRZ.views.QuickOrderView.prototype.addMore = function(){
+                /*Object.getPrototypeOf(theView).addMore = function () {
+                    var content = "";
+                    var rowSelector = "";
+                    if (CCRZ.display.isPhone())
+                        rowSelector = CCRZ.uiProperties.QuickOrderView.phone.selector + " .row";
+                    else {
+                        if (CCRZ.disableAdaptive) {
+                            rowSelector = CCRZ.uiProperties.QuickOrderView.desktop.selector + " .quickOrderRow";
+                        } else {
+                            rowSelector = CCRZ.uiProperties.QuickOrderView.desktop.selector + " .row";
+                        }
+
+                    }
+
+                    var ele = $(rowSelector);
+
+                    var currSize = this.count;
+                    for (var i = currSize; i < currSize + 10; i++) {
+                        content += this.templateEntry(i);
+                        this.count++;
+                    }
+                    $(rowSelector).append(content);
+                    if (this.count > 29)
+                        $('.addMore').hide();
+                }*/
+            });
+
+
+        });
+
+
+        $(function () {
+
+            CCRZ.pubSub.on("view:QuickOrderView:refresh", function (viewRef) {
+
+                console.log('QuickOrderView view refresh');
+                Object.getPrototypeOf(viewRef).ootb_addMore = Object.getPrototypeOf(viewRef).addMore;
+                Object.getPrototypeOf(viewRef).addMore = function () {
+
+                    //alert("I'm here!");
+                    console.log('Inside QuickOrderView.addMore() override');
+
+                    var content = "";
+                    var rowSelector = "";
+                    if (CCRZ.display.isPhone())
+                        rowSelector = CCRZ.uiProperties.QuickOrderView.phone.selector + " .row";
+                    else {
+                        if (CCRZ.disableAdaptive) {
+                            rowSelector = CCRZ.uiProperties.QuickOrderView.desktop.selector + " .quickOrderRow";
+                        } else {
+                            rowSelector = CCRZ.uiProperties.QuickOrderView.desktop.selector + " .row";
+                        }
+
+                    }
+
+                    var ele = $(rowSelector);
+
+                    var currSize = this.count;
+                    for (var i = currSize; i < currSize + 10; i++) {
+                        content += this.templateEntry(i);
+                        this.count++;
+                    }
+                    $(rowSelector).append(content);
+                    if (this.count > 29)
+                        $('.addMore').hide();
+
+                };
+                viewRef.delegateEvents();
+            });
+
+        });
+
+
+    </script>
+</apex:component>

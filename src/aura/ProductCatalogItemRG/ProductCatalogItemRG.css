@@ -1,0 +1,16 @@
+.THIS .qtyInput .slds-form-element__control{
+    display: inline-block;
+}
+.THIS .qtyInput .slds-form-element__control .slds-input {
+    max-width: 70px;
+}
+.THIS h4.slds-truncate.slds-align--absolute-center a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 90%;
+}
+.THIS .image{
+    max-height:150px;
+    min-height:149px;
+}

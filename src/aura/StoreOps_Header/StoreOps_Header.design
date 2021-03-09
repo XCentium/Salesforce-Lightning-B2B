@@ -1,0 +1,4 @@
+<design:component label="Store Ops App - Header">
+    <design:attribute name="logoPath"  label="Logo URL" placeholder="https://sdorcgpackage.lightning.force.com/resource/NTOWhite"/>
+    <design:attribute name="backgroundColor"  label="Background Color (hex)" placeholder="#60C6F0"/>
+</design:component>

@@ -1,0 +1,258 @@
+<!-- 
+Demo component for simulating Pardot Activity History
+P. Delattre (pdelattre@salesforce.com) 
+Initial release - March 13 2017
+Update to strictly respect Pardot activity names and Icons - March 28 2017
+--> 
+
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+	<aura:attribute name="Title" type="String" default="Engagement History"/>
+    
+    <aura:attribute name="Icon1" type="String" default="custom:custom21"/>
+    <aura:attribute name="Text1" type="String" default="Form View"/>
+    <aura:attribute name="SubText1" type="String" default="Form: Demo Request"/>
+    <aura:attribute name="Date1" type="String" default="11 mos 25 days ago"/>
+    
+       <aura:attribute name="Icon2" type="String" default="custom:custom21"/>
+    <aura:attribute name="Text2" type="String" default="Form View"/>
+    <aura:attribute name="SubText2" type="String" default="Form: Webinar Registration"/>
+    <aura:attribute name="Date2" type="String" default="11 mos 28 days ago"/>
+    
+       <aura:attribute name="Icon3" type="String" default="standard:file"/>
+    <aura:attribute name="Text3" type="String" default="File Accessed"/>
+    <aura:attribute name="SubText3" type="String" default="File: Email Header 1.jpg"/>
+    <aura:attribute name="Date3" type="String" default="7 days 22 hrs ago"/>
+    
+       <aura:attribute name="Icon4" type="String" default="custom:custom21"/>
+    <aura:attribute name="Text4" type="String" default="Form View"/>
+    <aura:attribute name="SubText4" type="String" default="Form: Contact Us"/>
+    <aura:attribute name="Date4" type="String" default="1 mo 15 days ago"/>
+    
+       <aura:attribute name="Icon5" type="String" default="standard:file"/>
+    <aura:attribute name="Text5" type="String" default="File Accessed"/>
+    <aura:attribute name="SubText5" type="String" default="File: Logo.gif"/>
+    <aura:attribute name="Date5" type="String" default="2 mos 20 days ago"/>
+    
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
+
+	<div class="flexipageComponent" data-aura-class="flexipageComponent">
+    <div class="slds piEngagementHistoryList" data-aura-class="piEngagementHistoryList">
+        <div class="slds-card slds-card--narrow slds-card_boundary">
+            <div class="slds-card__header slds-truncate">
+                <img class="slds-icon slds-icon--small slds-media__figure " src="{!$Resource.PardotHistoryDemoIcons+'/EngagementHistorySVG.svg'}"/>
+                
+                    <span class="slds-text-heading--small">{!v.Title}</span>
+                    <span class="activity-count">
+                        (11)
+                    </span>
+                </div>
+                <div class="slds__spinner slds-hidden">
+                    <img class="slds-icon--small slds-icon__spinner" src=""/>
+                        <span class="slds-text-body--small">Loading activities...</span>
+                    </div>
+                    <div class="slds-card__body">
+                        <div class="slds-card__body--inner slds-m-bottom--large"></div>
+                        <div class="slds-card__body--inner">
+                            <ul >
+                                <li >
+                                    <span class="slds-assistive-text piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">{!v.Text1}</span>
+                                    <div class="slds-media slds-tile piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">
+                                        <div class="slds-media__body">
+                                            <div class="slds-media slds-media--timeline">
+                                                <div class="slds-media__figure slds-timeline__icon">
+                                                    <div class="slds-icon_container">
+                                                        <span class="slds-icon_container slds-icon-standard-task  piSvgIcon" data-aura-class="piSvgIcon">
+                                                            <!--<lightning:icon iconName="{!v.Icon1}" size="small" alternativeText=""/>-->
+																														<img src="{!$Resource.PardotHistoryDemoIcons+v.Icon1}" width="24" height="24"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-media__body timeline-item">
+                                                    <p class="slds-timeline__title" title="Form View">
+                                                        <span class="slds-timeline__title-content">
+                                                            <span class="activity-name slds-truncate">{!v.Text1}</span>
+                                                            <span class="slds-p-left--xxx-small warning-icon"></span>
+                                                        </span>
+                                                    </p>
+                                                    <ul >
+                                                        <li >
+                                                            <div class="slds-text-body--small piEngagementHistoryListItemMetadata" data-aura-class="piEngagementHistoryListItemMetadata">
+                                                                <span title="Demo Request" class="uiOutputText" data-aura-class="uiOutputText">{!v.SubText1}</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="slds-media__figure slds-media__figure--reverse timeline-item-date">
+                                                        <div class="slds-timeline__actions">
+                                                            <p class="slds-timeline__date">{!v.Date1}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li >
+                                    <span class="slds-assistive-text piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">{!v.Text2}</span>
+                                    <div class="slds-media slds-tile piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">
+                                        <div class="slds-media__body">
+                                            <div class="slds-media slds-media--timeline">
+                                                <div class="slds-media__figure slds-timeline__icon">
+                                                    <div class="slds-icon_container">
+                                                        <span class="slds-icon_container slds-icon-standard-task  piSvgIcon" data-aura-class="piSvgIcon">
+                                                            <img src="{!$Resource.PardotHistoryDemoIcons+v.Icon2}" width="24" height="24"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-media__body timeline-item">
+                                                    <p class="slds-timeline__title" title="Form View">
+                                                        <span class="slds-timeline__title-content">
+                                                            <span class="activity-name slds-truncate">{!v.Text2}</span>
+                                                            <span class="slds-p-left--xxx-small warning-icon"></span>
+                                                        </span>
+                                                    </p>
+                                                    <ul >
+                                                        <li >
+                                                            <div class="slds-text-body--small piEngagementHistoryListItemMetadata" data-aura-class="piEngagementHistoryListItemMetadata">
+                                                                <span title="Webinar Registration" class="uiOutputText" data-aura-class="uiOutputText">{!v.SubText2}</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="slds-media__figure slds-media__figure--reverse timeline-item-date">
+                                                        <div class="slds-timeline__actions">
+                                                            <p class="slds-timeline__date">{!v.Date2}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li >
+                                    <span class="slds-assistive-text piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">{!v.Text3}</span>
+                                    <div class="slds-media slds-tile piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">
+                                        <div class="slds-media__body">
+                                            <div class="slds-media slds-media--timeline">
+                                                <div class="slds-media__figure slds-timeline__icon">
+                                                    <div class="slds-icon_container">
+                                                        <span class="slds-icon_container slds-icon-standard-task  piSvgIcon" data-aura-class="piSvgIcon">
+                                                            <img src="{!$Resource.PardotHistoryDemoIcons+v.Icon3}" width="24" height="24"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-media__body timeline-item">
+                                                    <p class="slds-timeline__title" title="File Accessed">
+                                                        <span class="slds-timeline__title-content">
+                                                            <span class="activity-name slds-truncate">{!v.Text3}</span>
+                                                            <span class="slds-p-left--xxx-small warning-icon"></span>
+                                                        </span>
+                                                    </p>
+                                                    <ul >
+                                                        <li >
+                                                            <div class="slds-text-body--small piEngagementHistoryListItemMetadata" data-aura-class="piEngagementHistoryListItemMetadata">
+                                                                <span title="Email Header 1.jpg" class="uiOutputText" data-aura-class="uiOutputText">{!v.SubText3}</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="slds-media__figure slds-media__figure--reverse timeline-item-date">
+                                                        <div class="slds-timeline__actions">
+                                                            <p class="slds-timeline__date">{!v.Date3}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li >
+                                    <span class="slds-assistive-text piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">{!v.Text4}</span>
+                                    <div class="slds-media slds-tile piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">
+                                        <div class="slds-media__body">
+                                            <div class="slds-media slds-media--timeline">
+                                                <div class="slds-media__figure slds-timeline__icon">
+                                                    <div class="slds-icon_container">
+                                                        <span class="slds-icon_container slds-icon-standard-task  piSvgIcon" data-aura-class="piSvgIcon">
+                                                            <img src="{!$Resource.PardotHistoryDemoIcons+v.Icon4}" width="24" height="24"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-media__body timeline-item">
+                                                    <p class="slds-timeline__title" title="Form View">
+                                                        <span class="slds-timeline__title-content">
+                                                            <span class="activity-name slds-truncate">{!v.Text4}</span>
+                                                            <span class="slds-p-left--xxx-small warning-icon"></span>
+                                                        </span>
+                                                    </p>
+                                                    <ul >
+                                                        <li >
+                                                            <div class="slds-text-body--small piEngagementHistoryListItemMetadata" data-aura-class="piEngagementHistoryListItemMetadata">
+                                                                <span title="Contact Us" class="uiOutputText" data-aura-class="uiOutputText">{!v.SubText4}</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="slds-media__figure slds-media__figure--reverse timeline-item-date">
+                                                        <div class="slds-timeline__actions">
+                                                            <p class="slds-timeline__date">{!v.Date4}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li >
+                                    <span class="slds-assistive-text piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">{!v.Text5}</span>
+                                    <div class="slds-media slds-tile piEngagementHistoryListItem" data-aura-class="piEngagementHistoryListItem">
+                                        <div class="slds-media__body">
+                                            <div class="slds-media slds-media--timeline">
+                                                <div class="slds-media__figure slds-timeline__icon">
+                                                    <div class="slds-icon_container">
+                                                        <span class="slds-icon_container slds-icon-standard-task  piSvgIcon" data-aura-class="piSvgIcon">
+                                                            <img src="{!$Resource.PardotHistoryDemoIcons+v.Icon5}" width="24" height="24"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-media__body timeline-item">
+                                                    <p class="slds-timeline__title" title="File Accessed">
+                                                        <span class="slds-timeline__title-content">
+                                                            <span class="activity-name slds-truncate">{!v.Text5}</span>
+                                                            <span class="slds-p-left--xxx-small warning-icon"></span>
+                                                        </span>
+                                                    </p>
+                                                    <ul >
+                                                        <li >
+                                                            <div class="slds-text-body--small piEngagementHistoryListItemMetadata" data-aura-class="piEngagementHistoryListItemMetadata">
+                                                                <span title="Logo.gif" class="uiOutputText" data-aura-class="uiOutputText">{!v.SubText5}</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="slds-media__figure slds-media__figure--reverse timeline-item-date">
+                                                        <div class="slds-timeline__actions">
+                                                            <p class="slds-timeline__date">{!v.Date5}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="piEngagementHistoryPaginator" data-aura-class="piEngagementHistoryPaginator">
+                                <div class="center">
+                                    <a class="disable-click" href="">
+                                        <span >«&nbsp;</span>First</a>
+                                    <span >&nbsp;&nbsp;|&nbsp;&nbsp;Showing&nbsp;&nbsp;1&nbsp;-&nbsp;5&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                                    <a class="disable-click" href="">
+                                        <span >«&nbsp;</span>Previous 5</a>
+                                    <span >&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                                    <a href="">Next 5<span >&nbsp;»</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+</aura:component>

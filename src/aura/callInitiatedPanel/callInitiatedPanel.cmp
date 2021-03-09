@@ -1,0 +1,108 @@
+<!--
+Copyright 2016 salesforce.com, inc. All rights reserved.
+
+Use of this software is subject to the salesforce.com Developerforce Terms of Use and other applicable terms that salesforce.com may make available, as may be amended from time to time. You may not decompile, reverse engineer, disassemble, attempt to derive the source code of, decrypt, modify, or create derivative works of this software, updates thereto, or any part thereof. You may not use the software to engage in any development activity that infringes the rights of a third party, including that which interferes with, damages, or accesses in an unauthorized manner the servers, networks, or other properties or services of salesforce.com or any third party.
+
+WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL SALESFORCE.COM HAVE ANY LIABILITY FOR ANY DAMAGES, INCLUDING BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR DAMAGES BASED ON LOST PROFITS, DATA OR USE, IN CONNECTION WITH THE SOFTWARE, HOWEVER CAUSED AND, WHETHER IN CONTRACT, TORT OR UNDER ANY OTHER THEORY OF LIABILITY, WHETHER OR NOT YOU HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+-->
+
+<aura:component description="panel that is shown on dialing, incoming or transferring calls before being connected that displays basic contact info for the call." implements="c:panel"
+                controller="ctiApexController">
+    <aura:registerEvent name="workspace" type="c:WorkspaceEvent"></aura:registerEvent>
+
+    <aura:if isTrue="{!v.wasSearched}">
+        <audio src="/resource/SlickCTI_Outbound/SlickCTI_Outbound.mp3" autoplay="true">
+        </audio>
+        <aura:set attribute="else">
+            <aura:if isTrue="{!v.clickToDial}">
+                <!-- <audio aura:id="outboundRing" src="/resource/SlickCTI_Outbound/SlickCTI_Outbound.mp3" autoplay="true"> -->
+                <audio aura:id="outboundRing" src="{!v.outboundRingtone}" autoplay="true">
+                </audio>
+                <aura:set attribute="else">
+                    <!-- <audio aura:id="inboundRing" src="/resource/SlickCTI_InboundRing/SlickCTI_InboundRing.mp3" autoplay="true"> -->
+                    <audio aura:id="inboundRing" src="{!v.incomingRingtone}" autoplay="true">
+                    </audio>
+                </aura:set>
+            </aura:if>
+        </aura:set>
+    </aura:if>
+
+    <aura:attribute name="incomingRingtone" type="String" />
+    <aura:attribute name="outboundRingtone" type="String" />
+
+    <aura:attribute name="state" type="String" />
+    <aura:attribute name="label" type="String" />
+    <aura:attribute name="recordName" type="String" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="account" type="Object" />
+    <aura:attribute name="title" type="String" />
+    <aura:attribute name="phone" type="String" />
+    <aura:attribute name="presence" type="String" description="Could be Available, Busy or Unavailable"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+    <!-- Custom Attributes -->
+    <aura:attribute name="wasSearched" type="Boolean" default="false"/>
+    <aura:attribute name="contactName" type="String" />
+    <aura:attribute name="accountName" type="String" />
+    <aura:attribute name="title_2" type="String" />
+    <aura:attribute name="phone_2" type="String" />
+    <aura:attribute name="recordName_2" type="String" />
+    <aura:attribute name="recordId_2" type="String" />
+
+    <aura:attribute name="incomingName" type="String" />
+    <aura:attribute name="isPrimary" type="Boolean" default="true"/>
+
+    <!-- coshea extra attributes -->
+    <aura:attribute name="clickToDial" type="Boolean" default="false"/>
+
+    <div class="slds-panel">
+        <!--  Top section: Information about the contact, including an avatar -->
+        <div class="slds-panel__section">
+            <div class="avatar slds-align-absolute-center slds-text-align_center">
+                <lightning:icon class="slds-m-around_small" iconName="standard:person_account"></lightning:icon>
+            </div>
+
+            <!-- If this was a search we show default, otherwise we show custom -->
+            <aura:if isTrue="{!v.wasSearched}">
+                <div class="name slds-text-heading--large slds-text-color--weak slds-text-align--center">{!v.recordName}</div>
+                <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">{!v.account.Name}</div>
+                <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">{!v.title}</div>
+                <div class="incoming slds-text-heading--x-small slds-text-color--weak slds-text-align--center">{!v.state}&nbsp;<ui:outputphone value="{!v.phone}" />...</div>
+                <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
+                    <c:ticker />
+                </div>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.clickToDial}">
+                        <div class="name slds-text-heading--large slds-text-color--weak slds-text-align--center">{!v.recordName}</div>
+                        <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">{!v.account.Name}</div>
+                        <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">{!v.title}</div>
+                        <div class="incoming slds-text-heading--x-small slds-text-color--weak slds-text-align--center">{!v.state}&nbsp;<ui:outputphone value="" />...</div>
+                        <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center"> <c:ticker /> </div>
+                        <aura:set attribute="else">
+                            <div class="name slds-text-heading--large slds-text-color--weak slds-text-align--center">{!v.incomingName}</div>
+                            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">{!v.accountName}</div>
+                            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">{!v.title_2}</div>
+                            <div class="incoming slds-text-heading--x-small slds-text-color--weak slds-text-align--center">{!v.state}&nbsp;<ui:outputphone value="{!v.phone}" />...</div>
+                            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
+                                <c:ticker />
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+
+
+        </div>
+
+        <!--  Bottom section: End button on Dialing; Decline and Accept buttons on Incoming or Transferring -->
+        <div class="bottom-panel slds-panel__section slds-align-bottom slds-grid">
+            <aura:if isTrue="{! v.state == 'Dialing'}">
+                <button class="slds-size--1-of-1 slds-button slds-button--destructive" onclick="{!c.end}">End</button>
+                <aura:set attribute="else">
+                    <button class="slds-size--1-of-2 slds-button slds-button--destructive" onclick="{!c.decline}">Decline</button>
+                    <button class="slds-size--1-of-2 slds-button slds-button--brand" onclick="{!c.accept}">Accept</button>
+                </aura:set>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,99 @@
+<aura:component controller="CommunityIdeaController" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="isGuestUser" type="boolean" />
+    <aura:attribute name="listingTitle" type="String" />
+    <aura:attribute name="viewName" type="String" />
+    <aura:attribute name="ideasPerPage" type="Integer" />
+    <aura:attribute name="nextPage" type="Integer" default="0"/>
+    <aura:attribute name="IdeasList" type="Idea[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="zoneIdNames" type="Community[]" />
+    <aura:attribute name="selectedZoneId" type="String" />
+    <aura:attribute name="ideaDetailPath" type="String"/>
+    <aura:attribute name="ideaPostPath" type="String"/>
+    <aura:attribute name="ideasPageUpdated" type="Boolean" default="false"/>
+    <aura:attribute name="TotalIdeas" type="Integer" default="0"/>
+    <aura:attribute name="totalIdeaPages" type="Integer" default="1"/>
+    <aura:attribute name="pageNos" type="Integer[]" default="[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]"/>
+    
+    <div>
+        <div class="pageTitle">
+            <div class="postIdeaButton">
+                <a href="{!v.ideaPostPath}">Post Idea</a>
+            </div>
+            <h2>{!v.viewName}&nbsp;{!v.listingTitle}</h2>
+        </div>
+        
+        <div class="PaginationStyle"> 
+            <div class="zoneCont">
+                <ui:inputSelect aura:id="zone" label="Zone " change="{!c.onZoneChange}">
+                    <aura:iteration items="{!v.zoneIdNames}" var="zoneIdName">
+                        <ui:inputSelectOption text="{!zoneIdName.Id}" label="{!zoneIdName.Name}"/>
+                    </aura:iteration>
+                </ui:inputSelect>
+            </div>
+            <div class="filterStyle">
+                <span class="unselectedPage">&lt;</span>
+                <aura:iteration start="0" items="{!v.pageNos}" var="totalPages" end="{!v.totalIdeaPages}">
+                    <aura:if isTrue="{!totalPages == v.nextPage+1}">
+                        <span class="selectedPage">{!totalPages}</span>
+                        <aura:set attribute="else">
+                            <span class="unselectedPage">{!totalPages}</span>
+                        </aura:set>
+                    </aura:if>
+                </aura:iteration>
+                <span class="unselectedPage">&gt;</span>
+            </div>
+            <ui:inputSelect aura:id="filters" label="Filter: " change="{!c.onSelectChange}" >
+                <ui:inputSelectOption text="Popular" label="Popular" value="true"/>
+                <ui:inputSelectOption text="Recent" label="Recent"/>
+                <ui:inputSelectOption text="My" label="My"/>
+            </ui:inputSelect>
+        </div>
+        <ul class="list-group">
+            <aura:iteration items="{!v.IdeasList}" var="idea">
+                <li class="list-group-item">
+                    <div class="voteForIdea">
+                        <!-- TODO: Refactor voting buttons into a child component -->
+                        <aura:if isTrue="{!idea.Votes[0].Type != null}">
+                            <!-- GENERAL RULES FOR IDEA VOTING: -->
+                            <!-- 
+								1. If you create an idea, you automatically vote the idea up.
+								2. If someone else creates the idea, you can vote it up or vote it down once. You can change your vote
+							-->
+                            <aura:if isTrue="{!idea.Votes[0].Type == 'Up'}">
+                                <img width="30" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/promoted.png'}" /> &nbsp;
+                                <!-- img width="30" class="promoteDemoteIdea" data-idValue="{!idea.Id}" onclick="{!c.demoteAnIdea}" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/demote.png'}" / -->
+                                <aura:set attribute="else">
+                                    <img width="30" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/demoted.png'}" />&nbsp;
+                                    <!-- img width="30" class="promoteDemoteIdea" onclick="{!c.promoteAnIdea}" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/promote.png'}" / -->
+                                </aura:set>
+                            </aura:if>
+                            <aura:set attribute="else">
+                                <img width="30" class="promoteDemoteIdea" data-idValue="{!idea.Id}" onclick="{!c.promoteAnIdea}" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/promote.png'}" /> &nbsp;
+                                <img width="30" class="promoteDemoteIdea" data-idValue="{!idea.Id}" onclick="{!c.demoteAnIdea}" src="{!$SfdcSite.pathPrefix + '/resource/communityIdeasAssets/demote.png'}" />
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                    <a href="{! $SfdcSite.pathPrefix + '/s/' + v.ideaDetailPath + idea.Id }">
+                        <h4 class='prodname'>{!idea.Title}</h4>
+                    </a>
+                    <div class='proddescription'>Points: <span class="bold">{!idea.VoteTotal}</span></div>
+                    <!-- div class='ideastatus'>Status: {!idea.Status}</div -->
+                    <div class='creatorPublisher'>Posted by <span class="bold">{!idea.CreatorName} </span> &nbsp; on <span class="bold"><ui:outputDateTime value="{!idea.CreatedDate}"/></span></div>
+                    <div class='ideanumcomments'><span class="bold">{!idea.NumComments}</span> Comments</div>
+                    <div class='ideacategories'>Posted to <span class="bold">{!idea.Categories}</span></div>
+                </li>
+            </aura:iteration>
+        </ul>
+        <div class="paginationButtons">
+            <aura:if isTrue="{!v.nextPage != 0}">
+                <ui:button label="First" press="{!c.firstPage}" />
+                <ui:button label="Previous" press="{!c.previousPage}" />
+            </aura:if>
+            <aura:if isTrue="{!v.TotalIdeas > (v.nextPage+1) * v.ideasPerPage}">
+                <ui:button label="Next" press="{!c.nextPage}" />
+                <ui:button label="Last" press="{!c.lastPage}" />
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,64 @@
+<aura:component >
+   
+	<aura:attribute name="sections" type="List"/>
+	<aura:attribute name="sourceSection" type="Integer"/>
+    <aura:attribute name="destSection" type="Integer"/>
+    <aura:attribute name="scope" type="String" default="selection"/>
+    <aura:attribute name="action" type="String" default="ask"/>
+    <aura:attribute name="selectedValue" type="String" access="PRIVATE"/>
+    
+    <aura:registerEvent name="moveLines" type="c:PricerMoveLinesEvent"/>
+    
+  <div aura:id="about" role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+    <div class="slds-modal__container">
+      <div class="slds-modal__header">
+
+        <lightning:buttonicon iconName="utility:close" size="large" alternativeText="icon" class="slds-modal__close" variant="bare-inverse" onclick="{!c.closeModal}"/>
+        <h2 id="header43" class="slds-text-heading--medium">{!$Label.c.Pricer_Move_lines_to_another_section}</h2>
+      </div>
+      <div class="slds-modal__content slds-p-around--medium">
+     
+     <div class="slds-grid  slds-wrap " style="margin-bottom:7px">
+       <div class=" slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12">   
+      		<ui:inputRadio aura:id="r1" labelClass="uiLabelPadding" name="scopeChoice" label="{!$Label.c.Pricer_Move_all_lines}" change="{!c.scopeSelectorChange}" value="{!(v.scope=='allLines')}" text="allLines"/>
+        </div>
+       <div class="slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12">
+      		<ui:inputRadio aura:id="r0" labelClass="uiLabelPadding" name="scopeChoice" label="{!$Label.c.Pricer_Move_only_selected_lines}" change="{!c.scopeSelectorChange}" value="{!(v.scope=='selection')}" text="selection"/>      
+       </div>     
+     </div>    
+          
+     <div class="slds-p-bottom--x-small" style="width: 100%;">
+        <lightning:select name="colorId" label="{!$Label.c.Pricer_Choose_a_target_section}" aura:id="sectionInd" value="{!v.selectedValue}" >
+            <aura:iteration items="{!v.sections}" var="section" indexVar="sectionIndex">
+                <aura:if isTrue="{!!section.isDeleted}">
+                <option text="{!section.oSection.Name}" value="{!sectionIndex}" selected="{!(v.sourceSection==sectionIndex)}"/>
+                </aura:if>    
+            </aura:iteration>
+        </lightning:select>     
+     </div>      
+     <p></p>
+      
+
+      </div>
+      <div class="slds-modal__footer" style="position:relative;height:58px">
+        <aura:if isTrue="{!v.isApexInProgress}">
+        	<div role="status" class="slds-spinner slds-spinner_brand slds-spinner_small" >
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+        	</div>
+        <aura:set attribute="else">
+            <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}">{!$Label.c.Pricer_Cancel}</button>
+            <button class="slds-button slds-button--brand" onclick="{!c.confirm}">{!$Label.c.Pricer_Confirm}</button>
+   		</aura:set>
+        </aura:if>
+            
+        
+      </div>
+    </div>
+  </div>
+  <div aura:id="greyzone" class="slds-backdrop slds-backdrop--open"></div>
+
+
+
+</aura:component>

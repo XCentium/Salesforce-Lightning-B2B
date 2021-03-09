@@ -1,0 +1,11 @@
+<design:component>
+	<design:attribute name="ButtonText"  label="Top Button Text" default="Open Trailhead" />
+    <design:attribute name="HeaderIcon"  label="Icon in the header" default="standard:reward" />
+    <design:attribute name="TrailheadProfileRank"  label="Trailhead Profile Rank" default="Mountaineer" datasource="Mountaineer, Scout, Hiker, Explorer,Adventurer, Expeditioner,Ranger"/>
+    <design:attribute name="TrailheadProfilePoints"  label="8050" default="8050" />
+    <design:attribute name="TrailheadProfileURL"  label="Trailhead Profile URL" default="https://trailhead.salesforce.com/en/me/peterarentoftnielsen" />
+    <design:attribute name="TrailheadBadgeImageURL"  label="Trailhead Badge Image URL" default="https://developer.salesforce.com/resource/images/trailhead/badges/modules/trailhead_modules_advanced_formulas.png" />
+    <design:attribute name="DescriptionOfBadge"  label="Description of the Badge" default="Learn how to write clean, easy-to-understand formulas" />
+    <design:attribute name="TrailheadBadgeTitle"  label="Trailhead Badge Title" default="Advanced Formulas" />
+    <design:attribute name="PointsAwardedForBadge"  label="Points Awarded for the Badge" default="500" />
+</design:component>

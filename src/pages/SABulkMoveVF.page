@@ -1,0 +1,22 @@
+<apex:page lightningStylesheets="true" Controller="SAJeopardyController" doctype="HTML-5.0">
+<!-- javascript to close window after user presses Re-assign button -->
+  <script type="text/javascript">
+    function getOut() {
+      Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.SAJeopardyController.getMeOutOfHere}',
+        function(ev) { parent.postMessage('closeLightbox','*'); }, 
+        { buffer: false, escape: false, timeout: 120000});
+    }
+  </script>
+  <apex:form >
+  <apex:messages />
+    <apex:pageBlock title="{!TheSAs} to Another Tech">
+      <apex:outputLabel value="Select Tech to Reassign jobs : " for="srselect"/>
+        <apex:selectList id="srselect" value="{!srSelected}" multiselect="false" size="1">
+          <apex:selectOptions value="{!sroptions}"/>
+        </apex:selectList>  
+      <apex:commandButton id="saveBtn" value="Re-Assign" action="{!bam}" onclick="getOut()"/>
+    </apex:pageBlock>
+    
+  </apex:form>    
+</apex:page>

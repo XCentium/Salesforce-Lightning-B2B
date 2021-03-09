@@ -1,0 +1,667 @@
+<!--
+ - Created by brandon.rogers on 2019-05-30.
+ -->
+
+<apex:component id="ckz_Hero">
+    <script id="cc-splash-desktop-template" type="text/template">
+
+        {{#if this.Hero}}
+        <section class="ckz-hero">
+
+            <!-- HERO SLIDES -->
+            <ul class="ckz-hero-slider">
+                {{#each this.Hero}}
+                {{#ifEquals this.heroLayout "Text"}}
+                <li {{#ifEquals @index 0}}class="selected" {{/ifEquals}}>
+                <div class="ckz-full-width">
+                    <h2>{{htmlDecode (pageLabelMap this.heroTitle)}}</h2>
+                    <p>{{htmlDecode (pageLabelMap this.heroText)}}</p>
+
+                    {{#ifNotEquals heroButton1Type "None"}}
+                    {{#ifEquals heroButton1Type "URL"}}
+                    <a href="{{this.heroButton1URI}}" class="ckz-btn" {{#if this.heroButton1Target}}target="_blank"{{/if}}>
+                    {{pageLabelMap this.heroButton1Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton1Type "Product"}}
+                    <a href="javascript:productDetails('{{this.heroButton1SKU}}');" class="ckz-btn">
+                        {{pageLabelMap this.heroButton1Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton1Type "Category"}}
+                    <a href="javascript:productList('{{this.heroButton1Category}}');" class="ckz-btn">
+                        {{pageLabelMap this.heroButton1Description}}
+                    </a>
+                    {{/ifEquals}}
+                    {{/ifNotEquals}}
+
+                    {{#ifNotEquals heroButton2Type "None"}}
+                    {{#ifEquals heroButton2Type "URL"}}
+                    <a href="{{this.heroButton2URI}}" class="ckz-btn secondary" {{#if this.heroButton2Target}}target="_blank"{{/if}}>
+                    {{pageLabelMap this.heroButton2Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton2Type "Product"}}
+                    <a href="javascript:productDetails('{{this.heroButton2SKU}}');" class="ckz-btn secondary">
+                        {{pageLabelMap this.heroButton2Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton2Type "Category"}}
+                    <a href="javascript:productList('{{this.heroButton2Category}}');" class="ckz-btn secondary">
+                        {{pageLabelMap this.heroButton2Description}}
+                    </a>
+                    {{/ifEquals}}
+                    {{/ifNotEquals}}
+                </div> <!-- .ckz-full-width -->
+                </li>
+                {{/ifEquals}}
+
+
+                {{#ifEquals this.heroLayout "Full Image"}}
+                <li {{#ifEquals @index 0}}class="selected" {{/ifEquals}} style="background-image: url({{this.fullImageURL}})">
+                <div class="ckz-full-width">
+                    {{#ifCond this.heroTitle '||' this.heroText}}
+                    <div class="ckz-shadow {{#ifEquals this.heroTextPosition 'Left'}}shadow-left{{/ifEquals}} {{#ifEquals this.heroTextPosition 'Center'}}shadow-center{{/ifEquals}} {{#ifEquals this.heroTextPosition 'Right'}}shadow-right{{/ifEquals}}">
+                        <h2>{{htmlDecode (pageLabelMap this.heroTitle)}}</h2>
+                        <p>{{htmlDecode (pageLabelMap this.heroText)}}</p>
+
+                        {{#ifNotEquals heroButton1Type "None"}}
+                        {{#ifEquals heroButton1Type "URL"}}
+                        <a href="{{this.heroButton1URI}}" class="ckz-btn" {{#if this.heroButton1Target}}target="_blank"{{/if}}>
+                        {{pageLabelMap this.heroButton1Description}}
+                        </a>
+                        {{/ifEquals}}
+
+                        {{#ifEquals heroButton1Type "Product"}}
+                        <a href="javascript:productDetails('{{this.heroButton1SKU}}');" class="ckz-btn">
+                            {{pageLabelMap this.heroButton1Description}}
+                        </a>
+                        {{/ifEquals}}
+
+                        {{#ifEquals heroButton1Type "Category"}}
+                        <a href="javascript:productList('{{this.heroButton1Category}}');" class="ckz-btn">
+                            {{pageLabelMap this.heroButton1Description}}
+                        </a>
+                        {{/ifEquals}}
+                        {{/ifNotEquals}}
+
+                        {{#ifNotEquals heroButton2Type "None"}}
+                        {{#ifEquals heroButton2Type "URL"}}
+                        <a href="{{this.heroButton2URI}}" class="ckz-btn secondary" {{#if this.heroButton2Target}}target="_blank"{{/if}}>
+                        {{pageLabelMap this.heroButton2Description}}
+                        </a>
+                        {{/ifEquals}}
+
+                        {{#ifEquals heroButton2Type "Product"}}
+                        <a href="javascript:productDetails('{{this.heroButton2SKU}}');" class="ckz-btn secondary">
+                            {{pageLabelMap this.heroButton2Description}}
+                        </a>
+                        {{/ifEquals}}
+
+                        {{#ifEquals heroButton2Type "Category"}}
+                        <a href="javascript:productList('{{this.heroButton2Category}}');" class="ckz-btn secondary">
+                            {{pageLabelMap this.heroButton2Description}}
+                        </a>
+                        {{/ifEquals}}
+                        {{/ifNotEquals}}
+                    </div>
+                    {{/ifCond}}
+                </div> <!-- .ckz-full-width -->
+                </li>
+                {{/ifEquals}}
+
+
+                {{#ifEquals this.heroLayout "Image Left"}}
+                <li {{#ifEquals @index 0}}class="selected" {{/ifEquals}}>
+                <div class="ckz-half-width ckz-img-container">
+                    <img src="{{this.fullImageURL}}" alt="">
+                </div> <!-- .ckz-half-width.ckz-img-container -->
+
+                <div class="ckz-half-width">
+                    <h2>{{htmlDecode (pageLabelMap this.heroTitle)}}</h2>
+                    <p>{{htmlDecode (pageLabelMap this.heroText)}}</p>
+
+                    {{#ifNotEquals heroButton1Type "None"}}
+                    {{#ifEquals heroButton1Type "URL"}}
+                    <a href="{{this.heroButton1URI}}" class="ckz-btn" {{#if this.heroButton1Target}}target="_blank"{{/if}}>
+                    {{pageLabelMap this.heroButton1Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton1Type "Product"}}
+                    <a href="javascript:productDetails('{{this.heroButton1SKU}}');" class="ckz-btn">
+                        {{pageLabelMap this.heroButton1Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton1Type "Category"}}
+                    <a href="javascript:productList('{{this.heroButton1Category}}');" class="ckz-btn">
+                        {{pageLabelMap this.heroButton1Description}}
+                    </a>
+                    {{/ifEquals}}
+                    {{/ifNotEquals}}
+
+                    {{#ifNotEquals heroButton2Type "None"}}
+                    {{#ifEquals heroButton2Type "URL"}}
+                    <a href="{{this.heroButton2URI}}" class="ckz-btn secondary" {{#if this.heroButton2Target}}target="_blank"{{/if}}>
+                    {{pageLabelMap this.heroButton2Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton2Type "Product"}}
+                    <a href="javascript:productDetails('{{this.heroButton2SKU}}');" class="ckz-btn secondary">
+                        {{pageLabelMap this.heroButton2Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton2Type "Category"}}
+                    <a href="javascript:productList('{{this.heroButton2Category}}');" class="ckz-btn secondary">
+                        {{pageLabelMap this.heroButton2Description}}
+                    </a>
+                    {{/ifEquals}}
+                    {{/ifNotEquals}}
+                </div> <!-- .ckz-half-width -->
+                </li>
+                {{/ifEquals}}
+
+
+                {{#ifEquals this.heroLayout "Image Right"}}
+                <li {{#ifEquals @index 0}}class="selected" {{/ifEquals}}>
+                <div class="ckz-half-width">
+                    <h2>{{htmlDecode (pageLabelMap this.heroTitle)}}</h2>
+                    <p>{{htmlDecode (pageLabelMap this.heroText)}}</p>
+
+                    {{#ifNotEquals heroButton1Type "None"}}
+                    {{#ifEquals heroButton1Type "URL"}}
+                    <a href="{{this.heroButton1URI}}" class="ckz-btn" {{#if this.heroButton1Target}}target="_blank"{{/if}}>
+                    {{pageLabelMap this.heroButton1Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton1Type "Product"}}
+                    <a href="javascript:productDetails('{{this.heroButton1SKU}}');" class="ckz-btn">
+                        {{pageLabelMap this.heroButton1Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton1Type "Category"}}
+                    <a href="javascript:productList('{{this.heroButton1Category}}');" class="ckz-btn">
+                        {{pageLabelMap this.heroButton1Description}}
+                    </a>
+                    {{/ifEquals}}
+                    {{/ifNotEquals}}
+
+                    {{#ifNotEquals heroButton2Type "None"}}
+                    {{#ifEquals heroButton2Type "URL"}}
+                    <a href="{{this.heroButton2URI}}" class="ckz-btn secondary" {{#if this.heroButton2Target}}target="_blank"{{/if}}>
+                    {{pageLabelMap this.heroButton2Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton2Type "Product"}}
+                    <a href="javascript:productDetails('{{this.heroButton2SKU}}');" class="ckz-btn secondary">
+                        {{pageLabelMap this.heroButton2Description}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals heroButton2Type "Category"}}
+                    <a href="javascript:productList('{{this.heroButton2Category}}');" class="ckz-btn secondary">
+                        {{pageLabelMap this.heroButton2Description}}
+                    </a>
+                    {{/ifEquals}}
+                    {{/ifNotEquals}}
+                </div> <!-- .ckz-half-width -->
+
+                <div class="ckz-half-width ckz-img-container">
+                    <img src="{{this.fullImageURL}}" alt="">
+                </div> <!-- .ckz-half-width.ckz-img-container -->
+                </li>
+                {{/ifEquals}}
+
+
+                {{#ifEquals this.heroLayout "Video"}}
+                <li class="ckz-bg-video {{#ifEquals @index 0}}selected{{/ifEquals}}" style="background-image: url({{this.fullImageURL}})">
+                    <div class="ckz-full-width">
+                        {{#ifCond this.heroTitle '||' this.heroText}}
+                        <div class="ckz-shadow {{#ifEquals this.heroTextPosition 'Left'}}shadow-left{{/ifEquals}} {{#ifEquals this.heroTextPosition 'Center'}}shadow-center{{/ifEquals}} {{#ifEquals this.heroTextPosition 'Right'}}shadow-right{{/ifEquals}}">
+                            <h2>{{htmlDecode (pageLabelMap this.heroTitle)}}</h2>
+                            <p>{{htmlDecode (pageLabelMap this.heroText)}}</p>
+
+                            {{#ifNotEquals heroButton1Type "None"}}
+                            {{#ifEquals heroButton1Type "URL"}}
+                            <a href="{{this.heroButton1URI}}" class="ckz-btn" {{#if this.heroButton1Target}}target="_blank"{{/if}}>
+                            {{pageLabelMap this.heroButton1Description}}
+                            </a>
+                            {{/ifEquals}}
+
+                            {{#ifEquals heroButton1Type "Product"}}
+                            <a href="javascript:productDetails('{{this.heroButton1SKU}}');" class="ckz-btn">
+                                {{pageLabelMap this.heroButton1Description}}
+                            </a>
+                            {{/ifEquals}}
+
+                            {{#ifEquals heroButton1Type "Category"}}
+                            <a href="javascript:productList('{{this.heroButton1Category}}');" class="ckz-btn">
+                                {{pageLabelMap this.heroButton1Description}}
+                            </a>
+                            {{/ifEquals}}
+                            {{/ifNotEquals}}
+
+                            {{#ifNotEquals heroButton2Type "None"}}
+                            {{#ifEquals heroButton2Type "URL"}}
+                            <a href="{{this.heroButton2URI}}" class="ckz-btn secondary" {{#if this.heroButton2Target}}target="_blank"{{/if}}>
+                            {{pageLabelMap this.heroButton2Description}}
+                            </a>
+                            {{/ifEquals}}
+
+                            {{#ifEquals heroButton2Type "Product"}}
+                            <a href="javascript:productDetails('{{this.heroButton2SKU}}');" class="ckz-btn secondary">
+                                {{pageLabelMap this.heroButton2Description}}
+                            </a>
+                            {{/ifEquals}}
+
+                            {{#ifEquals heroButton2Type "Category"}}
+                            <a href="javascript:productList('{{this.heroButton2Category}}');" class="ckz-btn secondary">
+                                {{pageLabelMap this.heroButton2Description}}
+                            </a>
+                            {{/ifEquals}}
+                            {{/ifNotEquals}}
+                        </div>
+                        {{/ifCond}}
+                    </div> <!-- .ckz-full-width -->
+
+                    <div class="ckz-bg-video-wrapper" data-video="{{this.heroVideoURI}}">
+                        {{#ifEquals this.heroVideoType "youtube"}}
+                        <div class="ckz-video-background-yt">
+                            <div class="ckz-video-foreground-yt">
+                                <div id="muteYouTubeVideoPlayer"></div>
+                            </div>
+                        </div>
+                        {{/ifEquals}}
+
+                        <video loop="" muted>
+                            {{#ifEquals this.heroVideoType "mp4"}}
+                            <source src="{{this.heroVideoURI}}" type="video/mp4">
+                            {{/ifEquals}}
+
+                            {{#ifEquals this.heroVideoType "webm"}}
+                            <source src="{{this.heroVideoURI}}" type="video/webm">
+                            {{/ifEquals}}
+                        </video>
+                    </div> <!-- .ckz-bg-video-wrapper -->
+                </li>
+                {{/ifEquals}}
+                {{/each}}
+            </ul> <!-- .ckz-hero-slider -->
+
+            <!-- HERO NAVIGATION -->
+            <div class="ckz-slider-nav">
+                <nav>
+                    <span class="ckz-marker item-1"></span>
+                    <ul>
+                        {{#each this.Hero}}
+                        <li {{#ifEquals @index 0}}class="selected" {{/ifEquals}}>
+                        <a href="javascript:void(0);">
+                            <div class="hero-nav-icon">
+                                <i class="{{this.heroNavIcon}} fa-3x"></i>
+                            </div>
+                            <div class="hero-nav-label hidden-xs">
+                                {{{pageLabelMap this.heroNavLabel}}}
+                            </div>
+                        </a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </nav>
+            </div> <!-- .ckz-slider-nav -->
+        </section> <!-- .ckz-hero -->
+        {{/if}}
+
+
+        {{#if this.Splash}}
+        <div id="carousel-splash" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                {{#each this.Splash}}
+                <li data-target="#carousel-splash" data-slide-to="{{@index}}"></li>
+                {{/each}}
+            </ol>
+
+            <div class="carousel-pause">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button type="button" class="btn btn-link" onclick="pauseCarousel()">
+                            <i class="fas fa-pause-circle" id="cPause"></i>
+                            <i class="fas fa-play-circle hide" id="cPlay"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-inner" role="listbox">
+                {{#each this.Splash}}
+                <div class="item" data-id="{{@index}}">
+                    {{#if this.sku}}
+                    <a href="javascript:productDetails('{{this.sku}}');">
+                        <img src="{{this.fullImageURL}}" alt="{{this.name}}" class="center-block"/>
+                    </a>
+                    {{else}}
+                    {{#if this.categoryId}}
+                    <a href="javascript:productList('{{this.categoryId}}');">
+                        <img src="{{this.fullImageURL}}" alt="{{this.name}}" class="center-block"/>
+                    </a>
+                    {{else}}
+                    {{#if this.externalLink}}
+                    <a href="{{this.externalLink}}" {{#if this.isNewWindow}}target="_blank" {{/if}}>
+                    <img src="{{this.fullImageURL}}" alt="{{this.name}}" class="center-block"/>
+                    </a>
+                    {{else}}
+                    {{#if this.noLink }}
+                    <img src="{{this.fullImageURL}}" alt="{{this.name}}" class="center-block"/>
+                    {{/if}}
+                    {{/if}}
+                    {{/if}}
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+
+            <a class="left carousel-control" href="#carousel-splash" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+
+            <a class="right carousel-control" href="#carousel-splash" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        <br/>
+        {{/if}}
+    </script>
+
+
+    <script async="async" src="https://www.youtube.com/iframe_api"></script>
+
+    <script type="text/javascript">
+        /*
+        function htmlDecode(input){
+          var e = document.createElement('div');
+          e.innerHTML = input;
+          // handle case of empty input
+          return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+        }
+        */
+        $(function () {
+            CCRZ.uiProperties.SplashDisp.desktop.tmpl = 'cc-splash-desktop-template';
+            CCRZ.uiProperties.SplashDisp.desktop.selector = '.CKZ-splash-promo-Desktop';
+            CCRZ.pubSub.on('view:PromoDisp:refresh', function () {
+                console.log("ckz_Hero: PromoDisp: refresh");
+
+                // FOR ONE COL HOMPEAGE
+                if ($(".CKZ-splash-promo-Desktop")[0]) {
+                    // DO NOTHING
+                } else {
+                    // PREPEND MISSING DIV
+                    $(".home_slider").prepend("<div class='CKZ-splash-promo-Desktop'></div>");
+                }
+
+                if (CCRZ.splashModel) {
+                    if (CCRZ.splashModel.attributes.Hero) {
+                        for (var i = 0; i < CCRZ.splashModel.attributes.Hero.length; i++) {
+                            if (CCRZ.splashModel.attributes.Hero[i].heroVideoType === "youtube") {
+                                var yt = CCRZ.splashModel.attributes.Hero[i].heroVideoURI;
+                                initHero(yt);
+                            }
+                        }
+                        if (!yt) {
+                            initHero();
+                        }
+                    }
+                }
+            });
+
+            Handlebars.registerHelper('htmlDecode', function(input) {
+
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                // handle case of empty input
+                return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+
+            });
+
+            Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+                switch (operator) {
+                    case '==':
+                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    case '===':
+                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                    case '!=':
+                        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+                    case '!==':
+                        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+                    case '<':
+                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                    case '<=':
+                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                    case '>':
+                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                    case '>=':
+                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                    case '&&':
+                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                    case '||':
+                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    default:
+                        return options.inverse(this);
+                }
+            });
+
+        });
+
+        function initHero(yt) {
+            console.log("ckz_Hero: initHero");
+
+            var slidesWrapper = $('.ckz-hero-slider');
+
+            //check if a .ckz-hero-slider exists in the DOM
+            if (slidesWrapper.length > 0) {
+                console.log("ckz_Hero: ckz-hero-slider exists!");
+
+                var primaryNav = $('.ckz-primary-nav'),
+                    sliderNav = $('.ckz-slider-nav'),
+                    navigationMarker = $('.ckz-marker'),
+                    slidesNumber = slidesWrapper.children('li').length,
+                    visibleSlidePosition = 0,
+                    autoPlayId,
+                    autoPlayDelay = 5000;
+
+                //upload videos (if not on mobile devices)
+                // uploadVideo(slidesWrapper);
+
+                //autoplay slider
+                setAutoplay(slidesWrapper, slidesNumber, autoPlayDelay);
+
+                //on mobile - open/close primary navigation clicking/tapping the menu icon
+                primaryNav.on('click', function (event) {
+                    if ($(event.target).is('.ckz-primary-nav')) $(this).children('ul').toggleClass('is-visible');
+                });
+
+                //change visible slide
+                sliderNav.on('click', 'li', function (event) {
+                    event.preventDefault();
+                    var selectedItem = $(this);
+                    if (!selectedItem.hasClass('selected')) {
+                        // if it's not already selected
+                        var selectedPosition = selectedItem.index(),
+                            activePosition = slidesWrapper.find('li.selected').index();
+
+                        if (activePosition < selectedPosition) {
+                            nextSlide(slidesWrapper.find('.selected'), slidesWrapper, sliderNav, selectedPosition);
+                        } else {
+                            prevSlide(slidesWrapper.find('.selected'), slidesWrapper, sliderNav, selectedPosition);
+                        }
+
+                        //this is used for the autoplay
+                        visibleSlidePosition = selectedPosition;
+
+                        updateSliderNavigation(sliderNav, selectedPosition);
+                        updateNavigationMarker(navigationMarker, selectedPosition + 1);
+                        //reset autoplay
+                        setAutoplay(slidesWrapper, slidesNumber, autoPlayDelay);
+                    }
+                });
+
+                YouTubeReady(yt, slidesWrapper);
+
+            } else {
+                console.log("ckz_Hero: NOPE! TRY AGAIN");
+            }
+
+        }
+
+        function nextSlide(visibleSlide, container, pagination, n) {
+            // console.log("ckz_Hero: nextSlide");
+
+            visibleSlide.removeClass('selected from-left from-right').addClass('is-moving').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function () {
+                visibleSlide.removeClass('is-moving');
+            });
+
+            container.children('li').eq(n).addClass('selected from-right').prevAll().addClass('move-left');
+            checkVideo(visibleSlide, container, n);
+        }
+
+        function prevSlide(visibleSlide, container, pagination, n) {
+            // console.log("ckz_Hero: prevSlide");
+
+            visibleSlide.removeClass('selected from-left from-right').addClass('is-moving').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function () {
+                visibleSlide.removeClass('is-moving');
+            });
+
+            container.children('li').eq(n).addClass('selected from-left').removeClass('move-left').nextAll().removeClass('move-left');
+            checkVideo(visibleSlide, container, n);
+        }
+
+        function updateSliderNavigation(pagination, n) {
+            // console.log("ckz_Hero: updateSliderNavigation");
+
+            var navigationDot = pagination.find('.selected');
+            navigationDot.removeClass('selected');
+            pagination.find('li').eq(n).addClass('selected');
+        }
+
+        function setAutoplay(wrapper, length, delay) {
+            // console.log("ckz_Hero: setAutoplay");
+
+            if (wrapper.hasClass('autoplay')) {
+                clearInterval(autoPlayId);
+                autoPlayId = window.setInterval(function () {
+                    autoplaySlider(length)
+                }, delay);
+            }
+        }
+
+        function autoplaySlider(length) {
+            // console.log("ckz_Hero: autoplaySlider");
+
+            if (visibleSlidePosition < length - 1) {
+                nextSlide(slidesWrapper.find('.selected'), slidesWrapper, sliderNav, visibleSlidePosition + 1);
+                visibleSlidePosition += 1;
+            } else {
+                prevSlide(slidesWrapper.find('.selected'), slidesWrapper, sliderNav, 0);
+                visibleSlidePosition = 0;
+            }
+            updateNavigationMarker(navigationMarker, visibleSlidePosition + 1);
+            updateSliderNavigation(sliderNav, visibleSlidePosition);
+        }
+
+        function checkVideo(hiddenSlide, container, n) {
+            // console.log("ckz_Hero: checkVideo");
+
+            //check if a video outside the viewport is playing - if yes, pause it
+            var hiddenVideo = hiddenSlide.find('video');
+            if (hiddenVideo.length > 0) hiddenVideo.get(0).pause();
+
+            //check if the select slide contains a video element - if yes, play the video
+            var visibleVideo = container.children('li').eq(n).find('video');
+            if (visibleVideo.length > 0) visibleVideo.get(0).play();
+        }
+
+        function updateNavigationMarker(marker, n) {
+            // console.log("ckz_Hero: updateNavigationMarker");
+
+            marker.removeClassPrefix('item').addClass('item-' + n);
+        }
+
+        $.fn.removeClassPrefix = function (prefix) {
+            //remove all classes starting with 'prefix'
+            this.each(function (i, el) {
+                var classes = el.className.split(" ").filter(function (c) {
+                    return c.lastIndexOf(prefix, 0) !== 0;
+                });
+                el.className = $.trim(classes.join(" "));
+            });
+            return this;
+        };
+
+
+        // function onYouTubeIframeAPIReady(yt) {
+        function YouTubeReady(yt, container) {
+            console.log("ckz_Hero: YouTubeReady");
+
+            var player;
+            player = new YT.Player('muteYouTubeVideoPlayer', {
+                videoId: yt, // YouTube Video ID
+                width: 1920,               // Player width (in px)
+                height: 1080,              // Player height (in px)
+                playerVars: {
+                    autoplay: 1,        // Auto-play the video on load
+                    controls: 0,        // Show pause/play buttons in player
+                    showinfo: 0,        // Hide the video title
+                    modestbranding: 1,  // Hide the Youtube Logo
+                    loop: 1,            // Run the video in a loop
+                    playlist: yt,
+                    fs: 0,              // Hide the full screen button
+                    cc_load_policy: 0,  // Hide closed captions
+                    iv_load_policy: 3,  // Hide the Video Annotations
+                    autohide: 0,        // Hide video controls when playing
+                    disablekb: 1,
+
+                },
+                events: {
+                    onReady: function (e) {
+                        e.target.mute();
+                    }
+                }
+            });
+
+            var visibleVideo = container.children('li').eq(0).find('video');
+            if (visibleVideo.length > 0) {
+                visibleVideo.get(0).play();
+            }
+        }
+
+        var carouselPause = false;
+
+        function pauseCarousel() {
+            // console.log("ckz_Hero: pauseCarousel");
+
+            if (carouselPause === false) {
+                $(".carousel").carousel("pause");
+                $("#cPause").addClass("hide");
+                $("#cPlay").removeClass("hide");
+
+                carouselPause = true;
+            } else {
+                $(".carousel").carousel("cycle");
+                $("#cPause").removeClass("hide");
+                $("#cPlay").addClass("hide");
+
+                carouselPause = false;
+            }
+        }
+    </script>
+</apex:component>

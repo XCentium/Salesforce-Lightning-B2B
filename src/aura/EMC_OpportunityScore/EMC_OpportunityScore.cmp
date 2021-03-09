@@ -1,0 +1,32 @@
+<aura:component controller="EMC_ScoreController" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,c:MixpanelInterface" extends="c:Mixpanel" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"></aura:handler>
+    <aura:attribute name="recordId" type="String"></aura:attribute>
+    <aura:attribute name="score" type="Map"></aura:attribute>
+    <aura:attribute name="reasons" type="Object[]"></aura:attribute>
+    <aura:handler name="deleteReason" event="c:deleteReason" action="{!c.deleteReason}"/>
+    
+    <div class="container">
+        <div class="main slds-scope">
+            <div class="slds-form slds-m-bottom_small">
+                <div class="slds-form-element">
+                    <lightning:input type="number" required="true" label="Score" min="0" max="100" value="{!v.score.Score}" />
+                </div>
+            </div>
+            
+            <div class="slds-text-title_caps slds-m-bottom_x-small">
+                Reasons
+            </div>
+            <aura:iteration items="{!v.reasons}" var="reason" indexVar="idx">
+                <c:EMC_ScoreReason reason="{!reason}" index="{!idx}"></c:EMC_ScoreReason>
+            </aura:iteration>
+            <aura:if isTrue="{!v.reasons.length &lt; 5}">
+                <div class="slds-text-align_center add" href="javascript:void(0)" onclick="{!c.addReason}">Add</div>
+            </aura:if>
+        </div>
+        
+        <div class="button-container slds-clearfix slds-p-top_x-small">
+            <lightning:button class="slds-button slds-button_neutral slds-float_left" onclick="{!c.cancel}">Cancel</lightning:button>
+            <lightning:button class="slds-button slds-button_brand slds-float_right" onclick="{!c.save}">Save</lightning:button>
+        </div>
+    </div>
+</aura:component>

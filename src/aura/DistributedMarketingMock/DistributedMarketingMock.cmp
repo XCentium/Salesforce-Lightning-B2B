@@ -1,0 +1,141 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="options" type="List" default="[
+    {'label': 'Bill Martin', 'value': 'Bill Martin'},
+    {'label': 'Rachel Morris', 'value': 'Rachel Morris'},
+    {'label': 'George Mazzotta', 'value': 'George Mazzotta'},                                                    
+    {'label': 'Andy Young', 'value': 'Andy Young'}                                                    
+    ]"/>
+    
+    <aura:attribute name="Page" type="String" default="Start" />
+    
+    <aura:attribute name="RichTextIntro" type="String" default="Add Your Personalized Content Here"/>
+    <aura:attribute name="RichTextConclusion" type="String" default="Add Your Conclusion Here."/>
+    <aura:attribute name="logo" type="String" default="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Restaurant/Logo/scotts-small.png" />
+    <aura:attribute name="template1" type="String" default="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Restaurant/distributedMarketing/template1.jpg" />
+    <aura:attribute name="template2" type="String" default="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Restaurant/distributedMarketing/template2.jpg" />
+    
+    <aura:attribute name="SelectedTemplate" type="String" default="" />
+    
+    <aura:attribute name="Template1Heading" type="String" default="Join Us for Scott's Exclusive Event!" />
+    <aura:attribute name="Template1Content" type="String" default="We are so excited to offer you access to our Exclusive Event just for Loyalty Members coming up. Scott's is debuting new menu items next Saturdsy and would like to invite you to the tasting." />
+    
+    <aura:attribute name="Template2Heading" type="String" default="Did you know we do carry-out?" />
+    <aura:attribute name="Template2Content" type="String" default="We offer our full menu on carry out. Order within the next week to get 10% off your first carry-out order!" />
+     
+    <aura:attribute name="value" type="List" default="option1"/>
+    <aura:attribute name="disabled" type="Boolean" default="true" />
+    
+    <button onclick="{!c.openmodal}" class="slds-button slds-button_brand">
+       View Pending Member
+    </button>
+    
+    <section role="dialog" tabindex="-1" aura:id="Modalbox" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-close">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button onclick="{!c.closeModal}" class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                     <lightning:icon iconName="utility:close" alternativeText="Close" />
+                </button>
+                <aura:if isTrue="{!v.Page == 'Start'}">
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Pending Approvals</h2>
+                	<aura:set attribute="else">
+                       <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Personlized Messages</h2> 
+                    </aura:set>
+                </aura:if>
+                
+            </header>
+            <div class="slds-modal__content slds-p-around_medium relative" id="modal-content-id-1">
+                <div aura:id="Pendings">
+                    <h3>Pending Approvals</h3>
+                    <div class="checkList">
+                        <lightning:checkboxGroup name="Checkbox Group"
+                                 label="Name"
+                                 options="{! v.options }"
+                                 value="{! v.value }"
+                                 onchange="{! c.checkboxChange }"/>
+                    </div>
+                    <div class="actionList">
+                        <button onclick="{!c.accept}" class="slds-button slds-button_neutral" disabled="{!v.disabled}">
+                            Approve
+                        </button>
+                        <button onclick="{!c.reject}" class="slds-button slds-button_neutral" disabled="{!v.disabled}">
+                            Reject
+                        </button>
+                        <button onclick="{!c.personalize}" class="slds-button slds-button_neutral" disabled="{!v.disabled}">
+                            Personalize Message
+                        </button>
+                    </div>
+                </div>
+                <div aura:id="PersonalizedMessage" class="slds-hidden"> 
+                    <div class="half">
+                    	<div class="padding">
+                            <h2>Personalize Messages</h2>
+                            
+                            <lightning:select name="select1" label="Select a Template" value="{!v.SelectedTemplate}" >
+                                <option value="">Choose one...</option>
+                                <option value="1">Welcome Template</option>
+                                <option value="2">Carry Out Template</option>
+                            </lightning:select>
+                            
+                            <label>Introduction</label><br/>
+                        	<lightning:inputRichText value="{!v.RichTextIntro}" placeholder=""/>
+                            <br/><br/>
+                            <label>Conclusion</label><br/>
+                            <lightning:inputRichText value="{!v.RichTextConclusion}" placeholder=""/>
+                        </div>
+                    </div>
+                    <div class="half">
+                    	<div class="padding">
+                            <aura:if isTrue="{!v.SelectedTemplate != ''}" >
+                                <img src="{!v.logo}" class="BrandingLogo" />
+                                <aura:if isTrue="{!v.SelectedTemplate == '1'}" >
+                                    <img src="{!v.template1}" class="templatebanner"/>
+                                    <div class="setContent">
+                                        <h3>{!v.Template1Heading}</h3>
+                                        <p>{!v.Template1Content}</p>
+                                    </div>
+                                    <div aura:id="output" class="output highlighted">
+                                        <p><lightning:formattedRichText value="{!v.RichTextIntro}" /></p>
+                                    </div>
+                                    <div aura:id="output" class="output highlighted">
+                                        <p><lightning:formattedRichText value="{!v.RichTextConclusion}" /></p>
+                                    </div>
+                                    <div aura:id="output" class="output center">
+                                        <button  class="slds-button slds-button_brand">Book Your Table Online Now</button>
+                                    </div>
+                                </aura:if>    
+                                <aura:if isTrue="{!v.SelectedTemplate == '2'}" >
+                                    <img src="{!v.template2}" class="templatebanner"/>
+                                    <div class="setContent">
+                                        <h3>{!v.Template2Heading}</h3>
+                                        <p>{!v.Template2Content}</p>
+                                    </div>
+                                    <div aura:id="output" class="output highlighted">
+                                        <p><lightning:formattedRichText value="{!v.RichTextIntro}" /></p>
+                                    </div>
+                                    <div aura:id="output" class="output highlighted">
+                                        <p><lightning:formattedRichText value="{!v.RichTextConclusion}" /></p>
+                                    </div>
+                                    <div aura:id="output" class="output center">
+                                        <button  class="slds-button slds-button_brand">Place Your Order Now</button>
+                                    </div>
+                                </aura:if>    
+                                <aura:set attribute="else">
+                                    <h3>Please Select a Template</h3>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button onclick="{!c.closeModal}" class="slds-button slds-button_neutral">Cancel</button>
+                <aura:if isTrue="{!v.Page == 'EmailTemplate'}">
+                	<button onclick="{!c.reset}" class="slds-button slds-button_neutral">Back</button>
+                </aura:if>
+                <button onclick="{!c.saveModal}" class="slds-button slds-button_brand">Save</button>
+            </footer> 
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_close" aura:id="Modalbackdrop"></div>
+    </aura:component>

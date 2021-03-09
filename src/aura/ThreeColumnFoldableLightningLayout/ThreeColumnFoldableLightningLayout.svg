@@ -1,0 +1,50 @@
+<svg width="199.99999999999997" height="153" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+ <title>Three Columns 210 v1</title>
+ <defs>
+  <path id="path-1" d="m52.919,23.32786c1.05309,1.64868 7.43316,2.94292 7.43316,2.94292c0,0 1.6838,1.23521 -4.54186,1.23521c-4.38296,0 -17.87335,0 -25.47525,0c-7.60191,0 -21.0923,0 -25.47526,0c-6.22566,0 -4.54186,-1.23521 -4.54186,-1.23521c0,0 6.38007,-1.29424 7.43316,-2.94292c1.05308,-1.64868 2.88545,-23.25874 2.88545,-23.25874l39.39702,0c0,0 1.83236,21.61006 2.88544,23.25874z"/>
+  <rect rx="3.855422" height="123.572184" width="200" y="0.484177" x="0" id="path-3"/>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g fill-rule="evenodd" fill="none" id="Template-images-export">
+   <g id="Three-Columns-206-v1-Copy">
+    <g id="Three-Columns-210-v1">
+     <g id="stand">
+      <path opacity="0.5" id="standShadow" d="m130.34106,150.92365l0,0.77016c0.06478,0.36534 -0.49883,0.9411 -4.74898,0.9411c-4.38263,0 -17.87199,0 -25.4733,0c-7.60132,0 -21.09067,0 -25.4733,0c-4.25015,0 -4.81376,-0.57576 -4.74359,-0.9411l-0.00539,-0.77016l0.75323,0.3358l58.9381,0l0.75323,-0.3358z"/>
+      <path fill="#C6C7CA" id="standBottom" d="m130.34106,150.58786l0,0.77015c0.06478,0.36534 -0.49883,0.94111 -4.74898,0.94111c-4.38263,0 -17.87199,0 -25.4733,0c-7.60132,0 -21.09067,0 -25.4733,0c-4.25015,0 -4.81376,-0.57577 -4.74359,-0.94111l-0.00539,-0.77015l0.75323,0.33579l58.9381,0l0.75323,-0.33579z"/>
+      <mask transform="translate(0.15923528373241425,0) translate(-0.1517448127269745,0) translate(0.1785714328289032,0) translate(69.5999984741211,124.02297973632812) translate(181,63) translate(-181,-63) " id="mask-2">
+       <use id="svg_1" xlink:href="#path-1"/>
+      </mask>
+      <use id="svg_2" x="69.78606" y="124.02298" xlink:href="#path-1" fill="#D8D8D8"/>
+     </g>
+     <g id="screen">
+      <mask transform="translate(0.15923528373241425,0) translate(-0.1517448127269745,0) translate(0.1785714328289032,0) translate(0,0.48417699337005615) translate(181,63) translate(-181,-63) " id="mask-4">
+       <use id="svg_3" xlink:href="#path-3"/>
+      </mask>
+      <g id="outer">
+       <use id="svg_4" x="0.186062" y="0.484177" xlink:href="#path-3" fill="#9B9B9B" fill-opacity="0.300159"/>
+       <use id="svg_5" x="0.186062" y="0.484177" xlink:href="#path-3" fill="#E1E1E1"/>
+      </g>
+      <g fill="#FFFFFF" mask="url(#mask-4)" id="Today@2x">
+       <g id="Mask">
+        <rect id="svg_6" height="104.245617" width="186.535516" y="9.683544" x="6.93305"/>
+       </g>
+      </g>
+     </g>
+     <rect height="98.600006" width="47.562583" y="12.199997" x="9.186062" fill="#54698D" id="Rectangle-3420-Copy-7"/>
+     <rect height="98.600006" width="47.562583" y="12.199997" x="143.186062" fill="#54698D" id="Rectangle-3420-Copy-8"/>
+     <rect height="98.600006" width="81.25" y="12.199997" x="59.436062" fill="#54698D" id="Rectangle-3420-Copy-9"/>
+    </g>
+   </g>
+  </g>
+  <rect stroke="#7f7f7f" id="svg_11" height="11.989498" width="2.078522" y="57.83942" x="56.928406" stroke-width="1.5" fill="#7f7f7f"/>
+  <path stroke="#000" transform="rotate(-90 57.93094253540041,64.17067718505861) " id="svg_12" d="m57.198649,64.62648l0.7323,-0.9116l0.73229,0.9116l-1.46459,0z" stroke-width="1.5" fill="#000000"/>
+  <rect stroke="#7f7f7f" id="svg_13" height="12" width="2.078522" y="58" x="140.752018" stroke-width="1.5" fill="#7f7f7f"/>
+  <path stroke="#000" transform="rotate(90 141.7109527587891,64.0404739379883) " id="svg_15" d="m140.978655,64.496276l0.7323,-0.9116l0.73229,0.9116l-1.46459,0z" stroke-width="1.5" fill="#000000"/>
+ </g>
+</svg>

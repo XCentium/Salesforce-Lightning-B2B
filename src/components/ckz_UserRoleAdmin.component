@@ -1,0 +1,169 @@
+<apex:component id="ckz_UserRoleAdmin" controller="ckz_ctrl_UserRolesMyAccount">
+
+    <div class="userRolesStuff"></div>
+
+    <script id="CKZ-MyAccountUserRoles" type="text/template">
+        <h2 class="title">{{pageLabelMap 'MyAccount_UserRoles'}}</h2>
+        <div class="messagingSection-UserRoles-Error" style="display: none"></div>
+        <div class="messagingSection-UserRoles-Info" style="display: none"></div>
+        <div class="main_content_large_right_container">
+
+            <table class="table table-striped">
+                <thead>
+                <td>User</td>
+                <td>Can Place Orders</td>
+                <td>Budget Limit (0 for no limit)</td>
+                <td>Requires Approval</td>
+                <td>&nbsp;</td>
+                </thead>
+
+                <tbody>
+                {{#each this.userRoles}}
+                <tr class="odd">
+                    <td>{{lastName}}, {{firstName}}</td>
+                    <td>
+                        {{#if canOrder}}
+                        <input name="canOrder" id="canOrder_{{contactId}}" checked="true" type="checkBox"/>
+                        {{else}}
+                        <input name="canOrder" id="canOrder_{{contactId}}" type="checkBox"/>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{#if budgetLimit}}
+                        <input type="text" class="form-control" name="budgetLimit" id="budgetLimit_{{contactId}}" maxlength="10" value="{{budgetLimit}}"/>
+                        {{else}}
+                        <input type="text" class="form-control" name="budgetLimit" id="budgetLimit_{{contactId}}" maxlength="10" value="0"/>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{#if requiresApproval}}
+                        <input name="requiresApproval" id="requiresApproval_{{contactId}}" checked="true" type="checkBox"/>
+                        {{else}}
+                        <input name="requiresApproval" id="requiresApproval_{{contactId}}" type="checkBox"/>
+                        {{/if}}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default doSave" data-id="{{contactId}}">Save</button>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+
+        </div>
+    </script>
+
+    <script>
+
+        jQuery(function($) {
+
+            CCRZ.models = CCRZ.models || {};
+
+            CCRZ.models.UserRolesModel = CCRZ.CloudCrazeModel.extend({});
+
+                CCRZ.collections.UserRolesModelList = CCRZ.CloudCrazeCollection.extend({
+                    model: CCRZ.models.UserRolesModel,
+                    className: 'ckz_ctrl_UserRolesMyAccount',
+                    fetch: function (callback) {
+                        var coll = this;
+
+                        this.invokeCtx('fetchUserRolesForUserAccount', function (response, event) {
+
+                            console.log("ckz_ctrl_UserRolesMyAccount: " + JSON.stringify(response.data));
+
+                            coll.reset(response.data);
+
+                            callback(response.data);
+
+                        }, {nmsp: false, buffer: false});
+                    },
+                    saveContactChanges: function(userData, callback) {
+                        this.invokeContainerLoadingCtx($('body'), "updateContact", JSON.stringify(userData),
+                            function(response){
+                                if(response && response.messages) {
+                                    callback(response);
+                                }
+                            },
+                            {nmsp: false}
+                        );
+                    },
+                    displayMessages: function(response) {
+                        if(response.messages) {
+
+                            CCRZ.pubSub.trigger('pageMessage', response);
+
+                        }
+                    }
+                });
+
+            CCRZ.MyAccount = _.extend(CCRZ.MyAccount||{},{
+                UserRoles :{
+                    register : function(registrar){
+                        registrar.registerNewView('userRoles', CCRZ.processPageLabelMap('MyAccount_UserRoles'), new CCRZ.views.UserRolesView());
+                    }
+                }
+            });
+
+            CCRZ.views.UserRolesView = CCRZ.CloudCrazeView.extend({
+                viewName : "UserRolesView",
+                className: 'ckz_ctrl_UserRolesMyAccount',
+                templatePhone : CCRZ.util.template('CKZ-MyAccountUserRoles'),
+                templateDesktop : CCRZ.util.template('CKZ-MyAccountUserRoles'),
+                renderSelector: ".userRolesStuff",
+                //viewTitle : 'User Roles',
+                init: function (options) {
+                    var thisView = this;
+                    thisView.dataSet = {};
+                    thisView.userRolesCollection = new CCRZ.collections.UserRolesModelList();
+
+                    thisView.userRolesCollection.fetch(function (response) {
+
+                        if (response) {
+                        	thisView.dataSet = response;
+                        }
+
+                        thisView.render();
+
+                    });
+                },
+                events:
+                    {
+                        "click .doSave": "saveContactChanges"
+                    },
+                renderPhone : function() {
+
+                    this.$el.html(this.templatePhone(this.dataSet));
+                },
+                renderDesktop : function() {
+                    console.log("ckz_UserRoleAdmin:renderDesktop");
+
+                    this.$el.html(this.templateDesktop(this.dataSet));
+                },
+                saveContactChanges: function(event) {
+                    console.log('Inside saveContactChanges function');
+
+                    var contactId = $(event.target).data("id");
+                    console.log('contactId = ' + contactId);
+
+                    var canOrder = $('#canOrder_' + contactId).is(':checked');
+                    var requiresApproval = $('#requiresApproval_' + contactId).is(':checked');
+                    var budgetLimit = $('#budgetLimit_' + contactId).val();
+
+                    var formData = {};
+                    formData.contactId = contactId;
+                    formData.canOrder = canOrder;
+                    formData.requiresApproval = requiresApproval;
+                    formData.budgetLimit = budgetLimit;
+
+                    /*this.userRolesCollection.saveContactChanges(formData, function() {
+                        alert('Save is good!');
+                        });
+                    */
+                    this.userRolesCollection.saveContactChanges(formData, this.userRolesCollection.displayMessages);
+            	},
+            });
+
+        });
+    </script>
+
+</apex:component>

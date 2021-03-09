@@ -1,0 +1,142 @@
+<aura:component controller="OM_Cooler_IoT_Controller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="vibrationValue" type="Decimal" default="20.0"/>
+    <aura:attribute name="internalTempValue" type="Decimal" default="35.0"/>
+    <aura:attribute name="externalTempValue" type="Decimal" default="70.0" />
+    <aura:attribute name="voltageValue" type="Decimal" default="100.0" />
+    <aura:attribute name="doorOpen" type="Boolean" default="false" />
+    
+    <aura:attribute name="AlpineDuringInventory" type="Decimal" default="50.0" />
+    <aura:attribute name="AlpinePreInventory" type="Decimal" default="50.0" />
+    <aura:attribute name="AlpinePostInventory" type="Decimal" default="50.0" />
+    <aura:attribute name="Asset" type="String[]" />
+    <aura:attribute name="showInventorySliders" type="Boolean" default="true" />
+    <aura:attribute name="InventoryProduct1Label" type="String" default="Pre - ED1L6-TCCON-622 Units"/>
+    <aura:attribute name="InventoryProduct2Label" type="String" default="During - HD1L4-TCPST-625 Units" />
+    <aura:attribute name="InventoryProduct3Label" type="String" default="Post - P4-012 Units" />
+
+    <aura:attribute name="ProdList" type="IDO_Cooler_Inventory__c[]"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.GetInventoryList}"/>
+    
+    <div class="outer-wrapper slds-p-horizontal_medium slds-p-vertical_large">
+        <div class="cooler-img-wrapper slds-align_absolute-center">
+            <aura:iteration items="{!v.Asset}" var="asset"> 
+                <aura:if isTrue="{!asset.Product2.purl__c != ''}">
+                    <aura:if isTrue="{!asset.Product2.purl__c != undefined}">
+                        <img src="{!asset.Product2.purl__c}" class="img cooler-img" />
+                    </aura:if>
+                </aura:if>
+            </aura:iteration>
+            <!-- Hard Coded Asset door open/closed 
+            	<img src="{!v.doorOpen ? $SfdcSite.pathPrefix + '/resource/cooler_open' : $SfdcSite.pathPrefix + '/resource/cooler_closed'}" class="img cooler-img" />
+			-->
+        </div>
+        <lightning:accordion>
+            <lightning:accordionSection name="Health" label="Health">
+                <div class="vibration-slider slds-p-vertical_x-small">
+                    <lightning:slider step="5" value="{!v.vibrationValue}" min="0" max="100" label="Select a vibration value" />
+                    <aura:if isTrue="{!v.vibrationValue > 51}">
+                        <div class="threshold-text error">Error State - Trigger Case</div>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.vibrationValue > 25}">
+                                <div class="threshold-text warning">Warning State</div>
+                                <aura:set attribute="else">
+                                    <div class="threshold-text okay">Normal State</div>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                </div>
+                
+                <div class="int-temp-slider slds-p-vertical_x-small">
+                    <lightning:slider step="5" value="{!v.internalTempValue}" min="0" max="100" label="Select an internal temperature value" />
+                    <aura:if isTrue="{!v.internalTempValue >= 60}">
+                        <div class="threshold-text error">Error State - Trigger Case</div>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.internalTempValue >= 40}">
+                                <div class="threshold-text warning">Warning State</div>
+                                <aura:set attribute="else">
+                                    <div class="threshold-text okay">Normal State</div>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                </div>
+                <div class="volatege-slider slds-p-vertical_x-small">
+                    <lightning:slider step="5" value="{!v.voltageValue}" min="0" max="100" label="Select a voltage" />
+                    <aura:if isTrue="{! greaterthan(v.voltageValue, 70 )}">
+                        <div class="threshold-text okay">Normal State</div>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{! lessthan(v.voltageValue, 51)}">
+                                <div class="threshold-text error">Error State - Trigger Case</div>
+                                <aura:set attribute="else">
+                                    <div class="threshold-text warning">Warning State</div>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                </div>
+                
+                <div class="ext-temp-slider slds-p-vertical_x-small">
+                    <lightning:slider step="5" value="{!v.externalTempValue}" min="0" max="100" label="External Temperature" />
+                </div>
+                <div class="door-open-checkbox slds-p-vertical_x-small">
+                    <lightning:input type="checkbox" value="{!v.doorOpen}" label="Is the door open?" onchange="{!c.openDoor}"/>
+                </div>
+            </lightning:accordionSection>
+                <aura:if isTrue="{!v.showInventorySliders == true}">
+                <lightning:accordionSection name="Inventory" label="Inventory">
+                    <h2 style="font-weight:bold">Inventory</h2>
+                    <div class="pre-slider slds-p-vertical_x-small">
+                        <lightning:slider step="1" value="{!v.AlpinePreInventory}" min="0" max="50" label="{!v.InventoryProduct1Label}" />
+                        <aura:if isTrue="{!v.AlpinePreInventory > 50}">
+                            <div class="threshold-text error">Error State - Trigger Case</div>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{! lessthan(v.AlpinePreInventory, 25) }">
+                                    <div class="threshold-text warning">Inventory Level Low</div>
+                                    <aura:set attribute="else">
+                                        <div class="threshold-text okay">Inventory Ok</div>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="during-slider slds-p-vertical_x-small">
+                        <lightning:slider step="1" value="{!v.AlpineDuringInventory}" min="0" max="50" label="{!v.InventoryProduct2Label}" />
+                        <aura:if isTrue="{!v.AlpineDuringInventory > 50}">
+                            <div class="threshold-text error">Error State - Trigger Case</div>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{! lessthan(v.AlpineDuringInventory, 25) }">
+                                    <div class="threshold-text warning">Inventory Level Low</div>
+                                    <aura:set attribute="else">
+                                        <div class="threshold-text okay">Inventory Ok</div>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="post-slider slds-p-vertical_x-small">
+                        <lightning:slider step="1" value="{!v.AlpinePostInventory}" min="0" max="50" label="{!v.InventoryProduct3Label}" />
+                        <aura:if isTrue="{!v.AlpinePostInventory > 50}">
+                            <div class="threshold-text error">Error State - Trigger Case</div>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{! lessthan(v.AlpinePostInventory, 25) }">
+                                    <div class="threshold-text warning">Inventory Level Low</div>
+                                    <aura:set attribute="else">
+                                        <div class="threshold-text okay">Inventory Ok</div>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </lightning:accordionSection>
+            </aura:if>    
+        </lightning:accordion>
+        <div class="button-container slds-p-vertical_x-small slds-align_absolute-center">
+            <button class="slds-button slds-button_brand" onclick="{!c.submitPlatformEvent}" >
+                Submit Event
+            </button>
+        </div>
+    </div>
+</aura:component>

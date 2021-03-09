@@ -1,0 +1,4 @@
+.THIS .slds-button_icon-container, .THIS .slds-button--icon-container, .THIS .slds-button_icon-border, .THIS .slds-button--icon-border, .THIS .slds-button_icon-border-filled, .THIS .slds-button--icon-border-filled, .THIS .slds-button_icon-border-inverse, .THIS .slds-button--icon-border-inverse, .THIS .slds-button_icon-brand, .THIS .slds-button_icon-more, .THIS .slds-button--icon-more, .THIS .slds-button_icon-container-more, .THIS .slds-button--icon-container-more{
+    width:auto;
+    height:auto;
+}

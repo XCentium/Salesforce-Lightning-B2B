@@ -1,0 +1,42 @@
+<aura:component >
+	<aura:attribute name="familyList" type="Product2[]" />
+	<aura:attribute name="familyKey" type="String" />
+	<aura:attribute name="selected" type="Boolean" default="false"/>
+    <aura:registerEvent name="categorySelected" type="c:ProductCatalogCategorySelected"/>
+
+	<li class="{!v.selected ? 'isActive tabItem' : 'tabItem'}">
+		<ui:outputURL class="tabItem" value="" label="{!v.familyKey}" click="{!c.navigateToFamily}"/>
+		<aura:if isTrue="{!v.familyKey != 'Home'}">
+			<ui:menu >
+				<ui:menuTriggerLink class="dropdownTriggerContainer">
+					<c:svgIcon svgPath="{!$sfdcSite.Prefix + $Resource.SLDS203 + '/assets/icons/utility-sprite/svg/symbols.svg#chevrondown'}" class="dropdownTrigger" size="x-small" name="chevrondown" />
+				</ui:menuTriggerLink>
+				<ui:menuList class="menu--nubbin-top">
+					<ui:actionMenuItem class="{!v.familyList[0].Id}" label="{!v.familyList[0].Name}" click="{!c.navigateToFamily}"/>
+					<aura:if isTrue="{!v.familyList[1].Id}">
+						<ui:actionMenuItem class="{!v.familyList[1].Id}" label="{!v.familyList[1].Name}" click="{!c.navigateToFamily}"/>
+					</aura:if>
+					<aura:if isTrue="{!v.familyList[2].Id}">
+						<ui:actionMenuItem class="{!v.familyList[2].Id}" label="{!v.familyList[2].Name}" click="{!c.navigateToFamily}"/>
+					</aura:if>
+					<aura:if isTrue="{!v.familyList[3].Id}">
+						<ui:actionMenuItem class="{!v.familyList[3].Id}" label="{!v.familyList[3].Name}" click="{!c.navigateToFamily}"/>
+					</aura:if>
+					<aura:if isTrue="{!v.familyList[4].Id}">
+						<ui:actionMenuItem class="{!v.familyList[4].Id}" label="{!v.familyList[4].Name}" click="{!c.navigateToFamily}"/>
+					</aura:if>
+					<aura:if isTrue="{!v.familyList[5].Id}">
+						<ui:actionMenuItem class="{!v.familyList[5].Id}" label="{!v.familyList[5].Name}" click="{!c.navigateToFamily}"/>
+					</aura:if>
+					<aura:if isTrue="{!v.familyList[6].Id}">
+						<ui:actionMenuItem class="{!v.familyList[6].Id}" label="{!v.familyList[6].Name}" click="{!c.navigateToFamily}"/>
+					</aura:if>
+		        	<!-- COMMENTED DUE TO BUG: https://success.salesforce.com/issues_view?id=a1p5Y00000357LHAAI
+			        <aura:iteration items="{!v.familyList}" var="product" indexVar="i">
+						<ui:actionMenuItem class="{!v.product.Id}" label="{!v.product.Name}" click="{!c.navigateToFamily}"/>
+			        </aura:iteration>-->
+				</ui:menuList>
+			</ui:menu>
+		</aura:if>
+	</li>
+</aura:component>

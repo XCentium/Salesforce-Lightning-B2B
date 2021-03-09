@@ -1,0 +1,227 @@
+<aura:component implements="force:hasRecordId" access="global">
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+    <aura:attribute name="ListCount" type="String" />
+    <aura:attribute name="SelectedContact" type="String"/>
+    <aura:attribute name="backgroundHexColor" type="String" access="global" default="#55BFEE"/>
+    <force:recordData aura:id="recordLoader"
+      recordId="{!v.recordId}"
+      layoutType="FULL"
+      targetRecord="{!v.record}"
+      targetFields="{!v.simpleRecord}"
+      targetError="{!v.recordError}"  />
+    
+    <aura:if isTrue="{!v.ListCount > 1}">
+    	<div class="panelHalf">
+        	<div class="padding">
+            <div class="slds-card card centertext" aura:id="card" >
+            <div class="header-image" style = "{! 'background-image:url(' + (v.backgroundImageUrl) + '); background-color:' + (v.backgroundHexColor) + ';'}">
+                <div class="slds-grid slds-grid_align-end slds-p-around_medium">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.gotoContact}" id="{!v.simpleRecord.Id}">View</button>
+                </div>
+            </div>
+            <div class="slds-media slds-m-left_x-large noborder">
+                <div class="slds-media_figure">
+                    <div class="customer-image-container ">
+                        <aura:if isTrue="{!empty(v.simpleRecord.Profile_Image_URL__c)}">
+                                <img src="/_slds/images/themes/lightning_lite/lightning_lite_profile_avatar_160.png" class="customer-avatar"/>
+                            <aura:set attribute="else">
+                                <img src="{!v.simpleRecord.Profile_Image_URL__c }" class="customer-avatar"/>
+                            </aura:set>   
+                        </aura:if>
+                        <div class="csat-indicator slds-p-right_medium">                                        
+                           <aura:if isTrue="{!not(empty(v.fields.Cust360_CSAT__c))}">
+                                <aura:if isTrue="{!greaterthanorequal(v.fields.Cust360_CSAT__c, 4)}">
+                                    <!--<img src="{!$Resource.ContactImageResources + '/ContactImageResources/Positive.png'}" alt="CSAT"  />-->
+                                    <lightning:icon iconName="utility:smiley_and_people" class="csat-icon csat-icon-positive" size="small"></lightning:icon>
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!lessthan(v.fields.Cust360_CSAT__c, 2)}">
+                                            <lightning:icon iconName="utility:sentiment_negative" class="csat-icon csat-icon-negative" size="small"></lightning:icon>
+                                            <aura:set attribute="else">                                
+                                                    <lightning:icon iconName="utility:sentiment_neutral" class="csat-icon csat-icon-neutral" size="small"></lightning:icon>
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                           </aura:if>     
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-media_body slds-m-left_medium slds-m-top_medium">
+                    <div class="slds-text-heading_small title-weight">{!v.simpleRecord.Name}</div>
+                    <aura:if isTrue="{!not(empty(v.simpleRecord.MailingCity))}">
+                        <div class="slds-text-color_weak ">{!v.simpleRecord.MailingCity + ', ' + v.simpleRecord.MailingState}</div>
+                    </aura:if>    
+                </div>
+            </div>
+              <div class="panelHalf">
+                    <div class="padding">
+                        <div class="slds-media_body">
+                            <div class="slds-text-color_weak">
+                                Rewards Number
+                            </div>
+                            <div class=" title-weight">
+                                <aura:if isTrue="{!v.simpleRecord.Customer_Rewards__c != null}">
+                                    {!v.simpleRecord.Customer_Rewards__c}
+                                    <aura:set attribute="else">
+                                        Not a member
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>  
+                    </div>
+               </div>   
+               <div class="panelHalf">
+                    <div class="padding">
+                        <div class="slds-media_body">
+                            <div class="slds-text-color_weak">
+                                Loyalty Status
+                            </div>
+                            <div class=" title-weight">
+                                <aura:if isTrue="{!v.simpleRecord.Tier__c != null}">
+                                    {!v.simpleRecord.Tier__c}
+                                    <aura:set attribute="else">
+                                        No Status
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>  
+                    </div>
+               </div>     
+               <div class="clear"></div> 
+       </div>
+       <!-- Display Lightning Data Service errors, if any -->
+        <aura:if isTrue="{!not(empty(v.recordError))}">
+          <div class="recordError">
+            <ui:message title="Error" severity="error" closable="true">
+              {!v.recordError}
+            </ui:message>
+          </div>
+        </aura:if>
+        </div>
+        </div>
+        <aura:set attribute="else">
+            <div class="panelWhole">
+        	<div class="padding">
+            <div class="slds-card card centertext" aura:id="card" >
+            <div class="header-image" style = "{! 'background-image:url(' + (v.backgroundImageUrl) + '); background-color:' + (v.backgroundHexColor) + ';'}">
+                <div class="slds-grid slds-grid_align-end slds-p-around_medium">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.gotoContact}" id="{!v.simpleRecord.Id}">View</button>
+                </div>
+            </div>
+            <div class="slds-media slds-m-left_x-large noborder">
+                <div class="slds-media_figure">
+                    <div class="customer-image-container ">
+                        <aura:if isTrue="{!empty(v.fields.Cust360_Contact_Picture_URL__c)}">
+                                <img src="/_slds/images/themes/lightning_lite/lightning_lite_profile_avatar_160.png" class="customer-avatar"/>
+                            <aura:set attribute="else">
+                                <img src="{!v.simpleRecord.Profile_Image__c }" class="customer-avatar"/>
+                            </aura:set>   
+                        </aura:if>
+                        <div class="csat-indicator slds-p-right_medium">                                        
+                           <aura:if isTrue="{!not(empty(v.fields.Cust360_CSAT__c))}">
+                                <aura:if isTrue="{!greaterthanorequal(v.fields.Cust360_CSAT__c, 4)}">
+                                    <!--<img src="{!$Resource.ContactImageResources + '/ContactImageResources/Positive.png'}" alt="CSAT"  />-->
+                                    <lightning:icon iconName="utility:smiley_and_people" class="csat-icon csat-icon-positive" size="small"></lightning:icon>
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!lessthan(v.fields.Cust360_CSAT__c, 2)}">
+                                            <lightning:icon iconName="utility:sentiment_negative" class="csat-icon csat-icon-negative" size="small"></lightning:icon>
+                                            <aura:set attribute="else">                                
+                                                    <lightning:icon iconName="utility:sentiment_neutral" class="csat-icon csat-icon-neutral" size="small"></lightning:icon>
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                           </aura:if>     
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-media_body slds-m-left_medium slds-m-top_medium">
+                    <div class="slds-text-heading_small title-weight">{!v.simpleRecord.Name}</div>
+                    <aura:if isTrue="{!not(empty(v.simpleRecord.MailingCity))}">
+                        <div class="slds-text-color_weak ">{!v.simpleRecord.MailingCity + ', ' + v.simpleRecord.MailingState}</div>
+                    </aura:if>    
+                </div>
+            </div>
+              <div class="panelHalf">
+                    <div class="padding">
+                        <div class="slds-media_body">
+                            <div class="slds-text-color_weak">
+                                Rewards Number
+                            </div>
+                            <div class=" title-weight">
+                                <aura:if isTrue="{!v.simpleRecord.Customer_Rewards__c != null}">
+                                    {!v.simpleRecord.Customer_Rewards__c}
+                                    <aura:set attribute="else">
+                                        Not a member
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>  
+                    </div>
+               </div>   
+               <div class="panelHalf">
+                    <div class="padding">
+                        <div class="slds-media_body">
+                            <div class="slds-text-color_weak">
+                                Loyalty Status
+                            </div>
+                            <div class=" title-weight">
+                                <aura:if isTrue="{!v.simpleRecord.Tier__c != null}">
+                                    {!v.simpleRecord.Tier__c}
+                                    <aura:set attribute="else">
+                                        No Status
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>  
+                    </div>
+               </div>     
+               <div class="clear"></div> 
+               <div class="panelHalf">
+                    <div class="padding">
+                        <div class="slds-media_body">
+                            <div class="slds-text-color_weak">
+                                Customer Since
+                            </div>
+                            <div class=" title-weight">
+                                <ui:outputDate value="{!v.simpleRecord.Customer_Since__c}"/>
+                            </div>
+                        </div>  
+                    </div>
+               </div>  
+               <div class="panelHalf">
+                    <div class="padding">
+                        <div class="slds-media_body">
+                            <div class="slds-text-color_weak">
+                                Lifetime Value
+                            </div>
+                            <div class=" title-weight">
+                                <aura:if isTrue="{!v.Total_Purchase_Amount__c.Tier__c != null}">
+                                    <ui:outputCurrency aura:id="curr" value="{!v.simpleRecord.Total_Purchase_Amount__c }" format="$##,##,###,###.00"/>
+                                    <aura:set attribute="else">
+                                        No Purchases
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>  
+                    </div>
+               </div>  
+               <div class="clear"></div>
+       </div>
+       <!-- Display Lightning Data Service errors, if any -->
+        <aura:if isTrue="{!not(empty(v.recordError))}">
+          <div class="recordError">
+            <ui:message title="Error" severity="error" closable="true">
+              {!v.recordError}
+            </ui:message>
+          </div>
+        </aura:if>
+        </div>
+        </div>
+        </aura:set>
+     </aura:if>    
+        
+    
+</aura:component>

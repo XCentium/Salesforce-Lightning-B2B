@@ -1,0 +1,10 @@
+<design:component>
+
+    <design:attribute name="userId" label="User ID" />
+    <design:attribute name="selectedStorefront" label="Selected Storefront" />
+    <design:attribute name="locale" label="Locale" />
+    <design:attribute name="cartId" label="Cart Id" />
+    <design:attribute name="cartEncryptedId" label="Cart Encrypted Id" />
+    <design:attribute name="accountId" label="Account ID" />
+
+</design:component>

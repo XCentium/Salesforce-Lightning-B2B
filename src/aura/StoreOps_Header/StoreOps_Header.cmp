@@ -1,0 +1,19 @@
+<aura:component controller="ClientellingController" implements="flexipage:availableForAllPageTypes" access="global" >
+	<aura:attribute name="logoPath" type="String" default="https://sdorcgpackage.lightning.force.com/resource/NTOWhite"/>
+    <aura:attribute name="backgroundColor" type="String" default="#60C6F0"/>
+    <aura:attribute name="searchText" type="String" default=""/>
+    <aura:attribute name="SelectedContact" type="String" default=""/>
+    <aura:attribute name="PageShown" type="String" default="Home" />
+    
+    <div class="box" style="{!'background-color:' + v.backgroundColor}">
+        <div class="padding">
+            <div class="logowrapper">
+            	<img src="{!v.logoPath}" class="logoSize"/> 
+            </div>
+            <div class="headerSearch">
+                <c:StoreOps_ContactSearch />
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</aura:component>

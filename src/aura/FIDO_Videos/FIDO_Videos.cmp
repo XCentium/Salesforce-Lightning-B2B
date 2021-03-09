@@ -1,0 +1,250 @@
+<aura:component controller="FIDO" extends="c:Mixpanel" implements="c:MixpanelInterface">
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="SearchType" type="String" /> 
+    <aura:attribute name="SearchPhrase" type="String" /> 
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="ComponentTitle" type="String" />
+    <aura:attribute name="Filter" type="String" default=""/>
+    <aura:attribute name="Videos" type="String[]"/>
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.ScreenChoice}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.SearchPhrase}" action="{!c.init}"/>
+    
+    <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType != 'All')}">
+        <div class="paddingleftright">
+            <h3 class="searchHeader">Search Results for: {!v.SearchPhrase}</h3>
+        </div>
+    </aura:if>
+    <aura:iteration items="{!v.Settings}" var="setting">
+        <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType != 'All')}">   
+            <div class="cardWrapper">
+                <aura:iteration items="{!v.Videos}" var="video">
+                    <c:FIDO_IfContains items="{!video.name}"  items2="{!video.video_description__c}" element="{!v.SearchPhrase}">
+                        <div class="videoCard">
+                            <div class="paddingsmall"> 
+                                <button class="slds-button slds-button_neutral cardButton" aura:id="{!video.video_url__c}" id="{!video.video_url__c}" onclick="{!c.toURL}">
+                                    <div class=""> 
+                                        <aura:if isTrue="{!and(video.thumbnail_url__c != '',video.thumbnail_url__c != null)}">
+                                            <div class="videoTitle" style="{!'background-image:url(' + video.thumbnail_url__c + ');'}">
+                                            </div>
+                                            <aura:set attribute="else">
+                                                <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);'}">
+                                                </div>
+                                            </aura:set>
+                                        </aura:if>
+                                        <div class="videoDescription">
+                                            <div class="padding">
+                                                <h3>
+                                                    <div class="headingleft">
+                                                        {!video.name}
+                                                    </div>
+                                                </h3>
+                                                <div class=" desc">
+                                                    <ui:outputRichText value="{!video.video_description__c }"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </button>
+                            </div>
+                        </div>
+                    </c:FIDO_IfContains>
+                </aura:iteration>
+            </div>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!or(v.recid == '', v.recid == null)}" >
+                    <div class="owner">
+                        <div class="">
+                            <aura:if isTrue="{!not(empty(v.Videos))}">
+                                <lightning:tabset>
+                                    <aura:if isTrue="{!setting.show_how_to_videos__c == true}">
+                                        <lightning:tab label="How Tos" id="1">
+                                            <div class="center">
+                                                <h3 class="h3light" >Click any item to learn more</h3>
+                                            </div>
+                                            <div class="paddingleftright">
+                                                <div class="cardWrapper">
+                                                    <aura:iteration items="{!v.Videos}" var="video">
+                                                        <aura:if isTrue="{!video.video_type__c == 'How Tos'}">
+                                                            <div class="videoCard">
+                                                                <div class="paddingsmall"> 
+                                                                    <button class="slds-button slds-button_neutral cardButton" aura:id="{!video.video_url__c}" id="{!video.video_url__c}" onclick="{!c.toURL}">
+                                                                        <div class=""> 
+                                                                            <aura:if isTrue="{!and(video.thumbnail_url__c != '',video.thumbnail_url__c != null)}">
+                                                                                <div class="videoTitle" style="{!'background-image:url(' + video.thumbnail_url__c + ');'}">
+                                                                                    <div class="videoBadge">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <aura:set attribute="else">
+                                                                                    <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);'}">
+                                                                                        <div class="videoBadge">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                            <div class="videoDescription">
+                                                                                <div class="padding">
+                                                                                    <h3>
+                                                                                        <div class="headingleft">
+                                                                                            {!video.name}
+                                                                                        </div>
+                                                                                    </h3>
+                                                                                    <div class=" desc">
+                                                                                        <ui:outputRichText value="{!video.video_description__c }"/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </aura:if>
+                                                    </aura:iteration>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </lightning:tab>
+                                    </aura:if>
+                                    <aura:if isTrue="{!setting.show_enablement_videos__c == true}">
+                                        <lightning:tab label="Enablement Videos" id="2">
+                                            <div class="center">
+                                                <h3 class="h3light">Click any item to learn more</h3>
+                                            </div>
+                                            <div class="paddingleftright">
+                                                <div class="cardWrapper">
+                                                    <aura:iteration items="{!v.Videos}" var="video">
+                                                        <aura:if isTrue="{!video.video_type__c == 'Enablement Videos'}">
+                                                            <div class="videoCard">
+                                                                <div class="paddingsmall"> 
+                                                                    <button class="slds-button slds-button_neutral cardButton" aura:id="{!video.video_url__c}" id="{!video.video_url__c}" onclick="{!c.toURL}">
+                                                                        <div class=""> 
+                                                                            <aura:if isTrue="{!and(video.thumbnail_url__c != '',video.thumbnail_url__c != null)}">
+                                                                                <div class="videoTitle" style="{!'background-image:url(' + video.thumbnail_url__c + ');'}">
+                                                                                    <div class="videoBadge">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <aura:set attribute="else">
+                                                                                    <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);'}">
+                                                                                        <div class="videoBadge">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                            <div class="videoDescription">
+                                                                                <div class="padding">
+                                                                                    <h3>
+                                                                                        <div class="headingleft">
+                                                                                            {!video.name}
+                                                                                        </div>
+                                                                                    </h3>
+                                                                                    <div class=" desc">
+                                                                                        <ui:outputRichText value="{!video.video_description__c }"/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </aura:if>
+                                                    </aura:iteration>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </lightning:tab>
+                                    </aura:if>
+                                    <aura:if isTrue="{!setting.show_setup_guide_videos__c == true}">
+                                        <lightning:tab label="Setup Guides" id="3">
+                                            <div class="center">
+                                                <h3 class="h3light">Click any item to learn more</h3>
+                                            </div>
+                                            <div class="paddingleftright">
+                                                <div class="cardWrapper">
+                                                    <aura:iteration items="{!v.Videos}" var="video">
+                                                        <aura:if isTrue="{!video.video_type__c == 'Setup Guides'}">
+                                                            <div class="videoCard">
+                                                                <div class="paddingsmall"> 
+                                                                    <button class="slds-button slds-button_neutral cardButton" aura:id="{!video.video_url__c}" id="{!video.video_url__c}" onclick="{!c.toURL}">
+                                                                        <div class=""> 
+                                                                            <aura:if isTrue="{!and(video.thumbnail_url__c != '',video.thumbnail_url__c != null)}">
+                                                                                <div class="videoTitle" style="{!'background-image:url(' + video.thumbnail_url__c + ');'}">
+                                                                                </div>
+                                                                                <aura:set attribute="else">
+                                                                                    <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/setup+guides.png);'}">
+                                                                                    </div>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                            <div class="videoDescription">
+                                                                                <div class="padding">
+                                                                                    <h3>
+                                                                                        <div class="headingleft">
+                                                                                            {!video.name}
+                                                                                        </div>
+                                                                                    </h3>
+                                                                                    <div class=" desc">
+                                                                                        <ui:outputRichText value="{!video.video_description__c }"/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </aura:if>
+                                                    </aura:iteration>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </lightning:tab>
+                                    </aura:if>
+                                </lightning:tabset>
+                                <aura:set attribute="else">
+                                    <div class="center">
+                                        <div class="paddinglarge">
+                                            <lightning:icon iconName="standard:waits" size="large" alternativeText=""/>  <br/><br/> 
+                                            <em>Nothing to report!</em>
+                                        </div>
+                                    </div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </div>
+                    <aura:set attribute="else">
+                        <c:FIDO_SingleRecord OrgName="{!v.OrgName}" IndustryName="{!v.IndustryName}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" Industry="{!v.Industry}" />
+                    </aura:set>
+                </aura:if> 
+            </aura:set>
+        </aura:if>
+    </aura:iteration>
+    
+    <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+    <section role="dialog" aura:id="ShareModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Share Content</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="padding">
+                    <div class="padding center">
+                        <h3 class="borderbottom">Share these instructions</h3>
+                        <div class="paddingtopbottom">
+                            To access this IDO Information, paste the below URL into a browser and replace the YOURDOMAIN in the URL with your Org's Domain.<br/><br/>
+                            <a href="{!v.ShareableURL}" target="_blank">https://<strong>YOURDOMAIN</strong>.lightning.force.com{!v.ShareableURL}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}">Close</button>
+            </footer>
+        </div>
+    </section>
+</aura:component>

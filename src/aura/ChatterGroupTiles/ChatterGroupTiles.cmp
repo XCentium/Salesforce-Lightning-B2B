@@ -1,0 +1,28 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,force:appHostable,flexipage:availableForAllPageTypes" controller="ChatterGroupTiles" access="global">
+    <aura:attribute name="discussionGroups" type="Object[]" default=""/>
+    <aura:attribute name="publicOnly" type="Boolean" default="true"/>
+    <aura:attribute name="filter" type="String" default=""/>
+    <aura:attribute name="bgcolor" type="String" default="#0070D2"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  
+    <style>
+    .outerDiv .innerdiv .blockcontent:hover{
+    	background:{!v.bgcolor};
+	}
+    </style>
+    
+    <div class="outerDiv"> 
+        <aura:iteration items="{!v.discussionGroups}" var="dgroup">
+            <div class="innerdiv">
+                <a href="" data-recordid="{!dgroup.Id}" onclick="{!c.gotoGroup}" class="blocklink">
+                    <div class="backgroundimage" style="{!'background-image: url('+dgroup.FullPhotoUrl+')'}"></div>
+                    <div class="blockcontent">
+                        <div class="blocktitle">{!dgroup.Name}</div>
+                    </div>
+                </a>
+            </div>  			
+        </aura:iteration>
+    </div>
+
+</aura:component>

@@ -1,0 +1,149 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:hasRecordId" access="global" controller="MLMJourneyOptIn">
+	<aura:attribute name="journeys" type="IDO_Customer_Journey__c[]"  />
+    <aura:attribute name="ShowData" type="String" />
+    <aura:attribute name="Title" type="String" />
+    <aura:attribute name="optCount" type="String"  />
+    <aura:attribute name="recordId" type="String" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>	
+    <h1 class="h1">{!v.Title}</h1>
+    <aura:if isTrue="{!v.recordId != NULL}">
+    	<aura:iteration var="j" items="{!v.journeys}" indexVar="index">
+            <div class="journey">
+                <div class= "slds-media slds-media_center header">
+                    <div class="topleft slds-grid">
+                        <div class="slds-media_figure">
+                            <div class="slds-icon_container slds-m-left_x-small" >
+                                <div class="paddingtopbottom marginleft">
+                                <lightning:icon iconName="standard:goals" size="small" class="einstein-icon"></lightning:icon> 
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="slds-media_body slds-m-left_small"> 
+                            <div class="paddingtopbottom">
+                                <span class="slds-text-heading_small slds-truncate slds-has-flexi-truncate" style="font-weight:bold;">{!j.Name}</span> 
+                            </div>
+                        </div>
+                    </div>    
+                    <div class="topright slds-grid">
+                        <c:MLM_Journey_Opt_In_Item journeyid="{!j.Id}" cID="{!v.recordId}" /> 
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="padding20">
+                    <h3>Audience:</h3>
+                    <p>{!j.Audience__c}</p>
+                    <h3>Description: </h3> 
+                    <aura:unescapedHtml value="{!j.Description__c}" />
+                    <c:MLM_Journey_Opt_In_Details journeyid="{!j.Id}" cID="{!v.recordId}" journeys="{!v.journeys}" />
+                </div>    
+            </div>
+        </aura:iteration>
+        <aura:set attribute="else">
+        	<aura:iteration var="j" items="{!v.journeys}" indexVar="index">
+                <div class="journey">
+                    <div class= "slds-media slds-media_center header">
+                        <div class="topleft slds-grid">
+                            <div class="slds-media_figure">
+                                <div class="slds-icon_container slds-m-left_x-small" >
+                                    <div class="paddingtopbottom marginleft">
+                                    <lightning:icon iconName="standard:goals" size="small" class="einstein-icon"></lightning:icon> 
+                                    </div>    
+                                </div>
+                            </div>
+                            <div class="slds-media_body slds-m-left_small"> 
+                                <div class="paddingtopbottom">
+                                    <span class="slds-text-heading_small slds-truncate slds-has-flexi-truncate" style="font-weight:bold;">{!j.Name}</span> 
+                                </div>
+                            </div>
+                        </div>    
+                        <div class="topright slds-grid">
+                            <c:MLM_Journey_Opt_In_Item journeyid="{!j.Id}" cID="{!v.recordId}" ShowContactButton="true" /> 
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="padding20">
+                        <h3>Audience:</h3>
+                        <p>{!j.Audience__c}</p>
+                        <h3>Description: </h3> 
+                        <aura:unescapedHtml value="{!j.Description__c}" />
+                        <aura:if isTrue="{!v.ShowData == 'Yes'}">
+                            <div class="third">
+                                <div class="boxpadding">
+                                    <div class="border center">
+                                    	<div class="boxpadding">
+                                        	<span class="smalltext block">
+                                            	Successful Completion of this Journey
+                                            </span>
+                                            <span class="metric block">
+                                                <div class="boxpadding">
+                                            		{!j.Total_Contacts_Completed__c}
+                                                </div>
+                                            </span>
+                                            <span class="smalltext block">
+                                            	Recent Purchasers 67% of all completions
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="third">
+                                <div class="boxpadding">
+                                    <div class="border">
+                                    	<div class="boxpadding">
+                                            <div class="row">
+                                                <div class="padding">
+                                                	<div class="leftalign">Total Participants</div>
+                                                    <div class="rightalign">{!j.Total_Participants__c}</div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="padding">
+                                                	<div class="leftalign">Open Rate</div>
+                                                    <div class="rightalign">{!j.Open_Rate__c}</div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="padding">
+                                                	<div class="leftalign">Not Opened</div>
+                                                    <div class="rightalign">{!j.Not_Opened_Count__c }</div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="padding">
+                                                	<div class="leftalign">Unsubscribed</div>
+                                                    <div class="rightalign">{!j.Unsubscribed_Count__c}</div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="third">
+                                <div class="boxpadding">
+                                    <div class="border">
+                                    	<div class="boxpadding">
+                                        	<div class="row">
+                                                <div class="padding">
+                                                	<div class="leftalign">Completed Journey Without Purchases</div>
+                                                    <div class="rightalign">{!j.Completed_without_purchase_count__c}</div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </aura:if>
+                        <c:MLM_Journey_Opt_In_Details journeyid="{!j.Id}" cID="{!v.recordId}" journeys="{!v.journeys}" showByDefault="true"/>
+                    </div>    
+                </div>
+            </aura:iteration>
+        </aura:set>
+    </aura:if>
+</aura:component>

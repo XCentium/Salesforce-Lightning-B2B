@@ -1,0 +1,242 @@
+<apex:page standardController="Account" Extensions="Q2CAccountUtilitiesController" applyBodyTag="False" applyHtmlTag="False" showHeader="false" standardStylesheets="false" sidebar="false" docType="html-5.0" tabStyle="Account">
+   <html>
+      <head>
+         <apex:slds />
+      </head>
+      <body>
+         <div class="slds-scope">
+            <apex:form >
+               <div class="slds-page-header">
+                  <div class="slds-grid">
+                     <div class="slds-col slds-has-flexi-truncate">
+                        <div class="slds-media slds-no-space slds-grow">
+                           <div class="slds-media__figure">
+                              <span class="slds-icon_container slds-icon-standard-opportunity" title="Description of icon when needed">
+                                 <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../assets/icons/standard-sprite/svg/symbols.svg#opportunity" />
+                                 </svg>
+                              </span>
+                           </div>
+                           <div class="slds-media__body">
+                              <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Quote to Cash Demo Setup">CPQ Utilities</h1>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                        <div class="slds-button-group" role="group">
+                           <apex:commandButton action="{!CloseRedirect}" value="Close" styleClass="slds-button slds-button_neutral"/>
+                           ﻿
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <br></br>
+               <article class="slds-card">
+                  <div class="slds-card__header slds-grid">
+                     <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                           <h2 class="slds-text-heading_small">
+                              <span>Reset Methods</span>
+                           </h2>
+                        </div>
+                     </header>
+                  </div>
+                  <div class="slds-card__body slds-card__body_inner">
+                     <div class="slds-grid">
+                        <div class="slds-col">
+                           <!-- 1 -->
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="Standard Account Reset as seen in standard demos"/>   
+                                 <div class="slds-form-element__control">
+                                    <apex:commandButton action="{!resetAccount}" value="Standard Reset" styleClass="slds-button slds-button_neutral"/>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- 2 -->
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="Standard Account Reset that creates a new blank opportunity on this account"/>
+                                 <div class="slds-form-element__control">
+                                    <apex:commandButton action="{!resetAccountNewOpp}" value="New Opp Reset" styleClass="slds-button slds-button_neutral"/>
+                                    ﻿
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- 3 -->
+                           <div class="slds-form-element">                         
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="Standard Account Reset that creates a new opportunity and primary quote (drops you in the QLE)"/>
+                                 <div class="slds-form-element__control">
+                                    <apex:commandButton action="{!resetAccountQuickQuote}" value="Quick Quote Reset" styleClass="slds-button slds-button_neutral"/>                                   ﻿
+                                 </div>
+                              </div>
+                           </div>
+                           
+                        </div>
+                       
+                           <!-- 4 -->
+                        <div class="slds-col">
+                           <!-- 1 -->
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Delete_Contracted_Prices__c.Label}"/>
+                                 <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputField styleClass="slds-input" value="{!settings.Delete_Contracted_Prices__c}" />
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- 2 -->
+                           <div class="slds-form-element">                         
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="Standard Account reset that creates an opportunity with a clone of the master quote"/>
+                                 <div class="slds-form-element__control">
+                                    <apex:commandButton action="{!resetAccountMasterQuote}" value="Quote Me" styleClass="slds-button slds-button_neutral"/>
+                                    ﻿
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- 3 -->                           
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Q2C_Demo_Settings__c.Fields.Master_Quote__c.Label}"/>
+                                 <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputField styleClass="slds-input" value="{!settings.Master_Quote__c}" />
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="slds-text-align_center">
+                     <div class="slds-button-group slds-align_absolute-center" role="group">
+                     </div>
+                  </div>
+                  <br></br>
+               </article>
+               <!-- New Account Setup -->
+               <article class="slds-card">
+               <div class="slds-card__header slds-grid">
+                     <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                           <h2 class="slds-text-heading_small">
+                              <span>New Account Setup</span>
+                           </h2>
+                        </div>
+                     </header>
+                  </div>
+                  <div class="slds-card__body slds-card__body_inner">
+                     <div class="slds-grid">
+                        <div class="slds-col">
+                           <!-- 1 -->
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Account.Fields.SBQQ__ContractCoTermination__c.Label}"/>
+                                 <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputField styleClass="slds-input" value="{!ThisAccount.SBQQ__ContractCoTermination__c}" />
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- 2 -->
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Account.Fields.SBQQ__CoTerminationEvent__c.Label}"/>
+                                 <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputField styleClass="slds-input" value="{!ThisAccount.SBQQ__CoTerminationEvent__c}" />
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- 3 -->
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Account.Fields.SBQQ__RenewalPricingMethod__c.Label}"/>
+                                 <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputField styleClass="slds-input" value="{!ThisAccount.SBQQ__RenewalPricingMethod__c}" />
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="slds-col">
+                           <!-- 1 -->
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Account.Fields.SBQQ__CoTermedContractsCombined__c.Label}"/>
+                                 <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputField styleClass="slds-input" value="{!ThisAccount.SBQQ__CoTermedContractsCombined__c}" />
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- 2 -->
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Account.Fields.SBQQ__AssetQuantitiesCombined__c.Label}"/>
+                                 <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputField styleClass="slds-input" value="{!ThisAccount.SBQQ__AssetQuantitiesCombined__c}" />
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- 3 -->
+                           <div class="slds-form-element">
+                              <div class="slds-form-element__control">
+                                 <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Account.Fields.SBQQ__RenewalModel__c.Label}"/>
+                                 <div class="slds-form-element__control slds-m-horizontal_xx-small">
+                                        <apex:inputField styleClass="slds-input" value="{!ThisAccount.SBQQ__RenewalModel__c}" />
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="slds-text-align_center">
+                     <div class="slds-button-group slds-align_absolute-center" role="group">
+                     </div>
+                  </div>
+                  <div class="slds-text-align_center">
+                        <div class="slds-button-group slds-align_absolute-center" role="group">
+                            <apex:commandButton action="{!updateAccount}" value="Update Account" styleClass="slds-button slds-button_neutral"/>
+                        </div>
+                    </div>
+                    <br></br>
+               </article>
+               <article class="slds-card">
+                   <div class="slds-card__header slds-grid">
+                      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                         <div class="slds-media__body">
+                            <h2 class="slds-text-heading_small">
+                               <span>Contact Setup</span>
+                            </h2>
+                         </div>
+                      </header>
+                   </div>
+                   <div class="slds-card__body slds-card__body_inner">
+                      <div class="slds-grid">
+                         <div class="slds-col">
+                            <!-- Approver Email -->
+                            <div class="slds-form-element">
+                               <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Contact.Fields.FirstName.Label}" rendered="{!ThisContact.FirstName!=NULL}"/>
+                               <div class="slds-form-element__control">
+                                  <apex:inputText styleClass="slds-input" value="{!ThisContact.FirstName}" rendered="{!ThisContact.FirstName!=NULL}"/>
+                               </div>
+                            </div>
+                            <div class="slds-form-element">
+                               <apex:outputLabel styleClass="slds-form-element__label" value="{!$ObjectType.Contact.Fields.LastName.Label}" rendered="{!ThisContact.FirstName!=NULL}"/>
+                               <div class="slds-form-element__control">
+                                  <apex:inputText styleClass="slds-input" value="{!ThisContact.LastName}" rendered="{!ThisContact.FirstName!=NULL}"/>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <div class="slds-text-align_center">
+                      <apex:outputLabel styleClass="slds-form-element__label" value="This will set the email to steelbrick_demo@salesforce.com" rendered="{!ThisContact.FirstName!=NULL}"/>
+                      <div class="slds-button-group slds-align_absolute-center" role="group">
+                         <apex:commandButton action="{!insertContact}" value="Update Contact" styleClass="slds-button slds-button_neutral" rendered="{!ThisContact.FirstName!=NULL}" />
+                      </div>
+                   </div>
+                   <br></br>
+                </article>
+            </apex:form>
+         </div>
+      </body>
+   </html>
+</apex:page>

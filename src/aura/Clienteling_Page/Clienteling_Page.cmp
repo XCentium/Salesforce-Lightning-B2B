@@ -1,0 +1,57 @@
+<aura:component >
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="PageName" type="String" default="Home"/>
+    <aura:attribute name="SelectedContact" type="String" default=""/>
+    <aura:attribute name="searchText" type="String"/>
+    <aura:if isTrue="{!v.PageName == 'Home' }">
+        <c:Clienteling_Page_Home 
+            appSettings="{!v.appSettings}"  
+            PageName="{!v.PageName}"  
+            SelectedContact="{!v.SelectedContact}"                      
+        />
+    </aura:if>
+    <aura:if isTrue="{!v.PageName == 'Customers' }">
+        <c:Clienteling_Page_Customers 
+            appSettings="{!v.appSettings}" 
+            SelectedContact="{!v.SelectedContact}" 
+            searchText="{!v.searchText}"                       
+        />
+    </aura:if>
+    <aura:if isTrue="{!v.PageName == 'New Merchandise' }">
+        <c:Clienteling_Page_NewMerchandise 
+        	appSettings="{!v.appSettings}" 
+        />
+    </aura:if>
+    <aura:if isTrue="{!v.PageName == 'Store Promotions' }">
+        <c:Clienteling_Page_StorePromotions 
+        	appSettings="{!v.appSettings}"                                     
+        />
+    </aura:if>
+    <aura:if isTrue="{!v.PageName == 'Shift Schedule' }">
+        <c:Clienteling_Page_ShiftSchedule 
+        	appSettings="{!v.appSettings}"                                   
+        />
+    </aura:if>
+    <aura:if isTrue="{!v.PageName == 'Analytics' }">
+        <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index"> 
+        	<wave:waveDashboard 
+                developerName="{!setting.HomePage_Wave_ID__c}" 
+                height="{!setting.Homepage_Wave_Dashboard_Height__c}" 
+                showHeader ="false" 
+                showTitle="true"
+            /> 
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.PageName == 'Discussions' }">
+        <c:Clienteling_Page_Discussions 
+            appSettings="{!v.appSettings}"  
+            PageName="{!v.PageName}"  
+            SelectedContact="{!v.SelectedContact}"                      
+        />
+    </aura:if>
+    <aura:if isTrue="{!v.PageName == 'Training' }">
+    	<c:Clienteling_Page_Training 
+            appSettings="{!v.appSettings}"                                                 
+        />
+    </aura:if>
+</aura:component>

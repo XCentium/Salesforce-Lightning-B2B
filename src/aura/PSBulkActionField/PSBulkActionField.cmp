@@ -1,0 +1,178 @@
+<aura:component access="global">
+    <aura:attribute name="fld" type="Object" required="true" access="global"/>
+    <!-- types=string -->
+    <aura:if isTrue="{!v.fld.ftype == 'string'}">
+        <lightning:input
+            aura:id="{!v.fld.name + 'Search'}"
+            type="text"
+            label="{!v.fld.label + ':'}"
+            value="{!v.fld.value}"/>
+    </aura:if>
+    <!-- picklist -->
+    <aura:if isTrue="{!v.fld.ftype == 'picklist'}">
+        <div class="slds-form-element slds-is-required slds-p-bottom_xx-small">
+            <label class="slds-form-element__label" for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+            <div class="slds-form-element__control">
+                <ui:inputSelect
+                    aura:id="{!v.fld.name + 'Search'}"
+                    class="slds-input"
+                    value="{!v.fld.value}">
+                    <ui:inputSelectOption text="" label=""/>
+                    <aura:iteration items="{!v.fld.options}" var="opt">
+                        <ui:inputSelectOption text="{!opt.label}" label="{!opt.label}"/>
+                    </aura:iteration>
+                </ui:inputSelect>
+            </div>
+        </div>
+    </aura:if>
+    <!-- multipicklist (standard Lightning multi-select) -->
+    <aura:if isTrue="{!v.fld.ftype == 'multipicklist2'}">
+        <div
+            class="slds-form-element slds-is-required slds-p-bottom_xx-small"
+            style="vertical-align: top;">
+            <label
+                class="slds-form-element__label"
+                style="vertical-align: top; margin-top: 6px;"
+                for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+            <div class="slds-form-element__control">
+                <ui:inputSelect
+                    aura:id="{!v.fld.name + 'Search'}"
+                    class="slds-input multiple"
+                    value="{!v.fld.value}"
+                    multiple="true">
+                    <ui:inputSelectOption text="--None--" label="--None--"/>
+                    <aura:iteration items="{!v.fld.options}" var="opt">
+                        <ui:inputSelectOption text="{!opt.label}" label="{!opt.label}"/>
+                    </aura:iteration>
+                </ui:inputSelect>
+            </div>
+        </div>
+    </aura:if>
+    <!-- multipicklist (INCOMPLETE: use checkbox option) -->
+    <aura:if isTrue="{!v.fld.ftype == 'multipicklist'}">
+        <div
+            class="slds-form-element slds-is-required slds-p-bottom_xx-small"
+            style="vertical-align: top;">
+            <label
+                class="slds-form-element__label"
+                style="vertical-align: top; margin-top: 6px;"
+                for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+            <div class="slds-form-element__control">
+                <aura:iteration items="{!v.fld.options}" var="opt">
+                    <ui:inputCheckbox aura:id="Checkbox" label="{!opt.label}"/>
+                </aura:iteration>
+            </div>
+        </div>
+    </aura:if>
+    <!-- email -->
+    <aura:if isTrue="{!v.fld.ftype == 'textarea'}">
+        <lightning:textarea
+            aura:id="{!v.fld.name + 'Search'}"
+            label="{!v.fld.label + ':'}"
+            name="{!v.fld.name}"
+            value="{!v.fld.value}"/>
+    </aura:if>
+    <!-- email -->
+    <aura:if isTrue="{!v.fld.ftype == 'email'}">
+        <lightning:input
+            aura:id="{!v.fld.name + 'Search'}"
+            type="email"
+            label="{!v.fld.label + ':'}"
+            name="{!v.fld.name}"
+            value="{!v.fld.value}"/>
+    </aura:if>
+    <!-- phone -->
+    <aura:if isTrue="{!v.fld.ftype == 'phone'}">
+        <lightning:input
+            aura:id="{!v.fld.name + 'Search'}"
+            type="tel"
+            label="{!v.fld.label + ':'}"
+            name="{!v.fld.name}"
+            value="{!v.fld.value}"/>
+    </aura:if>
+    <!-- boolean -->
+    <aura:if isTrue="{!v.fld.ftype == 'boolean'}">
+        <lightning:input
+            type="checkbox"
+            label="{!v.fld.label}"
+            value="{!v.fld.value}"
+            checked="{!v.fld.value}"
+            name="{!v.fld.name}"/>
+
+    </aura:if>
+    <!-- date -->
+    <aura:if isTrue="{!v.fld.ftype == 'date'}">
+        <lightning:input
+            aura:id="{!v.fld.name + 'Search'}"
+            type="date"
+            label="{!v.fld.label + ':'}"
+            name="{!v.fld.name}"
+            value="{!v.fld.value}"/>
+    </aura:if>
+    <!-- datetime -->
+    <aura:if isTrue="{!v.fld.ftype == 'datetime'}">
+        <lightning:input
+            aura:id="{!v.fld.name + 'Search'}"
+            type="date"
+            label="{!v.fld.label + ':'}"
+            name="{!v.fld.name}"
+            value="{!v.fld.value}"/>
+    </aura:if>
+     <!-- double -->
+     <aura:if isTrue="{!v.fld.ftype == 'double'}">
+        <lightning:input
+            aura:id="{!v.fld.name + 'Search'}"
+            type="number"
+            label="{!v.fld.label + ':'}"
+            name="{!v.fld.name}"
+            value="{!v.fld.value}"/>
+    </aura:if>   
+       <!-- currency -->
+       <aura:if isTrue="{!v.fld.ftype == 'currency'}">
+        <lightning:input
+            aura:id="{!v.fld.name + 'Search'}"
+            type="number"
+            label="{!v.fld.label + ':'}"
+            name="{!v.fld.name}"
+            value="{!v.fld.value}"
+            formatter="currency"
+            step="0.01"/>
+    </aura:if>   
+    <!-- percent -->
+    <aura:if isTrue="{!v.fld.ftype == 'percent'}">
+            <lightning:input
+                aura:id="{!v.fld.name + 'Search'}"
+                type="number"
+                label="{!v.fld.label + ':'}"
+                name="{!v.fld.name}"
+                value="{!v.fld.value}"
+                formatter="percent"
+                step="0.01"/>
+        </aura:if>   
+
+    <!-- integer -->
+    <aura:if isTrue="{!v.fld.ftype == 'integer'}">
+        <lightning:input
+            aura:id="{!v.fld.name + 'Search'}"
+            type="number"
+            label="{!v.fld.label + ':'}"
+            name="{!v.fld.name}"
+            value="{!v.fld.value}"
+            step="1.0"/>
+    </aura:if>   
+    <!-- reference -->
+    <aura:if isTrue="{!v.fld.ftype == 'reference'}">
+        <c:strike_lookup
+            label="{!v.fld.label + ':'}"
+            object="{!v.fld.referenceTo}"
+            searchField="Name"
+            placeholder="{! 'Select an ' + v.fld.placeholderName}"
+            iconName="{! v.fld.icon}"
+            subtitleField=""
+            order="Name"
+            limit="5"
+            loadingMessage="Loading..."
+            errorMessage="Invalid input"
+            value="{!v.fld.value}"/>
+    </aura:if>
+</aura:component>

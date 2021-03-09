@@ -1,0 +1,726 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="Features" type="String[]"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="OrgFeatures" type="String[]"/>
+    <aura:attribute name="Org2Features" type="String[]"/>
+    <aura:attribute name="DemoOrg" type="String" />
+    <aura:attribute name="OrgId" type="String" />
+    <aura:attribute name="DemoOrg2" type="String" default="" />
+    <aura:attribute name="OrgIdentifier" type="String" />
+    <aura:attribute name="OrgIdentifier2" type="String" />
+    <aura:attribute name="Org2Name" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="orgOptions" type="List"/>
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="ScreenChoice" type="String" default="{!v.ScreenChoice}" />
+    <aura:attribute name="SearchPhrase" type="String" default='' />
+    <aura:attribute name="SearchType" type="String" /> 
+    <aura:attribute name="recid" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:if isTrue="{!and(v.SearchPhrase != '',v.SearchType == 'Features')}">
+        <div class="paddingleftright">
+            <h3 class="searchHeader">Search Results for: {!v.SearchPhrase}</h3>
+        </div>
+    </aura:if>
+    <aura:if  isTrue="{!or(v.recid == '', v.recid == null)}" >
+        <div class="owner greenbordertop">
+            <h3 class="borderbottom">
+                <div class="padding">
+                    <lightning:icon iconName="standard:resource_preference" size="medium" alternativeText=""/>   
+                    <span class="marginleft">What Features are in Your IDO</span>
+                </div>
+            </h3>
+            <div class="textleft padding">
+                <aura:if isTrue="{!v.SearchPhrase != ''}">
+                    <div class="featurelist">
+                        <div class="featurewrapper">
+                            <div class="featureitem title"><div class="padding"></div></div>
+                            <div class="featureitem  tableheader">
+                                <div class="margin10 center ">
+                                    <div class="title2 paddingsmall">
+                                        <strong>Enabled</strong>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="featureitem  tableheader">
+                                <div class="margin10 center ">
+                                    <div class="title2 paddingsmall">
+                                        <strong>Customization</strong>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                        <aura:iteration items="{!v.Features}" var="feature"> 
+                            <c:FIDO_IfContains items="{!feature.name}"  element="{!v.SearchPhrase}"> 
+                                <aura:if isTrue="{!feature.demo_org_feature__c == null }">
+                                    <div class="featurewrapper">
+                                        <div class="featureitem featureleft">
+                                            <div class="padding">
+                                                <strong class="featuretitle" >{!feature.name}</strong>
+                                                <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                    <div class="featureinfoicon">
+                                                        <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                        <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                            <div class="padding center">
+                                                                <ui:outputRichText aura:id="outputRT" value="{!feature.description_of_customization__c}" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+                                            </div>
+                                        </div>
+                                        <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!feature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!feature.name}" DemoOrg="{!v.DemoOrg}" />
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <aura:iteration items="{!v.Features}" var="Subfeature"> 
+                                        <aura:if isTrue="{!Subfeature.cloud__c == 'Service'}">
+                                            <aura:if isTrue="{!Subfeature.demo_org_feature__c == feature.sfid }">
+                                                <div class="featurewrapper">
+                                                    <div class="featureitem featureleft">
+                                                        <div class="padding">
+                                                            <strong class="featuresmall featuretitle">{!Subfeature.name}</strong>
+                                                            <aura:if isTrue="{!Subfeature.description_of_customization__c != undefined}">
+                                                                <div class="featureinfoicon">
+                                                                    <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                    <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                        <div class="padding center">
+                                                                            <ui:outputRichText aura:id="outputRT" value="{!Subfeature.description_of_customization__c}" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </aura:if>
+                                                        </div>
+                                                    </div>
+                                                    <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!feature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!Subfeature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                    <div class="clear"></div>
+                                                </div>
+                                                <div class="clear"></div>
+                                            </aura:if>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </aura:if>
+                            </c:FIDO_IfContains>
+                        </aura:iteration>
+                    
+                    <aura:set attribute="else">
+                        <ul class="slds-accordion customAccordion">
+                            <li class="slds-accordion__list-item">
+                                <section class="slds-accordion__section " aura:id="Industry-parent" id="Industry-parent">
+                                    <div class="slds-accordion__summary">
+                                        <h3 class="slds-accordion__summary-heading">
+                                            <button aria-controls="accordion-details-01" aura:id="Industry" id="Industry" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.handleSetActiveSectionC}">
+                                                <lightning:icon class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" iconName="utility:chevrondown" size="xx-small"/>
+                                                <span class="slds-truncate" title="Accordion summary">
+                                                    <img src="https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/clouds/industry.png" class="accordionimg" />
+                                                    Industry Cloud
+                                                </span>
+                                            </button>
+                                        </h3>
+                                    </div>
+                                    <div class="slds-accordion__content" id="accordion-details-01">
+                                        <div class="paddingleftright">
+                                            <div class="featurelist">
+                                                <div class="featurewrapper">
+                                                    <div class="featureitem title"><div class="padding"></div></div>
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Enabled</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Customization</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                            <ul class="featureouter">
+                                            	<aura:iteration items="{!v.Features}" var="feature"> 
+                                                <aura:if isTrue="{!feature.cloud__c == 'Industry'}">
+                                                    <aura:if isTrue="{!feature.demo_org_feature__c == null }">
+                                                        <li class="featurewrapper">
+                                                            <div class="featureitem featureleft">
+                                                                <div class="padding">
+                                                                    <strong class="featuretitle" >{!feature.name}</strong>
+                                                                    <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                        <div class="featureinfoicon">
+                                                                            <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                            <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                <div class="padding center">
+                                                                                    <ui:outputRichText aura:id="outputRT" value="{!feature.description_of_customization__c}" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </aura:if>
+                                                                </div>
+                                                            </div>
+                                                            <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!feature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!feature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                            
+                                                            <div class="clear"></div>
+                                                        </li>
+                                                        <div class="clear"></div>
+                                                        <aura:iteration items="{!v.Features}" var="Subfeature"> 
+                                                            <aura:if isTrue="{!Subfeature.cloud__c == 'Industry'}">
+                                                                <aura:if isTrue="{!Subfeature.demo_org_feature__c == feature.sfid }">
+                                                                    <li class="featurewrapper">
+                                                                        <div class="featureitem featureleft">
+                                                                            <div class="padding">
+                                                                                <strong class="featuresmall featuretitle">{!Subfeature.name}</strong>
+                                                                                <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                                    <div class="featureinfoicon">
+                                                                                        <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                                        <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                            <div class="padding center">
+                                                                                                <ui:outputRichText aura:id="outputRT" value="{!Subfeature.description_of_customization__c}" />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </div>
+                                                                        </div>
+                                                                        <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!feature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!Subfeature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                                        <div class="clear"></div>
+                                                                    </li>
+                                                                    <div class="clear"></div>
+                                                                </aura:if>
+                                                            </aura:if>
+                                                        </aura:iteration>
+                                                    </aura:if>
+                                                </aura:if>
+                                            </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </section>
+                            </li>
+                            <li class="slds-accordion__list-item">
+                                <section class="slds-accordion__section " aura:id="Service-parent" id="Service-parent">
+                                    <div class="slds-accordion__summary">
+                                        <h3 class="slds-accordion__summary-heading">
+                                            <button aria-controls="accordion-details-01" aura:id="Service" id="Service" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.handleSetActiveSectionC}">
+                                                <lightning:icon class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" iconName="utility:chevrondown" size="xx-small"/>
+                                                <span class="slds-truncate" title="Accordion summary">
+                                                    <img src="https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/clouds/service.png" class="accordionimg" />
+                                                    Service Cloud
+                                                </span>
+                                            </button>
+                                        </h3>
+                                    </div>
+                                    <div class="slds-accordion__content" id="accordion-details-01">
+                                        <div class="paddingleftright">
+                                            <div class="featurelist">
+                                                <div class="featurewrapper">
+                                                    <div class="featureitem title"><div class="padding"></div></div>
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Enabled</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Customization</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                            <ul class="featureouter">
+                                            <aura:iteration items="{!v.Features}" var="feature"> 
+                                                <aura:if isTrue="{!feature.cloud__c == 'Service'}">
+                                                    <aura:if isTrue="{!feature.demo_org_feature__c == null }">
+                                                        <li class="featurewrapper">
+                                                            <div class="featureitem featureleft">
+                                                                <div class="padding">
+                                                                    <strong class="featuretitle">{!feature.name}</strong>
+                                                                    <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                        <div class="featureinfoicon">
+                                                                            <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                            <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                <div class="padding center">
+                                                                                    <ui:outputRichText aura:id="outputRT" value="{!feature.description_of_customization__c}" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </aura:if>
+                                                                </div>
+                                                            </div>
+                                                            <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!feature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!feature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                            <div class="clear"></div>
+                                                        </li>
+                                                        <div class="clear"></div>
+                                                        <aura:iteration items="{!v.Features}" var="Subfeature"> 
+                                                            <aura:if isTrue="{!Subfeature.cloud__c == 'Service'}">
+                                                                <aura:if isTrue="{!Subfeature.demo_org_feature__c == feature.sfid }">
+                                                                    <li class="featurewrapper">
+                                                                        <div class="featureitem featureleft">
+                                                                            <div class="padding">
+                                                                                <strong class="featuresmall featuretitle">{!Subfeature.name}</strong>
+                                                                                <aura:if isTrue="{!Subfeature.description_of_customization__c != undefined}">
+                                                                                    <div class="featureinfoicon">
+                                                                                        <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                                        <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                            <div class="padding center">
+                                                                                                <ui:outputRichText aura:id="outputRT" value="{!Subfeature.description_of_customization__c}" />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </div>
+                                                                        </div>
+                                                                        <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!Subfeature.sfid}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!Subfeature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                                        <div class="clear"></div>
+                                                                    </li>
+                                                                    <div class="clear"></div>
+                                                                </aura:if>
+                                                            </aura:if>
+                                                        </aura:iteration>
+                                                    </aura:if>
+                                                </aura:if>
+                                            </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </section>
+                            </li>
+                            <li class="slds-accordion__list-item">
+                                <section class="slds-accordion__section " aura:id="Sales-parent" id="Sales-parent">
+                                    <div class="slds-accordion__summary">
+                                        <h3 class="slds-accordion__summary-heading">
+                                            <button aria-controls="accordion-details-01" aura:id="Sales" id="Sales" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.handleSetActiveSectionC}">
+                                                <lightning:icon class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" iconName="utility:chevrondown" size="xx-small"/>
+                                                <span class="slds-truncate" title="Accordion summary">
+                                                    <img src="https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/clouds/sales.png" class="accordionimg" />
+                                                    Sales Cloud
+                                                </span>
+                                            </button>
+                                        </h3>
+                                    </div>
+                                    <div class="slds-accordion__content" id="accordion-details-01">
+                                        <div class="paddingleftright">
+                                            <div class="featurelist">
+                                                <div class="featurewrapper">
+                                                    <div class="featureitem title"><div class="padding"></div></div>
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Enabled</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Customization</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                            <ul class="featureouter">
+                                            <aura:iteration items="{!v.Features}" var="feature"> 
+                                                <aura:if isTrue="{!feature.cloud__c == 'Sales'}">
+                                                    <aura:if isTrue="{!feature.demo_org_feature__c == null }">
+                                                        <li class="featurewrapper">
+                                                            <div class="featureitem featureleft">
+                                                                <div class="padding">
+                                                                    <strong class="featuretitle" >{!feature.name}</strong>
+                                                                    <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                        <div class="featureinfoicon">
+                                                                            <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                            <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                <div class="padding center">
+                                                                                    <ui:outputRichText aura:id="outputRT" value="{!feature.description_of_customization__c}" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </aura:if>
+                                                                </div>
+                                                            </div>
+                                                            <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!feature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!feature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                            <div class="clear"></div>
+                                                        </li>
+                                                        <div class="clear"></div>
+                                                        <aura:iteration items="{!v.Features}" var="Subfeature"> 
+                                                            <aura:if isTrue="{!Subfeature.cloud__c == 'Sales'}">
+                                                                <aura:if isTrue="{!Subfeature.demo_org_feature__c == feature.sfid }">
+                                                                    <li class="featurewrapper">
+                                                                        <div class="featureitem featureleft">
+                                                                            <div class="padding">
+                                                                                <strong class="featuresmall featuretitle">{!Subfeature.name}</strong>
+                                                                                <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                                    <div class="featureinfoicon">
+                                                                                        <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                                        <div class="implementationDetails" aura:id="{!Subfeature.Id}">
+                                                                                            <div class="padding center">
+                                                                                                <ui:outputRichText aura:id="outputRT" value="{!Subfeature.description_of_customization__c}" />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </div>
+                                                                        </div>
+                                                                        <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!Subfeature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!Subfeature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                                        <div class="clear"></div>
+                                                                    </li>
+                                                                    <div class="clear"></div>
+                                                                </aura:if>
+                                                            </aura:if>
+                                                        </aura:iteration>
+                                                    </aura:if>
+                                                </aura:if>
+                                            </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </section>
+                            </li>
+                            <li class="slds-accordion__list-item">
+                                <section class="slds-accordion__section " aura:id="Platform-parent" id="Platform-parent">
+                                    <div class="slds-accordion__summary">
+                                        <h3 class="slds-accordion__summary-heading">
+                                            <button aria-controls="accordion-details-01" aura:id="Platform" id="Platform" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.handleSetActiveSectionC}">
+                                                <lightning:icon class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" iconName="utility:chevrondown" size="xx-small"/>
+                                                <span class="slds-truncate" title="Accordion summary">
+                                                    <img src="https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/clouds/platform.png" class="accordionimg" />
+                                                    Platform
+                                                </span>
+                                            </button>
+                                        </h3>
+                                    </div>
+                                    <div class="slds-accordion__content" id="accordion-details-01">
+                                        <div class="paddingleftright">
+                                            <div class="featurelist">
+                                                <div class="featurewrapper">
+                                                    <div class="featureitem title"><div class="padding"></div></div>
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Enabled</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Customization</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                            <ul class="featureouter">
+                                            <aura:iteration items="{!v.Features}" var="feature"> 
+                                                <aura:if isTrue="{!feature.cloud__c == 'Platform'}">
+                                                    <aura:if isTrue="{!feature.demo_org_feature__c == null }">
+                                                        <li class="featurewrapper">
+                                                            <div class="featureitem featureleft">
+                                                                <div class="padding">
+                                                                    <strong class="featuretitle featureleft" >{!feature.name}</strong>
+                                                                    <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                        <div class="featureinfoicon">
+                                                                            <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                            <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                <div class="padding center">
+                                                                                    <ui:outputRichText aura:id="outputRT" value="{!feature.description_of_customization__c}" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </aura:if>
+                                                                </div>
+                                                            </div>
+                                                            <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!feature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!feature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                            <div class="clear"></div>
+                                                        </li>
+                                                        <div class="clear"></div>
+                                                        <aura:iteration items="{!v.Features}" var="Subfeature"> 
+                                                            <aura:if isTrue="{!Subfeature.cloud__c == 'Platform'}">
+                                                                <aura:if isTrue="{!Subfeature.demo_org_feature__c == feature.sfid }">
+                                                                    <li class="featurewrapper">
+                                                                        <div class="featureitem featureleft">
+                                                                            <div class="padding">
+                                                                                <strong class="featuresmall featuretitle">{!Subfeature.name}</strong>
+                                                                                <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                                    <div class="featureinfoicon">
+                                                                                        <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                                        <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                            <div class="padding center">
+                                                                                                <ui:outputRichText aura:id="outputRT" value="{!Subfeature.description_of_customization__c}" />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </div>
+                                                                        </div>
+                                                                        <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!Subfeature.sfid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!Subfeature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                                        <div class="clear"></div>
+                                                                    </li>
+                                                                    <div class="clear"></div>
+                                                                </aura:if>
+                                                            </aura:if>
+                                                        </aura:iteration>
+                                                    </aura:if>
+                                                </aura:if>
+                                            </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </section>
+                            </li>
+                            <li class="slds-accordion__list-item">
+                                <section class="slds-accordion__section " aura:id="Community-parent" id="Community-parent">
+                                    <div class="slds-accordion__summary">
+                                        <h3 class="slds-accordion__summary-heading">
+                                            <button aria-controls="accordion-details-01" aura:id="Community" id="Community" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.handleSetActiveSectionC}">
+                                                <lightning:icon class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" iconName="utility:chevrondown" size="xx-small"/>
+                                                <span class="slds-truncate" title="Accordion summary">
+                                                    <img src="https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/clouds/community.png" class="accordionimg" />
+                                                    Community Cloud
+                                                </span>
+                                            </button>
+                                        </h3>
+                                    </div>
+                                    <div class="slds-accordion__content" id="accordion-details-01">
+                                        <div class="paddingleftright">
+                                            <div class="featurelist">
+                                                <div class="featurewrapper">
+                                                    <div class="featureitem title"><div class="padding"></div></div>
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Enabled</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Customization</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                            <ul class="featureouter">
+                                            <aura:iteration items="{!v.Features}" var="feature"> 
+                                                <aura:if isTrue="{!feature.cloud__c == 'Community'}">
+                                                    <aura:if isTrue="{!feature.demo_org_feature__c == null }">
+                                                        <li class="featurewrapper">
+                                                            <div class="featureitem featureleft">
+                                                                <div class="padding">
+                                                                    <strong class="featuretitle" >{!feature.name}</strong>
+                                                                    <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                        <div class="featureinfoicon">
+                                                                            <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                            <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                <div class="padding center">
+                                                                                    <ui:outputRichText aura:id="outputRT" value="{!feature.description_of_customization__c}" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </aura:if>
+                                                                </div>
+                                                            </div>
+                                                            <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!feature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!feature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                            <div class="clear"></div>
+                                                        </li>
+                                                        <div class="clear"></div>
+                                                        <aura:iteration items="{!v.Features}" var="Subfeature"> 
+                                                            <aura:if isTrue="{!Subfeature.cloud__c == 'Community'}">
+                                                                <aura:if isTrue="{!Subfeature.demo_org_feature__c == feature.sfid }">
+                                                                    <li class="featurewrapper">
+                                                                        <div class="featureitem featureleft">
+                                                                            <div class="padding">
+                                                                                <strong class="featuresmall featuretitle">{!Subfeature.name}</strong>
+                                                                                <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                                    <div class="featureinfoicon">
+                                                                                        <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                                        <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                            <div class="padding center">
+                                                                                                <ui:outputRichText aura:id="outputRT" value="{!Subfeature.description_of_customization__c}" />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </div>
+                                                                        </div>
+                                                                        <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!Subfeature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!Subfeature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                                        <div class="clear"></div>
+                                                                    </li>
+                                                                    <div class="clear"></div>
+                                                                </aura:if>
+                                                            </aura:if>
+                                                        </aura:iteration>
+                                                    </aura:if>
+                                                </aura:if>
+                                            </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </section>
+                            </li>
+                            <li class="slds-accordion__list-item">
+                                <section class="slds-accordion__section " aura:id="Common-parent" id="Common-parent">
+                                    <div class="slds-accordion__summary">
+                                        <h3 class="slds-accordion__summary-heading">
+                                            <button aria-controls="accordion-details-01" aura:id="Common" id="Common" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.handleSetActiveSectionC}">
+                                                <lightning:icon class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" iconName="utility:chevrondown" size="xx-small"/>
+                                                <span class="slds-truncate" title="Accordion summary">
+                                                    <lightning:icon iconName="utility:layers" size="medium" class="accordionimg"/>
+                                                    Common Layer
+                                                </span>
+                                            </button>
+                                        </h3>
+                                    </div>
+                                    <div class="slds-accordion__content" id="accordion-details-01">
+                                        <div class="paddingleftright">
+                                            <div class="featurelist">
+                                                <div class="featurewrapper">
+                                                    <div class="featureitem title"><div class="padding"></div></div>
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Enabled</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="featureitem  tableheader">
+                                                        <div class="margin10 center ">
+                                                            <div class="title2 paddingsmall">
+                                                            	<strong>Customization</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="clear"></div>
+                                                </div>
+                                            </div>
+                                            <ul class="featureouter">
+                                            <aura:iteration items="{!v.Features}" var="feature"> 
+                                                <aura:if isTrue="{!feature.cloud__c == 'Common Layer'}">
+                                                    <aura:if isTrue="{!feature.demo_org_feature__c == null }">
+                                                        <li class="featurewrapper">
+                                                            <div class="featureitem featureleft">
+                                                                <div class="padding">
+                                                                    <strong class="featuretitle" >{!feature.name}</strong>
+                                                                    <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                        <div class="featureinfoicon">
+                                                                            <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                            <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                <div class="padding center">
+                                                                                    <ui:outputRichText aura:id="outputRT" value="{!feature.description_of_customization__c}" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </aura:if>
+                                                                </div>
+                                                            </div>
+                                                            <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!feature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!feature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                            <div class="clear"></div>
+                                                        </li>
+                                                        <div class="clear"></div>
+                                                        <aura:iteration items="{!v.Features}" var="Subfeature"> 
+                                                            <aura:if isTrue="{!Subfeature.cloud__c == 'Common Layer'}">
+                                                                <aura:if isTrue="{!Subfeature.demo_org_feature__c == feature.sfid }">
+                                                                    <li class="featurewrapper">
+                                                                        <div class="featureitem featureleft">
+                                                                            <div class="padding">
+                                                                                <strong class="featuresmall featuretitle">{!Subfeature.name}</strong>
+                                                                                <aura:if isTrue="{!feature.description_of_customization__c != undefined}">
+                                                                                    <div class="featureinfoicon">
+                                                                                        <lightning:icon iconName="utility:info" size="xx-small" alternativeText=""  /> 
+                                                                                        <div class="implementationDetails" aura:id="{!feature.Id}">
+                                                                                            <div class="padding center">
+                                                                                                <ui:outputRichText aura:id="outputRT" value="{!Subfeature.description_of_customization__c}" />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </div>
+                                                                        </div>
+                                                                        <c:FIDO_FeatureCompareOrgCheck FeatureSFID="{!Subfeature.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" OrgFeatures="{!v.OrgFeatures}" FeatureName="{!Subfeature.name}" DemoOrg="{!v.DemoOrg}" />
+                                                                        <div class="clear"></div>
+                                                                    </li>
+                                                                    <div class="clear"></div>
+                                                                </aura:if>
+                                                            </aura:if>
+                                                        </aura:iteration>
+                                                    </aura:if>
+                                                </aura:if>
+                                            </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </section>
+                            </li>
+                        </ul>
+                    </aura:set>
+                </aura:if>
+            </div>
+        </div>
+        <aura:set attribute="else">
+            <c:FIDO_SingleRecord OrgName="{!v.OrgName}" IndustryName="{!v.IndustryName}" OrgId="{!v.OrgId}" Industry="{!v.Industry}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}"/>
+        </aura:set>
+        
+    </aura:if>
+    
+    <div aura:id="orgcheckoverlay" class="slds-backdrop slds-backdrop_closed"></div>
+    <section role="dialog" aura:id="OrgModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Compare This Org</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="padding">
+                    <div class="compare2"> 
+                        <p>Select another org to compare features with.</p>
+                        <div class="filter">
+                            <label>Demo Org</label>
+                            <lightning:select name="solution_Select" label="" required="false" onchange="{!c.onOrgChange}">
+                                <option value="-- None --">-- None --</option>
+                                <aura:iteration items="{!v.orgOptions}" var="org">
+                                    <aura:if isTrue="{!org.org_identifier__c  != null}">
+                                        <aura:if isTrue="{!org.name  != v.OrgName}">
+                                            <option value="{!org.org_identifier__c}">{!org.name}</option>
+                                        </aura:if>
+                                    </aura:if>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}">Close</button>
+            </footer>
+        </div>
+    </section>
+    
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

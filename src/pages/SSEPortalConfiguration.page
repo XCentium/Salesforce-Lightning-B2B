@@ -1,0 +1,2315 @@
+<apex:page sidebar="false" title="Template Configuration - {!$Organization.Name}" standardController="Org_Template__c" extensions="SSEPortalConfiguration" id="thePage">
+    <head>
+        <title>SSE Template Configuration</title>
+        <link type="text/css" rel="stylesheet" href="{!URLFOR($Resource.SSEPortalResources, 'styles/jquery.miniColors.css')}"/>    
+        <link type="text/css" rel="stylesheet" href="/apex/SSEPortalCSSConfiguration?id={!Org_Template__c.id}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSEPortalResources, '/scripts/jquery.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSEPortalResources, '/scripts/jquery.miniColors.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSEPortalResources, '/scripts/config.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSEPortalResources, '/scripts/downloadFile.js')}"/>        
+        <script type="text/javascript">
+            $j = jQuery.noConflict();
+            var templateid = '{!Org_Template__c.id}';
+            var Image_Logo__c = '{!Org_Template__c.Image_Logo__c}';
+            var Image_Footer__c = '{!Org_Template__c.Image_Footer__c}';
+            var Image_Slide1__c = '{!Org_Template__c.Image_Slide1__c}';
+            var Image_Slide2__c = '{!Org_Template__c.Image_Slide2__c}';
+            var Image_Slide3__c = '{!Org_Template__c.Image_Slide3__c}';
+            var Image_Body__c = '{!Org_Template__c.Image_Body__c}';
+            var Image_Background_Image__c = '{!Org_Template__c.Image_Background_Image__c}';
+            
+            $j(document).ready(function(){
+                //Set select box values
+                $j('#Image_Background_Position__c').val('{!Org_Template__c.Image_Background_Position__c}'),
+                $j('#Image_Background_Repeat__c').val('{!Org_Template__c.Image_Background_Repeat__c}'),
+                $j('#Position_Sidebar__c').val('{!Org_Template__c.Position_Sidebar__c}');
+                $j('#Position_Tabs__c').val('{!Org_Template__c.Position_Tabs__c}');
+                $j('#Position_Page__c').val('{!Org_Template__c.Position_Page__c}');
+                $j('#Position_Slider__c').val('{!Org_Template__c.Position_Slider__c}');
+                $j('#Position_Footer__c').val('{!Org_Template__c.Position_Footer__c}');
+                $j('#Font_Weight_Main__c').val('{!Org_Template__c.Font_Weight_Main__c}');
+                $j('#Font_Weight_Secondary_Title__c').val('{!Org_Template__c.Font_Weight_Secondary_Title__c}');
+                $j('#Font_Weight_Small_Information__c').val('{!Org_Template__c.Font_Weight_Small_Information__c}'); 
+                $j('#Font_Weight_Page_Title__c').val('{!Org_Template__c.Font_Weight_Page_Title__c}');
+                $j('#Font_Weight_Side_Header__c').val('{!Org_Template__c.Font_Weight_Side_Header__c}');
+                $j('#Font_Weight_Tab__c').val('{!Org_Template__c.Font_Weight_Tab__c}');
+                $j('#Font_Weight_Tab_A__c').val('{!Org_Template__c.Font_Weight_Tab_A__c}');
+                $j('#Font_Weight_Tab_H__c').val('{!Org_Template__c.Font_Weight_Tab_H__c}');
+                $j('#Font_Weight_Button__c').val('{!Org_Template__c.Font_Weight_Button__c}');
+                $j('#Font_Weight_Button_H__c').val('{!Org_Template__c.Font_Weight_Button_H__c}');
+                $j('#Font_Weight_Side_Button__c').val('{!Org_Template__c.Font_Weight_Side_Button__c}');
+                $j('#Font_Weight_Side_Button_H__c').val('{!Org_Template__c.Font_Weight_Side_Button_H__c}');
+                $j('#Font_Weight_Navigation_Menu__c').val('{!Org_Template__c.Font_Weight_Navigation_Menu__c}');
+                $j('#Font_Weight_Navigation_Menu_H__c').val('{!Org_Template__c.Font_Weight_Navigation_Menu_H__c}');
+                $j('#Font_Transform_Main__c').val('{!Org_Template__c.Font_Transform_Main__c}');
+                $j('#Font_Transform_Secondary_Title__c').val('{!Org_Template__c.Font_Transform_Secondary_Title__c}');
+                $j('#Font_Transform_Small_Information__c').val('{!Org_Template__c.Font_Transform_Small_Information__c}');
+                $j('#Font_Transform_Page_Title__c').val('{!Org_Template__c.Font_Transform_Page_Title__c}');
+                $j('#Font_Transform_Side_Header__c').val('{!Org_Template__c.Font_Transform_Side_Header__c}');
+                $j('#Font_Transform_Tab__c').val('{!Org_Template__c.Font_Transform_Tab__c}');
+                $j('#Font_Transform_Tab_A__c').val('{!Org_Template__c.Font_Transform_Tab_A__c}');
+                $j('#Font_Transform_Tab_H__c').val('{!Org_Template__c.Font_Transform_Tab_H__c}');
+                $j('#Font_Transform_Button__c').val('{!Org_Template__c.Font_Transform_Button__c}');
+                $j('#Font_Transform_Button_H__c').val('{!Org_Template__c.Font_Transform_Button_H__c}');
+                $j('#Font_Transform_Side_Button__c').val('{!Org_Template__c.Font_Transform_Side_Button__c}');
+                $j('#Font_Transform_Side_Button_H__c').val('{!Org_Template__c.Font_Transform_Side_Button_H__c}');
+                $j('#Font_Transform_Navigation_Menu__c').val('{!Org_Template__c.Font_Transform_Navigation_Menu__c}');
+                $j('#Font_Transform_Navigation_Menu_H__c').val('{!Org_Template__c.Font_Transform_Navigation_Menu_H__c}');
+                $j('#Font_Decoration_Main__c').val('{!Org_Template__c.Font_Decoration_Main__c}');
+                $j('#Font_Decoration_Secondary_Title__c').val('{!Org_Template__c.Font_Decoration_Secondary_Title__c}');
+                $j('#Font_Decoration_Small_Information__c').val('{!Org_Template__c.Font_Decoration_Small_Information__c}');
+                $j('#Font_Decoration_Page_Title__c').val('{!Org_Template__c.Font_Decoration_Page_Title__c}');
+                $j('#Font_Decoration_Side_Header__c').val('{!Org_Template__c.Font_Decoration_Side_Header__c}');
+                $j('#Font_Decoration_Tab__c').val('{!Org_Template__c.Font_Decoration_Tab__c}');
+                $j('#Font_Decoration_Tab_A__c').val('{!Org_Template__c.Font_Decoration_Tab_A__c}'); 
+                $j('#Font_Decoration_Tab_H__c').val('{!Org_Template__c.Font_Decoration_Tab_H__c}');
+                $j('#Font_Decoration_Button__c').val('{!Org_Template__c.Font_Decoration_Button__c}');
+                $j('#Font_Decoration_Button_H__c').val('{!Org_Template__c.Font_Decoration_Button_H__c}');
+                $j('#Font_Decoration_Side_Button__c').val('{!Org_Template__c.Font_Decoration_Side_Button__c}');
+                $j('#Font_Decoration_Side_Button_H__c').val('{!Org_Template__c.Font_Decoration_Side_Button_H__c}');
+                $j('#Font_Decoration_Navigation_Menu__c').val('{!Org_Template__c.Font_Decoration_Navigation_Menu__c}');
+                $j('#Font_Decoration_Navigation_Menu_H__c').val('{!Org_Template__c.Font_Decoration_Navigation_Menu_H__c}');
+                $j('#Image_Button__c').prop('checked', {!Org_Template__c.Image_Button__c});
+                $j('#Image_Button_H__c').prop('checked', {!Org_Template__c.Image_Button_H__c});
+                $j('#Image_Background__c').prop('checked', {!Org_Template__c.Image_Background__c});
+                $j('#Image_Page_Block_Header__c').prop('checked', {!Org_Template__c.Image_Page_Block_Header__c});
+                $j('#Shadow_Side__c').prop('checked', {!Org_Template__c.Shadow_Side__c});
+                $j('#Shadow_Header__c').prop('checked', {!Org_Template__c.Shadow_Header__c});
+                $j('#Shadow_Body__c').prop('checked', {!Org_Template__c.Shadow_Body__c});
+                $j('#Shadow_Page_Block__c').prop('checked', {!Org_Template__c.Shadow_Page_Block__c});
+                $j('#Shadow_Side_Module__c').prop('checked', {!Org_Template__c.Shadow_Side_Module__c});
+                $j('#Component_Image__c').prop('checked', {!Org_Template__c.Component_Image__c});
+                $j('#Component_Cases__c').prop('checked', {!Org_Template__c.Component_Cases__c});
+                $j('#Component_Products__c').prop('checked', {!Org_Template__c.Component_Products__c});
+                $j('#Component_Entitlements__c').prop('checked', {!Org_Template__c.Component_Entitlements__c});
+                $j('#Component_Ideas__c').prop('checked', {!Org_Template__c.Component_Ideas__c});
+                $j('#Component_Solutions__c').prop('checked', {!Org_Template__c.Component_Solutions__c});
+                $j('#Component_Articles__c').prop('checked', {!Org_Template__c.Component_Articles__c});
+                $j('#Component_Charts__c').prop('checked', {!Org_Template__c.Component_Charts__c});
+                $j('#Component_Approvals__c').prop('checked', {!Org_Template__c.Component_Approvals__c});
+                $j('#Component_Leads__c').prop('checked', {!Org_Template__c.Component_Leads__c});
+            
+                initalizePage();
+            
+                $j('.hotspot').mouseover(function(e) {                      
+                    e.stopPropagation();
+                    $j(this).addClass('hover2');
+                }).mouseout(function (e) {
+                    $j(this).removeClass('hover2');
+                });
+            
+                $j('.portalheadertab, .portallefttab, #portalsidetabs').mouseover(function(e) {                      
+                    e.stopPropagation();
+                    $j('.portalheadertab, .portallefttab, #portalsidetabs').addClass('hover2');
+                }).mouseout(function (e) {
+                    $j('.portalheadertab, .portallefttab, #portalsidetabs').removeClass('hover2');
+                });
+
+                $j('#portalbody, .tabheaderclassic').mouseover(function(e) {                      
+                    e.stopPropagation();
+                    $j('#classicmode, #portalcontainer').addClass('hover2');
+                }).mouseout(function (e) {
+                    $j('#classicmode, #portalcontainer').removeClass('hover2');
+                });
+            
+                $j(".tabheaderclassic").click(function(e){
+                    e.stopPropagation();
+                    $j(".configpanel").hide();
+                    $j("#configportalcontainer").toggle();
+                });
+
+                changeLayout();
+                exportTemplate('{!Org_Template__c.Id}');
+                
+                $j("#downloadImagesLink").click(function(e){      
+                    window.open(Image_Logo__c, 'Logo');
+                    window.open(Image_Slide1__c, 'Slide 1');
+                    window.open(Image_Slide2__c, 'Slide 2');
+                    window.open(Image_Slide3__c, 'Slide 3');
+                    window.open(Image_Body__c, 'Body');
+                    window.open(Image_Background_Image__c, 'Background');
+                    window.open(Image_Footer__c, 'Footer');
+                });
+            });
+        </script>
+        <style>
+        #portalsidebar {
+            display: none !important;
+        }
+        #portalpageblockcontent {
+            position: absolute;
+            top: 20px;
+            left: -55px !important;
+            width: 653px !important;
+        }
+        #title {
+            display: none !important;
+        }
+        #info {
+            display: none !important;
+        }
+            
+        .savebutton, .deletebutton, .clonebutton, .exportbutton, .backbutton {
+            background-color: #F5F5F5;
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FFF), to(#E6E6E6));
+            background-image: -webkit-linear-gradient(top, #FFF, #E6E6E6);
+            background-image: -o-linear-gradient(top, #FFF, #E6E6E6);
+            background-image: linear-gradient(to bottom, #FFF, #E6E6E6);
+            background-image: -moz-linear-gradient(top, #FFF, #E6E6E6);
+            background-repeat: repeat-x;
+            border: 1px solid #BBB;
+            text-align: center;
+            line-height: 20px;
+            height: 20px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+            
+            .backbutton{
+                float: left;
+            }
+            
+            #templateIcon{
+                left:20px;
+            }
+            
+            #templateNameInput{
+                margin-left: 20px;
+            }
+            
+            #templateTopText{
+                width: 901px;
+            }
+            
+            .hidden{
+                display: none !important;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <!--Title-->
+        <div id="templateTopText">Demo Template</div>
+        <div id="designertitle">
+            <div class="backbutton" onclick="window.location = '/apex/SSEPortalListView';"><h1>Back</h1></div>
+            <div id="templateIcon"></div>
+            <input id="templateNameInput" value="{!Org_Template__c.Name}"/>
+            <div class="deletebutton"><h1>Delete</h1></div>
+            <div class="exportbutton"><h1 id="downloadJSON">Export</h1></div>  
+            <div class="clonebutton"><h1>Clone</h1></div>   
+            <div class="savebutton"><h1>Saved</h1></div> 
+            <apex:form >
+                <apex:actionFunction action="{!cloneTemplate}" name="cloneTemplate"/>
+                <apex:actionFunction action="{!deleteTemplate}" name="deleteTemplate"/>
+            </apex:form> 
+        </div>
+
+        <div id="configurationcontainer">
+            <!--Portal Options-->
+            <div class="configpanel" id="introduction">
+                <h2>Setup</h2>
+                <div class="configcontainer wide introtext">
+                    <iframe class="vidyard_iframe" src="//api.vidyard.com/playbackengine/MahXyqcYgnupIs-Y_Pwv3g?v=2.2" width="100%" height="172" scrolling="no" frameborder="0" allowtransparency="true"></iframe>
+                </div>
+                <div class="configcontainer wide" id="importantinformation">
+                    <h1>Important Styling Options</h1>
+                    <div class="configlabel">The 3 sliding images appear on all branbed pages unless hidden here.</div><div class="configdata"> <select id="Position_Slider__c" class="positionselect"><option value="show">Show</option><option value="hide">Hide</option></select></div>
+                    <div class="configlabel">Get all template images. Warning: Opens 7 tabs,check popup blocker</div><div class="configdata" style="margin:0px;"><div id="downloadImagesLink">Download</div></div>
+                </div>
+                <div class="configcontainer first">
+                    <h1>Useful Links</h1>
+                    <div class="configlabel">Visualforce</div><div class="configdata"><a href="/{!vfCSS.id}/e" target="_blank">CSS</a></div>
+                    <div class="configlabel">Visualforce</div><div class="configdata"><a href="/{!vfHome.id}/e" target="_blank">Home Page</a></div>
+                    <div class="configlabel">APEX</div><div class="configdata"><a href="/{!apexHome.id}/e" target="_blank">Home Page</a></div>
+                    <div class="configlabel">HTML</div><div class="configdata"><a href="/{!htmlHeader.id}" target="_blank">Portal Header</a></div>
+                    <div class="configlabel">HTML</div><div class="configdata"><a href="/{!htmlFooter.id}" target="_blank">Portal Footer</a></div>
+                </div>
+                <div class="configcontainer hidden">
+                    <h1>Layout</h1>
+                    <div class="configlabel ">Sidebar</div><div class="configdata"> <select id="Position_Sidebar__c" class="positionselect"><option value="left">Left</option><option value="right">Right</option></select></div>
+                    <div class="configlabel">Tabs</div><div class="configdata"> <select id="Position_Tabs__c" class="positionselect"><option value="top">Top</option><!--<option value="bottom">Bottom</option><option value="left">Left</option>--><option value="classic">Classic</option></select></div>
+                    <div class="configlabel">Style</div><div class="configdata"> <select id="Position_Page__c" class="positionselect"><option value="new">New</option><option value="classic">Classic</option></select></div>
+                    <div class="configlabel">Footer</div><div class="configdata"> <select id="Position_Footer__c" class="positionselect"><option value="show">Show</option><option value="hide">Hide</option></select></div>
+                </div>
+                <div class="configcontainer wide components">
+                    <h1>Home Components</h1>
+                    <p>Components have moved to widget configurator</p>
+                    <div class="hidden">
+                        <div class="configlabel">Image</div><div class="configdata"><input type="checkbox" id="Component_Image__c"/></div>
+                        <div class="configlabel">Cases</div><div class="configdata"><input type="checkbox" id="Component_Cases__c"/></div>
+                        <div class="configlabel">Products</div><div class="configdata"><input type="checkbox" id="Component_Products__c"/></div>
+                        <div class="configlabel">Entitlements</div><div class="configdata"><input type="checkbox" id="Component_Entitlements__c"/></div>
+                        <div class="configlabel">Ideas</div><div class="configdata"><input type="checkbox" id="Component_Ideas__c"/></div>
+                        <div class="configlabel">Solutions</div><div class="configdata"><input type="checkbox" id="Component_Solutions__c"/></div>
+                        <div class="configlabel">Articles</div><div class="configdata"><input type="checkbox" id="Component_Articles__c"/></div>
+                        <div class="configlabel">Dashboard</div><div class="configdata"><input type="checkbox" id="Component_Charts__c"/></div>
+                        <div class="configlabel">Approvals</div><div class="configdata"><input type="checkbox" id="Component_Approvals__c"/></div>
+                        <div class="configlabel">Leads</div><div class="configdata"><input type="checkbox" id="Component_Leads__c"/></div>
+                        <div class="configlabel"></div><div class="configdata"></div>
+                        <div class="configlabel"></div><div class="configdata"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Style Input Boxes-->
+            <div class="configpanel" id="configportalheadertop">
+                <h2>Navigation Bar</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Header_T_G_T__c" type="text" value="{!Org_Template__c.Back_Header_T_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Header_T_G_B__c" type="text" value="{!Org_Template__c.Back_Header_T_G_B__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Profile Menu</h1>
+        
+                    <div class="configlabel">
+                        Selected
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Navigation_Menu__c" type="text" value="{!Org_Template__c.Back_Navigation_Menu__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Hover
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Navigation_Menu_H__c" type="text" value="{!Org_Template__c.Back_Navigation_Menu_H__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Font</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Navigation_Menu__c" type="text" value="{!Org_Template__c.Font_Colour_Navigation_Menu__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Navigation_Menu__c" type="text" value="{!Org_Template__c.Font_Size_Navigation_Menu__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Navigation_Menu__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Navigation_Menu__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Navigation_Menu__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Font Hover</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Navigation_Menu_H__c" type="text" value="{!Org_Template__c.Font_Colour_Navigation_Menu_H__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Navigation_Menu_H__c" type="text" value="{!Org_Template__c.Font_Size_Navigation_Menu_H__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Navigation_Menu_H__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Navigation_Menu_H__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Navigation_Menu_H__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalheadermid">
+                <h2>Header</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Header_Mid_G_T__c" type="text" value="{!Org_Template__c.Back_Header_Mid_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Header_Mid_G_B__c" type="text" value="{!Org_Template__c.Back_Header_Mid_G_B__c}"/>
+                    </div>
+                </div>
+
+                <div class="configcontainer wide">
+                    <h1>Image</h1>
+
+                    <div class="configlabel">
+                        Size
+                    </div>
+
+                    <div class="configdata configdataimage">
+                        90px height * 748|900|1024|1120px width
+                    </div>
+
+                    <div class="configlabel">
+                        Logo
+                    </div>
+        
+                    <div class="configdata configdataimage">
+                   
+                        <input type="file" name="Image_Logo__c" id="Image_Logo__c" class="imagefield"/>
+                        <input type="submit" value="Upload" id="Image_Logo" class="imagebutton"/>
+                        
+                    </div>
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalheadertabs">
+                <h2>Tabs</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Tab_G_T__c" type="text" value="{!Org_Template__c.Back_Tab_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Tab_G_B__c" type="text" value="{!Org_Template__c.Back_Tab_G_B__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Background Active</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Tab_A_G_T__c" type="text" value="{!Org_Template__c.Back_Tab_A_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Tab_A_G_B__c" type="text" value="{!Org_Template__c.Back_Tab_A_G_B__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Background Hover</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Tab_H_G_T__c" type="text" value="{!Org_Template__c.Back_Tab_H_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Tab_H_G_B__c" type="text" value="{!Org_Template__c.Back_Tab_H_G_B__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Corners</h1>
+        
+                    <div class="configlabel">
+                        Radius
+                    </div>
+        
+                    <div class="configdata">
+                        <input type="text" value="{!Org_Template__c.Radius_Tab__c}" id="Radius_Tab__c"/>  
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Font</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Tab__c" type="text" value="{!Org_Template__c.Font_Colour_Tab__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Tab__c" type="text" value="{!Org_Template__c.Font_Size_Tab__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Tab__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Tab__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Tab__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Font Active</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Tab_A__c" type="text" value="{!Org_Template__c.Font_Colour_Tab_A__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Tab_A__c" type="text" value="{!Org_Template__c.Font_Size_Tab_A__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Tab_A__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Tab_A__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Tab_A__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Font Hover</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Tab_H__c" type="text" value="{!Org_Template__c.Font_Colour_Tab_H__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Tab_H__c" type="text" value="{!Org_Template__c.Font_Size_Tab_H__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Tab_H__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Tab_H__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Tab_H__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalheaderbot">
+                <h2>Slider</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Header_B_G_T__c" type="text" value="{!Org_Template__c.Back_Header_B_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Header_B_G_B__c" type="text" value="{!Org_Template__c.Back_Header_B_G_B__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Shadow
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Shadow_Header__c" type="checkbox" value="{!Org_Template__c.Shadow_Header__c}"/>
+                    </div>
+                </div>
+
+                <div class="configcontainer wide">
+                    <h1>Image</h1>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+
+                    <div class="configdata configdataimage">
+                        275px height * 900|1160px width
+                    </div>
+
+                    <div class="configlabel">
+                        Slide 1
+                    </div>
+        
+                    <div class="configdata configdataimage">
+                        <input type="file" name="Image_Slide1__c" id="Image_Slide1__c" class="imagefield"/>
+                        <input type="submit" value="Upload" id="Image_Slide1" class="imagebutton"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Slide 2
+                    </div>
+        
+                    <div class="configdata configdataimage">
+                        <input type="file" name="Image_Slide2__c" id="Image_Slide2__c" class="imagefield"/>
+                        <input type="submit" value="Upload" id="Image_Slide2" class="imagebutton"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Slide 3
+                    </div>
+        
+                    <div class="configdata configdataimage">
+                        <input type="file" name="Image_Slide3__c" id="Image_Slide3__c" class="imagefield"/>
+                        <input type="submit" value="Upload" id="Image_Slide3" class="imagebutton"/>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalfooter">
+                <h2>Footer</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Footer_G_T__c" type="text" value="{!Org_Template__c.Back_Footer_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Footer_G_B__c" type="text" value="{!Org_Template__c.Back_Footer_G_B__c}"/>
+                    </div>
+                </div>
+                
+                <div class="configcontainer wide">
+                    <h1>Image</h1>
+
+                    <div class="configlabel">
+                        Size
+                    </div>
+
+                    <div class="configdata configdataimage">
+                        245px height * 900|1120px width
+                    </div>
+
+                    <div class="configlabel">
+                        Footer
+                    </div>
+        
+                    <div class="configdata configdataimage">
+                        <input type="file" name="Image_Footer__c" id="Image_Footer__c" class="imagefield"/>
+                        <input type="submit" value="Upload" id="Image_Footer" class="imagebutton"/>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalsidebar">
+                <h2>Side Bar Menu</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_G_T__c" type="text" value="{!Org_Template__c.Back_Side_G_T__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_G_B__c" type="text" value="{!Org_Template__c.Back_Side_G_B__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Shadow
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Shadow_Side__c" type="checkbox" value="{!Org_Template__c.Shadow_Side__c}"/>
+                    </div>
+                </div>
+
+                <div class="configcontainer">
+                    <h1>Module Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_Module_G_T__c" type="text" value="{!Org_Template__c.Back_Side_Module_G_T__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_Module_G_B__c" type="text" value="{!Org_Template__c.Back_Side_Module_G_B__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Shadow
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Shadow_Side_Module__c" type="checkbox" value="{!Org_Template__c.Shadow_Side_Module__c}"/>
+                    </div>
+                </div>
+
+                <div class="configcontainer first">
+                    <h1>Header Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_Module_Header_G_T__c" type="text" value="{!Org_Template__c.Back_Side_Module_Header_G_T__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_Module_Header_G_B__c" type="text" value="{!Org_Template__c.Back_Side_Module_Header_G_B__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Corners</h1>
+        
+                    <div class="configlabel">
+                        Sidebar
+                    </div>
+        
+                    <div class="configdata">
+                        <input type="text" value="{!Org_Template__c.Radius_Side__c}" id="Radius_Side__c"/>  
+                    </div>
+
+                    <div class="configlabel">
+                        Module
+                    </div>
+        
+                    <div class="configdata">
+                        <input type="text" value="{!Org_Template__c.Radius_Side_Module__c}" id="Radius_Side_Module__c"/>  
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Font</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Side_Header__c" type="text" value="{!Org_Template__c.Font_Colour_Side_Header__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Side_Header__c" type="text" value="{!Org_Template__c.Font_Size_Side_Header__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Side_Header__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Side_Header__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Side_Header__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalsidebarbutton">
+                <h2>Side Bar Button</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_Button_G_T__c" type="text" value="{!Org_Template__c.Back_Side_Button_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_Button_G_B__c" type="text" value="{!Org_Template__c.Back_Side_Button_G_B__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Background Hover</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_Button_H_G_T__c" type="text" value="{!Org_Template__c.Back_Side_Button_H_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Side_Button_H_G_B__c" type="text" value="{!Org_Template__c.Back_Side_Button_H_G_B__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Font</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Side_Button__c" type="text" value="{!Org_Template__c.Font_Colour_Side_Button__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Side_Button__c" type="text" value="{!Org_Template__c.Font_Size_Side_Button__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Side_Button__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Side_Button__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Side_Button__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Font Hover</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Side_Button_H__c" type="text" value="{!Org_Template__c.Font_Colour_Side_Button_H__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Side_Button_H__c" type="text" value="{!Org_Template__c.Font_Size_Side_Button_H__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Side_Button_H__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Side_Button_H__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Side_Button_H__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Corners</h1>
+        
+                    <div class="configlabel">
+                        Radius
+                    </div>
+        
+                    <div class="configdata">
+                        <input type="text" value="{!Org_Template__c.Radius_Side_Button__c}" id="Radius_Side_Button__c"/>  
+                    </div>
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalbutton">
+                <h2>Button</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Button_G_T__c" type="text" value="{!Org_Template__c.Back_Button_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Button_G_B__c" type="text" value="{!Org_Template__c.Back_Button_G_B__c}"/>
+                    </div>
+                    
+                    <div class="configlabel">
+                        Pattern
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Image_Button__c" type="checkbox"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Background Hover</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Button_H_G_T__c" type="text" value="{!Org_Template__c.Back_Button_H_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Button_H_G_B__c" type="text" value="{!Org_Template__c.Back_Button_H_G_B__c}"/>
+                    </div>
+                    
+                    <div class="configlabel">
+                        Pattern
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Image_Button_H__c" type="checkbox"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Font</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Button__c" type="text" value="{!Org_Template__c.Font_Colour_Button__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Button__c" type="text" value="{!Org_Template__c.Font_Size_Button__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Button__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Button__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Button__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Font Hover</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Button_H__c" type="text" value="{!Org_Template__c.Font_Colour_Button_H__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Button_H__c" type="text" value="{!Org_Template__c.Font_Size_Button_H__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Button_H__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Button_H__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Button_H__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Corners</h1>
+        
+                    <div class="configlabel">
+                        Radius
+                    </div>
+        
+                    <div class="configdata">
+                        <input type="text" value="{!Org_Template__c.Radius_Button__c}" id="Radius_Button__c"/>  
+                    </div>
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalcontainer">
+                <h2>Body</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Background_G_T__c" type="text" value="{!Org_Template__c.Back_Background_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Background_G_B__c" type="text" value="{!Org_Template__c.Back_Background_G_B__c}"/>
+                    </div>
+  
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Classic Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Body_G_T__c" type="text" value="{!Org_Template__c.Back_Body_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Body_G_B__c" type="text" value="{!Org_Template__c.Back_Body_G_B__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Shadow
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Shadow_Body__c" type="checkbox" value="{!Org_Template__c.Shadow_Body__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Title Font</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Page_Title__c" type="text" value="{!Org_Template__c.Font_Colour_Page_Title__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Page_Title__c" type="text" value="{!Org_Template__c.Font_Size_Page_Title__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Page_Title__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Page_Title__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Page_Title__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Information Font</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Small_Information__c" type="text" value="{!Org_Template__c.Font_Colour_Small_Information__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Small_Information__c" type="text" value="{!Org_Template__c.Font_Size_Small_Information__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Small_Information__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Small_Information__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Small_Information__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="configcontainer wide">
+                    <h1>Home Page Image</h1>
+
+                    <div class="configlabel">
+                        Size
+                    </div>
+                    <div class="configdata configdataimage">
+                        600px width
+                    </div>
+
+                    <div class="configlabel">
+                        Home Page
+                    </div>
+                    
+                    <div class="configdata configdataimage">
+                        <input type="file" name="Image_Body__c" id="Image_Body__c" class="imagefield"/>
+                        <input type="submit" value="Upload" id="Image_Body" class="imagebutton"/>
+                    </div>
+                </div>
+                
+                <div class="configcontainer wide">
+                    <h1>Background Image</h1>
+                    
+                    <div class="configlabel">
+                        Displayed?
+                    </div>
+        
+                    <div class="configdata configdataimage">
+                        <input type="checkbox" id="Image_Background__c" value="{!Org_Template__c.Image_Background__c}"/>
+                    </div>
+                    
+                    <div class="configlabel">
+                        Image
+                    </div>
+        
+                    <div class="configdata configdataimage">
+                        <input type="file" name="Image_Background_Image__c" id="Image_Background_Image__c" class="imagefield"/>
+                        <input type="submit" value="Upload" id="Image_Background_Image" class="imagebutton"/>
+                    </div>
+                    
+                    <div class="configlabel">
+                        Position
+                    </div>
+        
+                    <div class="configdata" style="width:125px;margin-right:60px;">
+                        <select id="Image_Background_Position__c">
+                            <option value="left top">
+                                Left
+                            </option>
+                            <option value="center top">
+                                Center
+                            </option>
+                            <option value="center right">
+                                Right
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div class="configlabel">
+                        Repeat
+                    </div>
+        
+                    <div class="configdata" style="width:125px;margin-right:60px;">
+                        <select id="Image_Background_Repeat__c">
+                            <option value="repeat-y">
+                                Vertical
+                            </option>
+                            <option value="repeat-x">
+                                Horizontal
+                            </option>
+                            <option value="repeat">
+                                Both
+                            </option>
+                            <option value="no-repeat">
+                                None
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalpageblock">
+                <h2>Page Block</h2>
+        
+                <h1 class="closepopup">Back</h1>
+
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Page_Block_G_T__c" type="text" value="{!Org_Template__c.Back_Page_Block_G_T__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Page_Block_G_B__c" type="text" value="{!Org_Template__c.Back_Page_Block_G_B__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Shadow
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Shadow_Page_Block__c" type="checkbox" value="{!Org_Template__c.Shadow_Page_Block__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Corners</h1>
+        
+                    <div class="configlabel">
+                        Radius
+                    </div>
+        
+                    <div class="configdata">
+                        <input type="text" value="{!Org_Template__c.Radius_Page_Block__c}" id="Radius_Page_Block__c"/>   
+                    </div>
+                </div>
+                <div class="configcontainer first">
+                    <h1>Odd Row Background</h1>
+        
+                    <div class="configlabel">
+                        Background
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Page_Block_Table_Odd__c" type="text" value="{!Org_Template__c.Back_Page_Block_Table_Odd__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Even Row Background</h1>
+        
+                    <div class="configlabel">
+                        Background
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Page_Block_Table_Even__c" type="text" value="{!Org_Template__c.Back_Page_Block_Table_Even__c}"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer first">
+                    <h1>Font</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Main__c" type="text" value="{!Org_Template__c.Font_Colour_Main__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Main__c" type="text" value="{!Org_Template__c.Font_Size_Main__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Main__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Main__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Main__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="configcontainer">
+                    <h1>Google Charts</h1>
+        
+                    <div class="configlabel">
+                        Colour 1
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Google_Chart_1__c" type="text" value="{!Org_Template__c.Back_Google_Chart_1__c}"/>
+                    </div>
+
+                    <div class="configlabel">
+                        Colour 2
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Google_Chart_2__c" type="text" value="{!Org_Template__c.Back_Google_Chart_2__c}"/>
+                    </div>
+                                    
+                    <div class="configlabel">
+                        Colour 3
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Google_Chart_3__c" type="text" value="{!Org_Template__c.Back_Google_Chart_3__c}"/>
+                    </div>
+                                    
+                    <div class="configlabel">
+                        Colour 4
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Google_Chart_4__c" type="text" value="{!Org_Template__c.Back_Google_Chart_4__c}"/>
+                    </div>
+
+                </div>
+            </div>
+        
+            <div class="configpanel" id="configportalpageblockheader">
+                <h2>Page Block Header</h2>
+        
+                <h1 class="closepopup">Back</h1>
+        
+                <div class="configcontainer first">
+                    <h1>Background</h1>
+        
+                    <div class="configlabel">
+                        Top
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Page_Block_Header_G_T__c" type="text" value="{!Org_Template__c.Back_Page_Block_Header_G_T__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Bottom
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Back_Page_Block_Header_G_B__c" type="text" value="{!Org_Template__c.Back_Page_Block_Header_G_B__c}"/>
+                    </div>
+                    
+                    <div class="configlabel">
+                        Pattern
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Image_Page_Block_Header__c" type="checkbox"/>
+                    </div>
+                </div>
+        
+                <div class="configcontainer">
+                    <h1>Font</h1>
+        
+                    <div class="configlabel">
+                        Colour
+                    </div>
+        
+                    <div class="configdata">
+                        <input class="color-picker" data-opacity="1" id="Font_Colour_Secondary_Title__c" type="text" value="{!Org_Template__c.Font_Colour_Secondary_Title__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Size
+                    </div>
+        
+                    <div class="configdata">
+                        <input id="Font_Size_Secondary_Title__c" type="text" value="{!Org_Template__c.Font_Size_Secondary_Title__c}"/>
+                    </div>
+        
+                    <div class="configlabel">
+                        Weight
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Weight_Secondary_Title__c">
+                            <option value="normal">
+                                Normal
+                            </option>
+        
+                            <option value="bold">
+                                Bold
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Transform
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Transform_Secondary_Title__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="uppercase">
+                                Uppercase
+                            </option>
+        
+                            <option value="lowercase">
+                                Lowercase
+                            </option>
+        
+                            <option value="capitalize">
+                                Capitalize
+                            </option>
+                        </select>
+                    </div>
+        
+                    <div class="configlabel">
+                        Decoration
+                    </div>
+        
+                    <div class="configdata">
+                        <select id="Font_Decoration_Secondary_Title__c">
+                            <option value="none">
+                                None
+                            </option>
+        
+                            <option value="underline">
+                                Underline
+                            </option>
+        
+                            <option value="overline">
+                                Overline
+                            </option>
+        
+                            <option value="line-through">
+                                Line-Through
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!--Portal Mockup-->
+            <div id="portalcontainer" class="hotspot">
+                <div id="portalheadertop" class="hotspot">
+                    <span>{!$User.FirstName} {!$User.LastName}</span>
+                </div>
+                <div id="classicmode">
+                    <div id="portalheadermid" class="hotspot">
+                        <div id="portallogo"></div>
+                        <div id="portalheadertabcontainer">
+                            <div class="portalheadertab inactive" id="lasttab">Accounts</div>
+                            <div class="portalheadertab inactive">Ideas</div>
+                            <div class="portalheadertab">Cases</div>
+                        </div>
+                    </div>
+                    <div id="portalheaderbot" class="hotspot">
+                        <div id="portalslider"></div>
+                    </div>
+                    <div id="portalbody">
+                        <div id="portalsidebar" class="hotspot">
+                            <div id="portalsidebarheader">
+                                <span>Search</span>
+                            </div>
+                            <div id="portalsidebarmodule">
+                                <div id="portalsearchbox"></div>
+                                <div id="portalsidebarbutton" class="hotspot">Go!</div>
+                            </div>
+                        </div>
+                        <div id="portalcontent">
+                            <div id="title">Welcome</div>
+                            <div id="info">Printable View</div>
+                            <div id="portalpageblockcontent">
+                                <div id="portalpageblockheader" class="hotspot">
+                                    <span>Cases</span><div id="portalbutton" class="hotspot">Save</div>
+                                </div>
+                                <div id="portalpageblock" class="hotspot">
+                                    <div class="odd row">000001&nbsp;&nbsp;&nbsp;&nbsp;High&nbsp;&nbsp;&nbsp;&nbsp;Web&nbsp;&nbsp;&nbsp;&nbsp;Ive lost my password</div>
+                                    <div class="even row">000002&nbsp;&nbsp;&nbsp;&nbsp;High&nbsp;&nbsp;&nbsp;&nbsp;Web&nbsp;&nbsp;&nbsp;&nbsp;Mobile application registration</div>
+                                    <div class="odd row">000003&nbsp;&nbsp;&nbsp;&nbsp;High&nbsp;&nbsp;&nbsp;&nbsp;Web&nbsp;&nbsp;&nbsp;&nbsp;Trouble connecting to the internet</div>
+                                    <div class="even row"></div>
+                                    <div class="odd row"></div>
+                                    <div class="even row"></div>
+                                    <div class="odd row"></div>
+                                    <div class="even row lastrow"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="portalsidetabs" class="hotspot">
+                            <div class="portallefttab">Cases</div>
+                            <div class="portallefttab inactive">Ideas</div>
+                            <div class="portallefttab inactive">Accounts</div>
+                        </div>
+                    </div>
+                    <div id="portalfooter" class="hotspot">
+                        <div id="portalfooterimage"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-36269828-3']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    
+    </script>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

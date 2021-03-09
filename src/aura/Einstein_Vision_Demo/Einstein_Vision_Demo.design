@@ -1,0 +1,8 @@
+<design:component label="Einstein Vision Roof Type Analyzer">
+  <design:attribute
+    name="title"
+    label="Title"
+    description="Appears at the top of the component"
+    default="Einstein Roof Type Analyzer"
+  />    
+</design:component>

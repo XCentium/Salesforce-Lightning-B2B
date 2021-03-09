@@ -1,0 +1,26 @@
+<template>
+	<div class="slds-grid slds-gutters slds-wrap">
+		<!-- PO NUMBER -->
+		<div class="slds-col slds-size_1-of-1">
+			<lightning-input
+				type="text"
+				label="Enter PO Number"
+				value={purchaseOrderNumber}
+				onchange={handlePoChange}
+			>
+			</lightning-input>
+		</div>
+
+		<!-- BILLING ADDRESS -->
+		<div class="slds-col slds-size_1-of-1">
+			<lightning-combobox
+				name="billingAddress"
+				label="Billing Address"
+				value={selectedAddress}
+				options={options}
+				onchange={handleBillingAddressChange}
+			></lightning-combobox>
+		</div>
+	</div>
+
+</template>

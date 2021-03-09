@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT" description="ckz_OrderForm_ProductFilterEvent">
+    <aura:attribute name="filterName" type="String" required="true"/>
+    <aura:attribute name="filterSfid" type="String" required="true"/>
+    <aura:attribute name="filterSelections" type="List" required="true"/>
+
+</aura:event>

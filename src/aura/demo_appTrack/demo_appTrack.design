@@ -1,0 +1,11 @@
+<design:component label="Q Insight">
+    <design:attribute
+    name="Description"
+    label="PLEASE NOT REMOVE"
+                      description="This component helps Q Branch understand how demos are used so we can better invest our resources.  No personal information is used."/>
+  <design:attribute
+    name="page"
+    label="Page Attribute"
+    datasource="B2B Commerce Community,B2B Commerce Setup,Billing,Channel Sales,Consumer Community,CPQ,Depot Repair Console,Digital Engagement,Einstein Playground,EMC²,Engage,Field Service,High Velocity Sales,HR,Lightning Scheduler Console,Lightning Service Console,Maps,Marketing,My App,Pardot,Partner Central,Professional Community,Project Management,Sales,Salesforce CMS,Service,Service Cloud Console,Standard Quote,CPQ Quote"
+  />
+</design:component>

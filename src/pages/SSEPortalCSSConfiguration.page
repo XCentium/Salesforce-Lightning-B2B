@@ -1,0 +1,637 @@
+<apex:page cache="false" showHeader="false" contentType="text/css" standardController="Org_Template__c">
+    
+    /*CSS for the portal configuration page*/
+    
+    #importantinformation{
+        height:133px;
+        background: #fcffc1;
+    }
+    #importantinformation .configdata {
+        width:60px !important;
+        margin-right: 32px;
+    }
+    #importantinformation .configlabel {
+        width:80px !important;
+        margin-right:10px;
+    }
+    #downloadImagesLink{
+        color:#015BA7;
+    }
+    #downloadImagesLink:hover{
+        cursor:pointer;
+    }
+    
+    #templateIcon{
+        float:left;
+        width:43px;
+        height:38px;
+        background:url("{!URLFOR($Resource.SSEPortalResources, '/images/SSEPortalIcon.png')}") no-repeat;
+        background-size: auto 100%;
+        position: relative;
+        top: -12px;
+    }
+    #configurationcontainer{
+        width:1114px;
+        height:842px;
+        margin:auto;
+    }
+    #portalcontainer{
+        width:725px;
+        margin-left:10px;
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        float:right;
+        <apex:outputPanel rendered="{!Org_Template__c.Image_Background__c == true}" layout="none">
+            background: url('/resource/SSEPortalResources/images/SSEPortalBackground.png') {!Org_Template__c.Back_Background_G_T__c};   
+            background: url('/resource/SSEPortalResources/images/SSEPortalBackground.png'), -moz-linear-gradient(top,  {!Org_Template__c.Back_Background_G_T__c} 0%, {!Org_Template__c.Back_Background_G_B__c} 100%); 
+            background: url('/resource/SSEPortalResources/images/SSEPortalBackground.png'), -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Background_G_T__c}), color-stop(100%,{!Org_Template__c.Back_Background_G_B__c}));
+            background: url('/resource/SSEPortalResources/images/SSEPortalBackground.png'), -webkit-linear-gradient(top,  {!Org_Template__c.Back_Background_G_T__c} 0%,{!Org_Template__c.Back_Background_G_B__c} 100%);
+            background: url('/resource/SSEPortalResources/images/SSEPortalBackground.png'), linear-gradient(to bottom,  {!Org_Template__c.Back_Background_G_T__c} 0%,{!Org_Template__c.Back_Background_G_B__c} 100%); 
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!Org_Template__c.Image_Background__c == false}" layout="none">
+            background: {!Org_Template__c.Back_Background_G_T__c};   
+            background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Background_G_T__c} 0%, {!Org_Template__c.Back_Background_G_B__c} 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Background_G_T__c}), color-stop(100%,{!Org_Template__c.Back_Background_G_B__c}));
+            background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Background_G_T__c} 0%,{!Org_Template__c.Back_Background_G_B__c} 100%);
+            background: linear-gradient(to bottom,  {!Org_Template__c.Back_Background_G_T__c} 0%,{!Org_Template__c.Back_Background_G_B__c} 100%); 
+        </apex:outputPanel>
+        border:1px solid #CCCCCC;
+    }
+    #portalheadertop{
+        width:100%;
+        height:23px;
+        line-height:22px;
+        text-align:right;
+        -webkit-border-top-left-radius: 4px;
+        border-top-left-radius: 4px;
+        -webkit-border-top-right-radius: 4px;
+        border-top-right-radius: 4px;
+        background: {!Org_Template__c.Back_Header_T_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Header_T_G_T__c} 0%, {!Org_Template__c.Back_Header_T_G_B__c} 15%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Header_T_G_T__c}), color-stop(15%,{!Org_Template__c.Back_Header_T_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Header_T_G_T__c} 0%,{!Org_Template__c.Back_Header_T_G_B__c} 15%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Header_T_G_T__c} 0%,{!Org_Template__c.Back_Header_T_G_B__c} 15%);
+        color:{!Org_Template__c.Font_Colour_Navigation_Menu__c};
+        font-size:{!Org_Template__c.Font_Size_Navigation_Menu__c};
+        font-weight:{!Org_Template__c.Font_Weight_Navigation_Menu__c};
+        text-transform:{!Org_Template__c.Font_Transform_Navigation_Menu__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Navigation_Menu__c};
+    }
+    #portalheadertop span{
+        padding-right:20px;
+    }
+    #portalheadermid{
+        width:100%;
+        height:58px;
+        background: {!Org_Template__c.Back_Header_Mid_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Header_Mid_G_T__c} 0%, {!Org_Template__c.Back_Header_Mid_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Header_Mid_G_T__c}), color-stop(100%,{!Org_Template__c.Back_Header_Mid_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Header_Mid_G_T__c} 0%,{!Org_Template__c.Back_Header_Mid_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Header_Mid_G_T__c} 0%,{!Org_Template__c.Back_Header_Mid_G_B__c} 100%);
+        position:relative;
+    }
+    #portallogo{
+        height:58px;
+        width:572px;
+        background-image:url('{!Org_Template__c.Image_Logo__c}');
+        background-repeat:no-repeat;
+        background-position:left; 
+        background-size:auto 100%;
+        margin:auto;
+    }
+    #portalheaderbot{
+        width:100%;
+        height:175px;
+        background: {!Org_Template__c.Back_Header_B_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Header_B_G_T__c} 0%, {!Org_Template__c.Back_Header_B_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Header_B_G_T__c}), color-stop(100%,{!Org_Template__c.Back_Header_B_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Header_B_G_T__c} 0%,{!Org_Template__c.Back_Header_B_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Header_B_G_T__c} 0%,{!Org_Template__c.Back_Header_B_G_B__c} 100%);
+    }
+    #portalslider{
+        width:572px;
+        height:175px;
+        margin:auto;
+        position:relative;
+        background-image:url('{!Org_Template__c.Image_Slide1__c}');
+        background-repeat:no-repeat;
+        background-position:center; 
+        background-size:100% 100%;
+    }
+    #portalbody{
+        width:546px;
+        height:397px;
+        margin:auto;
+        position:relative;
+        padding:13px
+    }
+    #title{
+        color:{!Org_Template__c.Font_Colour_Page_Title__c};
+        font-size:{!Org_Template__c.Font_Size_Page_Title__c};
+        font-weight:{!Org_Template__c.Font_Weight_Page_Title__c};
+        text-transform:{!Org_Template__c.Font_Transform_Page_Title__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Page_Title__c};
+        position:absolute;
+        left:0px;
+    }
+    #info{
+        position:absolute;
+        right:0px;
+        color:{!Org_Template__c.Font_Colour_Small_Information__c};
+        font-size:{!Org_Template__c.Font_Size_Small_Information__c};
+        font-weight:{!Org_Template__c.Font_Weight_Small_Information__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Small_Information__c};
+        text-transform:{!Org_Template__c.Font_Transform_Small_Information__c};
+    }
+    #portalfooter{
+        width:100%;
+        height:156px;
+        border-top:5px solid {!Org_Template__c.Back_Header_B_G_T__c};
+        background: {!Org_Template__c.Back_Footer_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Footer_G_T__c}  0%, {!Org_Template__c.Back_Footer_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Footer_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Footer_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Footer_G_T__c}  0%,{!Org_Template__c.Back_Footer_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Footer_G_T__c}  0%,{!Org_Template__c.Back_Footer_G_B__c} 100%);
+        background-repeat:no-repeat;
+        background-position:center; 
+        margin:auto;
+        -webkit-border-bottom-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        -webkit-border-bottom-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+    #portalfooterimage{
+        height:156px;
+        width:572px;
+        margin:auto;
+        position:relative;
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+        -webkit-border-bottom-right-radius: 4px;
+        -webkit-border-bottom-left-radius: 4px;
+        -moz-border-bottom-right-radius: 4px;
+        -moz-border-bottom-left-radius: 4px;
+        background-image:url('{!Org_Template__c.Image_Footer__c}');
+        background-repeat:no-repeat;
+        background-position:center; 
+        background-size:100% 100%;
+    }
+    #portalsidebar, #portalsidetabs{
+        background: {!Org_Template__c.Back_Side_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Side_G_T__c}  0%, {!Org_Template__c.Back_Footer_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Side_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Side_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Side_G_T__c}  0%,{!Org_Template__c.Back_Side_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Side_G_T__c}  0%,{!Org_Template__c.Back_Side_G_B__c} 100%);
+        width:128px;
+        padding:6px;
+        height:388px;
+        border-radius:{!Org_Template__c.Radius_Side__c};
+        -webkit-border-radius:{!Org_Template__c.Radius_Side__c};
+        -moz-border-radius:{!Org_Template__c.Radius_Side__c};
+        position:absolute;
+    }
+    #portalsidetabs{
+        left:13px;
+    }
+    #portalsidebarheader, #portalsidebarmodule{
+        padding:6px;
+    }
+    #portalsidebarheader{
+        border-top-right-radius:{!Org_Template__c.Radius_Side_Module__c};
+        -webkit-border-top-right-radius:{!Org_Template__c.Radius_Side_Module__c};
+        -moz-border-top-right-radius:{!Org_Template__c.Radius_Side_Module__c};
+         border-top-left-radius:{!Org_Template__c.Radius_Side_Module__c};
+        -webkit-border-top-left-radius:{!Org_Template__c.Radius_Side_Module__c};
+        -moz-border-top-left-radius:{!Org_Template__c.Radius_Side_Module__c};
+        background: {!Org_Template__c.Back_Side_Module_Header_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Side_Module_Header_G_T__c}  0%, {!Org_Template__c.Back_Side_Module_Header_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Side_Module_Header_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Side_Module_Header_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Side_Module_Header_G_T__c}  0%,{!Org_Template__c.Back_Side_Module_Header_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Side_Module_Header_G_T__c}  0%,{!Org_Template__c.Back_Side_Module_Header_G_B__c} 100%);  
+    }
+    #portalsidebarmodule{
+        border-bottom-right-radius:{!Org_Template__c.Radius_Side_Module__c};
+        -webkit-border-bottom-right-radius:{!Org_Template__c.Radius_Side_Module__c};
+        -moz-border-bottom-right-radius:{!Org_Template__c.Radius_Side_Module__c};
+         border-bottom-left-radius:{!Org_Template__c.Radius_Side_Module__c};
+        -webkit-border-bottom-left-radius:{!Org_Template__c.Radius_Side_Module__c};
+        -moz-border-bottom-left-radius:{!Org_Template__c.Radius_Side_Module__c};
+        background: {!Org_Template__c.Back_Side_Module_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Side_Module_G_T__c}  0%, {!Org_Template__c.Back_Side_Module_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Side_Module_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Side_Module_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Side_Module_G_T__c}  0%,{!Org_Template__c.Back_Side_Module_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Side_Module_G_T__c}  0%,{!Org_Template__c.Back_Side_Module_G_B__c} 100%);   
+    }
+    #portalsidetabs {
+        float:left;
+        display:none;
+    }
+    #portalsidebar span{
+        width:100%;
+        border-bottom: 1px solid {!Org_Template__c.Font_Colour_Side_Header__c};
+        color:{!Org_Template__c.Font_Colour_Side_Header__c};
+        text-transform:{!Org_Template__c.Font_Transform_Side_Header__c};
+        font-weight:{!Org_Template__c.Font_Weight_Side_Header__c};
+        font-size:{!Org_Template__c.Font_Size_Side_Header__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Side_Header__c};
+    }
+    #portalcontent{
+        width:393px;
+        right:0px;
+        position:absolute;
+        height:100%;
+    }
+    #portalpageblockcontent{
+        position:absolute;
+        top:50px;
+        width:393px;
+    }
+    #portalpageblockheader{
+        <apex:outputPanel rendered="{!Org_Template__c.Image_Page_Block_Header__c == true}" layout="none">
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png') {!Org_Template__c.Back_Page_Block_Header_G_B__c};
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -moz-linear-gradient(top,  {!Org_Template__c.Back_Page_Block_Header_G_T__c} 0%, {!Org_Template__c.Back_Page_Block_Header_G_B__c} 100%); 
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Page_Block_Header_G_T__c}), color-stop(100%,{!Org_Template__c.Back_Page_Block_Header_G_B__c}));
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-linear-gradient(top,  {!Org_Template__c.Back_Page_Block_Header_G_T__c} 0%,{!Org_Template__c.Back_Page_Block_Header_G_B__c} 100%);
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), linear-gradient(to bottom,  {!Org_Template__c.Back_Page_Block_Header_G_T__c} 0%,{!Org_Template__c.Back_Page_Block_Header_G_B__c} 100%);
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!Org_Template__c.Image_Page_Block_Header__c == false}" layout="none">
+            background: {!Org_Template__c.Back_Page_Block_Header_G_B__c};
+            background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Page_Block_Header_G_T__c} 0%, {!Org_Template__c.Back_Page_Block_Header_G_B__c} 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Page_Block_Header_G_T__c}), color-stop(100%,{!Org_Template__c.Back_Page_Block_Header_G_B__c}));
+            background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Page_Block_Header_G_T__c} 0%,{!Org_Template__c.Back_Page_Block_Header_G_B__c} 100%);
+            background: linear-gradient(to bottom,  {!Org_Template__c.Back_Page_Block_Header_G_T__c} 0%,{!Org_Template__c.Back_Page_Block_Header_G_B__c} 100%);
+        </apex:outputPanel>
+        width:100%px;
+        box-sizing:border-box;
+        -moz-box-sizing:border-box;
+        -webkit-box-sizing:border-box;
+        height:30px;
+        line-height:30px;
+        padding-left:10px;
+        padding-right:10px;
+        border-top-right-radius:{!Org_Template__c.Radius_Page_Block__c};
+        -webkit-border-top-right-radius:{!Org_Template__c.Radius_Page_Block__c};
+        -moz-border-top-right-radius:{!Org_Template__c.Radius_Page_Block__c};
+        border-top-left-radius:{!Org_Template__c.Radius_Page_Block__c};
+        -webkit-border-top-left-radius:{!Org_Template__c.Radius_Page_Block__c};
+        -moz-border-top-left-radius:{!Org_Template__c.Radius_Page_Block__c};
+    }
+    #portalpageblockheader span{
+        color:{!Org_Template__c.Font_Colour_Secondary_Title__c};
+        font-size:{!Org_Template__c.Font_Size_Secondary_Title__c};
+        font-weight:{!Org_Template__c.Font_Weight_Secondary_Title__c};
+        text-transform:{!Org_Template__c.Font_Transform_Secondary_Title__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Secondary_Title__c};
+    }
+    #portalpageblock{
+        width:100%;
+        background:transparent;
+    }
+    .odd{ 
+        background-color:{!Org_Template__c.Back_Page_Block_Table_Odd__c}; 
+    }
+    .even{ 
+        background-color:{!Org_Template__c.Back_Page_Block_Table_Even__c}; 
+    }
+    .row{
+        width:100%;
+        height:40px;
+        line-height:40px;
+        padding-left:20px;
+        box-sizing:border-box;
+        -moz-box-sizing:border-box;
+        -webkit-box-sizing:border-box;
+        color:{!Org_Template__c.Font_Colour_Main__c};
+        font-size:{!Org_Template__c.Font_Size_Main__c};
+        font-weight:{!Org_Template__c.Font_Weight_Main__c};
+        text-transform:{!Org_Template__c.Font_Transform_Main__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Main__c};
+    }
+    .lastrow{
+        border-bottom-right-radius:{!Org_Template__c.Radius_Page_Block__c};
+        -webkit-border-bottom-right-radius:{!Org_Template__c.Radius_Page_Block__c};
+        -moz-border-bottom-right-radius:{!Org_Template__c.Radius_Page_Block__c};
+        border-bottom-left-radius:{!Org_Template__c.Radius_Page_Block__c};
+        -webkit-border-bottom-left-radius:{!Org_Template__c.Radius_Page_Block__c};
+        -moz-border-bottom-left-radius:{!Org_Template__c.Radius_Page_Block__c};
+    }
+    #portalbutton{
+        width:55px;
+        height:20px;
+        line-height:20px;
+        text-align:center;
+        margin:auto;
+        position:relative;
+        top:-25px;
+        border-radius: {!Org_Template__c.Radius_Button__c};
+        -webkit-border-radius: {!Org_Template__c.Radius_Button__c};
+        <apex:outputPanel rendered="{!Org_Template__c.Image_Button__c == true}" layout="none">
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png') {!Org_Template__c.Back_Button_G_T__c};
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -moz-linear-gradient(top,  {!Org_Template__c.Back_Button_G_T__c}  0%, {!Org_Template__c.Back_Button_G_B__c} 100%); 
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Button_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Button_G_B__c}));
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), -webkit-linear-gradient(top,  {!Org_Template__c.Back_Button_G_T__c}  0%,{!Org_Template__c.Back_Button_G_B__c} 100%);
+            background: url('/resource/SSEPortalResources/images/SSEPortalBarBackground.png'), linear-gradient(to bottom,  {!Org_Template__c.Back_Button_G_T__c}  0%,{!Org_Template__c.Back_Button_G_B__c} 100%);
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!Org_Template__c.Image_Button__c == false}" layout="none">
+            background: {!Org_Template__c.Back_Button_G_T__c};
+            background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Button_G_T__c}  0%, {!Org_Template__c.Back_Button_G_B__c} 100%); 
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Button_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Button_G_B__c}));
+            background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Button_G_T__c}  0%,{!Org_Template__c.Back_Button_G_B__c} 100%);
+            background: linear-gradient(to bottom,  {!Org_Template__c.Back_Button_G_T__c}  0%,{!Org_Template__c.Back_Button_G_B__c} 100%);
+        </apex:outputPanel>
+        color:{!Org_Template__c.Font_Colour_Button__c};
+        font-size:{!Org_Template__c.Font_Size_Button__c};
+        font-weight:{!Org_Template__c.Font_Weight_Button__c};
+        text-transform:{!Org_Template__c.Font_Transform_Button__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Button__c};
+    }
+    #portalsidebarbutton{ 
+        width: 100%;
+        height:30px;
+        margin-top:10px;
+        line-height:30px;
+        text-align:center;
+        background: {!Org_Template__c.Back_Side_Button_G_T__c};
+        background: -moz-linear-gradient(top, {!Org_Template__c.Back_Side_Button_G_T__c}  0%, {!Org_Template__c.Back_Side_Button_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Side_Button_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Side_Button_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Side_Button_G_T__c}  0%,{!Org_Template__c.Back_Side_Button_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Side_Button_G_T__c}  0%,{!Org_Template__c.Back_Side_Button_G_B__c} 100%);
+        text-transform: uppercase;
+        border-radius:{!Org_Template__c.Radius_Side_Button__c};
+        -webkit-border-radius:{!Org_Template__c.Radius_Side_Button__c};
+        -moz-border-radius:{!Org_Template__c.Radius_Side_Button__c};
+        color:{!Org_Template__c.Font_Colour_Side_Button__c};
+        font-size:{!Org_Template__c.Font_Size_Side_Button__c};
+        font-weight:{!Org_Template__c.Font_Weight_Side_Button__c};
+        text-transform:{!Org_Template__c.Font_Transform_Side_Button__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Side_Button__c};
+    }
+    .portallefttab{
+        width: 100%;
+        height:30px;
+        margin-bottom:10px;
+        line-height:30px;
+        text-align:center;
+        border-radius:{!Org_Template__c.Radius_Tab__c};
+        -webkit-border-radius:{!Org_Template__c.Radius_Tab__c};
+        -moz-border-radius:{!Org_Template__c.Radius_Tab__c};
+        background: {!Org_Template__c.Back_Tab_A_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Tab_A_G_T__c}  0%, {!Org_Template__c.Back_Tab_A_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Tab_A_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Tab_A_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Tab_A_G_T__c} 0%,{!Org_Template__c.Back_Tab_A_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Tab_A_G_T__c}  0%,{!Org_Template__c.Back_Tab_A_G_B__c} 100%);
+        color:{!Org_Template__c.Font_Colour_Tab_A__c};
+        font-size:{!Org_Template__c.Font_Size_Tab_A__c};
+        font-weight:{!Org_Template__c.Font_Weight_Tab_A__c};
+        text-transform:{!Org_Template__c.Font_Transform_Tab_A__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Tab_A__c};
+    }
+    #classicmode{
+        width:100%;
+        margin: auto;
+    }
+    #portalsearchbox{
+        width:100%;
+        height:20px;
+        margin-top:10px;
+        background:#FFFFFF;
+    }
+    #portalheadertabcontainer{
+        width:572px;
+        height:43px;
+        margin:auto;
+        position:relative;
+        top:-43px;
+    }
+    .portalheadertab{
+        float:right;
+        width:75px;
+        height:30px;
+        position:relative;
+        line-height:30px;
+        text-align:center;
+        right:10px;
+        margin-left:10px;
+        border-radius:{!Org_Template__c.Radius_Tab__c};
+        -webkit-border-radius:{!Org_Template__c.Radius_Tab__c};
+        -moz-border-radius:{!Org_Template__c.Radius_Tab__c};
+        background: {!Org_Template__c.Back_Tab_A_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Tab_A_G_T__c}  0%, {!Org_Template__c.Back_Tab_A_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Tab_A_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Tab_A_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Tab_A_G_T__c} 0%,{!Org_Template__c.Back_Tab_A_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Tab_A_G_T__c}  0%,{!Org_Template__c.Back_Tab_A_G_B__c} 100%);
+        color:{!Org_Template__c.Font_Colour_Tab_A__c};
+        font-size:{!Org_Template__c.Font_Size_Tab_A__c};
+        font-weight:{!Org_Template__c.Font_Weight_Tab_A__c};
+        text-transform:{!Org_Template__c.Font_Transform_Tab_A__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Tab_A__c};
+    }
+    .inactive{
+        color:{!Org_Template__c.Font_Colour_Tab__c};
+        font-size:{!Org_Template__c.Font_Size_Tab__c};
+        font-weight:{!Org_Template__c.Font_Weight_Tab__c};
+        text-transform:{!Org_Template__c.Font_Transform_Tab__c};
+        text-decoration:{!Org_Template__c.Font_Decoration_Tab__c};
+        background: none;
+        background: {!Org_Template__c.Back_Tab_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Tab_G_T__c}  0%, {!Org_Template__c.Back_Tab_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Tab_G_T__c} ), color-stop(100%,{!Org_Template__c.Back_Tab_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Tab_G_T__c} 0%,{!Org_Template__c.Back_Tab_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Tab_G_T__c}  0%,{!Org_Template__c.Back_Tab_G_B__c} 100%);
+    }
+    .configpanel{
+        width:354px;
+        height:818px;
+        padding:10px;
+        display:none;
+        float:left;
+        position:relative;
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        background-color: #E6E6E7;
+        border:1px solid #CCCCCC;
+        border-top:3px solid #747E96;
+        font-size:11px;
+    }
+    #introduction{
+        display:block;
+    }
+    .configcontainer{
+        background:#F2F2F3;
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        width:150px;
+        padding:10px;
+        float:left;
+        margin-top:10px;
+        border:1px solid #CCCCCC;
+    }
+    .wide{
+        width:332px;
+    }
+    .wide .configlabel{
+        width:75px;
+    }
+    .wide .configdata{
+        width:35px;
+    }
+    .first{
+        margin-right:10px;
+    }
+    .configlabel, .configdata{
+        float:left;
+        height:35px;
+        line-height: 22px;
+    }
+    .configlabel{
+        width:65px;
+    }
+    .configdata {
+        width:85px;
+    }
+    .configpanel select, .configpanel input{
+        width:100%;
+        font-size:11px;
+    }
+    .configpanel input{
+        width:50px;
+        height:18px;
+    }
+    .miniColors-triggerWrap{
+        position:relative;
+        top:-1px;
+    }
+    h1{
+        width:100%;
+        float:left;
+        color:#015BA7;
+        margin-bottom:10px;
+        font-weight:normal;
+        font-size:14px;
+    }
+    h2{
+        width:100%;
+        color:#333333;
+        font-size:14px;
+        line-height:20px;
+        float:left;
+    }
+    .configcontainer h1{
+        font-size:11px;
+    }
+    .closepopup{
+        width:36px;
+        position:absolute;
+        right:0px;
+        color:#015BA7;
+        line-height:20px;
+        font-size:11px;
+    }
+    .closepopup:hover{
+        cursor:pointer;
+    }
+
+    .hover2{
+        cursor:pointer;
+        background: #747E96 !important;
+    }
+   
+    
+    .rightsidebar{
+        position:absolute;
+        right:0px;
+    }
+    .bottomtabbar{
+        top:175px;
+    }
+    .slidertop{
+        top:-58px;
+        position:relative;
+    }
+    .bodytabsleft{
+        width:100% !important;
+        height: 423px !important;
+        box-sizing:border-box;
+        -moz-box-sizing:border-box;
+        -webkit-box-sizing:border-box;
+    }
+    .classicactive{
+        background: {!Org_Template__c.Back_Body_G_T__c};
+        background: -moz-linear-gradient(top,  {!Org_Template__c.Back_Body_G_T__c} 0%, {!Org_Template__c.Back_Body_G_B__c} 100%); 
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,{!Org_Template__c.Back_Body_G_T__c}), color-stop(100%,{!Org_Template__c.Back_Body_G_B__c}));
+        background: -webkit-linear-gradient(top,  {!Org_Template__c.Back_Body_G_T__c} 0%,{!Org_Template__c.Back_Body_G_B__c} 100%);
+        background: linear-gradient(to bottom,  {!Org_Template__c.Back_Body_G_T__c} 0%,{!Org_Template__c.Back_Body_G_B__c} 100%); 
+    }
+    #designertitle{
+        width:1114px;
+        font-size:24px;
+        color:#000000;
+        margin:auto;
+        margin-bottom:10px;
+        line-height:26px;
+    }
+    #templateNameInput{
+        font-size:24px;
+        border:0px;
+        outline: none;
+        width:600px;
+        margin:0px;
+        padding-left: 0px;
+    }
+    .savebutton, .deletebutton, .clonebutton, .exportbutton, .backbutton{
+        float:right;
+        line-height:26px;
+        margin-left:20px;
+    }
+    .savebutton:hover, .deletebutton:hover, .clonebutton:hover, .exportbutton:hover, .backbutton:hover{
+        cursor:pointer;
+    }
+    .introtext{
+        height:172px;
+    }
+    #changelog{
+        height:138px;
+    }
+    ul li, ol li {
+        margin-left:0px;
+    }
+    .miniColors-trigger {
+        background-image: url('/resource/SSEPortalResources/styles/images/trigger.png') !important;
+        background-position: 0 0 !important;
+        background-repeat: no-repeat !important;
+    }
+    .wide .configdataimage{
+        width:255px;
+    }
+    .configdata .imagefield{
+        width:185px;
+    }
+    .configdata .imagebutton{
+        width:64px;
+    }
+    .components .configdata input{
+        width: 20px;
+    }
+    .configinfo{
+        width:100%;
+        margin-bottom:10px;
+    }
+    #templateTopText{
+        font-size: .9em;
+        font-weight: bold;
+        color: #4a4a56;
+        padding-left: 43px;
+        width: 1071px;
+        margin:auto;
+    }
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

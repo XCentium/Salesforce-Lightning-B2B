@@ -1,0 +1,81 @@
+<apex:component >
+    <apex:includeScript value="{!URLFOR($Resource.SDO_jqueryui192, '/js/jquery-1.8.3.js')}"/>   
+    <apex:variable var="urlParams" value="e?retURL=/apex/Community_Social_Home"/>
+    <style type="text/css" media="all">
+        @import url("{!$Site.prefix}/apex/Community_Widget_CSS_Override");
+    </style>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log("Quick Create Widget Ready!");
+        });
+    </script>
+    
+    <div class="widget_outer">
+        <div class="widget_inner">
+            <div class="widget_header">
+                <div>Quick Create</div>
+            </div>
+            <div class="widget_body">
+                <ul class="unstyled qcreateUL">                
+                    <li>
+                        <a href="{!$Site.prefix}/001/{!urlParams}" target="_top">
+                            <div style="background-position: 0 -2px; float:left; margin-right: 5px; margin-top: 2px; width: 16px; height: 16px; background-image: url({!$Site.prefix}/img/sprites/master.png);"/>
+                            <div>Account</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{!$Site.prefix}/003/{!urlParams}" target="_top">
+                            <div style="background-position: 0 -82px; float:left; margin-right: 5px; margin-top: 2px; width: 16px; height: 16px; background-image: url({!$Site.prefix}/img/sprites/master.png);"/>
+                            <div>Contact</div>    
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{!$Site.prefix}/00U/{!urlParams}" target="_top">
+                            <div style="background-position: 0 -22px; float:left; margin-right: 5px; margin-top: 2px; width: 16px; height: 16px; background-image: url({!$Site.prefix}/img/sprites/master.png);"/>
+                            <div>Event</div>    
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{!$Site.prefix}/00Q/{!urlParams}" target="_top">
+                            <div style="background-position: 0 -202px; float:left; margin-right: 5px; margin-top: 2px; width: 16px; height: 16px; background-image: url({!$Site.prefix}/img/sprites/master.png);"/>
+                            <div>Lead</div>    
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{!$Site.prefix}/006/{!urlParams}" target="_top">
+                            <div style="background-position: 0 -242px; float:left; margin-right: 5px; margin-top: 2px; width: 16px; height: 16px; background-image: url({!$Site.prefix}/img/sprites/master.png);"/>
+                            <div>Opportunity</div>    
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{!$Site.prefix}/00T/{!urlParams}" target="_top">
+                            <div style="background-position: 0 -342px; float:left; margin-right: 5px; margin-top: 2px; width: 16px; height: 16px; background-image: url({!$Site.prefix}/img/sprites/master.png);"/>
+                            <div>Task</div>    
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{!$Site.prefix}/500/{!urlParams}" target="_top">
+                            <div style="background-position: 0 -2px; float:left; margin-right: 5px; margin-top: 2px; width: 16px; height: 16px; background-image: url({!$Site.prefix}/img/sprites/master.png);"/>
+                            <div>Case</div>    
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="widget_footer">
+            </div>
+        </div>
+    </div>
+    
+    <style>           
+        .qcreateUL {
+            display: block;
+            list-style-type: disc;
+            -webkit-margin-before: 0em;
+            -webkit-margin-after: 0em;
+            -webkit-margin-start: 0px;
+            -webkit-margin-end: 0px;
+            -webkit-padding-start: 00px;
+        }
+    </style>
+</apex:component>

@@ -1,0 +1,4 @@
+<design:component label="Live Agent">
+	<design:attribute name="onlineButtonText" label="Online Chat Button Text" />    
+	<design:attribute name="offlineButtonText" label="Offline Chat Button Text" />
+</design:component>

@@ -1,0 +1,373 @@
+<aura:component controller="LightningProductPricer" implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+
+    <!-- DESIGN ATTRIBUTES -->
+    
+     <aura:attribute type="Boolean" name="autoScroll" default="true" access="global"/>
+     <aura:attribute type="String" name="greenMarginAbove" default="30" access="global"/>
+     <aura:attribute type="String" name="orangeMarginAbove" default="10" access="global"/> 
+   	 <aura:attribute type="Boolean" name="hideMargins" default="false" access="global"/> 
+     <aura:attribute type="Boolean" name="hideSections" default="false" access="global"/>
+     <aura:attribute type="Boolean" name="hideDiscounts" default="false" access="global"/>
+     <aura:attribute type="String" name="headerPosition" default="top" access="global"/>
+     <aura:attribute type="String" name="catalogCustomFilterFields" default="Family" access="global"/>
+     <aura:attribute name="catalogSearchResultImageField" type="String" default="Image__c" access="global"/> 
+     
+     <aura:attribute name="source" type="String" default="default" description="options:default,quickAction,tab"/> 
+
+    
+    <!-- OTHER ATTRIBUTES -->
+    
+      
+	<aura:attribute type="Map" name="marginLimits" default="{green:0.0,orange:0.0}"/>
+    
+    <aura:attribute name="sObjectName" type="String" />
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="pricerGID" type="String" default=""/>
+    <aura:attribute name="oQuote" type="Quote"/>
+    <aura:attribute name="sections" type="List" access="global"/>
+    <aura:attribute name="orgInfo" type="Map"/>
+    <aura:attribute type="String" name="discountScope" default="AllProducts"/>
+    <aura:attribute name="totalPrice" type="decimal"/>
+    <aura:attribute name="totalDiscount" type="Decimal"/>
+    <aura:attribute name="globalMarginPercent" type="Decimal"/>
+    <aura:attribute name="l1ToApply" type="Decimal"/>
+    <aura:attribute name="dealAmountTarget" type="Decimal"/>
+    <aura:attribute type="String" name="discountMethod" default="discount"/>
+    <aura:attribute type="String" name="statsImgSrc_load" default=""/>
+    <aura:attribute type="String" name="statsImgSrc_save" default=""/>
+    <aura:attribute name="focusAndScrollToNewSecAfterRender" type="Boolean" default="false" description=""/>
+	<aura:attribute type="String" name="panelClass" default="flexDisp slds-size--1-of-3 slds-medium-size--2-of-6 slds-large-size--4-of-12"/>
+    <aura:attribute type="String" name="summaryPanelGridLineClass" default="slds-size--1-of-2 slds-medium-size--3-of-6 slds-large-size--6-of-12"/>
+    <aura:attribute type="Boolean" name="isWidthTooSmall" default="false"/>
+	<aura:attribute type="Boolean" name="isFirstRendering" default="true"/>    
+    
+    <aura:registerEvent name="pricerSectionUpdate" type="c:PricerSectionUpdated"/>
+    <aura:registerEvent name="triggerSectionCalculation" type="c:PricerTriggerSectionCalculation"/>
+    <aura:registerEvent name="askPricerToScroll" type="c:PricerScrollEvent"/>
+    <aura:registerEvent name="reloadPricer" type="c:PricerReloadEvent"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    <aura:handler event="c:PricerSectionUpdated" action="{!c.refreshTotals}"/>
+    <aura:handler name="newSectionRequested" event="c:NewSectinRequested" action="{!c.addNewSection}"/>
+    <aura:handler name="askPricerToScroll" event="c:PricerScrollEvent" action="{!c.scrollToLookup}"/>
+    <aura:handler name="render" value="{!this}" action="{!c.onRender}"/> 
+    <aura:handler name="reloadPricer" event="c:PricerReloadEvent" action="{!c.doInit}"/>
+    <aura:handler name="moveLines" event="c:PricerMoveLinesEvent" action="{!c.moveLines}"/>
+    <aura:handler name="openCatalog" event="c:PricerOpenCatalogEvent" action="{!c.openCatalog}"/>
+    <aura:handler event="c:PricerAddProductEvent" action="{!c.handleAddLineEvent}"/>
+    <aura:handler event="c:CatalogSelectProductEvent" action="{!c.handleCatalogSelect}"/>
+    
+    <aura:dependency resource="markup://c:PricerChoosePricebook" />
+    <aura:dependency resource="markup://c:PricerMoveLinesModal" />
+	<aura:dependency resource="markup://c:PricerHelpModal" />
+    <aura:dependency resource="markup://c:PricerCatalogModal" />
+   
+    <div aura:id="gridTopDiv" class="slds">
+      
+        
+    <div class="{!and(v.isWidthTooSmall==false,or(v.sObjectName=='Quote',or(v.sObjectName=='Opportunity',v.sObjectName=='Order')))? '':'slds-hide'}" 
+         style="display: flex; flex-direction: column;">  
+        
+        
+        <aura:if isTrue="{!$Browser.formFactor=='DESKTOP'}">   
+            <div class="slds-grid" style="{!v.headerPosition=='top'?'order:1;':'order:2;'}">
+    
+                <div class="{!v.panelClass+(v.hideDiscounts ? ' slds-hide' : ' ')}">
+                    <lightning:card iconName="action:change_record_type" title="{!$Label.c.PricerDiscountCard}" class="width100 slds-p-horizontal--small slds-m-right_x-small headerBlock">
+    
+                        <div class="slds-grid  slds-wrap slds-grid_pull-padded slds-p-horizontal--small">
+                            <div class="slds-p-horizontal_small slds-size_1-of-1">
+                                <label class="slds-form-element__label" for="">{!$Label.c.PricerTarget}</label>
+                            </div>
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12">
+                                <ui:inputRadio aura:id="r1" name="marginTypeChoice" label="{!' '+$Label.c.Pricer_AllProducts+' '}" change="{!c.scopeSelectorChange}" value="true" text="AllProducts"/>
+    
+                            </div>
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12">
+                                <ui:inputRadio aura:id="r0" name="marginTypeChoice" label="{!' '+$Label.c.Pricer_Selection+' '}" change="{!c.scopeSelectorChange}" text="Selection"/> 
+                            </div>
+                            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_6-of-6 slds-large-size_12-of-12" style="margin-top:10px">
+                                <lightning:select name="select1" label="Action" value="{!v.discountMethod}">
+                                    <option value="discount">{!$Label.c.Pricer_add_discount}</option>
+                                    <option value="target">{!$Label.c.Pricer_Reach_target_amount}</option>
+                                </lightning:select>
+                            </div>
+                            <aura:if isTrue="{!v.discountMethod=='discount'}">  
+                                <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12" style="margin-top:10px">
+                                <label class="slds-form-element__label" for="text-input-01">{!$Label.c.Pricer_Discount}</label>
+                                <div class="slds-form-element__control slds-input-has-fixed-addon">
+                                    <ui:inputNumber class="slds-input centerContent" format="0.## %" value="{!v.l1ToApply}"/>
+    
+                                </div>
+                            	</div>
+                                
+                                <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12" style="margin-top:10px">
+                                	<label class="slds-form-element__label" for="text-input-01">&nbsp;</label>
+                                    <button class="slds-button width100 slds-button--neutral" onclick="{!c.applyDiscount}">{!$Label.c.Pricer_Apply}</button>
+                            	</div>
+                            </aura:if>    
+                            <aura:if isTrue="{!v.discountMethod=='target'}">  
+                                <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12" style="margin-top:10px">
+                                    <label class="slds-form-element__label" for="text-input-01">{!$Label.c.Pricer_TargetAmount}</label>
+                                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                                        <ui:inputCurrency class="slds-input" value="{!v.dealAmountTarget}"/>
+                                    </div>
+                                </div>
+                            
+                                <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12" style="margin-top:10px">
+                                    <label class="slds-form-element__label" for="text-input-01">&nbsp;</label>
+                                    <button class="slds-button width100 slds-button--neutral" onclick="{!c.reachQuoteTarget}">{!$Label.c.Pricer_Apply}</button>
+                                </div> 
+                            </aura:if>    
+ 
+    
+                        </div>
+    
+                    </lightning:card>
+                  
+                </div>
+    
+                <div class="{!v.panelClass +(v.hideSections ? ' slds-hide' : ' ')}">
+                    <lightning:card iconName="action:preview" title="{!$Label.c.Pricer_Sections}" class="width100 headerBlock slds-p-horizontal--small">
+                        <div class="slds-card__body paddedCardBody">
+                            <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                                <c:PricerSummary sections="{!v.sections}"/>
+    
+                            </div>
+                        </div>
+                    </lightning:card>
+                </div>
+    
+                <div class="{!v.panelClass}">
+    
+    
+    
+                  <lightning:card iconName="action:new_opportunity" title="{!$Label.c.PricerGlobalSummary}" class="{!'width100 slds-p-horizontal--small '+(and(v.hideDiscounts,v.hideSections) ? ' headerBlockSmall' : ' headerBlock slds-m-left_x-small')}">
+                    <div class="slds-grid slds-wrap">
+                        <div class="{!v.summaryPanelGridLineClass}">
+                           <div class="slds-p-left--small ">
+                                <div style="margin-bottom: 5px;">{!$Label.c.Pricer_Amount}:</div>
+                                <ui:outputCurrency aura:id="totalPrice" value="{!v.totalPrice}" class="slds-p-left--small slds-text-heading--small"/>
+                            </div>    
+                        </div>
+                        <div class="{!v.summaryPanelGridLineClass}">
+                             <div >
+                                    <div style="margin-bottom: 5px;">{!$Label.c.Pricer_CatalogDiscount}:</div>
+                                    <ui:outputNumber value="{!v.totalDiscount}" format="0.##%" class="slds-p-horizontal--small slds-text-heading--small"/>
+            
+                             </div>    
+                            
+                        </div>    
+                        <div class="{!v.summaryPanelGridLineClass}" style="{!(and(v.hideDiscounts,v.hideSections) ? ' ' : ' padding-top:20px')}">
+                            <div class="{!v.hideMargins?'slds-hide':'slds-p-horizontal--small'}" >
+                                    <div style="margin-bottom: 5px;">{!$Label.c.Pricer_RawMargin}:</div>
+                                    <div class="slds-p-horizontal--small" style="display:flex">
+                                    <ui:outputNumber value="{!v.globalMarginPercent}" format="0.##%" class="slds-text-heading--small"/>
+                                    <div class="{!if(v.globalMarginPercent>=v.marginLimits.green,'circle_green',if(v.globalMarginPercent>=v.marginLimits.orange,'circle_orange','circle_red'))}"></div>
+                                    </div>
+                             </div>    
+                        </div>
+                        <div class="{!v.summaryPanelGridLineClass}" style="{!(and(v.hideDiscounts,v.hideSections) ? ' ' : ' padding-top:20px;')+' '}">
+                           <div aura:id="saveBtnGrp" style="margin-top:10px"> 
+                                <lightning:buttonGroup >
+                                    <lightning:button variant="brand" label="{!$Label.c.Pricer_Save}" onclick="{!c.save}"/>
+                                    <lightning:buttonMenu variant="brand" alternativeText="Show menu" class="slds-button_last slds-button_brand btnBrandDropDown" menuAlignment="right" onselect="{!c.BtnGrpSelect}">
+                                        <lightning:menuItem label="{!$Label.c.Pricer_Reload}" value="reloadPricer" />
+                                        <lightning:menuItem label="{!$Label.c.Pricer_Change_Pricebook}" value="choosePricebook"/>
+                                        <lightning:menuItem label="{!$Label.c.Pricer_Help}" value="help"/>
+                                    </lightning:buttonMenu>
+                                </lightning:buttonGroup> 
+                            </div>
+                            <div aura:id="savingSpinner" class="savingInProgress slds-hide" style="margin-top:20px"> 
+                                <lightning:spinner alternativeText="Saving" /> 
+                            </div> 
+                        </div>
+                        <div>
+                        
+                        </div>
+                    
+                    </div>
+    
+            
+    
+       
+    
+                  </lightning:card>
+            </div>
+          </div>
+        <div aura:id="desktopSectionsContainer" class="slds-grid slds-wrap slds-grid--pull-padded" style="{!v.headerPosition=='top'?'order:2;':'order:1;'}">
+            <div class="{!$Browser.formFactor!='DESKTOP'?' slds-size--1-of-1':'slds-p-horizontal--small slds-size--1-of-1'}">
+                <div class="panel-group" id="accordion" style="margin-top:20px;">
+                    <div class="panel panel-default" aura:id="secContainer">
+                        <aura:iteration items="{!v.sections}" var="section" indexVar="sectionIndex">
+                            <c:PricerSection aura:id="PricerSection" section="{!section}" sectionIndex="{!sectionIndex}" sObjectName="{!v.sObjectName}" recordId="{!v.recordId}" orgInfo="{!v.orgInfo}" hideMargins="{!v.hideMargins}" hideSections="{!v.hideSections}" hideDiscounts="{!v.hideDiscounts}" marginLimits="{!v.marginLimits}"/>
+                        </aura:iteration>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>    
+ 	  </aura:if>
+      <aura:if isTrue="{!$Browser.formFactor!='DESKTOP'}"> 
+        <div>
+           <div aura:id="scroller" class="{!v.source=='quickAction'?'scroller scrollerForQuickAction':'scroller'}"> 
+            <div class="{!v.source=='quickAction'?'mobileHeader':'slds-hide'}">
+                <div style="flex: 1 1 0%;">
+                    <div style="{!$Browser.formFactor=='TABLET'?'padding-left:15px':''}">
+                    <lightning:buttonIcon iconName="utility:back" size="large"  variant="bare" onclick="{! c.handleMobileBackClick }" alternativeText="back" />
+                    </div>    
+                </div>   
+            </div>
+               
+            <div class="mobileFooter slds-hide">
+                <div style="flex: 1 1 0%;">
+                    <div style="{!$Browser.formFactor=='TABLET'?'padding-left:15px':''}">
+                    <lightning:buttonIcon iconName="utility:back" size="large"  variant="bare" onclick="{! c.handleMobileBackClick }" alternativeText="back" />
+                    </div>    
+                </div>
+            </div>   
+               
+          
+            <div class="scrollerContent">
+            <div class="mobileSummary" style="{!v.source=='quickAction'?'margin-top: 65px;':'margin-top: 15px;'}">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem  size="6">
+                    <div class="slds-p-left--small " style="margin-bottom:10px">
+                        <div style="margin-bottom: 5px;">{!$Label.c.Pricer_Amount}:</div>
+                        <ui:outputCurrency aura:id="totalPrice" value="{!v.totalPrice}" class="slds-p-left--small slds-text-heading--small"/>
+                    </div>  
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="left-small" size="6">
+                    <div style="margin-bottom:10px">
+                        <div style="margin-bottom: 5px;">{!$Label.c.Pricer_CatalogDiscount}:</div>
+                        <ui:outputNumber value="{!v.totalDiscount}" format="0.##%" class="slds-p-horizontal--small slds-text-heading--small"/>
+                    </div> 
+                </lightning:layoutItem>    
+                <lightning:layoutItem  size="6">
+                    <div class="{!v.hideMargins?'slds-hide':'slds-p-horizontal--small'}" >
+                        <div style="margin-bottom: 5px;">{!$Label.c.Pricer_RawMargin}:</div>
+                        <div class="slds-p-horizontal--small" style="display:flex">
+                            <ui:outputNumber value="{!v.globalMarginPercent}" format="0.##%" class="slds-text-heading--small"/>
+                            <div class="{!if(v.globalMarginPercent>=v.marginLimits.green,'circle_green',if(v.globalMarginPercent>=v.marginLimits.orange,'circle_orange','circle_red'))}"></div>
+                        </div>
+                     </div>  
+                </lightning:layoutItem>  
+                <lightning:layoutItem  size="6">
+                   <div aura:id="saveBtnGrp" style="margin-top:10px"> 
+                       <lightning:buttonGroup >
+                           <lightning:button variant="brand" label="{!$Label.c.Pricer_Save}" onclick="{!c.save}" class="height40px"/>
+                           <lightning:buttonMenu alternativeText="Show menu" class="slds-button_last slds-button_brand btnBrandDropDown ddmenu height40px" menuAlignment="right" onselect="{!c.BtnGrpSelect}">
+                               <lightning:menuItem label="{!$Label.c.Pricer_Global_Discounts}" value="distriDiscount" /> 
+                               <lightning:menuItem label="{!$Label.c.Pricer_Reload}" value="reloadPricer" />
+                               <lightning:menuItem label="{!$Label.c.Pricer_Change_Pricebook}" value="choosePricebook"/>
+                               <lightning:menuItem label="{!$Label.c.Pricer_Go_to_record}" value="navToRecord" class="{!v.source=='tab'?'':'slds-hide'}"/>
+                               <lightning:menuItem label="{!$Label.c.Pricer_quit_pricer}" value="quit" class="{!v.source=='tab'?'':'slds-hide'}"/>
+                               <lightning:menuItem label="{!$Label.c.Pricer_Help}" value="help"/>
+                           </lightning:buttonMenu>
+                       </lightning:buttonGroup> 
+                    </div>
+                    <div aura:id="savingSpinner" class="savingInProgress slds-hide" style="margin-top:20px"> 
+                        <lightning:spinner alternativeText="Saving" /> 
+                    </div> 
+                </lightning:layoutItem>    
+            </lightning:layout>  
+            </div>
+      
+        <div class="slds-grid slds-wrap" style="{!v.headerPosition=='top'?'order:2;':'order:1;'}">
+            <div class="{!$Browser.formFactor!='DESKTOP'?' slds-size--1-of-1':'slds-p-horizontal--small slds-size--1-of-1'}">
+                <div class="panel-group" id="accordion" style="margin-top:20px;">
+                    <div class="panel panel-default" aura:id="secContainer">
+                        <aura:iteration items="{!v.sections}" var="section" indexVar="sectionIndex">
+                            <c:PricerSection aura:id="PricerSection" section="{!section}" sectionIndex="{!sectionIndex}" sObjectName="{!v.sObjectName}" recordId="{!v.recordId}" orgInfo="{!v.orgInfo}" hideMargins="{!v.hideMargins}" hideSections="{!v.hideSections}" hideDiscounts="{!v.hideDiscounts}" marginLimits="{!v.marginLimits}"/>
+                        </aura:iteration>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+       </div>       
+       </div>
+            
+        <div aura:id="distributeModal" role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal">
+                 <div class="slds-modal__container">
+                     <div class="slds-modal__header">
+                        <lightning:buttonicon iconName="utility:close" size="large" alternativeText="icon" class="slds-modal__close" variant="bare-inverse" onclick="{!c.hideDistriModal}"/>
+                        <h2 id="header43" class="slds-text-heading--medium"></h2>
+                      </div>
+                      <div class="slds-modal__content slds-p-around--medium">  
+
+        					<div class="slds-grid  slds-wrap slds-grid_pull-padded slds-p-horizontal--small">
+                            <div class="slds-p-horizontal_small slds-size_1-of-1">
+                                <label class="slds-form-element__label" for="">{!$Label.c.PricerTarget}</label>
+                            </div>
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12">
+                                <ui:inputRadio aura:id="r1" name="marginTypeChoice" label="{!' '+$Label.c.Pricer_AllProducts+' '}" change="{!c.scopeSelectorChange}" value="true" text="AllProducts"/>
+    
+                            </div>
+                            <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12">
+                                <ui:inputRadio aura:id="r0" name="marginTypeChoice" label="{!' '+$Label.c.Pricer_Selection+' '}" change="{!c.scopeSelectorChange}" text="Selection"/> 
+                            </div>
+                            <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_6-of-6 slds-large-size_12-of-12" style="margin-top:10px">
+                                <lightning:select name="select1" label="Action" value="{!v.discountMethod}">
+                                    <option value="discount">{!$Label.c.Pricer_add_discount}</option>
+                                    <option value="target">{!$Label.c.Pricer_Reach_target_amount}</option>
+                                </lightning:select>
+                            </div>
+                            <aura:if isTrue="{!v.discountMethod=='discount'}">  
+                                <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12" style="margin-top:10px">
+                                <label class="slds-form-element__label" for="text-input-01">{!$Label.c.Pricer_Discount}</label>
+                                <div class="slds-form-element__control slds-input-has-fixed-addon">
+                                    <ui:inputNumber class="slds-input centerContent" format="0.## %" value="{!v.l1ToApply}"/>
+    
+                                </div>
+                            	</div>
+                                
+                                <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12" style="margin-top:10px">
+                                	<label class="slds-form-element__label" for="text-input-01">&nbsp;</label>
+                                    <button class="slds-button width100 slds-button--neutral" onclick="{!c.applyDiscount}">{!$Label.c.Pricer_Apply}</button>
+                            	</div>
+                            </aura:if>    
+                            <aura:if isTrue="{!v.discountMethod=='target'}">  
+                                <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12" style="margin-top:10px">
+                                    <label class="slds-form-element__label" for="text-input-01">{!$Label.c.Pricer_TargetAmount}</label>
+                                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                                        <ui:inputCurrency class="slds-input" value="{!v.dealAmountTarget}"/>
+                                    </div>
+                                </div>
+                            
+                                <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_3-of-6 slds-large-size_6-of-12" style="margin-top:10px">
+                                    <label class="slds-form-element__label" for="text-input-01">&nbsp;</label>
+                                    <button class="slds-button width100 slds-button--neutral" onclick="{!c.reachQuoteTarget}">{!$Label.c.Pricer_Apply}</button>
+                                </div> 
+                            </aura:if>    
+                        </div>	                          
+                     </div>
+                     <div class="slds-modal__footer">
+                     </div>
+                 </div>
+               </div>
+          <div aura:id="distributeModalGreyzone" class="slds-backdrop"></div>     
+            
+		</div>   
+     </aura:if>    
+        
+  </div>
+	
+  <div class="{!or(v.sObjectName=='Quote',or(v.sObjectName=='Opportunity',v.sObjectName=='Order'))?'slds-hide':''}">  
+      <div class="slds-text-color_error slds-text-heading_medium" style="background:white"><b>This component can only be run on standard Opportunity, Quote or Order objects</b></div>    
+  </div>
+  <div aura:id="isWidthTooSmallDiv" class="{!v.isWidthTooSmall?'':'slds-hide'}" style="width:100%">
+    <div class="slds-text-color_error slds-text-heading_medium" style="background:white;width:100%"><b>Container is too small for the pricer component to display nicely!</b></div>    
+  </div>      
+        
+  <div>
+        <img src="{!v.statsImgSrc_load}" style="height:1px;width:1px;border:0;position:absolute; visibility:hidden;"/> 
+      	<img src="{!v.statsImgSrc_save}" style="height:1px;width:1px;border:0;position:absolute; visibility:hidden;"/> 
+  </div>   
+
+  <div aura:id="modalArea" class="slds-p-bottom_small"></div>      
+</div>
+</aura:component>

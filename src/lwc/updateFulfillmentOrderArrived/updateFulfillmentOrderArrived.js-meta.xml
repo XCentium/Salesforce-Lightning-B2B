@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Update Fulfillment Order to Arrived</masterLabel>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+           
+            <property name="encryptedToken" type="String" label="Encrypted Token" required="true"
+            default="{!orderToken}"
+            description="Url Parameter merge field for the encrypted token value" />
+
+            <property name="successMessage" type="String" label="Success Message" required="true"
+            default="Order updated successfully! Your item will be out shortly!"
+            description="Message to display when order update is successful." />
+
+            <property name="failureMessage" type="String" label="Failure Message" required="true"
+            default="There was an issue updating your order. Please contact support."
+            description="Message to display when order update fails." />
+
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

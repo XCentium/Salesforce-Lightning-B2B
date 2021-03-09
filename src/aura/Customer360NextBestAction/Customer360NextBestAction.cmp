@@ -1,0 +1,95 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="title" type="String" access="global"></aura:attribute>
+    <aura:attribute name="icon" type="String" access="global"></aura:attribute>
+	<aura:attribute name="iconColor" type="String" access="global" default="#0070d2"></aura:attribute>    
+    <aura:attribute name="action1" type="String" access="global" default=""></aura:attribute>
+    <aura:attribute name="action2" type="String" access="global" default=""></aura:attribute>
+    <aura:attribute name="action3" type="String" access="global" default=""></aura:attribute>
+    <aura:attribute name="message1" type="String" access="global" default=""></aura:attribute>
+    <aura:attribute name="message2" type="String" access="global" default=""></aura:attribute>
+    <aura:attribute name="message3" type="String" access="global" default=""></aura:attribute>
+    <aura:attribute name="strength1" type="String" access="global" default=""></aura:attribute>
+    <aura:attribute name="strength2" type="String" access="global" default=""></aura:attribute>
+    <aura:attribute name="strength3" type="String" access="global" default=""></aura:attribute>
+	<aura:attribute name="collapsed" type="Boolean" access="global" default="false"></aura:attribute>    
+    <aura:attribute name="width" type="String"/>
+    <aura:attribute name="size"  type="String"/>
+    <lightning:flexipageRegionInfo width="{!v.width}"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:registerEvent name="acceptAllEvent" type="c:acceptAllEvent"/>
+    <aura:registerEvent name="rejectAllEvent" type="c:rejectAllEvent"/>
+    
+
+    <lightning:card class="card" aura:id="card" >
+        
+    	<aura:set attribute="title">
+        	
+            <a class="no-underline">
+            <div class= "slds-media slds-media_center " onclick="{!c.collapse}"  >                
+                <div class = "slds-media_figure">
+                    <aura:if isTrue="{!not(v.collapsed)}">
+                        <lightning:icon iconName="utility:chevrondown" size="x-small"></lightning:icon>
+                        <aura:set attribute="else">
+                            <lightning:icon iconName="utility:chevronright" size="x-small"></lightning:icon>
+                        </aura:set>
+            		</aura:if>
+                    <div class="slds-icon_container slds-m-left_x-small" style = "{! 'background-color:' + v.iconColor + ';'}" >
+                        <lightning:icon iconName="{!v.icon}" size="medium" class="einstein-icon"></lightning:icon> 
+                        
+                    </div>
+                </div>
+                <div class = "slds-media_body slds-m-left_small">                    
+                    <span class ="slds-text-heading_small slds-truncate slds-has-flexi-truncate" style="font-weight:bold;">{!v.title}</span>                    
+                </div>
+            </div>
+            </a>    
+        </aura:set>    
+        
+        <aura:if isTrue="{!not(v.collapsed)}">
+        	<lightning:layout horizontalAlign="" multipleRows="true" verticalAlign="stretch" class="slds-has-flexi-truncate slds-p-horizontal_xx-small">
+                <aura:if isTrue = "{!v.action1}">
+                	<lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="{!v.size}">
+                        <c:NextBestActionItem strength="{!v.strength1}" 
+                                              title="{!v.action1}" 
+                                              message="{!v.message1}"
+                                              action="Add"
+                                              action2="No Thanks">
+                        </c:NextBestActionItem>
+                    </lightning:layoutItem>
+                </aura:if>
+                <aura:if isTrue = "{!v.action2}">
+                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="{!v.size}">
+                        <c:NextBestActionItem strength="{!v.strength2}" 
+                                              title="{!v.action2}" 
+                                              message="{!v.message2}"
+                                              action="Add"
+                                              action2="No Thanks">
+                        </c:NextBestActionItem>
+                    </lightning:layoutItem>
+                </aura:if>    
+                <aura:if isTrue = "{!v.action3}">
+                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="{!v.size}">
+                        <c:NextBestActionItem strength="{!v.strength3}" 
+                                              title="{!v.action3}" 
+                                              message="{!v.message3}"
+                                              action="Add"
+                                              action2="No Thanks">
+                        </c:NextBestActionItem>
+                    </lightning:layoutItem>
+                </aura:if>
+            </lightning:layout>
+            
+            
+        </aura:if>
+        
+        <aura:set attribute="actions">
+            <aura:if isTrue="{!not(v.collapsed)}">
+            	<lightning:button label="Add All"  variant="neutral" onclick="{!c.acceptAll}" ></lightning:button>                
+            </aura:if>    
+        </aura:set>
+        
+        
+	</lightning:card>	
+</aura:component>

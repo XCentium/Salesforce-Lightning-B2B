@@ -1,0 +1,32 @@
+<!--
+ - Created by brandon.rogers on 4/1/20.
+ -->
+
+<apex:component id="ckz_PDP_Sellers">
+    <script id="CKZ-ProductDetail-Sellers" type="text/template">
+        <div class="row">
+            {{#each this.pageData.product.sellerPrices}}
+            <div class="col-sm-3">
+                <div class="panel panel-default text-center">
+                    <div class="panel-body">
+                        <a href="javascript:void(0);" class="seller-link cc_seller_link" data-selid="{{this.sellerID}}">
+                            <img alt="" class="media-object cc_media-object img-responsive" src="{{fallbackSrc (pdp-seller-field 'logo' this.sellerID ../pageData.sellers)}}"/>
+                        </a>
+                        <span class="cc_price">{{price this.price}}</span>
+                        <p class="cc_seller_name">{{pdp-seller-field 'sfdcName' this.sellerID ../pageData.sellers}}</p>
+                        {{#ifDisplay 'PD.dspladdcart'}}
+                        <button class="btn btn-default btn-sm addItem cc_add_item" data-id="{{../pageData.product.prodBean.id}}" data-selid="{{this.sellerID}}">{{pageLabelMap 'ProductDetail_AddToCart'}}</button>
+                        {{/ifDisplay}}
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            CCRZ.uiProperties.sellerSectionView.desktop.tmpl = 'CKZ-ProductDetail-Sellers';
+        });
+    </script>
+</apex:component>

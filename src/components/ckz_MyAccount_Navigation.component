@@ -1,0 +1,92 @@
+<!--
+ - Created by brandon.rogers on 1/24/19.
+ -->
+
+<apex:component id="ckz_MyAccount_Navigation" controller="ckz_ctrl_MyAccount_Navigation">
+
+    <script id="CKZ-MyAccount-Nav-Desktop" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_nav m-t-1">
+
+            <div class="ckz_MyAccountCard card">
+                <div class="cardheader"></div>
+
+                <div id="userInfo" class="avatar"></div>
+
+                <div id="contactInfo" class="info"></div>
+            </div>
+
+
+            <ul class="side_navigation_dropdown list-group cc_myaccount_nav_list" id="side_nav">
+                {{#each this}}
+                <li class="acctStep{{this.index}} acctStepNav list-group-item cc_acc_step_nav">
+                    <a href="#" class="gotoSection cc_goto_section d-block" data-index="{{this.index}}">
+                        {{{pageLabelMap this.title}}}
+                        <span class="pull-right">
+                            <i class="fa fa-angle-right" aria-hidden="true"></i>
+                        </span>
+                    </a>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </script>
+
+    <!-- USER INFO TEMPLATE -->
+    <script id="cc_tmpl_userInfo" type="text/x-handlebars-template">
+        {{#each_upto this 1}}
+            <img alt="" src="{{FullPhotoUrl}}"/>
+        {{/each_upto}}
+    </script>
+
+    <!-- CONTACT INFO TEMPLATE -->
+    <script id="cc_tmpl_contactInfo" type="text/x-handlebars-template">
+        {{#each_upto this 1}}
+            <div class="contactName title">{{Name}}</div>
+
+            <!--<div class="desc">
+                {{#if Title}}
+                    <p class="m-b-0">{{Title}}</p>
+                {{/if}}
+
+                <p class="small">{{Phone}}</p>
+
+                <div>
+                    <b>{{pageLabelMap 'MyAccountNav_ContactMailingAddress'}}</b>
+                </div>
+                <div>{{MailingAddress.street}}</div>
+                <div>{{MailingAddress.city}}, {{MailingAddress.state}} {{MailingAddress.postalCode}}</div>
+                <div>{{MailingAddress.country}}</div>
+            </div>-->
+        {{/each_upto}}
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.myAccountNavView.desktop.tmpl = 'CKZ-MyAccount-Nav-Desktop';
+
+            CCRZ.pubSub.on('view:myAccountNavView:refresh', function () {
+                console.log("myAccountNavView: refresh");
+
+                //RENDER USER INFO
+                var userInfo = {!userInfoJSON};
+                console.log("userInfo: " + JSON.stringify(userInfo));
+
+                var userInfoSource = $("#cc_tmpl_userInfo").html();
+                var userInfoTemplate = Handlebars.compile(userInfoSource);
+                var userInfoContext = userInfo;
+                var userInfoHtml = userInfoTemplate(userInfoContext);
+                $("#userInfo").html(userInfoHtml);
+
+                //RENDER CONTACT INFO
+                var contactInfo = {!contactInfoJSON};
+                console.log("contactInfo: " + JSON.stringify(contactInfo));
+
+                var contactInfoSource = $("#cc_tmpl_contactInfo").html();
+                var contactInfoTemplate = Handlebars.compile(contactInfoSource);
+                var contactInfoContext = contactInfo;
+                var contactInfoHtml = contactInfoTemplate(contactInfoContext);
+                $("#contactInfo").html(contactInfoHtml);
+            });
+        });
+    </script>
+</apex:component>

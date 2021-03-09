@@ -1,0 +1,672 @@
+<apex:page showHeader="false" sidebar="false" standardController="order" extensions="SDO_CatalogCheckout" standardStylesheets="false">
+	<head>
+	<script type="text/javascript">
+    	var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <apex:stylesheet value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/css/bootstrap.min.css')}"/>
+    <style>
+    	body {
+    		margin:15px;
+    	}
+    	*{
+    		margin:0px;
+    	}
+    	html *
+	    {
+	       /*font-family:Arial,Helvetica,sans-serif !important;*/
+	       
+	    }
+	    .my-font{
+	    	font-family:'Helvetica Neue',Helvetica,Arial,sans-serif !important;
+	    }
+    	html,body{
+    		height:100%;
+    	}
+    	.shoppingCart{
+    	}
+    	.shoppingCart:after {
+		  content: "";
+		  display: block;
+		}
+
+    	.shopping-cart-item{
+		}
+		.line-image{
+		  height:50px;
+		}
+		.shopping-cart-item a{
+		  position: relative;
+		  font-size: 12px;
+		  top: 17px;
+		  white-space: nowrap;
+		}
+		.price{
+			float: right;
+			position: relative;
+		  font-size: 12px;
+		  top: 17px;
+		  white-space: nowrap;
+		}
+		.line-qty{
+			width:40px;
+			display:inline;
+			position: relative;
+		  font-size: 12px;
+		  top: 14px;
+		}
+		.glyphicon-remove {
+			margin-left:10px;
+			cursor:pointer;
+			position: relative;
+		  font-size: 12px;
+		  top: 19px;
+		}
+		.table{
+			width:100%;
+		}
+		td{
+			border-top:0px !important;
+		}
+		.product-item h3 a {
+			text-transform: none;
+		}
+		.shopping-cart-footer,.shoppingCart:after{
+				  height: 38px;
+				  
+		}
+		.shopping-cart-footer{
+			position: fixed;
+			  bottom: 0;
+			  background: white;
+			  width: 100%;
+		}
+		
+		.total-wrapper {
+			font-weight:bold;
+			margin-top: 12px;
+			  white-space: nowrap;
+		}
+		.green-btn{
+		  font-size: 15px;
+		  border-radius: 5px !important;
+		  padding: 7px 6px;
+		  background: #87ae2e;
+		  border-color: #87ae2e;
+		  color: white;
+		  position: relative;
+		  top:10px;
+		  left: 10px;
+		}
+
+		.glyphicon-ok {
+		  margin-right: 15px;
+		  padding: 5px;
+		  border-radius: 20px;
+		  border: 3px solid;
+		  color: #aaa;
+		}
+		.form-inline {
+			margin:10px;
+		}
+		.searchresults{
+			min-height: 200px;
+			max-height: 500px;
+  			overflow-y: auto;
+		}
+		#businesssAccountCreate{
+			display:none;
+		}
+		#personalAccountCreate{
+			display:none;
+		}
+		#businesssAccountCreate, #businesssAccountSearch, #businesssContactSearch {
+			display:none;
+		}
+		.green-btn{
+		  font-size: 15px;
+		  border-radius: 5px !important;
+		  padding: 7px 6px;
+		  background: #87ae2e;
+		  border-color: #87ae2e;
+		  color: white;
+		  position: relative;
+		  top:10px;
+		  left: 10px;
+      	  cursor:pointer;
+		}
+    </style>
+    </head>
+    <body>
+    <apex:form >
+	    <apex:actionFunction name="pSearch" action="{!pSearch}" reRender="pResults,errorMessage">
+	    	<apex:param assignTo="{!pNameQuery}" name="pNameQuery" value=""/>
+	    	<apex:param assignTo="{!pEmailQuery}" name="pEmailQuery" value=""/>
+	    </apex:actionFunction>
+	    <apex:actionFunction name="bSearch" action="{!bSearch}" reRender="bAccountList,bResults,errorMessage">
+	    	<apex:param assignTo="{!bNameQuery}" name="pNameQuery" value=""/>
+	    	<apex:param assignTo="{!bNumberQuery}" name="pEmailQuery" value=""/>
+	    </apex:actionFunction>
+	    <apex:actionFunction name="setBusinessAccount" action="{!bAccount}" reRender="bAccount,errorMessage">
+	    	<apex:param assignTo="{!bAccountId}" name="bAccountId" value=""/>
+	    </apex:actionFunction>
+	    <apex:actionFunction name="setPersonAccount" action="{!pAccount}" reRender="pAccount,errorMessage,bContactResults">
+	    	<apex:param assignTo="{!pAccountId}" name="pAccountId" value=""/>
+	    </apex:actionFunction>
+	    <apex:actionFunction name="createBusinessAccount" action="{!createBusinessAccount}" rerender="bAccount,bContactResults">
+		</apex:actionFunction>
+		<apex:actionFunction name="bContactSearch" action="{!bContactSearch}" reRender="bContactResults,errorMessage">
+	    	<apex:param assignTo="{!bContactName}" name="bContactName" value=""/>
+	    	<apex:param assignTo="{!bContactEmail}" name="bContactEmail" value=""/>
+	    </apex:actionFunction>
+	    <apex:actionFunction name="bContact2" action="{!bContact}" reRender="ContactInfo">
+	    	<apex:param assignTo="{!bContactId}" name="bContactId" value=""/>
+	    </apex:actionFunction>
+
+	    <apex:outputPanel id="errorMessage" rendered="{!errorMessage != null}">
+			<div class="alert alert-danger" role="alert">{!errorMessage}</div>
+	    </apex:outputPanel>
+
+		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		  
+		  <div class="panel panel-default">
+		    <div class="panel-heading" role="tab" id="headingOne">
+		      <h4 class="panel-title">
+		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+		          <span class="glyphicon glyphicon-ok"></span>Account Identification
+		        </a>
+		      </h4>
+		    </div>
+		    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+		      <div class="panel-body">
+		        <div>
+					  <!-- Nav tabs -->
+					  <ul class="nav nav-tabs" role="tablist">
+					    <li role="presentation" class="active"><a href="#business" aria-controls="business" role="tab" data-toggle="tab">Business</a></li>
+					    <li role="presentation"><a href="#personal" aria-controls="personal" role="tab" data-toggle="tab">Personal</a></li>
+					  </ul>
+
+					  <!-- Tab panes -->
+					  <div class="tab-content">
+						  <div role="tabpanel" class="tab-pane active" id="business">
+						    <!-- selected bAccount -->
+							<apex:outputPanel rendered="{!order.AccountId != null}" id="bAccount">
+								<div class="panel panel-default" style="margin:10px;">
+								  <div class="panel-heading">
+								    <h3 style="display: inline-block;margin-right: 20px;" class="panel-title">Selected Account</h3>
+								    <div class="btn btn-default" style="display:inline-block;" onclick="$('#businesssAccountCreate').hide();$('#businesssAccountSearch').show();">Edit</div>
+								  </div>
+								  <div class="panel-body">
+								    <table class="table">
+									<th>Account Name</th>
+									<th>Account Number</th>
+									<th>Street</th>
+									<th>City</th>
+									<th>State/Province</th>
+									<th>Zip/Postal Code</th>
+									<tbody>
+										<tr>
+											<td>{!order.account.name}</td>
+											<td>{!order.account.accountnumber}</td>
+											<td>{!order.account.billingstreet}</td>
+											<td>{!order.account.billingcity}</td>
+											<td>{!order.account.billingstate}</td>
+											<td>{!order.account.billingpostalcode}</td>
+										</tr>
+									</tbody>
+								</table>
+								  </div>
+								</div>
+							</apex:outputPanel>
+							
+
+								<div id="businesssAccountCreate" class="panel panel-default" style="margin:10px;">
+	  								<div class="panel-heading">
+									    <h3 class="panel-title">New Account</h3>
+									  </div>
+	  								<div class="panel-body">
+										<div class="form-group">
+											<label for="exampleInputPassword1">Account Name</label>
+											<!-- <apex:inputField value="{!newAccount.name}"/> -->
+											<input type="text" class="form-control" id="bAccountName2"/>
+										</div>
+										<div class="btn btn-primary" onclick="createAccount();$('#businesssAccountCreate').hide();$('#businesssAccountSearch').show();">Create Account</div>
+										<div class="btn btn-default" onclick="$('#businesssAccountCreate').hide();$('#businesssAccountSearch').show();">Back</div>
+	  								</div>
+								</div>
+								<div id="businesssAccountSearch" class="panel panel-default" style="margin:10px;">
+	  								<div class="panel-body">
+									    <!-- Business form -->
+								    	<div class="form-inline">
+										  <div class="form-group">
+										    <input type="text" class="form-control" id="bAccountName" placeholder="Account Name"/>
+										  </div>
+										  <div class="form-group">
+										    <input type="text" class="form-control" id="bAccountNumber" placeholder="Account Number"/>
+										  </div>
+										  <button onclick="businessSearch();$('#businesssAccountCreate').hide();$('#businesssAccountSearch').show();" id="pSearch" type="button" class="btn green-btn">Search</button>
+										  <button onclick="$('#businesssAccountCreate').show();$('#businesssAccountSearch').hide();" id="bCreateAccount" type="button" class="bCreateAccountBtn btn btn-default">Create Account</button>
+										</div>
+										
+										<!-- business search results -->
+										<div class="searchresults">
+										<apex:outputPanel id="bResults">
+											<table class="table">
+												<th></th>
+												<th>Account Name</th>
+												<th>Account Number</th>
+												<th>Street</th>
+												<th>City</th>
+												<th>State/Province</th>
+												<th>Zip/Postal Code</th>
+												<tbody>
+													<apex:repeat id="bAccountList" value="{!bAccountResults}" var="a">
+													<tr>
+													<td>
+													<a href="#" onclick="checkBusinessAccount('{!a.id}');">use</a>
+													</td>
+													<td>{!a.name}</td>
+													<td>{!a.accountnumber}</td>
+													<td>{!a.billingstreet}</td>
+													<td>{!a.billingcity}</td>
+													<td>{!a.billingstate}</td>
+													<td>{!a.billingpostalcode}</td>
+													</tr>
+													</apex:repeat>
+												</tbody>
+											</table>
+										</apex:outputPanel>
+								  	
+								  </div>
+								  </div>
+							  </div>
+							  <!--END  Business search results -->
+							 <!--attach account info -->
+
+
+					    	</div>
+
+
+					    	<!-- personal search tab -->
+						    <div role="tabpanel" class="tab-pane" id="personal">
+						    	
+						    	<div id="personalAccountCreate" class="panel panel-default" style="margin:10px;">
+  								<div class="panel-heading">
+								    <h3 class="panel-title">New Account</h3>
+								  </div>
+  								<div class="panel-body">
+									<div class="form-group">
+										<label for="exampleInputPassword1">Account Name</label>
+										<!-- <apex:inputField value="{!newAccount.name}"/> -->
+										<input type="text" class="form-control" id="pAccountName"/>
+									</div>
+									<div class="btn btn-primary" onclick="createAccount();$('#personalAccountCreate').hide();$('#personalAccountSearch').show();">Create Account</div>
+									<div class="btn btn-default" onclick="$('#personalAccountCreate').hide();$('#personalAccountSearch').show();">Back</div>
+  								</div>
+							</div>
+						    	<div id="personalAccountSearch">
+						    	<!-- personal form -->
+						    	<div class="form-inline">
+								  <div class="form-group">
+								    <input type="text" class="form-control" id="pAccountName" placeholder="Account Name"/>
+								  </div>
+								  <div class="form-group">
+								    <input type="text" class="form-control" id="pAccountEmail" placeholder="Account Email"/>
+								  </div>
+								  <button onclick="personSearch();" id="bSearch" type="button" class="btn green-btn">Search</button>
+								  <button id="bCreateContact" type="button" class="btn btn-default" onclick="$('#personalAccountCreate').show();$('#personalAccountSearch').hide();">Create Account</button>
+								</div>
+								<!-- business search results -->
+								<div class="searchresults">
+								  		<!-- selected pAccount -->
+										<apex:outputPanel rendered="{!personAccount != null}" id="pAccount">
+											<table class="table">
+												<th>Account Name</th>
+												<th>Account Number</th>
+												<th>Street</th>
+												<th>City</th>
+												<th>State/Province</th>
+												<th>Zip/Postal Code</th>
+												<tbody>
+													<tr>
+													<td>{!personAccount.name}</td>
+													<td>{!personAccount.accountnumber}</td>
+													<td>{!personAccount.billingstreet}</td>
+													<td>{!personAccount.billingcity}</td>
+													<td>{!personAccount.billingstate}</td>
+													<td>{!personAccount.billingpostalcode}</td>
+													</tr>
+												</tbody>
+											</table>
+										</apex:outputPanel>
+							  			<apex:outputPanel id="pResults">
+							  				<table class="table">
+									  			<th></th>
+									  			<th>Account Name</th>
+									  			<th>Account Number</th>
+									  			<th>Street</th>
+									  			<th>City</th>
+									  			<th>State/Province</th>
+									  			<th>Zip/Postal Code</th>
+									  			<tbody>
+											  		<apex:repeat value="{!pAccountResults}" var="a">
+											  			<tr>
+											  				<td>
+										  						<a href="#" onclick="checkPersonAccount('{!a.id}');">use</a>
+											  				</td>
+											  				<td>{!a.name}</td>
+											  				<td>{!a.accountnumber}</td>
+											  				<td>{!a.billingstreet}</td>
+											  				<td>{!a.billingcity}</td>
+											  				<td>{!a.billingstate}</td>
+											  				<td>{!a.billingpostalcode}</td>
+											  			</tr>
+											  		</apex:repeat>
+										  		</tbody>
+									  		</table>
+								  		</apex:outputPanel>
+								  	
+								  </div>
+								  <!--END  Business search results -->
+						    </div>
+						    <!-- END personal search tab -->
+						    </div>
+					  </div>
+					  <!-- End tab pane -->
+					  
+					</div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="panel panel-default">
+		    <div class="panel-heading" role="tab" id="headingTwo">
+		      <h4 class="panel-title">
+		        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+		          <span class="glyphicon glyphicon-ok"></span> Contact Information
+		        </a>
+		      </h4>
+		    </div>
+		    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+		      <div class="panel-body">
+		        <apex:outputPanel rendered="{!o.CustomerAuthorizedById != null}" id="ContactInfo">
+					{!errorMessage}
+					<div class="panel panel-default" style="margin:10px;">
+					  <div class="panel-heading">
+					    <h3 style="display: inline-block;margin-right: 20px;" class="panel-title">Selected Contact</h3>
+					    <div class="btn btn-default" style="display:inline-block;" onclick="$('#businesssContactSearch').show();">Edit</div>
+					  </div>
+					  <div class="panel-body">
+					    <table class="table">
+						<th>Contact Name</th>
+						<th>Contact Email</th>
+						<th>Street</th>
+						<th>City</th>
+						<th>State/Province</th>
+						<th>Zip/Postal Code</th>
+						<tbody>
+							<tr>
+								<td>{!o.CustomerAuthorizedBy.name}</td>
+								<td>{!o.CustomerAuthorizedBy.email}</td>
+								<td>{!o.CustomerAuthorizedBy.mailingstreet}</td>
+								<td>{!o.CustomerAuthorizedBy.mailingcity}</td>
+								<td>{!o.CustomerAuthorizedBy.mailingstate}</td>
+								<td>{!o.CustomerAuthorizedBy.mailingpostalcode}</td>
+							</tr>
+						</tbody>
+					</table>
+					  </div>
+					</div>
+				</apex:outputPanel>
+											  	<div id="businesssContactSearch" class="panel panel-default" style="margin:10px;">
+	  								<div class="panel-body">
+									    <!-- Business form -->
+								    	<div class="form-inline">
+										  <div class="form-group">
+										    <input type="text" class="form-control" id="bContactName" placeholder="Contact Name"/>
+										  </div>
+										  <div class="form-group">
+										    <input type="text" class="form-control" id="bContactEmail" placeholder="Contact Email"/>
+										  </div>
+										  <button onclick="businessContactSearch();$('#businesssContactCreate').hide();$('#businesssContactSearch').show();" id="pSearch" type="button" class="btn green-btn">Search</button>
+										  <button onclick="$('#businesssContactCreate').show();$('#businesssContactSearch').hide();" id="pCreateContact" type="button" class="bCreateContactBtn btn btn-default">Create Contact</button>
+										</div>
+										
+										<!-- business search results -->
+										<div class="searchresults">
+										<apex:outputPanel id="bContactResults">
+											<table class="table">
+												<th></th>
+												<th>Full Name</th>
+												<th>Email Address</th>
+												<th>Street</th>
+												<th>City</th>
+												<th>State/Province</th>
+												<th>Zip/Postal Code</th>
+												<tbody>
+													<apex:repeat value="{!bContactResults}" var="c">
+													<tr>
+													<td>
+													<span style="text-decoration:underline;color:#337ab7;cursor:pointer;" onclick="bContact2('{!c.id}');">Use</span>
+													</td>
+													<td>{!c.name}</td>
+													<td>{!c.email}</td>
+													<td>{!c.mailingstreet}</td>
+													<td>{!c.mailingcity}</td>
+													<td>{!c.mailingstate}</td>
+													<td>{!c.mailingpostalcode}</td>
+													</tr>
+													</apex:repeat>
+												</tbody>
+											</table>
+										</apex:outputPanel>
+								  	
+								  </div>
+								  </div>
+							  </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="panel panel-default">
+		    <div class="panel-heading" role="tab" id="headingThree">
+		      <h4 class="panel-title">
+		        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+		          <span class="glyphicon glyphicon-ok"></span> Checkout Summary
+		        </a>
+		      </h4>
+		    </div>
+		    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+		      <div class="panel-body">
+		        Summary
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="shoppingCart">
+		</div>
+
+		<div class="row">
+			<div class="total-wrapper col-xs-6">
+				<span style="float:right;">Total: $<span class="total"></span></span>
+			</div>
+		</div>
+    </apex:form>
+
+
+	 <script src="/soap/ajax/33.0/connection.js" type="text/javascript"></script>
+	 <apex:includeScript value="/support/console/33.0/integration.js"/>
+	 <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery.min.js')}"/>
+	 <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/bootstrap.min.js')}"/> 
+	<script>
+		var orderContract;
+		if('{!order.accountId}' == 'null'){
+			$('#businesssAccountCreate').show();
+			$('#businesssAccountSearch').show();
+			$('#businesssContactSearch').show();
+		}
+
+		function showPanel(){
+			hideAll()
+		}
+
+		function checkBusinessAccount(accountId) {
+  			if(orderContract){
+	  			if(orderContract.Status == 'Activated'){
+	  				alert('You cannot change the account on an order with an activated contract');
+	  			} else {
+	  				setBusinessAccount(accountId);
+	  			}
+  			}else {
+  				setBusinessAccount(accountId);
+  			}
+		}
+
+		function checkPersonAccount(accountId){
+  			if(orderContract){
+	  			if(orderContract.Status == 'Activated'){
+	  				alert('You cannot change the account on an order with an activated contract');
+	  			} else {
+	  				setPersonAccount(accountId);
+	  			}
+	  		}
+		}
+
+
+		function personSearch() {
+			pSearch($('#pAccountName').val(),$('#pAccountEmail').val());
+		}
+
+		function businessSearch() {
+			bSearch($('#bAccountName').val(),$('#bAccountNumber').val());
+		}
+
+		function businessContactSearch() {
+			bContactSearch($('#bContactName').val(),$('#bContactEmail').val());
+		}
+		function checkBusinessContact(contactId) {
+        	bContact();
+        }
+
+		var result;
+		var records;
+		var listener = function (result) {
+            console.log('Message received from event: ' + result.message);
+            var pricebookEntryId = result.message.split(':')[0];
+			var quantity = result.message.split(':')[1];
+             result = sforce.connection.query("select product2Id,product2.Image__c,product2.Family,product2.id,product2.ProductCode,product2.attribute_1__c,product2.attribute_2__c,product2.attribute_3__c,product2.attribute_4__c,product2.attribute_5__c, pricebook2id,id, name, unitprice,UseStandardPrice from PricebookEntry where UseStandardPrice = true and id = \'" + pricebookEntryId + '\' limit 1' );
+  			 records = result.getArray("records");
+  			 var pricebookEntry = records[0];
+
+  			 /*
+  			 var productLine = '<div class="shopping-cart-item">';
+  			 productLine += '<img class="line-image" src="/servlet/servlet.FileDownload?file='+records[0].Product2.Image__c+'"/>';
+  			 productLine += '<a href="#" onclick="openSubtab(\''+records[0].Id+'\',\''+records[0].Name+'\')">records[0].Name</a>';
+  			 productLine += '$'+records[0].UnitPrice;
+  			 productLine += '<input class="qty-'+records[0].id+'" type="text" placeholder="Qty"/>';
+  			 productLine += '</div>';
+  			 $('.shoppingCart').append(productLine);
+  			 */
+
+
+  			 var orderProduct = new sforce.SObject("OrderItem"); 
+  			 	 orderProduct.OrderId = '{!order.id}';
+  			 	 orderProduct.PricebookEntryId =  pricebookEntry.Id;
+  			 	 orderProduct.UnitPrice = pricebookEntry.UnitPrice;  
+  			 	 orderProduct.Quantity = quantity;
+             var result = sforce.connection.create([orderProduct]);
+
+             displayList();
+        };
+        //Add a listener for the 'SampleEvent' event type
+        sforce.console.addEventListener('AddProductToShoppingCart', listener);
+
+        function displayList() {
+             var result2 = sforce.connection.query('select id,unitprice,quantity,PricebookEntryId,PricebookEntry.Product2.name,PricebookEntry.Product2.id,PricebookEntry.product2.Image__c from orderitem where orderid = \'{!order.id}\''); 
+             orderProductList = result2.getArray("records");
+             $('.shoppingCart').html('');
+             var tableString = '<table class="shopping-cart-item table">';
+             var total = 0;
+             for(var i =0;i<orderProductList.length;i++){
+             	tableString += addShoppingCartItem(orderProductList[i]);
+             	var price = parseInt(orderProductList[i].UnitPrice);
+             	var qty = parseInt(orderProductList[i].Quantity);
+             	total += qty*price;
+             }
+             tableString += '</table>';
+             $('.total').html(total);
+              $('.total').append('.00');
+             $('.shoppingCart').append(tableString);
+        }
+
+        function addShoppingCartItem(orderProductItem) {
+        	var productLine = '<tr>';
+        	 productLine += '<td>';
+  			 productLine += 	'<img class="line-image" src="/servlet/servlet.FileDownload?file='+orderProductItem.PricebookEntry.Product2.Image__c+'"/>';
+  			 productLine += '</td>';
+  			 productLine += '<td >';
+  			 productLine += 	'<a class="my-font" href="#" onclick="openSubtab(\''+orderProductItem.PricebookEntryId+'\',\''+orderProductItem.PricebookEntry.Product2.Name+'\')">'+orderProductItem.PricebookEntry.Product2.Name+'</a>';
+  			 productLine += '</td>';
+  			 productLine += '<td style="padding-right: 10px;">';
+  			 productLine += 	'<span class="price">$'+orderProductItem.UnitPrice + '0</span>';
+  			 productLine += '</td>';
+  			 productLine += '<td >';
+  			 productLine += 	'<input onchange="updateQuantity(\''+orderProductItem.Id+'\');" class="line-qty qty-'+orderProductItem.Id+'" type="text" placeholder="Qty" value="'+orderProductItem.Quantity.split('.')[0]+'"/>';
+  			 productLine += '</td>';
+  			 productLine += '<td>';
+  			 productLine += 	'<span class="glyphicon glyphicon-remove" onclick="removeOrderItem(\''+orderProductItem.Id+'\');" aria-hidden="true"></span>';
+  			 productLine += '</td>';
+  			 productLine += '</tr>';
+  			 return productLine;
+  			 //$('.shoppingCart').append(productLine);
+        }
+
+        function updateQuantity(orderItemId){
+        	var qty = $('.qty-'+orderItemId).val();
+        	console.log(qty);
+        	var result2 = sforce.connection.query('select id,unitprice,quantity from orderitem where id = \''+orderItemId+'\' limit 1'); 
+             orderItem = result2.getArray("records")[0];
+             orderItem.Quantity = parseInt(qty);
+             var result3 = sforce.connection.update([orderItem]);
+             console.log(result3);
+             displayList();
+        }
+
+        var url;
+        var tabName;
+        var callOpenSubtab=function callOpenSubtab(result) {
+        	console.log(result.id);
+            sforce.console.openSubtab(result.id, 
+               '/apex/sdo_productpage?id='+url, true, tabName);
+        };
+
+        function removeOrderItem(orderItemId) {
+        	console.log(orderItemId);
+        	var arr = [orderItemId];
+        	sforce.connection.deleteIds(arr);
+        	displayList();
+        }
+        
+        function openSubtab(myUrl,myTabName) {
+            url = myUrl;
+            tabName = myTabName;
+            sforce.console.getEnclosingPrimaryTabId(callOpenSubtab);
+        }
+
+        $(document).ready(function(){
+			displayList();
+			var contract = sforce.connection.query('select accountid,status, id from contract where id = \'{!order.contractId}\' limit 1');
+			var records = result.getArray("records");
+  			orderContract = records[0];
+        });
+
+        function createBusinessAccount() {
+
+        }
+
+        function createPersonAccount(){
+
+        }
+
+        
+	</script>
+	</body>
+</apex:page>

@@ -1,0 +1,21 @@
+<design:component label="Customer 360 Profile: Left Sidebar, No Header">
+    <flexipage:template >
+        <!-- The default width for the "left" region is "MEDIUM". In tablets,
+        the width is "SMALL" -->
+            <flexipage:region name="right" defaultWidth="Large">
+                <flexipage:formfactor type="LARGE" width="Large" />
+                <flexipage:formfactor type="MEDIUM" width="Small" />
+
+
+            </flexipage:region>
+            <flexipage:region name="left" defaultWidth="Small">
+        		<flexipage:formfactor type="LARGE" width="Small" />
+                <flexipage:formfactor type="MEDIUM" width="Small" />
+
+        	</flexipage:region>
+        
+        	
+          	                    
+            
+       </flexipage:template>
+</design:component>

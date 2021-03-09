@@ -1,0 +1,15 @@
+.THIS.outer-wrapper {
+    background-color: #fff;
+}
+.THIS .okay {
+    color: green;
+}
+.THIS .warning {
+    color: gold;
+}
+.THIS .error {
+    color: red;
+}
+.THIS .cooler-img {
+    height: 300px;
+}

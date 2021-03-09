@@ -1,0 +1,59 @@
+.THIS.box{
+    border:1px solid #ddd;
+    border-radius:5px;
+    margin:5px;
+    background:#fff;
+}
+.THIS .padding{
+    padding:20px;
+}
+.THIS.box h2{
+    margin-bottom:10px;
+    font-weight:bold;
+    font-size:20px;  
+}
+.THIS .week{
+    float:left;
+    font-size:14px;
+    text-align:center;
+    margin-right:10px;
+    position:relative;
+    top:18px;
+}
+.THIS .bar{
+    width:50%;
+    height:60px;
+    float:left;
+}
+.THIS .bluebox{
+    height:100%;
+    display:block;
+    background-color:#7CD6F3;
+}
+.THIS .fiftywide{
+    width:50%; 
+}
+.THIS .sixtywide{
+    width:60%;
+}
+.THIS .seventywide{
+    width:70%;
+}
+.THIS .eightywide{
+    width:80%;
+}
+.THIS .total{
+    margin-left:10px;
+    width:25%;
+    float:left;
+    text-align:left;
+    position:relative;
+    top:18px;
+}
+.THIS .clear{
+    clear:both;
+}
+.THIS .stat{
+    margin-bottom:10px;
+    position: relative;
+}

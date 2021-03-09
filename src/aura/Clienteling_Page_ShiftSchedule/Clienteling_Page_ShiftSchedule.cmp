@@ -1,0 +1,17 @@
+<aura:component >
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <div class="slds-page-header">
+    	<div class="slds-media">
+        	<div class="profilepicture">
+            	<lightning:icon iconName="standard:business_hours" size="small" alternativeText="Indicates approval"/> 
+            </div>
+            <div class="slds-media__body">
+            	<h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">My Schedule</h1>
+            	<p class="slds-text-body_small slds-line-height_reset">Check in and out of your shifts here.</p>
+            </div>
+        </div>
+    </div>
+	<c:Clienteling_Shift 
+    	appSettings="{!v.appSettings}"                           
+    />
+</aura:component>

@@ -1,0 +1,18 @@
+<aura:component  access="global" controller="ClientellingController">
+    <aura:attribute name="ActiveUser" type="User[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.GetUser}"/>
+    <aura:iteration var="user" items="{!v.ActiveUser}" indexVar="index"> 
+        <div class="slds-page-header">
+            <div class="slds-media">
+                <div class="profilepicture">
+                    <!--<lightning:icon iconName="standard:account" size="small" alternativeText="Indicates approval"/>-->
+                    <img src="{!user.FullPhotoUrl }"/> 
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="{!user.FirstName + ' ' + user.LastName }"> {!user.FirstName + ' ' + user.LastName }</h1>
+                    <p class="slds-text-body_small slds-line-height_reset">{!user.AboutMe}</p>
+                </div>
+            </div>
+        </div>
+    </aura:iteration>     
+</aura:component>

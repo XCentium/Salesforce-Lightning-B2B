@@ -1,0 +1,9 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+	<aura:attribute name="ButtonText" type="String" default="Learn More"/>
+    <aura:attribute name="ButtonLink" type="String" default="#"/>
+    <aura:attribute name="alignment" type="String" default="center"/>
+    
+    <div class="alignment" style="{! 'text-align:' + v.alignment + ';'}">
+    	<lightning:button variant="brand" label="{!v.ButtonText}" title="Brand action" onclick="{! c.GotoURL }" />
+    </div>
+</aura:component>

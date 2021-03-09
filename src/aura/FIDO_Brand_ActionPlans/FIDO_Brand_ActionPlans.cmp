@@ -1,0 +1,26 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="Industry" type="String" />
+    <aura:attribute name="Details" type="String[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="cardWrapper">
+        <aura:iteration items="{!v.Details}" var="rec">
+            <div class="card">
+                <div class="textleft">
+                    <div class="paddingsmall ">
+                        <div class="owner brandrecord">
+                            <h3 class="borderbottom smallh3">
+                                <div class="padding">
+                                    <lightning:icon iconName="standard:account" size="medium" alternativeText="" class="marginright" />   
+                                    <span class="marginleft10" >{!rec.name}</span>
+                                </div>
+                            </h3>
+                            <div class="padding">
+                                <ui:outputRichText value="{!rec.description__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>	
+        </aura:iteration>
+    </div>
+</aura:component>

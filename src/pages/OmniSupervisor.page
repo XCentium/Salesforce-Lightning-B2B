@@ -1,0 +1,2112 @@
+<apex:page lightningStyleSheets="true" showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="false"
+    applyBodyTag="false" docType="html-5.0">
+
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <apex:slds ></apex:slds>
+
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js">
+        </script>
+        <script src="https://code.highcharts.com/highcharts.js">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.5/angular.min.js">
+        </script>
+
+        <script>
+            /*let app = angular.module('omniSupervisor',[])
+                
+                app.controller('skillsTab', skillsTab)
+                
+                function skillsTab(scope){
+                	$scope.cases = []
+                    
+                    $scope.getCases = function(){
+                        OmniSupervisorCtrl.getCases(function(cases){
+                            $scope.cases = cases;
+                            $scope.$apply();
+                        })
+                    }
+                }*/
+        </script>
+
+        <style>
+            body {
+                width: 100%;
+                margin: 0
+            }
+
+            .uiMenuList_default {
+                background: rgb(255, 255, 255);
+                box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16);
+                border: 1px solid rgb(221, 219, 218);
+                border-radius: .25rem;
+                padding: .5rem 0;
+                float: left;
+                position: absolute;
+                min-width: 100px;
+                max-width: 400px;
+                left: 50%;
+                transform: translateX(-50%);
+                margin-top: .125rem;
+            }
+
+            .slds-tabs_default__content {
+                overflow-x: scroll;
+            }
+
+            svg .slds-icon . {
+                fill: #16325c;
+            }
+
+            .slds-tabs_scoped__link {
+                background: white;
+            }
+
+            .demo-agent_row {}
+
+            td {
+                min-height: 90px;
+                max-height: 90px;
+            }
+
+            .slds-scope .slds-text-heading_label,
+            .slds-scope .slds-text-heading_label {
+                color: black;
+            }
+
+            .slds-scope.slds-tabs_scoped__nav.slds-scope.slds-tabs_scoped__nav {
+                background: white;
+            }
+
+            .slds-scope .slds-tabs_scoped__nav,
+            .slds-scope .slds-tabs_scoped__nav {
+                background: white;
+            }
+
+            .slds-tabs_scoped__item.slds-text-heading_label.slds-active {
+                background: white;
+            }
+
+            .demo-agent_status-indicator {
+                width: 12px;
+                height: 12px;
+                display: inline-block;
+                border-radius: 50%;
+            }
+
+            .slds-tabs_scoped__content.slds-show {
+                background: white;
+            }
+
+            .slds-scope .slds-table td,
+            .slds-scope .slds-table th {
+                padding: 12px 15px;
+                padding-right: 0 !important;
+            }
+
+            .demo-agent_status-indicator.demo-agent_status-indicator-available {
+                background: #51A87A;
+            }
+
+            .demo-agent_status-indicator.demo-agent_status-indicator-busy {
+                background: #E36028;
+            }
+
+            .demo-agent_status-indicator.demo-agent_status-indicator-away {
+                background: #FFB128;
+            }
+
+            /* hide first item */
+
+            .demo-agent_row-hidden {
+                display: none;
+            }
+
+            .slds-tabs_default__item.slds-active a {
+                border-color: #0070d2;
+            }
+
+            aside {
+                border: 1px solid #ececec;
+                border-radius: 3px;
+                overflow: hidden;
+                margin-top: 10px;
+                height: 300px;
+                padding-top: 15px !important;
+            }
+
+            .slds .slds-card {
+                background: white !important;
+                position: relative;
+            }
+
+            .graph1label {
+                font-size: 33px;
+                font-family: Salesforce Sans;
+                text-align: center;
+                position: absolute;
+                top: 118px;
+                left: 0;
+                height: 100%;
+                width: 100%;
+            }
+
+            .graph1label .subtitle {
+                font-size: 12px
+            }
+
+            #Queue {
+                display: none;
+            }
+
+            #Agents {}
+        </style>
+
+    </head>
+
+    <apex:remoteObjects >
+        <apex:remoteObjectModel name="User" fields="Id,FirstName,LastName,Name,ProfileId,IsActive,Omni_Supervisor__c,FullPhotoUrl"
+        />
+    </apex:remoteObjects>
+
+    <body>
+
+        <!-- REQUIRED SLDS WRAPPER -->
+        <div class="slds-scope slds-grid slds-wrap">
+
+            <div class="slds-size_1-of-1 slds-grid slds-wrap slds-tabs_scoped ">
+
+                <div class="tab slds-size_1-of-1 slds-grid ">
+                    <ul class="slds-tabs_scoped__nav slds-size_1-of-1 slds-grid slds-wrap" role="tablist">
+                        <li id="Agent-Tab" class="slds-tabs_scoped__item slds-text-heading_label slds-active" title="Agents" role="presentation"
+                            onClick="agentTab();">
+                            <a class="slds-tabs_scoped__link" href="#void" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1"
+                                id="tab-scoped-1__item">Agents</a>
+                        </li>
+                        <li id="Queue-Tab" class="slds-tabs_scoped__item slds-text-heading_label" title="Queues" role="presentation" onClick="queueTab();">
+                            <a class="slds-tabs_scoped__link" href="#void" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-2"
+                                id="tab-scoped-2__item">Queues Backlog</a>
+                        </li>
+                        <li id="Work-Tab" class="slds-tabs_scoped__item slds-text-heading_label" title="Work" role="presentation" onClick="workTab()">
+                            <a class="slds-tabs_scoped__link" href="#void" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-3"
+                                id="tab-scoped-3__item">Assigned Work</a>
+                        </li>
+                        <li id="Skills-Tab" class="slds-tabs_scoped__item slds-text-heading_label" title="Skills Backlog" role="presentation" onClick="skillsTab()">
+                            <a class="slds-tabs_scoped__link" href="#void" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-3"
+                                id="tab-scoped-3__item">Skills Backlog</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <!-- START TAB FOR AGENT -->
+            <div id="Agents" class="tabcontent slds-size_1-of-1 slds-grid slds-wrap">
+                <div id="tab-scoped-1" class="slds-tabs_scoped__content slds-show slds-size_1-of-1 slds-grid slds-wrap" role="tabpanel" aria-labelledby="tab-scoped-1__item">
+                    <div class="slds-text-heading_medium slds-size_1-of-1 slds-grid slds-wrap">
+                        <img src="{!$Resource.omnilogo}" />
+                        <span class="slds-m-left_x-small">
+                            <b style=" font-size: 105%; font-weight: 500;">Agent Summary</b>
+                        </span>
+                    </div>
+
+                    <!-- INNER TABS -->
+                    <div class="slds-tabs_default slds-size_1-of-1 slds-grid slds-wrap">
+                        <ul class="slds-tabs_default__nav slds-size_1-of-1 slds-grid slds-wrap" role="tablist">
+                            <li class="slds-tabs_default__item slds-text-heading_label slds-active" title="Item One" role="presentation">
+                                <a class="slds-tabs_default__link" href="#void" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-default-1"
+                                    id="tab-default-1__item">All Agents</a>
+                            </li>
+                            <li class="slds-tabs_default__item slds-text-heading_label" title="Item Two" role="presentation">
+                                <a class="slds-tabs_default__link" href="#void" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2"
+                                    id="tab-default-2__item">Agents by Queue</a>
+                            </li>
+                            <li class="" style="width:55%">
+                               
+                            </li>
+                            
+                            <li class="" style="padding: 5px;" title="Item One" role="presentation">
+                                <button class="slds-button slds-button_neutral">Change Queue</button>
+                            </li>
+                            <li class="" style="padding: 5px;" title="Item Two" role="presentation">
+                                <button class="slds-button slds-button_neutral">Change Skills</button>
+                            </li>
+
+                            <li class="" style="padding: 5px;"  title="Item Two" role="presentation">
+                                <button class="slds-button slds-button_neutral" disabled='true'>Clear Filters</button>
+                            </li>
+                        </ul>
+                        <div id="tab-default-1" class="slds-tabs_default__content slds-show slds-size_1-of-1 slds-grid slds-wrap" role="tabpanel"
+                            aria-labelledby="tab-default-1__item">
+                            <table class="slds-table slds-table_striped slds-table_cell-buffer slds-max-medium-table_stacked" id="agent-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>&nbsp;</b>
+                                            </span>
+                                            
+                                        </th>
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>AGENT</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#down')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>STATUS</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#down')}"></use>
+                                                </svg>
+                                            </button>
+
+                                        </th>
+
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>FLAG</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#down')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>ACTION</b>
+                                            </span>
+                                        </th>
+
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>WORK SUMMERY</b>
+                                            </span>
+                                        </th>
+
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>STATE</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+
+                                        </th>
+
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>LOGIN</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>ACCEPT</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>CAPACITY</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>WORKLOAD</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>CHANNELS</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#down')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>ASSIGNED QUEUES</b>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="slds-truncate">
+                                                <b>SKILLS</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#down')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <!-- INJECTED TABLES GO HERE -->
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END TAB FOR AGENT -->
+
+
+
+            <!-- START TAB FOR QUEUE -->
+            <div id="Queue" class="tabcontent slds-size_1-of-1 slds-grid slds-wrap">
+                <div id="tab-scoped-1" class="slds-tabs_scoped__content slds-show slds-size_1-of-1 slds-grid slds-wrap" role="tabpanel" aria-labelledby="tab-scoped-1__item">
+                    <div class="slds-text-heading_medium slds-size_1-of-1 slds-grid slds-wrap">
+                        <img src="{!$Resource.omnilogo2}" />
+
+                        <span class="slds-m-left_x-small" style="font-weight: 500;"> Queues Backlog Summary</span>
+                    </div>
+
+                    <!-- INNER TABS -->
+                    <div class="slds-tabs_default slds-size_1-of-1 slds-grid slds-wrap">
+                        <div id="tab-default-1" class="slds-tabs_default__content slds-show slds-size_1-of-1 slds-grid slds-wrap" role="tabpanel"
+                            aria-labelledby="tab-default-1__item">
+
+
+                            <table class="slds-table slds-table_striped slds-size_1-of-1 slds-grid slds-wrap">
+                                <thead style="border-top:1px solid #e0e5ee; border-bottom: 1px solid #e0e5ee" class="slds-size_1-of-1 slds-grid slds-wrap">
+                                    <tr class="slds-text-heading_label slds-size_1-of-1 slds-grid slds-wrap">
+
+                                        <th scope="col" class="slds-size_2-of-12 slds-grid slds-wrap">
+                                            <span>
+                                                <b>Queue</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_2-of-12 slds-grid slds-wrap">
+                                            <span class="slds-truncate">
+                                                <b>Priority</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_1-of-12 slds-grid slds-wrap">
+                                            <span class="slds-truncate">
+                                                <b>Work Size</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_1-of-12 slds-grid slds-wrap">
+                                            <span class="slds-truncate">
+                                                <b>Type</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+
+                                        <th scope="col" class="slds-size_2-of-12 slds-grid slds-wrap">
+                                            <span class="slds-truncate">
+                                                <b>Total Waiting</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+
+                                        <th scope="col" class="slds-size_2-of-12 slds-grid slds-wrap">
+                                            <span class="slds-truncate">
+                                                <b>Longest Wait Time</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_2-of-12 slds-grid slds-wrap">
+                                            <span class="slds-truncate">
+                                                <b>Average Wait Time</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+
+
+                                <tbody class="slds-grid slds-wrap slds-size_1-of-1">
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_1-of-1">
+                                        <td class="demo-agent_channels slds-size_2-of-12 slds-grid slds-wrap" id="CHANNELS">
+                                            <a href="#">Chat</a>
+                                        </td>
+                                        <td class="demo-agent_work-items slds-size_2-of-12 slds-grid slds-wrap" id="WORKITEMS">
+                                            1
+                                        </td>
+                                        <td class="demo-agent_workload slds-size_1-of-12 slds-grid slds-wrap" id="WORKLOAD">
+                                            2 units
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            <svg style="margin-left: -14%; height:14px; width: 25%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/action-sprite/svg/symbols.svg#new_case ")}"></use>
+                                            </svg>
+                                            <svg style="margin-left: -10%; height:14px; width: 25%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/utility-sprite/svg/symbols.svg#share_post ")}"></use>
+                                            </svg>
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            _
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            _
+                                        </td>
+                                    </tr>
+
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_1-of-1">
+                                        <td class="demo-agent_channels slds-size_2-of-12 slds-grid slds-wrap" id="CHANNELS">
+                                            <a href="#">SMS</a>
+                                        </td>
+                                        <td class="demo-agent_work-items slds-size_2-of-12 slds-grid slds-wrap" id="WORKITEMS">
+                                            1
+                                        </td>
+                                        <td class="demo-agent_workload slds-size_1-of-12 slds-grid slds-wrap" id="WORKLOAD">
+                                            1 units
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            <svg style="margin-left: -5px; height:14px; width: 15%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/utility-sprite/svg/symbols.svg#share_post ")}"></use>
+                                            </svg>
+                                        </td>
+
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            2
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            9d, 1h 35 min
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            13d, 6h 15 min
+                                        </td>
+
+
+                                    </tr>
+
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_1-of-1">
+                                        <td class="demo-agent_channels slds-size_2-of-12 slds-grid slds-wrap" id="CHANNELS">
+                                            <a href="#">Social_Queue</a>
+                                        </td>
+                                        <td class="demo-agent_work-items slds-size_2-of-12 slds-grid slds-wrap" id="WORKITEMS">
+                                            1
+                                        </td>
+                                        <td class="demo-agent_workload slds-size_1-of-12 slds-grid slds-wrap" id="WORKLOAD">
+                                            1 units
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            <svg style="margin-left: -5px; height:14px; width: 15%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/utility-sprite/svg/symbols.svg#share_post ")}"></use>
+                                            </svg>
+                                        </td>
+
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            2
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            9d, 1h 35 min
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            13d, 6h 15 min
+                                        </td>
+
+
+                                    </tr>
+
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_1-of-1">
+                                        <td class="demo-agent_channels slds-size_2-of-12 slds-grid slds-wrap" id="CHANNELS">
+                                            <a href="#">Tier1Queue</a>
+                                        </td>
+                                        <td class="demo-agent_work-items slds-size_2-of-12 slds-grid slds-wrap" id="WORKITEMS">
+                                            2
+                                        </td>
+                                        <td class="demo-agent_workload slds-size_1-of-12 slds-grid slds-wrap" id="WORKLOAD">
+                                            3 units
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            <svg style="margin-left: -5px; height:14px; width: 15%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/action-sprite/svg/symbols.svg#new_case ")}"></use>
+                                            </svg>
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            13d, 6h 15 min
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_2-of-12 slds-grid slds-wrap" id="QUEUE">
+                                            15d, 6h 15 min
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="Work" class="tabcontent slds-size_1-of-1 slds-grid slds-wrap">
+                <div id="tab-scoped-2" class="slds-tabs_scoped__content slds-show slds-size_1-of-1 slds-grid slds-wrap" role="tabpanel" aria-labelledby="tab-scoped-2__item">
+                    <div class="slds-text-heading_medium">
+                        <img src="{!$Resource.omnilogo3}" />
+
+                        <span class="slds-m-left_x-small" style="font-weight: 500;"> Assigned Work</span>
+                    </div>
+
+                    <!-- INNER TABS -->
+                    <div class="slds-tabs_default slds-size_1-of-1 slds-grid slds-wrap">
+                        <div id="tab-default-2" class="slds-tabs_default__content slds-show slds-size_1-of-1 slds-grid slds-wrap" role="tabpanel"
+                            aria-labelledby="tab-default-2__item">
+
+
+                            <table class="slds-table slds-table_striped slds-size_1-of-1 slds-grid slds-wrap">
+                                <thead style="border-top:1px solid #e0e5ee; border-bottom: 1px solid #e0e5ee" class="slds-size_1-of-1 slds-grid slds-wrap">
+                                    <tr class="slds-text-heading_label slds-size_1-of-1 slds-grid slds-wrap">
+
+                                        <th scope="col" class="slds-size_2-of-8">
+                                            <span>
+                                                <b>Queue</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_1-of-8">
+                                            <span class="slds-truncate">
+                                                <b>Type</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_2-of-8">
+                                            <span class="slds-truncate">
+                                                <b>Assigned</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_1-of-8">
+                                            <span class="slds-truncate">
+                                                <b>Open</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_1-of-8">
+                                            <span class="slds-truncate">
+                                                <b>AHT</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+
+                                        <th scope="col" class="slds-size_1-of-8">
+                                            <span class="slds-truncate">
+                                                <b>ASA</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="slds-grid slds-wrap slds-size_1-of-1">
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_1-of-1">
+                                        <td class="demo-agent_channels slds-size_2-of-8" id="CHANNELS">
+                                            <a href="#">Chat</a>
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            <svg style="margin-left: -5px; height:14px; width: 9%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/utility-sprite/svg/symbols.svg#share_post ")}"></use>
+                                            </svg>
+                                            <svg style="margin-left: 3%; height:14px; width: 9%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/action-sprite/svg/symbols.svg#new_case ")}"></use>
+                                            </svg>
+
+                                        </td>
+                                        <td class="demo-agent_work-items slds-size_2-of-8" id="WORKITEMS">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_workload slds-size_1-of-8" id="WORKLOAD">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            _
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            _
+                                        </td>
+                                    </tr>
+
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_1-of-1">
+                                        <td class="demo-agent_channels slds-size_2-of-8" id="CHANNELS">
+                                            <a href="#">SMS</a>
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            <svg style="margin-left: -5px; height:14px; width: 15%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/utility-sprite/svg/symbols.svg#share_post ")}"></use>
+                                            </svg>
+                                        </td>
+                                        <td class="demo-agent_work-items slds-size_2-of-8" id="WORKITEMS">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_workload slds-size_1-of-8" id="WORKLOAD">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            _
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            _
+                                        </td>
+                                    </tr>
+
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_1-of-1">
+                                        <td class="demo-agent_channels slds-size_2-of-8" id="CHANNELS">
+                                            <a href="#">Social_Queue</a>
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            <svg style="margin-left: -5px; height:14px; width: 15%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/utility-sprite/svg/symbols.svg#share_post ")}"></use>
+                                            </svg>
+                                        </td>
+                                        <td class="demo-agent_work-items slds-size_2-of-8" id="WORKITEMS">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_workload slds-size_1-of-8" id="WORKLOAD">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            _
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            _
+                                        </td>
+                                    </tr>
+
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_1-of-1">
+                                        <td class="demo-agent_channels slds-size_2-of-8" id="TYPE">
+                                            <a href="#">Tier1Queue</a>
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            <svg style="margin-left: -5px; height:14px; width: 15%; fill: ##54698d;" aria-hidden="true" class="slds-icon slds-icon_medium slds-icon-text-default">
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, " /assets/icons/action-sprite/svg/symbols.svg#new_case ")}"></use>
+                                            </svg>
+                                        </td>
+                                        <td class="demo-agent_work-items slds-size_2-of-8" id="PRIORITY">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_workload slds-size_1-of-8" id="WORKSIZE">
+                                            0
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            _
+                                        </td>
+                                        <td class="demo-agent_assigned-queues slds-size_1-of-8" id="QUEUE">
+                                            _
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="Skills" class="tabcontent slds-size_1-of-1 slds-grid slds-wrap slds-clearfix">
+                <div id="tab-scoped-3" class="slds-tabs_scoped__content slds-show slds-size_1-of-1 slds-grid slds-wrap slds-clearfix" role="tabpanel"
+                    aria-labelledby="tab-scoped-3__item">
+                    <div class="slds-text-heading_medium slds-size_1-of-3 slds-wrap slds-grid slds-float_left">
+                        <img src="{!$Resource.omnilogo2}" />
+                        <span class="slds-m-left_x-small" style="font-weight: 500;"> Skills Backlog Summary</span>
+                    </div>
+                    <div class=" slds-size_1-of-3 slds-wrap slds-grid">
+                    </div>
+                    <div class=" slds-size_1-of-3 slds-grid slds-wrap slds-float_right">
+                        <div class="slds-col slds-size_1-of-3 slds-grid slds-wrap">
+                            Total Waiting
+                            <br/> 0
+                        </div>
+                        <div class="slds-col slds-size_1-of-3 slds-grid slds-wrap">
+                            Longest Wait Time
+                            <br/> _
+                        </div>
+                        <div class="slds-col slds-size_1-of-3 slds-grid slds-wrap">
+                            Average Wait Time
+                            <br/> _
+                        </div>
+                    </div>
+
+                    <!-- INNER TABS -->
+                    <div class="slds-tabs_default slds-size_1-of-1 slds-grid slds-wrap">
+                        <div id="tab-default-3" class="slds-tabs_default__content slds-show slds-size_1-of-1 slds-grid slds-wrap" role="tabpanel"
+                            aria-labelledby="tab-default-3__item">
+                            <table class="slds-table slds-table_striped slds-size_1-of-1 slds-grid slds-wrap">
+                                <thead style="border-top:1px solid #e0e5ee; border-bottom: 1px solid #e0e5ee" class="slds-size_1-of-1 slds-grid slds-wrap">
+                                    <tr class="slds-text-heading_label slds-size_1-of-1 slds-grid slds-wrap">
+                                        <th scope="col" class="slds-size_1-of-12">
+                                            <span>
+                                                <b>Type</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_1-of-12">
+                                            <span class="slds-truncate">
+                                                <b>Details</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_2-of-12">
+                                            <span class="slds-truncate">
+                                                <b>Skills</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_2-of-12">
+                                            <span class="slds-truncate">
+                                                <b>Priority</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#sort')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_2-of-12">
+                                            <span class="slds-truncate">
+                                                <b>Work Size</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+
+                                        <th scope="col" class="slds-size_2-of-12">
+                                            <span class="slds-truncate">
+                                                <b>Wait Time</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+
+                                        <th scope="col" class="slds-size_2-of-12">
+                                            <span class="slds-truncate">
+                                                <b> Requested Time</b>
+                                            </span>
+                                            <button class="slds-button slds-button_icon-border-filled slds-button_icon-x-small">
+                                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon_hint slds-button__icon_small">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#filter')}"></use>
+                                                </svg>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+
+                                <!-- Skills Queue -->
+
+                                <tbody class="slds-grid slds-wrap slds-size_1-of-1">
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_1-of-1 slds-align_absolute-center">
+                                        <td class="slds-size_1-of-1 slds-text-align_center ">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!--<table class="slds-table slds-table_striped slds-size_1-of-1 slds-grid slds-wrap">
+
+                                <tbody class="slds-grid slds-wrap slds-size_1-of-1">
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_12-of-12">
+                                        <td scope="col" class="slds-size_3-of-12">
+                                        </td>
+                                        <td scope="col" class="slds-size_4-of-12">
+                                            <a>
+                                                Inspiron 1750 Adaptor not charging
+                                                <br/> 00002373 | Jun 10, 2020, 10:11 AM | Phone | Low | New | Lauren Bailey
+                                            </a>
+                                        </td>
+
+                                        <td class="slds-size_1-of-12 ">
+                                            1
+                                        </td>
+
+                                        <td class="demo-agent_channels slds-size_1-of-12 ">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/action-sprite/svg/symbols.svg#new_case")}"></use>
+                                            </svg>
+                                            <svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/standard-sprite/svg/symbols.svg#call")}"></use>
+                                            </svg>
+                                        </td>
+
+                                        <td class="slds-size_2-of-12 ">
+                                            Tier1Queue
+                                        </td>
+
+                                        <td class="slds-size_1-of-12 ">
+                                        </td>
+                                    </tr>
+
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_12-of-12">
+                                        <td scope="col" class="slds-size_3-of-12">
+                                        </td>
+                                        <td scope="col" class="slds-size_4-of-12">
+                                            <a>
+                                                Return for order: O-0000000126<br/>
+                                                00002387 | Jun 10, 2020, 10:11 AM | Web | Medium | New | Lauren Bailey
+                                            </a>
+                                        </td>
+
+                                        <td class="slds-size_1-of-12 ">
+                                            1
+                                        </td>
+
+                                        <td class="demo-agent_channels slds-size_1-of-12 ">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/standard-sprite/svg/symbols.svg#call")}"></use>
+                                            </svg>
+                                        </td>
+                                        
+                                        <td class="slds-size_2-of-12 ">
+                                            Tier1Queue
+                                        </td>
+
+                                        <td class="slds-size_1-of-12 ">
+                                        </td>
+                                    </tr>
+
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_12-of-12">
+                                        <td scope="col" class="slds-size_3-of-12">
+                                        </td>
+                                        <td scope="col" class="slds-size_4-of-12">
+                                            <a>
+                                                TWEET FROM: MarkKingston
+                                                <br/> 
+                                                Twitter |1
+                                            </a>
+                                        </td>
+
+                                        <td class="slds-size_1-of-12 ">
+                                            1
+                                        </td>
+
+                                        <td class="demo-agent_channels slds-size_1-of-12 ">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/action-sprite/svg/symbols.svg#new_case")}"></use>
+                                            </svg>
+                                        </td>
+                                        
+                                        <td class="slds-size_2-of-12 ">
+                                            Tier1Queue
+                                        </td>
+
+                                        <td class="slds-size_1-of-12 ">
+                                        </td>
+                                    </tr>
+
+                                    <tr class="demo-agent_row slds-grid slds-wrap slds-size_12-of-12">
+                                        <td scope="col" class="slds-size_3-of-12">
+                                        </td>
+                                        <td scope="col" class="slds-size_4-of-12">
+                                            <a>
+                                                How do I extend my product warranty?<br/>
+                                                00001929 | Jun 10, 2020, 10:11 AM | Community | Low | New | Larry Baxter
+                                            </a>
+                                        </td>
+
+                                        <td class="slds-size_1-of-12 ">
+                                            1
+                                        </td>
+
+                                        <td class="demo-agent_channels slds-size_1-of-12 ">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'
+                                                <use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/action-sprite/svg/symbols.svg#new_case")}"></use>
+                                            </svg>
+                                        </td>
+                                        
+                                        <td class="slds-size_2-of-12 ">
+                                            Tier1Queue
+                                        </td>
+
+                                        <td class="slds-size_1-of-12 ">
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+        <!-- JAVASCRIPT -->
+        <script>
+
+            var totalQueues;
+            var queueTable = $('#Queue');
+            var agentTable = $('#Agents');
+            var workTable = $('#Work');
+            var skillTable = $('#Skills');
+
+            var tabAgent = $('#Agent-Tab');
+            var tabQueue = $('#Queue-Tab');
+            var tabWork = $('#Work-Tab')
+            var tabSkills = $('#Skills-Tab');
+            
+
+            agentTable.show();
+            queueTable.hide();
+            workTable.hide();
+            skillTable.hide();
+           
+            /* __________________________________ TAB FOR AGENT js ________________________________________- */
+
+            var queueTab = function () {
+                tabAgent.removeClass("slds-active")
+                tabWork.removeClass("slds-active")
+                tabQueue.addClass("slds-active")
+                tabSkills.removeClass("slds-active")
+
+                skillTable.hide();
+                queueTable.show();
+                workTable.hide();
+                agentTable.hide();
+            };
+
+            var agentTab = function () {
+                tabQueue.removeClass("slds-active")
+                tabWork.removeClass("slds-active")
+                tabAgent.addClass("slds-active")
+                tabSkills.removeClass("slds-active")
+
+                skillTable.hide();
+                queueTable.hide();
+                workTable.hide();
+                agentTable.show();
+            };
+
+            var workTab = function () {
+                tabQueue.removeClass("slds-active")
+                tabWork.addClass("slds-active")
+                tabAgent.removeClass("slds-active")
+                tabSkills.removeClass("slds-active")
+
+
+                queueTable.hide();
+                agentTable.hide();
+                workTable.show();
+                skillTable.hide();
+
+            };
+
+            var skillsTab = function () {
+                tabQueue.removeClass("slds-active")
+                tabWork.removeClass("slds-active")
+                tabAgent.removeClass("slds-active")
+                tabSkills.addClass("slds-active")
+
+
+                queueTable.hide();
+                agentTable.hide();
+                workTable.hide();
+                skillTable.show();
+            };
+
+
+            // TODO: Use jQuery instead of document.querySelector since we added it anyway
+            var nUsers = 14;
+            var maxTimeSinceLogin = 120;
+            var maxLoad = 2;
+            var skillsArray = ['Billing and Accounts',
+                'English',
+                'Generalist Agents',
+                'Customer Service'];
+            var skillNumber;
+
+
+            console.log('skillsArray ' + skillsArray);
+
+
+
+
+            // var $onlineLink = $('.onlineStatusItem a', window.parent.document).first();
+            // var $offlineLink = $('.offlineStatusItem a', window.parent.document);
+
+            // $onlineLink.on('click', function () {
+            //   var $firstRow = $('.demo-agent_row').first();
+            //   var $stateTimer = $firstRow.find('.demo-agent_time-in-state').find('.demo-timer');
+            //   var $acceptTimer = $firstRow.find('.demo-agent_time-since-last-accept').find('.demo-timer');
+            //   // reset timer
+            //   $stateTimer.attr('data-start-seconds', 0);
+            //   $acceptTimer.removeAttr('data-start-seconds').removeClass('demo-timer').html('_');
+
+            //   setTimeout(function () {
+            //     $firstRow.removeClass('demo-agent_row-hidden');
+            //   }, 1000);
+            // });
+
+            // $offlineLink.on('click', function () {
+            //   var $firstRow = $('.demo-agent_row').first();
+            //   $firstRow.addClass('demo-agent_row-hidden');
+            // });
+
+            // helpers for creating new users
+            var maleFirstNames = ['Noah', 'Liam', 'Mason', 'Jacob', 'William', 'Ethan', 'Michael', 'Alexander', 'James', 'Daniel', 'Elijah', 'Benjamin', 'Logan', 'Aiden', 'Jayden'];
+            var femaleFirstNames = ['Emma', 'Olivia', 'Sophia', 'Isabella', 'Ava', 'Mia', 'Emily', 'Abigail', 'Madison', 'Charlotte', 'Harper', 'Sofia', 'Avery', 'Elizabeth', 'Amelia'];
+            var lastNames = ['Smith', 'Brown', 'Johnson', 'Jones', 'Williams', 'Davis', 'Miller', 'Wilson', 'Taylor', 'Clark', 'White', 'Moore', 'Thompson', 'Allen', 'Martin'];
+            var assignedQueue = ['Chat, Tier1Queue','SMS, Social_Queue,','Tier1Queue, Social_Queue','Chat, Tier1Queue, Social_Queue','Chat, Social_Queue','Tier1Queue, Social_Queue,Chat','Tier1Queue, Social_Queue','Tier1Queue, Chat','Tier1Queue, SMS','Chat, Tier1Queue','Social_Queue','Tier1Queue','Tier1Queue, Social_Queue','Tier1Queue','Tier1Queue, Social_Queue,SMS'];
+            //for case number & capacity
+            var caseNum = [4];
+            var caseString=['4 Cases'];
+            var capacity = ['40%'];
+            var workload = ['4/10'];
+            var workStatus = ['All-Available'];
+            var tableString = '<td colspan="13" id="demoCases" style="display:none;"><table class="slds-table slds-table_striped slds-size_1-of-1 slds-grid slds-wrap">'+
+    '<tbody class="slds-grid slds-wrap slds-size_1-of-1">'+
+        '<tr class="demo-agent_row slds-grid slds-wrap slds-size_12-of-12">'+
+           '<td scope="col" class="slds-size_3-of-12">'+
+            '</td>'+
+            '<td scope="col" class="slds-size_4-of-12">'+
+                '<a>'+
+                    'Inspiron 1750 Adaptor not charging<br/> 00002373 | Jun 10, 2020, 10:11 AM | Phone | Low | New | Lauren Bailey'+
+                '</a>'+
+            '</td>'+
+            '<td class="slds-size_1-of-12 ">'+
+                '1'+
+            '</td>'+
+            '<td class="demo-agent_channels slds-size_1-of-12 ">'+
+                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'+
+                    '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/action-sprite/svg/symbols.svg#new_case")}"></use>'+
+                '</svg>'+
+                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'+
+                    '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/standard-sprite/svg/symbols.svg#call")}"></use>'+
+                '</svg>'+
+            '</td>'+
+            '<td class="slds-size_2-of-12 ">'+
+                'Tier1Queue'+
+            '</td>'+
+            '<td class="slds-size_1-of-12 ">'+
+            '</td>'+
+        '</tr>'+
+        '<tr class="demo-agent_row slds-grid slds-wrap slds-size_12-of-12">'+
+            '<td scope="col" class="slds-size_3-of-12">'+
+            '</td>'+
+            '<td scope="col" class="slds-size_4-of-12">'+
+                '<a>'+
+                    'Return for order: O-0000000126<br/>00002387 | Jun 10, 2020, 10:11 AM | Web | Medium | New | Lauren Bailey'+
+                '</a>'+
+            '</td>'+
+            '<td class="slds-size_1-of-12 ">'+
+                '1'+
+            '</td>'+
+            '<td class="demo-agent_channels slds-size_1-of-12 ">'+
+                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'+
+                    '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/standard-sprite/svg/symbols.svg#call")}"></use>'+
+                '</svg>'+
+            '</td>'+
+            '<td class="slds-size_2-of-12 ">'+
+                'Tier1Queue'+
+            '</td>'+
+            '<td class="slds-size_1-of-12 ">'+
+            '</td>'+
+        '</tr>'+
+        '<tr class="demo-agent_row slds-grid slds-wrap slds-size_12-of-12">'+
+            '<td scope="col" class="slds-size_3-of-12">'+
+            '</td>'+
+            '<td scope="col" class="slds-size_4-of-12">'+
+                '<a>'+
+                    'TWEET FROM: MarkKingston<br/> Twitter |1'+
+               '</a>'+
+            '</td>'+
+            '<td class="slds-size_1-of-12 ">'+
+                '1'+
+            '</td>'+
+            '<td class="demo-agent_channels slds-size_1-of-12 ">'+
+                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'+
+                    '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/action-sprite/svg/symbols.svg#new_case")}"></use>'+
+                '</svg>'+
+            '</td>'+  
+            '<td class="slds-size_2-of-12 ">'+
+                'Tier1Queue'+
+            '</td>'+
+            '<td class="slds-size_1-of-12 ">'+
+            '</td>'+
+        '</tr>'+
+        '<tr class="demo-agent_row slds-grid slds-wrap slds-size_12-of-12">'+
+            '<td scope="col" class="slds-size_3-of-12">'+
+            '</td>'+
+            '<td scope="col" class="slds-size_4-of-12">'+
+                '<a>'+
+                    'How do I extend my product warranty?<br/>'+
+                    '00001929 | Jun 10, 2020, 10:11 AM | Community | Low | New | Larry Baxter'+
+                '</a>'+
+            '</td>'+
+            '<td class="slds-size_1-of-12 ">'+
+                '1'+
+            '</td>'+
+            '<td class="demo-agent_channels slds-size_1-of-12 ">'+
+                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">'+
+                    '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/action-sprite/svg/symbols.svg#new_case")}"></use>'+
+                '</svg>'+
+            '</td>'+        
+            '<td class="slds-size_2-of-12 ">'+
+                'Tier1Queue'+
+            '</td>'+
+            '<td class="slds-size_1-of-12 ">'+
+            '</td>'+
+        '</tr>'+
+   '</tbody>'+
+'</table></td>';
+
+            var getRandomName = function (namesList) {
+                return namesList[~~(Math.random() * namesList.length)];
+            };
+
+            var getRandomSkillLevel = function () {
+                skillNumber = Math.floor(Math.random() * 10);
+                console.log('getRandomSkillLevel ' + skillNumber)
+                return skillNumber;
+            };
+
+            var getRandomSkill = function (skillList) {
+                var testing = Math.random() > 0.5 ? 'Billing and Accounts' : 'English';
+                var testing2 = Math.random() > 0.5 ? 'English' : 'Generalist Agents'
+
+                console.log('testing ' + testing)
+                console.log('testing2 ' + testing2)
+            };
+
+            // return case number 
+
+            var getRandomCaseNumber = function () {
+                    var num, i;
+                    for (i = 0; i < nUsers; i++) {
+                        num = Math.floor(Math.random() * 10);
+                        caseNum.push(num);
+                        caseString.push(num.toString() + ' Cases');
+                        capacity.push(num.toString() + '0%');
+                        workload.push(num.toString() + '/10');
+                        if(num<5){
+                            workStatus.push('Available');
+                        }else{
+                            workStatus.push('Away');
+                        }   
+                    }
+                    console.log(workload);
+                    return num;
+                }
+
+            var getSummeryString = function () {
+                var caseStr = getRandomCaseNumber + ' Cases';
+            }
+
+
+            var assignSkillTest = function () {
+                var returnArray = [];
+                var returnedArray = [];
+                var testSkillNumber = Math.floor(Math.random(1) * 4);
+                console.log(testSkillNumber)
+                console.log('skillsArray')
+
+                switch (testSkillNumber) {
+                    case 0:
+                        return ' _ ';
+                        break;
+                    case 1:
+                        returnArray = skillsArray.slice(0, testSkillNumber);
+                        console.log(returnArray)
+                        for (var i = 0; i < returnArray.length; i++) {
+                            returnArray[i] = returnArray[i] + ' (' + getRandomSkillLevel() + ')';
+                        }
+                        return returnArray
+                        break;
+                    case 2:
+                        returnArray = skillsArray.slice(0, testSkillNumber);
+                        console.log(returnArray)
+                        for (var i = 0; i < returnArray.length; i++) {
+                            returnArray[i] = returnArray[i] + ' (' + getRandomSkillLevel() + ')';
+                        }
+                        return returnArray
+                        break;
+                    case 3:
+                        returnArray = skillsArray.slice(0, testSkillNumber);
+                        console.log(returnArray)
+                        for (var i = 0; i < returnArray.length; i++) {
+                            returnArray[i] = returnArray[i] + ' (' + getRandomSkillLevel() + ')';
+                        }
+                        return returnArray
+                        break;
+                    case 4:
+                        returnArray = skillsArray.slice(0, testSkillNumber);
+                        console.log(returnArray)
+                        for (var i = 0; i < returnArray.length; i++) {
+                            returnArray[i] = returnArray[i] + ' (' + getRandomSkillLevel() + ')';
+                        }
+                        return returnArray
+                        break;
+                }
+
+                return returnArray;
+
+
+            }
+
+            var getDefaultTimes = function () {
+                var timeSinceLogin = ~~(Math.random() * maxTimeSinceLogin);
+                var timeInState = timeSinceLogin - ~~(Math.random() * timeSinceLogin);
+
+                return {
+                    timeSinceLogin: timeSinceLogin,
+                    timeInState: timeInState,
+                    timeSinceLastAccept: ~~(Math.random() * timeInState)
+                }
+            };
+
+            // if assigned queues / cases are to match update this fn
+            var getChannels = function () {
+                var availableChannels = ['call', 'web', 'phone_portrait', 'email'];
+                // var usersChannelLength = 1 + ~~(Math.random() * availableChannels.length);
+                var usersChannel = availableChannels[~~(Math.random() * availableChannels.length)];
+                return [usersChannel]
+            };
+
+            var getQueues = function (channels) {
+                return channels.map(function (channel) {
+                    switch (channel) {
+                        case 'call': return 'Phone';
+                        case 'web': return 'Web';
+                        case 'phone_portrait': return 'IoT';
+                        case 'email': return 'Email';
+                        default: return '_';
+                    }
+                });
+            };
+
+            var getItems = function () {
+                return ~~(Math.random() * (maxItems + 1));
+            };
+
+            var getLoad = function () {
+                var randLoad = Math.random();
+                if (randLoad < 0.9) return maxLoad; // 90% chance for "High"
+                else if (randLoad < 0.95) return maxLoad / 2; // 10% chance for Medium
+                else return 0; // 5% chance for Low
+            };
+
+            // iterator that gets the next avatar
+            var nextAvatar = (function () {
+                var currentMaleId = 0, currentFemaleId = 0;
+                return function (gender) {
+                    if (currentFemaleId > 35) currentFemaleId = 0;
+                    if (currentMaleId > 50) currentMaleId = 0;
+                    return gender === 'male' ? ++currentMaleId : ++currentFemaleId;
+                };
+            }());
+
+            var getAvatar = function (avatarGender) {
+                var avatarNumber = nextAvatar(avatarGender);
+                var jpgStr = 'avatars_' + avatarGender + '/00' + (avatarNumber >= 10 ? avatarNumber : '0' + avatarNumber) + '.jpg';
+                var urlStr = avatarGender === 'male' ? "{!URLFOR($Resource.avatars_male, '/')}" : "{!URLFOR($Resource.avatars_female, '/')}";
+                return "<img src='" + urlStr + jpgStr + "' />";
+            };
+
+            var getStatus = function () {
+                var statuses = ['All-Available', 'Chat-Available', 'Messaging-Available', 'Cases-Available', 'Busy', 'Busy-Break', 'Busy-Training', 'Phone-Availiable'];
+
+                var randStat = Math.random();
+                // 20% chance of being Busy
+                if (randStat < 0.2) return 'All-Available';
+                // 20% chance of being Away
+                else if (randStat < 0.3) return 'Chat-Available';
+
+                else if (randStat < 0.4) return 'Messaging-Available';
+
+                else if (randStat < 0.5) return 'Cases-Available';
+
+                else if (randStat < 0.6) return 'Busy';
+
+                else if (randStat < 0.7) return 'Busy-Break';
+
+                else if (randStat < 0.8) return 'Busy-Training';
+
+                // 60% chance Available
+                return 'Phone-Availiable';
+            };
+
+            var getGender = function () {
+                return Math.random() > 0.5 ? 'female' : 'male';
+            };
+
+            var changeStatus = function (ele) {
+                ele.parentElement.classList.toggle('slds-is-open');
+            }
+
+            var showCases = function(i){
+                console.log('clicked', i);
+                if(i==0){
+                    $("#demoCases").toggle("fast", function () {
+                        // Animation complete.
+                    });
+                }
+            }
+
+            let closeStatusPopover = (ele) => {
+            }
+
+            var generateAdditionalUsers = function (originalList) {
+                var usersList = originalList;
+                var user;
+                while (usersList.length <= nUsers) {
+                    user = {};
+                    user.gender = getGender();
+                    user.firstName = user.gender === 'female' ? getRandomName(femaleFirstNames) : getRandomName(maleFirstNames);
+                    user.lastName = getRandomName(lastNames);
+                    user.status = getStatus();
+                    user.channels = getChannels();
+                    user.queues = getQueues(user.channels);
+                    user.defaultTimes = getDefaultTimes();
+                    user.load = getLoad();
+                    user.items = user.load;
+
+                    usersList.push(user);
+                }
+                // make the logged in user the first one in the list
+                var orderedUsersList = [];
+                usersList.forEach(function (user) {
+                    user.id === "{!$User.Id}" ? orderedUsersList.unshift(user) : orderedUsersList.push(user);
+                });
+
+                orderedUsersList[0].status = 'All-Available';
+                orderedUsersList[0].channels = ['phone_portrait'];
+                orderedUsersList[0].queues = getQueues(orderedUsersList[0].channels);
+                orderedUsersList[0].load = 1;
+                orderedUsersList[0].items = orderedUsersList[0].load;
+
+                return orderedUsersList;
+            };
+
+            var fetchUsers = function (callback) {
+                var usersModel = new SObjectModel.User();
+                var users = [], user;
+
+                var query = { where: { IsActive: { eq: true }, Omni_Supervisor__c: { eq: true } } };
+
+                usersModel.retrieve(query, function (err, records) {
+                    if (err) alert(err.message);
+                    else {
+                        // if there are no users that match the query, generate the users now
+                        if (!records.length && callback) return callback(generateAdditionalUsers(users));
+
+                        records.forEach(function (record, idx) {
+                            user = {};
+                            // props from force
+                            user.firstName = record.get('FirstName');
+                            user.lastName = record.get('LastName');
+                            user.name = record.get('Name');
+                            user.id = record.get('Id');
+                            user.profileId = record.get('ProfileId');
+                            user.avatar = record.get('FullPhotoUrl');
+
+                            // added props to user object (fake stuff)
+                            user.status = getStatus();
+                            user.gender = getGender();
+                            user.channels = getChannels();
+                            user.queues = getQueues(user.channels);
+                            user.defaultTimes = getDefaultTimes();
+                            user.load = getLoad();
+                            user.items = user.load;
+
+                            users.push(user);
+                            if (idx === records.length - 1 && callback) {
+                                if (records.length >= nUsers) {
+                                    return callback(users);
+                                } else {
+                                    return callback(generateAdditionalUsers(users))
+                                }
+                            }
+                        });
+                    }
+                });
+            };
+
+            // formatting for table helpers
+            // status == 'Available' returns demo-agent_status-indicator-available
+            // make sure there's a matching class for indicator background color
+            var statusClass = function (input) {
+                if (input == 'All-Available' || input == 'Chat-Available' || input == 'Messaging-Available' || input == 'Cases-Available' || input == 'Available' ||input == 'Phone-Availiable') {
+                    return 'demo-agent_status-indicator-available';
+                }
+                else {
+                    return 'demo-agent_status-indicator-away';
+                }
+            };
+
+            var channelIcons = function (channels) {
+                return channels.map(function (channel) {
+                    switch (channel) {
+                        case 'email':
+                            return [
+                                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">',
+                                '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/standard-sprite/svg/symbols.svg#call")}"></use>',
+                                '</svg>'
+                            ].join('');
+                        case 'phone_portrait':
+                            return [
+                                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">',
+                                '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/utility-sprite/svg/symbols.svg#share_post")}"></use>',
+                                '</svg>',
+                                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">',
+                                '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/standard-sprite/svg/symbols.svg#call")}"></use>',
+                                '</svg>',
+                                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">',
+                                '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/action-sprite/svg/symbols.svg#new_case")}"></use>',
+                                '</svg>'
+                            ].join('');
+                        case 'call':
+                            return [
+                                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">',
+                                '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/utility-sprite/svg/symbols.svg#sms")}"></use>',
+                                '</svg>',
+                                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">',
+                                '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/action-sprite/svg/symbols.svg#new_case")}"></use>',
+                                '</svg>'
+                            ].join('');
+                        case 'web':
+                            return [
+                                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">',
+                                '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/action-sprite/svg/symbols.svg#new_case")}"></use>',
+                                '</svg>'
+                            ].join('');
+                        default:
+                            return [
+                                '<svg aria-hidden="true" class="slds-icon slds-icon_x-small slds-icon-text-default">',
+                                '<use xlink:href="{!URLFOR($Asset.SLDS, "/assets/icons/standard-sprite/svg/symbols.svg#' + channel + '")}"></use>',
+                                '</svg>'
+                            ].join('');
+                    }
+                }).join('');
+            };
+
+            var queuesList = function (queues) {
+                var uniqueQueues = [];
+                queues.forEach(function (queue) {
+                    if (uniqueQueues.indexOf(queue) <= -1) uniqueQueues.push(queue);
+                });
+
+                return uniqueQueues.join(', ');
+            };
+
+            var addTableRows = function (users, callback) {
+                var $tableElement = $('#agent-table');
+                var $tBodyElement = $tableElement.find('tbody');
+                var $tRowElement, tRowContent, rowData, tCellElement;
+
+                users.forEach(function (user, idx) {
+                    $tRowElement = $('<tr></tr>');
+                    // if(idx === 0) $tRowElement.addClass('demo-agent_row-hidden');
+                    tRowContent = [
+                        '<td class="demo-agent_status">',
+                        '<input type="checkbox" id="vehicle1" name="vehicle1" value="">'+
+                        '</td>',
+
+                        '<td class="demo-agent_user slds-truncate">',
+                        '<img style="width: 20px;cursor: pointer;" src="https://www.materialui.co/materialIcons/navigation/chevron_right_grey_192x192.png" onClick="showCases('+idx+')">',
+                        '<span class="slds-avatar slds-avatar_circle slds-avatar_small">',
+                        user.avatar && user.avatar !== 'undefined' ? '<img id="here" style="background: green" src="' + user.avatar + '" />' : getAvatar(user.gender),
+                        '</span>',
+                        '<span class="slds-m-left_x-small slds-text-body_small"><a href="#">',
+                        (user.firstName && user.firstName !== 'undefined' ? user.firstName : ''),
+                        (user.lastName && user.lastName !== 'undefined' ? ' ' + user.lastName : ''),
+                        '</a></span>',
+                        '</td>',
+
+                        '<td class="demo-agent_status">',
+                        '<span class="slds-m-right_small demo-agent_status-indicator ' + statusClass(user.status) + '"></span>',
+                        user.status,
+                        '</td>',
+
+                        '<td class="demo-agent_time-in-state">' +
+
+                        '<div class="slds-wrap slds-truncate">' +
+                        '<p> -- </p>' +
+                        '</div>' +
+                        '</td>',
+
+                        '<td class="demo-agent_time-since-last-accept">' +
+                        '<div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-is-closed">' +
+                        '<span class="" onClick="changeStatus(this)"><a> Change Status</a></span>' +
+                        '<div class="slds-dropdown slds-dropdown_left slds-dropdown_small">' +
+                        '<ul class="slds-dropdown__list" role="menu" aria-label="Show More">' +
+
+                        '<li class="slds-dropdown__item" role="presentation">' +
+                        '<a href="javascript:void(0);" role="menuitem" aria-disabled="false" tabindex="0">' +
+                        '<span class="slds-truncate" title="Cases - Available"> <img src="{!$Resource.onlineDot}" class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"/> Cases - Available </span>' +
+                        '</a>' +
+                        '</li>' +
+                        '<li class="slds-dropdown__item" role="presentation">' +
+                        '<a href="javascript:void(0);" role="menuitem" aria-disabled="false" tabindex="-1">' +
+                        '<span class="slds-truncate" title="Phone - Available "> <img src="{!$Resource.onlineDot}" class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"/> Phone - Available </span>' +
+                        '</a>' +
+                        '</li>' +
+                        '<li class="slds-dropdown__item" role="presentation">' +
+                        '<a href="javascript:void(0);" role="menuitem" aria-disabled="false" tabindex="-2">' +
+                        '<span class="slds-truncate" title="Chat - Available"> <img src="{!$Resource.onlineDot}" class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"/> Chat - Available </span>' +
+                        '</a>' +
+                        '</li>' +
+                        '<li class="slds-dropdown__item" role="presentation">' +
+                        '<a href="javascript:void(0);" role="menuitem" aria-disabled="false" tabindex="-3">' +
+                        '<span class="slds-truncate" title="Messaging - Available"> <img src="{!$Resource.onlineDot}" class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"/> Messaging - Available </span>' +
+                        '</a>' +
+                        '</li>' +
+                        '<li class="slds-dropdown__item" role="presentation">' +
+                        '<a href="javascript:void(0);" role="menuitem" aria-disabled="false" tabindex="-4">' +
+                        '<span class="slds-truncate" title="Busy"> <img src="{!$Resource.awayDot}" class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"/> Busy </span>' +
+                        '</a>' +
+                        '</li>' +
+                        '<li class="slds-dropdown__item" role="presentation">' +
+                        '<a href="javascript:void(0);" role="menuitem" aria-disabled="false" tabindex="-5">' +
+                        '<span class="slds-truncate" title="Busy - Break "> <img src="{!$Resource.awayDot}" class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"/> Busy - Break </span>' +
+                        '</a>' +
+                        '</li>' +
+                        '<li class="slds-dropdown__item" role="presentation">' +
+                        '<a href="javascript:void(0);" role="menuitem" aria-disabled="false" tabindex="-6">' +
+                        '<span class="slds-truncate" title="Busy - Lunch"> <img src="{!$Resource.awayDot}" class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"/> Busy - Lunch </span>' +
+                        '</a>' +
+                        '</li>' +
+                        '<li class="slds-dropdown__item" role="presentation">' +
+                        '<a href="javascript:void(0);" role="menuitem" aria-disabled="false" tabindex="-7">' +
+                        '<span class="slds-truncate" title="Busy - Training "> <img src="{!$Resource.awayDot}" class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"/> Busy - Training </span>' +
+                        '</a>' +
+                        '</li>' +
+                        '<li class="slds-dropdown__item" role="presentation">' +
+                        '<a href="javascript:void(0);" role="menuitem" aria-disabled="false" tabindex="-8">' +
+                        '<span class="slds-truncate" title="Offline"> <img src="{!$Resource.offlineDot}" class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"/> Offline </span>' +
+                        '</a>' +
+                        '</li>' +
+
+                        '</ul>' +
+                        '</div>' +
+                        '</div>' +
+                        '</td>',
+
+                        '<td class="demo-agent_time-in-state">' +
+
+                        '<div class="slds-wrap slds-truncate">' +
+                        '<p>' + caseString[idx] + '</p>' +
+                        '</div>' +
+                        '</td>',
+
+                        '<td class="demo-agent_time-in-state">' +
+
+                        '<div class="slds-wrap slds-truncate">' +
+                        '<span class="demo-timer" data-start-seconds="' + user.defaultTimes.timeInState + '"></span>' +
+                        '</div>' +
+                        '</td>',
+
+                        '<td class="demo-agent_time-in-state">' +
+                        '<div class="slds-wrap slds-truncate">' +
+                        '<span class="demo-timer" data-start-seconds="' + user.defaultTimes.timeSinceLogin + '"></span>' +
+                        '</div>' +
+                        '</td>',
+
+                        '<td class="demo-agent_time-in-state">' +
+                        '<div class="slds-wrap slds-truncate">' +
+                        '<span class="demo-timer" data-start-seconds="' + user.defaultTimes.timeSinceLastAccept + '"></span>' +
+                        '</div>' +
+                        '</td>',
+
+
+                        '<td class="demo-agent_status">',
+                        '<span class="slds-m-right_small demo-agent_status-indicator ' + statusClass(workStatus[idx]) + '"></span>',
+                        capacity[idx],
+                        '</td>',
+
+                        '<td class="demo-agent_capacity">' + workload[idx] + '</td>',
+
+
+                        '<td class="demo-agent_channels">',
+                        channelIcons(user.channels),
+                        '</td>',
+
+                        '<td class="demo-agent_work-items">',
+                        assignedQueue[idx],
+                        '</td>',
+
+                        '<td class="demo-agent_time-since-last-accept"><span class="slds-grid slds-wrap slds-size_1-of-1"><a class="slds-grid slds-wrap slds-size_1-of-1">' + assignSkillTest() + ' </a></span></td>'
+
+
+
+                    ].join('');
+
+                    $tRowElement.append(tRowContent);
+                    $tRowElement2 = $('<tr></tr>');
+                    
+                    $tBodyElement.append($tRowElement);
+                    if(idx==0){
+                        $tRowElement2.append(tableString);
+                        console.log(tableString);
+                        $tBodyElement.append($tRowElement2);
+                    }
+                });
+
+                if (callback) callback();
+            };
+
+            var formatTime = function (timeInSeconds) {
+                var mins = ~~(timeInSeconds / 60);
+                var secs = timeInSeconds - (mins * 60);
+                return mins + 'm ' + secs + 's';
+            };
+
+            var updateTimers = function (timeout) {
+                if (timeout) clearTimeout(timeout);
+                var timers = [].slice.call(document.querySelectorAll('.demo-timer'));
+                var nextTime;
+                timers.forEach(function (timer) {
+                    nextTime = +timer.getAttribute('data-start-seconds') + 1;
+                    timer.setAttribute('data-start-seconds', nextTime);
+                    timer.innerHTML = formatTime(nextTime);
+                });
+
+                var timeout = setTimeout(function () {
+                    if (timeout) clearTimeout(timeout);
+                    updateTimers(timeout);
+                }, 1000);
+            };
+
+            var addCharts = function (users) {
+                var counts = {};
+                var capacity;
+                // fill with zeros initial counts
+                ['Low', 'Medium', 'High'].forEach(function (label) { counts[label] = 0; });
+
+                users.forEach(function (user) {
+                    counts[user.status] = counts[user.status] ? counts[user.status] + 1 : 1; // Availability
+                    capacity = user.load / maxLoad;
+
+                    if (capacity < 0.33) { counts['Low'] += 1; }
+                    else if (capacity < 0.67) { counts['Medium'] += 1; }
+                    else { counts['High'] += 1; }
+
+                });
+
+                var colors = {
+                    available: '#51A87A',
+                    away: '#FFB128',
+                    busy: '#E36028'
+                };
+
+                var initialAvailabilityData = [
+                    { color: colors.available, name: "Available", y: 33.3333 },
+                    { color: colors.away, name: "Away", y: 33.3333 },
+                    { color: colors.busy, name: 'Busy', y: 33.3333 }
+                ];
+
+                var updatedAvailabilityData = [
+                    { color: colors.available, name: "Available", y: ~~((counts['Available'] / users.length) * 100) },
+                    { color: colors.away, name: "Away", y: ~~((counts['Away'] / users.length) * 100) },
+                    { color: colors.busy, name: 'Busy', y: ~~((counts['Busy'] / users.length) * 100) }
+                ];
+
+                // 20, 50, 30
+                var initialCapacityData = [
+                    { color: colors.available, name: "Low", y: 20 },
+                    { color: colors.away, name: "Medium", y: 50 },
+                    { color: colors.busy, name: 'High', y: 30 }
+                ];
+
+                var updatedCapacityData = [
+                    { color: colors.available, name: "Low", y: ~~((counts['Low'] / users.length) * 100) },
+                    { color: colors.away, name: "Medium", y: ~~((counts['Medium'] / users.length) * 100) },
+                    { color: colors.busy, name: 'High', y: ~~((counts['High'] / users.length) * 100) }
+                ];
+
+                var initialChannelData = [
+                    { y: 28, color: '#43AED4' },
+                    { y: 20, color: '#43AED4' },
+                    { y: 19, color: '#43AED4' },
+                    { y: 14, color: '#43AED4' },
+                    { y: 8, color: '#43AED4' },
+                    { y: 25, color: '#43AED4' }
+                ];
+
+                var updatedChannelData = [
+                    { y: 24, color: '#43AED4' },
+                    { y: 20, color: '#43AED4' },
+                    { y: 17, color: '#43AED4' },
+                    { y: 21, color: '#43AED4' },
+                    { y: 24, color: '#43AED4' },
+                    { y: 14, color: '#43AED4' }
+                ];
+
+                var initialDurationData = [
+                    [1437759332539, 101], [1437845732540, 99], [1437932132540, 97], [1438018532540, 95], [1438104932540, 93], [1438191332540, 91], [1438277732540, 92], [1438364132540, 90], [1438450532540, 91], [1438536932540, 89],
+                    [1438623332540, 87], [1438709732540, 85], [1438796132540, 83], [1438882532540, 84], [1438968932540, 82], [1439055332540, 83], [1439141732540, 84], [1439228132540, 82], [1439314532540, 83], [1439400932540, 81],
+                    [1439487332540, 82], [1439573732540, 83], [1439660132540, 84], [1439746532540, 82], [1439832932540, 80], [1439919332540, 78], [1440005732540, 79], [1440092132540, 80], [1440178532540, 81], [1440264932540, 82],
+                    [1440351332540, 83], [1440437732540, 84], [1440524132540, 82], [1440610532540, 83], [1440696932540, 81], [1440783332540, 82], [1440869732540, 83], [1440956132540, 81], [1441042532540, 82], [1441128932540, 80],
+                    [1441215332540, 78], [1441301732540, 79], [1441388132540, 77], [1441474532540, 78], [1441560932540, 76], [1441647332540, 74], [1441733732540, 72], [1441820132540, 73], [1441906532540, 74], [1441992932540, 72],
+                    [1442079332540, 70], [1442165732540, 71], [1442252132540, 72], [1442338532540, 70], [1442424932540, 71], [1442511332540, 72], [1442597732540, 70], [1442684132540, 71], [1442770532540, 69], [1442856932540, 67],
+                    [1442943332540, 65], [1443029732540, 63], [1443116132540, 61], [1443202532540, 59], [1443288932540, 57], [1443375332540, 55], [1443461732540, 53], [1443548132540, 54], [1443634532540, 52], [1443720932540, 50],
+                    [1443807332540, 48], [1443893732540, 48], [1443980132540, 48], [1444066532540, 48], [1444152932540, 48], [1444239332540, 49], [1444325732540, 49], [1444412132540, 50], [1444498532540, 51], [1444584932540, 49],
+                    [1444671332540, 50], [1444757732540, 48], [1444844132540, 48], [1444930532540, 48], [1445016932540, 49], [1445103332540, 49], [1445189732540, 50], [1445276132540, 48], [1445362532540, 49], [1445448932540, 50],
+                    [1445535332540, 48], [1445621732540, 48], [1445708132540, 49], [1445794532540, 50], [1445880932540, 51], [1445967332540, 52], [1446053732540, 50], [1446140132540, 48], [1446226532540, 48], [1446312932540, 48],
+                    [1446402932540, 49], [1446489332540, 50], [1446575732540, 48], [1446662132540, 48], [1446748532540, 48], [1446834932540, 49], [1446921332540, 50], [1447007732540, 51], [1447094132540, 52], [1447180532540, 53],
+                    [1447266932540, 51], [1447353332540, 49], [1447439732540, 50], [1447526132540, 51], [1447612532540, 49], [1447698932540, 49], [1447785332540, 49], [1447871732540, 50], [1447958132540, 48], [1448044532540, 49],
+                    [1448130932540, 50], [1448217332540, 51], [1448303732540, 49], [1448390132540, 50], [1448476532540, 48], [1448562932540, 48], [1448649332540, 48], [1448735732540, 49], [1448822132540, 50], [1448908532540, 51],
+                    [1448994932540, 52], [1449081332540, 53], [1449167732540, 51], [1449254132540, 52], [1449340532540, 53], [1449426932540, 54], [1449513332540, 55], [1449599732540, 53], [1449686132540, 54], [1449772532540, 55],
+                    [1449858932540, 53], [1449945332540, 51], [1450031732540, 52], [1450118132540, 50], [1450204532540, 51], [1450290932540, 52], [1450377332540, 53], [1450463732540, 54], [1450550132540, 55], [1450636532540, 53],
+                    [1450722932540, 51], [1450809332540, 52], [1450895732540, 50], [1450982132540, 48], [1451068532540, 48], [1451154932540, 48], [1451241332540, 48], [1451327732540, 49], [1451414132540, 50], [1451500532540, 51],
+                    [1451586932540, 52], [1451673332540, 53], [1451759732540, 51], [1451846132540, 52], [1451932532540, 50], [1452018932540, 51], [1452105332540, 49], [1452191732540, 50], [1452278132540, 51], [1452364532540, 52],
+                    [1452450932540, 50], [1452537332540, 48], [1452623732540, 48], [1452710132540, 48], [1452796532540, 48], [1452882932540, 48], [1452969332540, 49], [1453055732540, 49], [1453142132540, 50], [1453228532540, 48]
+                ];
+
+                var AVAILABILITY_CHART_CONFIG = {
+                    title: 'Availability',
+                    initialData: initialAvailabilityData
+                };
+
+                var CAPACITY_CHART_CONFIG = {
+                    title: 'Capacity',
+                    initialData: initialCapacityData
+                };
+
+                var CHANNEL_CHART_CONFIG = {
+                    title: 'Open Cases By Channel',
+                    initialData: initialChannelData
+                };
+
+                var DURATION_CHART_CONFIG = {
+                    title: 'Average Case Duration',
+                    initialData: initialDurationData
+                };
+
+                // Availability Chart
+                drawPieChart('#graph1', AVAILABILITY_CHART_CONFIG, function (chart) {
+                    setTimeout(function () {
+                        chart.series[0].setData(updatedAvailabilityData);
+                        animateUpdate('update', nUsers, 25);
+                    }, 1000);
+                });
+
+                // Capacity Chart
+                drawPieChart('#graph2', CAPACITY_CHART_CONFIG, function (chart) {
+                    // find the one with the name "High", that's the percent
+                    var updatedPercentage = updatedCapacityData.filter(function (item) {
+                        return item.name === 'High';
+                    })[0].y;
+
+                    setTimeout(function () {
+                        chart.series[0].setData(updatedCapacityData);
+                        animateUpdate('update2', 85, 25);
+                    }, 1500);
+                });
+
+                drawBarChart('#graph3', CHANNEL_CHART_CONFIG, function (chart) {
+                    setTimeout(function () {
+                        chart.series[0].setData(updatedChannelData);
+                    }, 2000);
+                });
+
+                drawLineChart('#graph4', DURATION_CHART_CONFIG, function (chart) {
+                    console.log('Average Case Duration Graph Drawn');
+                });
+
+                function getTitleObj(confTitle) {
+                    return {
+                        text: confTitle,
+                        align: 'left',
+                        style: {
+                            'fontFamily': 'Salesforce Sans',
+                            'color': '#16325c',
+                            'fontSize': '14px'
+                        }
+                    }
+                }
+
+                function drawPieChart(selector, configuration, callback) {
+                    $(selector).highcharts({
+                        chart: { type: 'pie', height: 270, marginTop: 20 },
+                        title: getTitleObj(configuration.title),
+                        plotOptions: {
+                            pie: {
+                                shadow: false,
+                                center: ['50%', '50%'],
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                borderWidth: 0,
+                                dataLabels: { enabled: false }
+                            }
+                        },
+                        tooltip: { enabled: false },
+                        series: [{
+                            name: configuration.title,
+                            data: configuration.initialData,
+                            size: '80%',
+                            innerSize: '70%'
+                        }]
+                    }, function (chart) {
+                        $('text:contains("Highcharts.com")').remove();
+                        if (callback) callback(chart);
+                    });
+                };
+
+                function drawBarChart(selector, configuration, callback) {
+                    $(selector).highcharts({
+                        chart: { type: 'bar', marginTop: 100, marginBottom: 55, height: 270 },
+                        title: getTitleObj(configuration.title),
+                        xAxis: { categories: ['Phone', 'Chat', 'Email', 'Social', 'SMS', 'IoT'] },
+                        yAxis: { min: 0, tickInterval: 10, title: { text: '' }, opposite: true },
+                        legend: { enabled: false },
+                        tooltip: { enabled: false },
+                        plotOptions: {
+                            series: {
+                                stacking: 'normal',
+                                pointPadding: 0,
+                                groupPadding: 0.009,
+                                dataLabels: {
+                                    enabled: true,
+                                    color: '#fff',
+                                    style: {
+                                        'fontFamily': 'Salesforce Sans',
+                                        'fontSize': '14px',
+                                        'textShadow': '0',
+                                        'marginRight': '10px',
+                                        'fontWeight': 'normal'
+                                    },
+                                    reserveSpace: false,
+                                    formatter: function () { return this.y },
+                                    inside: true,
+                                    rotation: 0,
+                                    shadow: false,
+                                    align: 'right',
+                                    padding: 10
+                                }
+                            }
+                        },
+                        series: [{ data: configuration.initialData, color: '#4DB7DA' }]
+                    }, function (chart) {
+                        $('text:contains("Highcharts.com")').remove();
+                        if (callback) callback(chart);
+                    });
+                };
+
+                function drawLineChart(selector, configuration, callback) {
+                    $(selector).highcharts({
+                        chart: {
+                            zoomType: 'x',
+                            height: 230,
+                            marginTop: 70
+                        },
+                        title: getTitleObj(configuration.title),
+                        xAxis: { type: 'datetime' },
+                        yAxis: { title: 'Duration' },
+                        legend: { enabled: false },
+                        tooltip: { enabled: false },
+                        plotOptions: {
+                            area: {
+                                fillColor: "rgba(238, 248, 251, 0.8)",
+                                marker: { radius: 2 },
+                                lineColor: '#62BFDE',
+                                lineWidth: 2,
+                                states: { hover: { lineWidth: 1 } },
+                                threshold: null
+                            }
+                        },
+                        series: [{
+                            fillOpacity: 0.6,
+                            type: 'area',
+                            name: 'Case Duration',
+                            data: configuration.initialData
+                        }]
+                    }, function (chart) {
+                        $('text:contains("Highcharts.com")').remove();
+                        if (callback) callback(chart);
+                    });
+                };
+
+                function animateUpdate(id, end, speed) {
+                    var element = $('#' + id);
+                    var curr = parseInt(element.text());
+                    var isPercentage = element.text().indexOf('%') > -1;
+
+                    var timer = setInterval(function () {
+                        if (curr > end) curr--;
+                        if (curr < end) curr++;
+
+                        element.text(curr + (isPercentage ? '%' : ''));
+                        if (curr == end) clearInterval(timer);
+
+                    }, speed);
+                }
+
+            };
+
+            getRandomCaseNumber();
+
+            fetchUsers(function (usersList) {
+                addTableRows(usersList, updateTimers);
+                addCharts(usersList);
+            });
+            /* __________________________________ TAB FOR AGENT js ________________________________________- */
+
+            getRandomSkillLevel();
+            getRandomSkill();            
+
+        </script>
+        <!-- / JAVASCRIPT -->
+    </body>
+
+
+
+    </html>
+</apex:page>

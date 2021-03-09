@@ -1,0 +1,63 @@
+<apex:page id="ckz_BIB_Checkout_incl" sidebar="false" showHeader="false" standardStylesheets="false">
+    <!-- STANDARD FLOW -->
+
+    <!-- LLI FLOW -->
+    <c:ckz_Checkout_LLI_Header />
+    <c:ckz_Checkout_LLI_ShippingDetails />
+    <c:ckz_Checkout_LLI_OrderReview />
+    <c:ckz_Checkout_LLI_OrderPayment />
+
+    <c:ckz_Checkout_LLI_AddressModal />
+    <c:ckz_Checkout_LLI_AddressCarousel />
+
+    <c:ckz_Checkout_Payment_PO />
+
+    <script type="text/javascript">
+        $(function () {
+            // STANDARD FLOW
+            /*CCRZ.pubSub.on('view:cartCheckoutView:awaitingSubViewInit', function (theView) {
+              if (CCRZ.Checkout.userInfo) {
+                 CCRZ.Checkout.userInfo.register(theView);
+              }
+              if (CCRZ.Checkout.shipping) {
+            CCRZ.Checkout.shipping.register(theView);
+             }
+              if (CCRZ.Checkout.review) {
+                  CCRZ.Checkout.review.register(theView);
+               }
+              if (CCRZ.Checkout.payment) {
+                   CCRZ.Checkout.payment.register(theView);
+              }
+              CCRZ.pubSub.trigger('view:cartCheckoutView:subViewInit');
+            });*/
+
+            //LLI FLOW
+            CCRZ.pubSub.on('view:LLIcartCheckoutView:awaitingSubViewInit', function (theView) {
+                if (CCRZ.Checkout.LLIshippingdetails) {
+                    CCRZ.Checkout.LLIshippingdetails.register(theView);
+                }
+                if (CCRZ.Checkout.SubscReviewNew) {
+                    CCRZ.Checkout.SubscReviewNew.register(theView);
+                }
+                if (CCRZ.Checkout.LLIorderreview) {
+                    CCRZ.Checkout.LLIorderreview.register(theView);
+                }
+                if (CCRZ.Checkout.LLIpayment) {
+                    CCRZ.Checkout.LLIpayment.register(theView);
+                }
+                CCRZ.pubSub.trigger('view:LLIcartCheckoutView:subViewInit');
+            });
+
+            CCRZ.pubSub.on('view:LLIcartCheckoutView:refresh', function (theView) {
+                $('#cartHeader a').removeAttr('onclick').addClass('chead cartHeaderLink');
+                $('.cc_QuickOrder a').removeAttr('onclick');
+            });
+        });
+
+        function ckzBackToCart(){
+            window.location.href = '/' + CCRZ.pagevars.storefrontName
+                + "/ccrz__Cart?cartID="
+                + CCRZ.pagevars.currentCartID + getCSRQueryString();
+        }
+    </script>
+</apex:page>

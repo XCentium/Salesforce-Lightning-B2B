@@ -1,0 +1,94 @@
+.THIS {
+}
+
+.THIS h2 {
+    text-transform: uppercase;
+    font-size: 1.125em;
+    font-weight: 700;
+}
+
+.THIS .content-con {
+    position:relative;
+    min-height: 65px;
+}
+
+.THIS .loadingIndicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    display: none;
+    text-align: center;
+    background-color: rgba(255,255,255,.5);
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50);
+}
+
+.THIS .loadingIndicator.shown {
+    display: block;
+}
+
+.THIS .person {
+    position:relative;
+    height: 81px;
+    width: 100%;
+    list-style-type: none;
+    padding: 8px 0px;
+    overflow: hidden;
+    border-bottom: 1px solid #f4f4f4;
+    word-wrap: break-word;
+}
+
+.THIS .person-photo-container {
+    position: absolute;
+    left:0px;
+    height: 65px;
+    width:65px;
+    padding:10px;
+}
+
+.THIS .person-photo {
+    height: 45px;
+    width:45px;
+    border-radius: 50%;
+}
+
+.THIS .person-detail-container {
+    position: absolute;
+    left:65px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.THIS .person-name {
+    height: 65px;
+    font-size: 16px;
+    font: 700 16px/1.4 Montserrat;
+}
+
+.THIS .person-type {
+    height: 65px;
+}
+
+.THIS .buttons-container {
+	text-align: center;
+    margin-top: 10px;
+}
+.THIS .forceCommunityAskCommunity {
+	width: calc(50% - 5px) !important;
+}
+.THIS .forceCommunityAskCommunity:nth-child(1) {
+}
+.THIS .forceCommunityAskCommunity:nth-child(2) {
+    margin-left:10px;
+}
+
+.THIS .no-users {
+    width: 100%;
+    padding: 15px 0px;
+}

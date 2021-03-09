@@ -1,0 +1,2 @@
+<apex:page StandardController="Opportunity" extensions="Q2COrderNowOpp" action="{!orderNow}">
+</apex:page>

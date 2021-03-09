@@ -1,0 +1,59 @@
+<!--
+ - Created by brandon.rogers on 2019-06-04.
+ -->
+
+<apex:page id="ckz_tmpl_TwoCol_SDO_MA" applyHtmlTag="false" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false">
+    <!-- Sidebar -->
+    <!--<div class="wrapper">
+        <div id="sidebar">
+            <div id="dismiss">
+                <i class="fal fa-times fa-2x"></i>
+            </div>
+
+            <div class="sidebarMiniCart hide">
+                <apex:insert name="MiniCartBox"/>
+            </div>
+        </div>
+    </div>-->
+
+    <div class="container cc_main_container ckz_tmpl_MA_TwoCol_RCG">
+
+        <div class="row cc_main_row">
+
+            <div class="col-sm-3">
+                <div id="MyAccount_navSection"></div> <!-- placeholder for MyAccount Nav in right nav -->
+
+                <div class="promotion-box-LeftNav"></div>
+                <div class="promotion-box-RightNav"></div>
+            </div>
+
+            <div class="col-sm-9">
+                <apex:insert name="body"/> <!-- REQUIRED FOR ANYTHING TO RENDER -->
+
+
+
+                <!--<apex:insert name="Banner" />
+                <div class="promotion-box-Banner"></div>
+                <div class="effwig"></div>
+                <apex:insert name="ProductSearch" />
+                <apex:insert name="CrossSell" />
+                <div class="effright"></div>
+                <div class="search-box-RightNav" />
+                <div id="MyAccount_navSection"></div> &lt;!&ndash; placeholder for MyAccount Nav in right nav &ndash;&gt;
+                <apex:insert name="ContactUs" />
+                <apex:insert name="SellerLocatorBox"/>
+                <div id="categories-right-nav"></div> &lt;!&ndash; placeholder for category tree in right nav &ndash;&gt;
+                <div class="widgetSection"></div>
+                <div class="promotion-box-RightNav"></div>
+                <apex:insert name="SideNavigation" />-->
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        jQuery(function $() {
+
+        });
+    </script>
+</apex:page>

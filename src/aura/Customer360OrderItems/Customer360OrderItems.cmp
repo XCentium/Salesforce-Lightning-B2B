@@ -1,0 +1,59 @@
+<aura:component controller="Customer360Controller" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="order" type="Map"></aura:attribute>
+    <aura:attribute name="orderItems" type="Map[]"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="c.init"></aura:handler>
+    
+    <lightning:card title="Items" iconName="standard:shipment">
+        <div class="slds-page-header slds-m-horizontal_small">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <b>Shipping To: </b> {!v.order.Account.Name + ', ' + v.order.ShippingAddress.street + ', ' + v.order.ShippingAddress.city + ', ' + v.order.ShippingAddress.state + ' ' + v.order.ShippingAddress.postalcode}
+                </div>
+            </div>
+        </div>
+        
+        
+        <table class="slds-table slds-no-row-hover slds-table_cell-buffer">
+            <thead>
+                <tr>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Product Details">Product Details</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Quantity">Quantity</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Unit Price">Unit Price</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Line Adjustments">Line Adjustments</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Item Total">Item Total</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.orderItems}" var="orderItem">
+                    <tr class="slds-hint-parent">
+                        <th data-label="Product Details">
+                            <div class="slds-truncate">{!orderItem.Product2.Name}</div>
+                        </th>
+                        <td data-label="Quantity">
+                            <div class="slds-truncate">{!orderItem.Quantity}</div>
+                        </td>
+                        <td data-label="Unit Price">
+                            <div class="slds-truncate"><ui:outputCurrency value="{!orderItem.ListPrice}"/></div>
+                        </td>
+                        <td data-label="Line Adjustments">
+                            <div class="slds-truncate"><ui:outputCurrency value="{!orderItem.ListPrice - orderItem.UnitPrice}"/></div>
+                        </td>
+                        <td data-label="Item Total">
+                            <div class="slds-truncate"><ui:outputCurrency value="{!orderItem.TotalPrice}"/></div>
+                        </td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,71 @@
+<!--
+Copyright 2016 salesforce.com, inc. All rights reserved.
+
+Use of this software is subject to the salesforce.com Developerforce Terms of Use and other applicable terms that salesforce.com may make available, as may be amended from time to time. You may not decompile, reverse engineer, disassemble, attempt to derive the source code of, decrypt, modify, or create derivative works of this software, updates thereto, or any part thereof. You may not use the software to engage in any development activity that infringes the rights of a third party, including that which interferes with, damages, or accesses in an unauthorized manner the servers, networks, or other properties or services of salesforce.com or any third party.
+
+WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL SALESFORCE.COM HAVE ANY LIABILITY FOR ANY DAMAGES, INCLUDING BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR DAMAGES BASED ON LOST PROFITS, DATA OR USE, IN CONNECTION WITH THE SOFTWARE, HOWEVER CAUSED AND, WHETHER IN CONTRACT, TORT OR UNDER ANY OTHER THEORY OF LIABILITY, WHETHER OR NOT YOU HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+-->
+
+<aura:component description="toolbar that contains help information and a few buttons." implements="c:panel" controller="ctiApexController">
+    <aura:attribute name="presence" type="String" description="Could be Available, Busy or Unavailable"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:attribute name="wrongAdapterUrl" type="Boolean" default="false"/>
+    <aura:attribute name="currentAdapter" type="String"/>
+    <aura:attribute name="correctAdapter" type="String"/>
+    
+    <aura:attribute name="primaryIcon" type="String"/>
+    <aura:attribute name="secondaryIcon" type="String"/>
+
+    <div class="slds-grid slds-m-around--x-small">
+        <!-- <aura:if isTrue="{!v.presence == 'Available'}"> -->
+            <div style="margin-right: 40px;">
+                <c:ctiActionsList />
+            </div>
+        <!-- </aura:if> -->
+        <div class="slds-col slds-has-flexi-truncate" style="padding-top: 7px;">
+            <c:statusDropdown presence="{!v.presence}"/>
+        </div>
+        <div class="slds-col slds-no-flex">
+            <div class="slds-button-group">
+                <aura:if isTrue="{!v.presence == 'Available'}">
+                <button title="Simulate an incoming call" class="slds-button slds-col--padded slds-icon-text-default" onclick="{!c.simulateIncomingCall}">
+                    <lightning:icon class="slds-m-left--medium slds-button__icon customIcon" iconName="{!v.primaryIcon}" size="x-small"></lightning:icon>
+                </button>
+              </aura:if>
+                <button title="Help" class="slds-button slds-icon-text-default" onclick="{!c.simulateIncomingCall2}">
+                    <lightning:icon class="slds-button__icon customIcon" iconName="{!v.secondaryIcon}" size="x-small"></lightning:icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop--open" id="backGroundSectionId" style="display: none;">
+        <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.showHelp}">
+                        <lightning:icon class="slds-button__icon slds-button__icon--large" iconName="action:close" size="x-small"></lightning:icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading--small">Open CTI</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <div class="slds-text-body--regular helpBody">
+
+                        <!-- <aura:if isTrue="{!v.wrongAdapterUrl}">
+                            <div class="slds-box">
+                                <div class="slds-text-heading_small" style="color: red;">Wrong Lightning CTI Adapter URL</div>
+                                <p>You need to change the <i>Lightning CTI Adapter URL</i> in the <i>Lightning Demo CTI</i> Call Center record.</p>
+                                <p>Please change the URL to:</p>
+                                <p><b>{!v.correctAdapter}</b></p>
+                            </div>
+                        </aura:if> -->
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+    </div>
+</aura:component>

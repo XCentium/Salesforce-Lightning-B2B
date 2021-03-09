@@ -1,0 +1,981 @@
+<apex:page controller="Catalog_Controller" applyBodyTag="false" docType="html-5.0" showHeader="false" standardStylesheets="false" applyHtmlTag="false">
+<html>
+<head>
+    <title>Catalog Cart</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width = device-width, height = device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    
+    <link rel="stylesheet" href="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/salesforce1/styles.css')}"/>
+    <link rel="stylesheet" href="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/salesforce1/icons.css')}"/>
+    <!-- Inline CSS -->
+    <style>
+        @charset "UTF-8";
+        /* iPhone Styling */
+        @media (max-width: 400px) {
+            .phoneFullSize { margin: 0px !important; width: 100%; }
+            .contentText, .contentTitle { font-size: 16px; }
+            .BlurbSection { display: none; }
+            .orderContent { height: 81px; }
+            .scrollContent { top: 101px; height: calc(100% - 57px - 101px); }
+            .buttonBottomBuffer {margin-bottom: calc(41px + 4px); line-height: 95%;}
+            .CartImg { width: 50px; height: 77px; }
+            .CartText {
+                width: calc(100% - 58px); 
+                width: -webkit-calc(100% - 58px); 
+            }
+            .title { font-size: calc({!HTMLENCODE(myCatalogTemplate.Title_Text_Size__c)} * 0.75); }
+            .subtitle { font-size: 40px; }
+            .contentItem { font-size: 2em; }
+        }
+        /* non-iPhone Styling */
+        @media (min-width: 401px) {
+            .contentText, .contentTitle { font-size: 20px; }
+            .orderContent { height: 85px; }
+            .scrollContent { top: 105px; height: calc(100% - 57px - 105px); }
+            .CartImg { width: 80px; height: 105px; }
+            .CartText { 
+                width: calc(100% - 88px); 
+                width: -webkit-calc(100% - 88px); 
+            }
+            .title { font-size: {!HTMLENCODE(myCatalogTemplate.Title_Text_Size__c)}; }
+            .subtitle { font-size: 44px; }
+            .contentItem { font-size: 2.5em; }
+        }
+    
+        /* Page styling */
+        @font-face {
+            font-family: 'LeagueGothic';
+            src: url("{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/LeagueGothic')}") format('truetype');
+            font-style: normal; 
+        }
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+        body {
+            background: url("{!HTMLENCODE(backgroundURL)}") no-repeat center center fixed; 
+            background-size: cover;
+            width: auto;
+            padding: 0px;
+            margin: 0px;
+            display: block;
+            color: #333;
+            font-family: 'ProximaNova', sans-serif;
+            font-weight: 300;
+            -webkit-font-smoothing: antialiased; 
+        }
+        #fullView {position: relative;}
+        .fullPage {position: absolute;}
+        #fullView,.fullPage {
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            -webkit-animation-duration: .7s;
+            animation-duration: .7s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+        .bg-Card {background-color: rgba(255,255,255,0.7);}
+    
+        /* Page Sections */
+        .header {
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            height: 36px;
+            padding: 8px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #FFF;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+            height: 57px;
+            padding: 8px 6px;
+            text-align: center;
+        }
+        .scrollContent {
+            position: fixed;
+            width: 100%;
+            bottom: 57px;
+            padding: 0 10px;
+            -webkit-overflow-scrolling: touch;
+            overflow-y: scroll;
+        }
+        .orderContent {
+            padding: 8px;
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            top: 10px;
+        }
+        .listContent {
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        .hideListContent {
+            height: 0%;
+            opacity:0;
+            transform:scale(1,0);
+            -webkit-transform:scale(1,0); /* Safari and Chrome */
+        }
+        .listImgContainer { width: 64px; padding-right: 6px; }
+        .listImg {max-height: 100px; max-width: 64px;}
+        .CartImg {
+            background-position: center center;
+            background-size: cover;
+            background-image: url("{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Images/NoImage.png')}"); 
+            margin-right: 3px;
+        }
+        .CartText {}
+        .CartItemButton { position: absolute; bottom: 8px; right: 99px; }
+        .checkoutContainer { width: 100%; text-align: center; }
+        .quantity { bottom: 8px; right: 8px; }
+        .content {width: 100%;}
+        .contentTitle {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .contentText {
+            margin-bottom: 4px;
+        }
+        .active { display: block !important; }
+        .inactive {display: none !important;}
+        .price {color: #B62525;}
+        .inputC {
+            padding: 10px 6px;
+            font-size: 16px;
+            height: 41px;
+            bottom: 8px;
+            right: 8px;
+            box-shadow: none;
+        }
+        .pvc {padding-top: 12px; padding-bottom: 9px;}
+        .mbxx {margin-bottom: 49px;}
+        .mhxs {margin-left: 3px; margin-right: 3px;}
+        .mt10 { margin-top: 10px; }
+        .mb10 { margin-bottom: 10px; }
+        .mbxs { margin-bottom: 4px; }
+        .pa8 { padding: 8px; }
+        .wid100 { width: 100%; }
+        .op0 {opacity: 0; z-index: -1;}
+    
+        /* Customization */
+        .phoneFullSize { min-width: 284px; }
+        .catalogBtn {
+            color: #FFF;
+            background-color: #428BCA;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 5px;
+            padding: 10px 18px;
+            margin: 0 3px;
+            height: 41px;
+        }
+        .catalogBtnAlt {
+            color: #3c3d3e;
+            background-color: #FFF;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+            padding: 10px 18px;
+            margin: 0 3px;
+            height: 41px;
+        }
+        .catalogBtn:hover{ background-color: #3b7fba; }
+        .catalogBtnAlt:hover{ background-color: #E6E6E6; border-color: #C0C0C0; }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        select::-ms-expand {display: none;}
+        select {direction: rtl;}
+        option {direction: ltr;}
+        select.Quantity {
+            color: #3c3d3e;
+            background-color: #FFF;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+            padding-right: 27px;
+            width: 85px;
+            height: 41px;
+            -webkit-appearance: none;
+        }
+        select.Quantity:hover{ background-color: #E6E6E6; border-color: #C0C0C0; }
+        .QuantityLabel {
+            bottom: 20px;
+            right: 57px;
+            z-index: 20;
+            font-size: 12px;
+            letter-spacing: -0.07em;
+        }
+        span.pickistSpot:before {
+            font-size: 15px;
+            top: initial;
+            bottom: 20px;
+            right: 14px;
+            z-index: 20;
+        }
+        .cartSizing {
+            width: calc(100% - 20px);
+            margin-left: 10px;
+            margin-top: 10px;
+            padding: 8px;
+        }
+        #summaryInformation div { line-height: 20px; }
+        .border-accent {border-color: rgba(100,100,100,0.25);}
+        .raisedX {
+            font-size: 14px;
+            position: relative;
+            bottom: 1px;
+            margin: 0 2px;
+        }
+        .title {
+            font-weight: normal;
+            color: {!HTMLENCODE(myCatalogTemplate.Title_Text_Color__c)};
+            font-family: LeagueGothic, Impact, sans-serif !important;
+            line-height: 0.9;
+            letter-spacing: -0.01em;
+        }
+        .subtitle {
+            font-weight: normal;
+            color: {!HTMLENCODE(myCatalogTemplate.Subtitle_Text_Color__c)};
+            font-family: LeagueGothic, Impact, sans-serif !important;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0.5px 0 rgba(200,200,200,1), 0 1px 0 rgba(190,190,190,1), 0 1.5px 0 rgba(180,180,180,1), 0 2px 0 rgba(170,170,170,1), 0 2.5px 0 rgba(160,160,160,1), 0 3px 0 rgba(150,150,150,1), 0 3.5px 0 rgba(140,140,140,1);
+        }
+        .categorySubtitle {color: {!HTMLENCODE(myCatalogTemplate.Category_Text_Color__c)};}
+        .contentItem {
+            font-family: LeagueGothic, Impact, sans-serif !important;
+            margin: 0 8px !important;
+            padding: 4px 12px !important;
+            background: rgba(255,255,255,.8);
+            display: inline;
+            overflow: visible;
+            line-height: 1.8em !important;
+            text-transform: uppercase;
+    
+        }
+    
+    
+        /* LOOKUP STYLES */
+        button.close {
+            padding: 0;
+            cursor: pointer;
+            background: transparent;
+            border: 0;
+            -webkit-appearance: none;
+            /* Secondary Attributes */
+            font-size: 21px;
+            font-weight: bold;
+            line-height: 1;
+            color: #000;
+            text-shadow: 0 1px 0 #fff;
+            opacity: .2;
+            filter: alpha(opacity=20);
+            float: right;
+        }
+        .searchWrapper{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom:0;
+            height: 100%;
+            z-index:1000;
+        }
+        .mySearchBox {
+            padding: 7px 44px 7px 7px;
+            line-height: 25px;
+            box-sizing: border-box;
+        }
+        .myField {
+            padding: 7px 14px;
+            line-height: 25px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+        }
+        .myTable td {
+            padding: 14px;
+            cursor: pointer;
+        }
+        .table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+            border: 1px solid #ddd;
+        }
+        .topBar {
+            display: -webkit-box;
+            display: -webkit-flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-pack: start;
+            -webkit-box-align: center;
+            box-orient: horizontal;
+            box-pack: start;
+            box-align: center;
+            -webkit-flex-wrap: nowrap;
+            -webkit-align-items: center;
+            -webkit-justify-content: space-between;
+            overflow: hidden;
+            vertical-align: top;
+            background-color: #428BCA;
+            border-bottom: 1px solid rgba(0,0,0,0.15);
+            height: 46px;
+        }
+        .cancelButton {
+            font-size: 13px;
+            background-color: rgba(0,0,0,0.15);
+            height: 30px;
+            margin: 7px;
+            padding: 0 14px 2px;
+            min-width: 0;
+            cursor: pointer;
+        }
+    
+        /* ANIMATED STYLES */
+        .animatedFast {
+          -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+          -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+        }
+        .animated {
+          -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+          -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+        }
+        .animatedSlow {
+          -webkit-animation-duration: 1.4s;
+          animation-duration: 1.4s;
+          -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+        }
+    
+        @-webkit-keyframes fadeInRightBig {
+          0% {
+            opacity: 0;
+            -webkit-transform: translate3d(2000px, 0, 0);
+            transform: translate3d(2000px, 0, 0);
+          }
+    
+          100% {
+            opacity: 1;
+            -webkit-transform: none;
+            transform: none;
+          }
+        }
+    
+        @keyframes fadeInRightBig {
+          0% {
+            opacity: 0;
+            -webkit-transform: translate3d(2000px, 0, 0);
+            -ms-transform: translate3d(2000px, 0, 0);
+            transform: translate3d(2000px, 0, 0);
+          }
+    
+          100% {
+            opacity: 1;
+            -webkit-transform: none;
+            -ms-transform: none;
+            transform: none;
+          }
+        }
+    
+        .fadeInRightBig {
+          -webkit-animation-name: fadeInRightBig;
+          animation-name: fadeInRightBig;
+        }
+    
+        @-webkit-keyframes fadeInLeftBig {
+          0% {
+            opacity: 0;
+            -webkit-transform: translate3d(-2000px, 0, 0);
+            transform: translate3d(-2000px, 0, 0);
+          }
+    
+          100% {
+            opacity: 1;
+            -webkit-transform: none;
+            transform: none;
+          }
+        }
+    
+        @keyframes fadeInLeftBig {
+          0% {
+            opacity: 0;
+            -webkit-transform: translate3d(-2000px, 0, 0);
+            -ms-transform: translate3d(-2000px, 0, 0);
+            transform: translate3d(-2000px, 0, 0);
+          }
+    
+          100% {
+            opacity: 1;
+            -webkit-transform: none;
+            -ms-transform: none;
+            transform: none;
+          }
+        }
+    
+        .fadeInLeftBig {
+          -webkit-animation-name: fadeInLeftBig;
+          animation-name: fadeInLeftBig;
+        }
+    
+        @-webkit-keyframes fadeOutRightBig {
+          0% {
+            opacity: 1;
+          }
+    
+          100% {
+            opacity: 0;
+            -webkit-transform: translate3d(2000px, 0, 0);
+            transform: translate3d(2000px, 0, 0);
+          }
+        }
+    
+        @keyframes fadeOutRightBig {
+          0% {
+            opacity: 1;
+          }
+    
+          100% {
+            opacity: 0;
+            -webkit-transform: translate3d(2000px, 0, 0);
+            -ms-transform: translate3d(2000px, 0, 0);
+            transform: translate3d(2000px, 0, 0);
+          }
+        }
+    
+        .fadeOutRightBig {
+          -webkit-animation-name: fadeOutRightBig;
+          animation-name: fadeOutRightBig;
+        }
+    
+        @-webkit-keyframes fadeOutLeftBig {
+          0% {
+            opacity: 1;
+          }
+    
+          100% {
+            opacity: 0;
+            -webkit-transform: translate3d(-2000px, 0, 0);
+            transform: translate3d(-2000px, 0, 0);
+          }
+        }
+    
+        @keyframes fadeOutLeftBig {
+          0% {
+            opacity: 1;
+          }
+    
+          100% {
+            opacity: 0;
+            -webkit-transform: translate3d(-2000px, 0, 0);
+            -ms-transform: translate3d(-2000px, 0, 0);
+            transform: translate3d(-2000px, 0, 0);
+          }
+        }
+    
+        .fadeOutLeftBig {
+          -webkit-animation-name: fadeOutLeftBig;
+          animation-name: fadeOutLeftBig;
+        }
+    
+        @-webkit-keyframes fadeIn {
+          0% {
+            opacity: 0;
+          }
+    
+          100% {
+            opacity: 1;
+          }
+        }
+    
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+          }
+    
+          100% {
+            opacity: 1;
+          }
+        }
+    
+        .fadeIn {
+          -webkit-animation-name: fadeIn;
+          animation-name: fadeIn;
+        }
+    
+        @-webkit-keyframes fadeOut {
+          0% {
+            opacity: 1;
+          }
+    
+          100% {
+            opacity: 0;
+          }
+        }
+    
+        @keyframes fadeOut {
+          0% {
+            opacity: 1;
+          }
+    
+          100% {
+            opacity: 0;
+          }
+        }
+    
+        .fadeOut {
+          -webkit-animation-name: fadeOut;
+          animation-name: fadeOut;
+        }
+    
+    </style>
+</head>
+<!-- Body -->
+<body>
+<apex:form >
+    <div id="fullView">
+
+        <!-- PAGE 1 of CART : VIEW CART -->
+        <div class="fullPage" id="viewCart">
+            <div class="orderContent bg-Card">
+                <div class="contentText tc animated" id="CartTotals">
+                    Cart Subtotal (
+                    <span class="TotalOrderItems">{!myOrder.Items__c}</span>
+                     Items ):
+                    <span class="price"> $<span class="TotalCost">{!myOrder.Total_Cost__c}</span>
+                    </span>
+                </div>
+                <div class="checkoutContainer">
+                    <input class="phoneFullSize catalogBtn" type="button" onclick="toSelectAccount()" value="Proceed to Checkout"/>
+                </div>
+            </div>
+            <!--<div class="scrollContainer">-->
+                <div class="scrollContent" id="scroll1">
+                    <!-- Items in Cart -->
+                    <apex:repeat value="{!myOrder.Catalog_Line_Items__r}" var="item">
+                        <div class="listContent bg-Card pos-rel" id="ID-{!HTMLENCODE(item.Id)}">
+                            <div class="CartImg a-top dib" style="background-image: url('{!HTMLENCODE(item.VF_Image__c)}')"/>
+                            <div class="CartText dib">
+                                <div class="dib a-top fr contentText price">
+                                    $<span class="ItemPrice">{!item.Product_Price__c}</span>
+                                </div>
+                                <div class="a-top contentTitle prm text-color-1 buttonBottomBuffer">
+                                    {!HTMLENCODE(item.Product_Name__c)}
+                                </div>
+                                <div class="a-top BlurbSection text-color-2 mbxx">
+                                    <apex:outputText escape="false" value="{!HTMLENCODE(item.Product_Short_Description__c)}"/>
+                                </div>
+                                <div class="inactive ActualQuantity">{!item.Quantity__c}</div>
+                                <input type="button" onclick="DeleteJS('{!JSINHTMLENCODE(item.Id)}')" value="Delete" class="CartItemButton catalogBtnAlt animated" />
+                                <div>
+                                    <span class="QuantityLabel text-color-6 pos-abs">QTY</span>
+                                    <span class="label--icon-r icon-utility-down text-color-3 pickistSpot"/>
+                                    <select class="Quantity pos-abs inputC text-color-1 fw-semibold input" id="{!HTMLENCODE(item.id)}">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:repeat>
+                    <div class="listContent bg-Card tc text-color-2 inactive" id="NoItems">
+                        No items in cart.
+                    </div>
+                </div>
+            <!--</div>-->
+            
+            <div class="footer">
+                <input class="catalogBtnAlt mhxs" type="button" onclick="CatalogJS()" value="Return to Catalog"/>
+                <input class="catalogBtnAlt mhxs" type="button" onclick="ClearJS()" value="Clear Order"/>
+            </div>
+        </div>
+
+
+
+        <!-- PAGE 2 of CART : SELECT ACCOUNT -->
+        <div class="fullPage op0" id="selectAccount">
+            <div class="cartSizing bg-Card tc">
+                <div class="contentText text-color-1">Select an Account</div>
+            </div>
+
+            <div class="cartSizing bg-Card" style="top: 20px;">
+
+
+                <!-- BEGIN LOOKUP COMPONENT -->
+                <div class="LookupComponent">
+                    <div class="myInputWrapper mbs">
+                        <table class="wid100">
+                            <tr>
+                                <td class="wid100">
+                                    <input onclick="showSearch();" id="field" class="myField text-color-1 wid100 bg-1 border border--input_default brm" />
+                                    <div id="InputId" style="display: none;"></div>
+                                </td>
+                                <td onclick="clearValue();" class="pam prs tc a-mid">
+                                    <button onclick="clearValue();" type="button" class="close" aria-hidden="true">&times;</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="searchWrapper wid100 bg-2">
+                        <div class="topBar">
+                            <span onclick="hideSearch();" class="pos-abs tc a-mid dib text-color-5 brm cancelButton">
+                                <span class="pos-rel f4" style="font-family:proximaRegular; top: 7px;">&times;</span>
+                            </span>
+                            <span class="text-color-5 f2 center fw-semibold">Account Name</span>
+                        </div>
+                            <apex:actionRegion >
+                                <apex:outputPanel id="myTable2">
+                                <div class="pam bg-2">
+                                    <apex:inputText styleClass="mySearchBox wid100 bg-1 border border--input_default brm" onKeyup="PopulateValuesJS();" value="{!filter}" html-placeholder="Search Accounts"/>
+                                </div>
+                                <table class="wid100 bg-2 table-responsive table-bordered">
+                                    <apex:repeat value="{!myValues}" var="i">
+                                        <tr>
+                                           <td class="pam wid100" style="cursor: pointer;" onclick="setValue('{!JSINHTMLENCODE(i.value)}','{!JSINHTMLENCODE(i.label)}');">
+                                               <apex:outputText styleClass="text-color-1" escape="false" value="{!HTMLENCODE(i.label)}" />
+                                           </td>
+                                       </tr>
+                                    </apex:repeat>
+                                </table>
+                            </apex:outputPanel>
+                            <apex:actionFunction action="{!PopulateValues}" name="PopulateValuesApex" rerender="myTable2" oncomplete="PopulateValuesComplete();"/>
+                        </apex:actionRegion>
+                    </div>
+                </div>
+                <!-- END LOOKUP COMPONENT -->
+
+
+                <div class="f4 text-color-2 mbs">
+                    Selecting an Account populates your order with shipping and payment information.  
+                </div>
+            </div>
+            
+            <div class="cartSizing tc" style="padding: 0px;">
+                <input class="catalogBtn phoneFullSize f3" type="button" onclick="toReviewOrder()" value="Confirm Account"/>
+            </div>
+            
+            <div class="footer">
+                <input class="catalogBtnAlt f3" style="min-width: 284px;" type="button" onclick="CatalogJS()" value="Cancel and Continue Shopping"/>
+            </div>
+        </div>
+
+
+
+        <!-- PAGE 3 of CART : ORDER SUMMARY -->
+        <div class="fullPage op0" id="orderSummary">
+            <div class="orderContent bg-Card">
+                <div class="contentText tc text-color-1">Order Summary</div>
+                <div class="checkoutContainer">
+                    <input class="phoneFullSize catalogBtn" type="button" onclick="toPlaceOrder()" value="Place your Order"/>
+                </div>
+            </div>
+
+            <div class="scrollContainer">
+                <div class="scrollContent" id="scroll2">
+                    <div id="summaryInformation" class="listContent bg-Card pos-rel">
+                        <div class="text-color-2">Shipping to:</div>
+                        <!-- Account Name gets inserted here by jQuery setValue() -->
+                        <div class="AccountName contentTitle text-color-1 mls "/>
+
+                        <div class="size-full border-bottom border-accent mvs"/>
+
+                        <div class="size-full">
+                            <div class="fl text-color-2">Items:</div>
+                            <div class="fr price">$<span class="TotalCost">{!myOrder.Total_Cost__c}</span></div>   
+                            <div class="cb"/>                   
+                        </div>
+                        <div class="size-full">
+                            <div class="fl text-color-2">Other Costs:</div>
+                            <div class="fr text-color-1">$0.00</div>   
+                            <div class="cb"/>                   
+                        </div>
+
+                        <div class="size-full mts">
+                            <div class="fl contentTitle text-color-1">Total Cost:</div>
+                            <div class="fr contentTitle price">$<span class="contentTitle TotalCost">{!myOrder.Total_Cost__c}</span></div>   
+                            <div class="cb"/>                   
+                        </div>
+                    </div>
+
+                    <div class="pa8 mb10 bg-Card pos-rel">
+                        <div class="checkoutContainer mb10">
+                            <input class="phoneFullSize catalogBtnAlt" type="button" onclick="returnToCart()" value="Edit Items in Cart"/>
+                        </div>
+                        <!-- Items in Cart -->
+                        <apex:repeat value="{!myOrder.Catalog_Line_Items__r}" var="item">
+                            <div class="border-top border-accent mvm"/>
+                            <div class="mt10" id="IDsum-{!HTMLENCODE(item.Id)}">
+                                <div class="CartImg a-top dib" style="background-image: url('{!HTMLENCODE(item.VF_Image__c)}')"/>
+                                <div class="CartText dib">
+                                    <div class="a-top contentTitle prm text-color-1">
+                                        {!HTMLENCODE(item.Product_Name__c)}
+                                    </div>
+                                    <div class="a-top BlurbSection text-color-2 mbxs">
+                                        <apex:outputText escape="false" value="{!HTMLENCODE(item.Product_Short_Description__c)}"/>
+                                    </div>
+                                    <div class="inactive ActualQuantity">{!item.Quantity__c}</div>
+                                    
+                                    <!-- Item information Altered -->
+                                    <div class="a-top text-color-2">
+                                        <span id="sumQuantbyID-{!item.id}">{!item.Quantity__c}</span>
+                                        <span class="raisedX">x</span>
+                                        $<span class="ItemPrice">{!item.Product_Price__c}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:repeat>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <input class="catalogBtnAlt f3" type="button" onclick="CatalogJS()" value="Cancel and Continue Shopping"/>
+
+            </div>
+        </div>
+
+
+
+        <!-- PAGE 4 of CART : THANK YOU -->
+        <div class="fullPage op0" id="thankYou">
+            <div class="pos-abs tc center" style="width:450px; height: 300px; top: 150px; left: calc(50% - 225px);">
+                <div class="subtitle caps">Thank You!</div>
+                <div class="f1 categorySubtitle mbs">for shopping with</div>
+                <div class="title caps mbs">{!HTMLENCODE(myCatalogTemplate.Title_Text__c)}</div>
+                <div class="f2 categorySubtitle mbm center" style="width: 250px; line-height: 1.1em;">A catalog order has been added to your account.</div>
+                <a class="f1 mbs contentItem" onclick="CatalogJS()">Return to Catalog</a>
+            </div>
+        </div>
+
+
+
+    </div>
+    
+    <apex:actionFunction name="toCatalog" action="{!toCatalog}"/>
+    <apex:actionFunction name="clearOrder" action="{!clearOrder}" oncomplete="CompletedJS()"/>
+    <apex:actionFunction name="completeOrderApex" action="{!completeOrder}" oncomplete="CompletedJS()"/>
+    <apex:actionFunction name="deleteApex" action="{!deleteFromCart}" oncomplete="CompletedJS()">
+        <apex:param name="firstParam" assignTo="{!productId}" value=""/>
+    </apex:actionFunction>
+    <apex:actionFunction name="updateQuantApex" action="{!updateQuantity}" oncomplete="CompletedJS()">
+        <apex:param name="firstParam" assignTo="{!productId}" value=""/>
+        <apex:param name="secondParam" assignTo="{!productQuantity}" value=""/>
+    </apex:actionFunction>
+    <apex:actionFunction name="updateAccountIdApex" action="{!updateAccount}" oncomplete="CompletedJS()">
+        <apex:param name="firstParam" assignTo="{!accountId}" value=""/>
+    </apex:actionFunction>
+
+</apex:form>
+
+<!-- Javascript -->
+<script type="text/javascript" src="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/jQuery.min.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/security/Class.create.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.ProductCatalogResources, '/ProductCatalog/Libs/security/jQueryEncoder.js')}"></script>
+<script type="text/javascript">
+    /* BASIC TOTALS VARIABLES FOR CART */
+    var totalItems = new Number();
+    var totalCost = new Number();
+
+    $(document).ready(function() {
+        var items = $(".TotalOrderItems").html().trim();
+        showQuantities();
+        showNone(items);
+
+        /* Cancel Salesforce1 bonus scroll */
+        document.addEventListener('touchmove', function(e){e.preventDefault()}, false);
+        document.getElementById('scroll1').addEventListener('touchmove', function(e){e.stopPropagation()}, false);
+        document.getElementById('scroll2').addEventListener('touchmove', function(e){e.stopPropagation()}, false);
+
+        /* Set proper url for desktop */
+        var stateObj = { foo: "bar" };
+        history.replaceState(stateObj, "Catalog Cart", "/apex/catalog_cart");
+    });
+
+    /* Cart Calculation Javascript Functions */
+    function showQuantities() {
+        var rows = $("[id^=ID-]");
+        rows.each(function() {
+            var rowQuantity = $('.Quantity').find(":selected").text();
+            var realQuant = $(this).find(".ActualQuantity").html();
+            $(this).find('select option[value="' + realQuant + '"]').prop('selected',true);
+        });
+    }
+    function calculateTotal() {
+        var rows = $("[id^=ID-]");
+        totalItems = 0;
+        totalCost = 0;
+        rows.each(function() {
+            var realQuant = parseFloat($(this).find(".ActualQuantity").html(), 10);
+            console.log("RealQuant:" + realQuant);
+            var realPrice = parseFloat($(this).find(".ItemPrice").html(), 10);
+            var ItemCost = realQuant * realPrice;
+            totalItems += realQuant;
+            totalCost += ItemCost;
+        });
+    }
+    function animateTotal(totItems, totPrice) {
+        totalItems = String(totalItems);
+        var decimalTotPrice = parseFloat(Math.round(totPrice * 100) / 100).toFixed(2);
+        $("#CartTotals").removeClass("fadeIn").addClass("fadeOut");
+        setTimeout(function(){
+            $(".TotalOrderItems").html( $.encoder.encodeForHTML($.encoder.canonicalize(totalItems)) );
+            $(".TotalCost").html( $.encoder.encodeForHTML($.encoder.canonicalize(decimalTotPrice)) );
+            $("#CartTotals").removeClass("fadeOut").addClass("fadeIn");
+            showNone(totalItems);
+        }, 500);
+    }
+    function DeleteJS(item) {
+        HideJS(item);
+        deleteApex(item);
+    }
+    function HideJS(item) {
+        var row = $("#ID-" + item);
+        row.addClass("animatedSlow fadeOutLeftBig"); 
+        setTimeout(function(){
+            row.hide(250, function() {
+                row.remove();
+                calculateTotal();
+                animateTotal(totalItems, totalCost);
+            });
+        }, 150);
+    }
+    function ClearJS() {
+        var rows = $("[id^=ID-]");
+        rows.addClass("animatedSlow fadeOutLeftBig"); 
+        setTimeout(function(){
+            rows.hide(250, function() {
+                rows.remove();
+                calculateTotal();
+                animateTotal(totalItems, totalCost);
+            });
+        }, 150);
+        clearOrder();
+    }
+    function showNone(number) {
+        if(number == "0") { 
+            $("#NoItems").removeClass("inactive").addClass("fadeIn"); 
+        }
+    }    
+    $('.Quantity').change(function() {
+        var payload = $(this).val();
+        var id = $(this).attr("id");
+        $(this).closest(".listContent").find(".ActualQuantity").html( $.encoder.encodeForHTML($.encoder.canonicalize(payload)) );
+        $('#sumQuantbyID-'+id).html( $.encoder.encodeForHTML($.encoder.canonicalize(payload)) );
+        updateQuantApex(id,payload);
+        calculateTotal();
+        animateTotal(totalItems, totalCost);
+    }); 
+    $('#field').change(function() {
+        var payload = $(this).val();
+        $('#field').html( $.encoder.encodeForHTML($.encoder.canonicalize(payload)) );
+        console.log("field changed and encoded");
+    });
+    
+    /* Lookup Javascript Functions */
+    function showSearch() {
+        PopulateValuesJS();
+        $('.searchWrapper').show().removeClass('fadeOut').addClass('fadeIn animatedFast');
+        $('.mySearchBox').focus();
+    }
+    function PopulateValuesJS() {
+        PopulateValuesApex();
+    }
+    function PopulateValuesComplete() {
+        var data = $('.mySearchBox').val();
+        $('.mySearchBox').focus().val('').val(data);
+        console.log("PV Completed and focused.");
+    }
+    function hideSearch() {
+        $('.searchWrapper').addClass('animatedFast fadeOut');
+        setTimeout(function() {
+            $('.searchWrapper').hide();
+        }, 500);
+    }
+    function setValue(id, Name) {
+        $('#field').val( $.encoder.encodeForHTML($.encoder.canonicalize(Name)) );
+        $('.AccountName').html( $.encoder.encodeForHTML($.encoder.canonicalize(Name)) );
+        updateAccountIdApex(id);
+        hideSearch();
+    }
+    function clearValue() {
+        $('.myField').val('');
+    }
+
+    /* Navigation Functions */
+    function toSelectAccount() { //viewCart selectAccount
+        $('#viewCart').addClass('fadeOutLeftBig');
+        setTimeout(function() {
+            $('#selectAccount').removeClass('op0');
+            $('#selectAccount').addClass('fadeInRightBig');
+        }, 0);
+        setTimeout(function() {
+            $('#viewCart').addClass('op0').removeClass('fadeOutLeftBig');
+        }, 1000);
+        setTimeout(function() {
+            $('#selectAccount').removeClass('fadeInRightBig');
+        }, 1500);
+    }
+    function toReviewOrder() { //selectAccount orderSummary
+        $('#selectAccount').addClass('fadeOutLeftBig');
+        setTimeout(function() {
+            $('#orderSummary').removeClass('op0');
+            $('#orderSummary').addClass('fadeInRightBig');
+        }, 0);
+        setTimeout(function() {
+            $('#selectAccount').addClass('op0').removeClass('fadeOutLeftBig');
+        }, 1000);
+        setTimeout(function() {
+            $('#orderSummary').removeClass('fadeInRightBig');
+        }, 1500);
+    }
+    function returnToCart() { //orderSummary viewCart
+        $('#orderSummary').addClass('fadeOutRightBig');
+        setTimeout(function() {
+            $('#viewCart').removeClass('op0');
+            $('#viewCart').addClass('fadeInLeftBig');
+        }, 0);
+        setTimeout(function() {
+            $('#orderSummary').addClass('op0').removeClass('fadeOutRightBig');
+        }, 1000);
+        setTimeout(function() {
+            $('#viewCart').removeClass('fadeInLeftBig');
+        }, 1500);
+    }
+    function toPlaceOrder() { //orderSummary
+        completeOrderApex();
+        $('#orderSummary').addClass('fadeOutLeftBig');
+        setTimeout(function() {
+            $('#thankYou').removeClass('op0');
+            $('#thankYou').addClass('fadeInRightBig');
+        }, 0);
+        setTimeout(function() {
+            $('#orderSummary').addClass('op0').removeClass('fadeOutLeftBig');
+        }, 1000);
+        setTimeout(function() {
+            $('#thankYou').removeClass('fadeInRightBig');
+        }, 1500);
+    }
+    function placeOrderJS() {
+        console.log("Calling placeOrderJS.");
+    }
+    function CatalogJS() {
+        console.log("Calling toCatalog.");
+        toCatalog();
+    }
+    function CompletedJS() {
+        console.log("Method completed.")
+    }
+</script>
+</body>
+</html>
+</apex:page>

@@ -1,0 +1,7 @@
+<aura:component >
+    <aura:attribute name="viewbox" type="string" default="" description="The viewbox for the svg component." />
+    <aura:attribute name="class" type="list" description="Class for the svg." />
+    <aura:attribute name="childItems" type="list" description="Child items to render." />
+    
+    {!v.body}
+</aura:component>

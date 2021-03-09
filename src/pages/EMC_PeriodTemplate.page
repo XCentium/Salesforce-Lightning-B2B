@@ -1,0 +1,8 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    <div class="slds-box has-hover slds-m-horizontal_small slds-p-around_small">
+        {{period.FullyQualifiedLabel }}
+        <div ng-click="delete()">
+            Delete
+        </div>
+    </div>
+</apex:page>

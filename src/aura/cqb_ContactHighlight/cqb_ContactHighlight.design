@@ -1,0 +1,40 @@
+<design:component>
+    <design:attribute name="contactImgUrl"
+                      label="Contact Image Override" 
+                      datasource="Blank.png,Astro.png,Male1.png,Male2.png,Male3.png,Female1.png,Female2.png,Female3.png,none"
+                      default="none"
+                      description="By default this is set to none and the component will use the Contact_Picture_URL__c from contact record. 
+                                   You can override by selecting from available images, set back to none to use contact picture url"
+                      />
+    <design:attribute name="backgroundImageUrl" 
+                      label="Background Image URL Override"
+                      description="URL for background image, for best results use image with height of 100px and at least 620px wide, 
+                                     package contains two samples that match the new 1Salesforce theme in the static resource folder 
+                                     (/resource/ContactImageResources/ContactImageResources/ProfileHeader.png and 
+                                      /resource/ContactImageResources/ContactImageResources/ProfileHeader2.png)
+                                     leave this blank to use chatter profile background."/>
+                 
+    <design:attribute name="borderHexColor" 
+                      label="Border Hex Color" 
+                      default="#FFFFFF"
+                      description="Set a border color for contact image with a hex code, useful to match accent color for brand profile. Examples
+                                   ScienceBlue = #0070d2, MidnightBlue = #00396b, ServicePurple = # 963cbd" />
+    
+    <design:attribute name="fieldsListString" 
+                      label="Fields to display" 
+					  default="AccountId Email Phone Activity_Indicator__c"                      
+                      description="Case sensitive API names of fields to display (in addition to Name and Title), separated by spaces, limit 8"/>
+    
+    <design:attribute name="stiefelingMullet" 
+                      label="Easter Egg for Strat West team"
+                      description="Enable at your own risk..."
+                      default="false"
+                      /> 
+    <sfdc:objects >
+        <sfdc:object >LiveChatTranscript</sfdc:object>
+        <sfdc:object >Case</sfdc:object>
+        <sfdc:object >MessagingSession</sfdc:object>
+        <sfdc:object >VoiceCall</sfdc:object>
+    </sfdc:objects>
+    
+</design:component>

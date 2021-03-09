@@ -1,0 +1,6 @@
+<aura:documentation>
+	<aura:description>Documentation</aura:description>
+	<aura:example name="RecommendedProducts" ref="RecommendedProducts" label="Label">
+        This component simulates a features coming in Q1 of 2019. Please keep that in mind while showing this.
+	</aura:example>
+</aura:documentation>

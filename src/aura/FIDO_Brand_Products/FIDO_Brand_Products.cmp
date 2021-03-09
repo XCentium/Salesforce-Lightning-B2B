@@ -1,0 +1,44 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="Industry" type="String" />
+    <aura:attribute name="PricebookId" type="String" />
+    <aura:attribute name="Product" type="PricebookEntry[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="cardWrapper">
+        <aura:iteration items="{!v.Product}" var="product">
+            <div class="productCard">
+                <div class="paddingsmall"> 
+                    <button class="slds-button slds-button_neutral cardButton productbutton" aura:id="{!product.Product2.Id}" id="{!product.Product2.Id}" onclick="{!c.GoToProduct}">
+                        <aura:if isTrue="{!and(product.Product2.Image_URL__c != '',product.Product2.Image_URL__c != null)}">
+                            <div class="productImgWrapper">
+                                <div class="paddingtopbottom5">
+                            		<div class=" productImgBg" style="{!'background-image:url(' + product.Product2.Image_URL__c + ');'}"></div>
+                                </div>
+                            </div>
+                             <div class="productDescription">
+                                 <div class="paddingleftright">
+                                     <span class="slds-text-title--caps slds-line-height--reset block">{!product.Product2.Name} (<ui:outputText value="{!product.Product2.ProductCode}"  />)</span><br/>
+                                     <div class="desc"> 
+                                     	<p><ui:outputCurrency aura:id="curr" value="{!product.UnitPrice}" format="¤##,##,###,###.00"/></p>
+                                         <p>{!product.Product2.Description}</p>
+                                     </div>
+                                 </div>
+                            </div>
+                            <aura:set attribute="else">
+                                <div class="videoTitle NoImgBg" style="{!'background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/placeholders/video_placeholder_image.png);'}"></div>
+                                <div class="productDescription">
+                                    <div class="paddingleftright">
+                                        <span class="slds-text-title--caps slds-line-height--reset block">{!product.Product2.Name} (<ui:outputText value="{!product.Product2.ProductCode}"  />)</span><br/>
+                                        <div class="desc">
+                                            <p><ui:outputCurrency aura:id="curr" value="{!product.UnitPrice}" format="¤##,##,###,###.00"/></p>
+                                            <p>{!product.Product2.Description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                    </button>
+                </div>
+            </div>
+        </aura:iteration>
+    </div>  
+</aura:component>

@@ -1,0 +1,5 @@
+<design:component label="Search Results: People and Topics">
+	<design:attribute name="SearchString" label="Search" description="Please add Search merge variable" default="{!searchString}" />
+    <design:attribute name="PeopleTabText" label="People Tab Text" description="Text to be displayed for the People tab. Some like to change this to 'Community Members'" default="PEOPLE" />
+    <design:attribute name="TopicsTabText" label="Topics Tab Text" description="Text to be displayed for the Topics tab." default="TOPICS" />
+</design:component>

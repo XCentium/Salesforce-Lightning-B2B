@@ -1,0 +1,455 @@
+<aura:component controller="AccountInsightsController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global"> <!-- implements="force:appHostable" -->
+    <aura:attribute name="greeting" type="String" default="Hello" access="global" />
+
+    <aura:attribute name="annual_revenue" type="Boolean" default="true" />
+    <aura:attribute name="employees" type="Boolean" default="true" />
+    <aura:attribute name="net_income" type="Boolean" default="true" />
+
+    <aura:attribute name="article" type="Account_Insight_Article__c" default="{'sobjectType': 'Account_Insight_Article__c'}"/>
+    <aura:attribute name="articles" type="Account_Insight_Article__c[]"/>
+
+    <ltng:require styles="/resource/slickas/slick/slick/slick.css, /resource/slickas/slick/slick/slick-theme.css"
+                  scripts="/resource/jqueryjs, /resource/slickas/slick/slick/slick.min.js"
+	                afterScriptsLoaded="{!c.doInit}"	/>
+    <style>
+      .buttonsContainerDupe {
+          /* float: right; */
+          /* margin-right: -19%; */
+          position: absolute;
+          right: 0;
+          /* bottom: 27.1rem; */
+          top: 10%;
+      }
+      .newsArticle {
+        height: 240px;
+        border-radius: .25rem !important;
+        border: 1px solid rgb(216, 221, 230);
+        min-width: 256px;
+        background: rgb(244, 246, 249);
+        color: rgb(84, 105, 141);
+        padding: 0.5rem;
+        <!-- width: 25%; -->
+        margin-right: 0.5rem;
+        position: relative;
+      }
+
+      .newsArticle .slds-button {
+        top: -0.1rem;
+        position: absolute !important;
+        right: -1rem !important;
+      }
+      .slds .slds-button--icon-border-filled {
+        width: 1.3rem !important;
+        height: 1.4rem !important;
+      }
+      .slds .slds-button--icon-border-filled {
+          background-color: transparent;
+      }
+      .slds-button__icon {
+          width: .8rem !important;
+          height: 1rem;
+          fill: currentColor;
+          margin-top: -1.2rem;
+          fill: currentColor;
+      }
+      .title {
+          <!-- font-size: 1.4rem !important; -->
+          font-weight: 700 !important;
+          color: rgb(22, 50, 92);
+          word-wrap: break-word;
+          line-height: 1.25;
+          -webkit-box-orient: vertical;
+          display: box;
+          display: -webkit-box;
+          margin: .5rem 0;
+      }
+
+      .title:hover {
+          color: rgb(0, 95, 178);
+          text-decoration: underline;
+          outline: 0;
+          cursor: pointer;
+      }
+
+      .slds img {
+          max-height: 108px;
+          width: 192px !important;
+          height: auto !important;
+          margin: 0 auto;
+          display: block;
+      }
+
+      .newsFooter {
+          position: absolute;
+          bottom: 0;
+          <!-- font-size: 1.2rem; -->
+      }
+
+      .articleBody {
+        padding-top: 4%;
+        overflow: hidden;
+        height: 82%;
+      }
+
+      .cooperCompanyInsightTeaser {
+          width: 100%;
+          /* margin: 0 auto !important; */
+          color: rgb(22, 50, 92);
+          background-color: rgb(244, 246, 249);
+          border-radius: .25rem;
+          border: 1px solid rgb(216, 221, 230);
+          <!-- margin: 0 0 1rem 3rem; -->
+          font-size: .875rem;
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-align-items: center;
+          -ms-flex-align: center;
+          align-items: center;
+          -webkit-box-pack: justify;
+          -webkit-justify-content: space-between;
+          -ms-flex-pack: justify;
+          justify-content: space-between;
+      }
+
+      .cooperCompanyInsightTeaser ul {
+          list-style: none;
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-box-pack: justify;
+          -webkit-justify-content: space-between;
+          -ms-flex-pack: justify;
+          justify-content: space-between;
+          margin: 0;
+          padding: 1rem 0;
+          min-width: 0;
+          width: 100%;
+      }
+
+      .cooperCompanyInsightTeaser .listContainer {
+          -webkit-box-flex: 1;
+          -webkit-flex: 1;
+          -ms-flex: 1;
+          flex: 1;
+          min-width: 0;
+      }
+
+      .cooperCompanyInsightTeaser li {
+          -webkit-box-flex: 1;
+          -webkit-flex: 1 1 auto;
+          -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+          width: 33%;
+          <!-- padding: 0 .75rem; -->
+          margin-left: 0.5rem;
+      }
+
+      .forceStyle .truncate {
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+      }
+
+      .cooperCompanyInsightTeaser .title {
+          text-transform: uppercase;
+          font-weight: 400 !important;
+      }
+
+      .cooperCompanyInsightTeaser .value {
+          font-weight: 300;
+          font-size: 1.5rem;
+          color: rgb(84, 105, 141);
+          white-space: nowrap;
+      }
+
+      .cooperCompanyInsightTeaser .trendValue {
+          font-size: .75rem;
+          font-weight: 700;
+          margin-left: .75rem;
+      }
+      <!-- .forceIcon:before {
+          font-family: "forceIconFontNew";
+          content: attr(data-icon);
+          speak: none;
+          text-rendering: auto;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          line-height: 1;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+      } -->
+
+      .card-header {
+        border-bottom: none;
+        color: rgb(22, 50, 92);
+        font-size: .875rem;
+        font-weight: 400;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        background-color: rgb(244, 246, 249);
+        padding: 1rem 0 .75rem .25rem;
+        margin: 0;
+      }
+
+      .card-header-title {
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display: flex;
+          position: relative;
+      }
+
+      .header-icon {
+          float: left;
+          margin-right: .75rem;
+      }
+
+      .forceEntityIconCmp.small, .witsNewsTeaserCard .forceEntityIconCmp.small .icon {
+          width: 1.5rem;
+          height: 1.5rem;
+          background-color: #54698d;
+          border-radius: .125rem !important;
+      }
+
+      .main-container {
+          padding-top: 0px !important;
+          background: #fff;
+      }
+
+      html body.sfdcBody {
+          font-family: 'Helvetica';
+          color: #3c3d3e;
+          background: none #F4F6F9 !important;
+          margin: 0;
+           padding: 0px !important;
+          height: 100%;
+          /* overflow: auto; */
+          -webkit-overflow-scrolling: touch;
+      }
+
+      .carousel {
+        <!-- overflow-x: auto; -->
+        display: flex;
+        margin-top: 2%;
+      }
+
+      .teaserCardDesktop {
+        background: #F4F6F9;
+        <!-- padding-bottom: 5%;
+        margin-left: -2%; -->
+      }
+
+      .witsNewsTeaserCard .header-label {
+        line-height: 1.25;
+        vertical-align: middle;
+        -webkit-align-self: center;
+        -ms-flex-item-align: center;
+        align-self: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: rgb(22, 50, 92);
+        font-weight: 300;
+        font-size: 1.125rem;
+      }
+
+      .matchedAccount {
+          white-space: nowrap;
+          font-size: smaller;
+      }
+
+      .witsNewsTeaserCard .card-footer {
+          padding: .75rem 0;
+          margin: 0;
+          background-color: rgb(244, 246, 249);
+          display: block;
+      }
+      .forceBaseCard .card-footer {
+          line-height: 1.5;
+          font-size: .875rem;
+          font-weight: 400;
+          padding: .75rem 0 .5rem 1rem;
+      }
+      .witsNewsTeaserCard {
+          border: rgb(216, 221, 230) 1px solid;
+      }
+
+      p.slick-slide {
+        width: 0px !important;
+      }
+
+      .buttonsContainerDupe .previous, .buttonsContainerDupe .next {
+          height: 1.5rem;
+          width: 1.5rem;
+          border-radius: 50%;
+          border: 1px solid rgb(216, 221, 230);
+          background-color: rgba(0, 0, 0, 0);
+          padding: 0;
+      }
+
+      .buttonsContainerDupe .previous {
+          margin-right: .5rem;
+      }
+
+      .buttonsContainerDupe .next {
+          margin-right: .5rem;
+      }
+
+      .slick-slider {
+        margin-bottom: 0px !important;
+      }
+      .carousel.slick-initialized.slick-slider::-webkit-scrollbar {
+          display: none;
+      }
+
+      .newsArticle {
+          min-width: 256px !important;
+          max-width: 256px;
+      }
+
+      .articleBody, .articleFooter,  .articleHeader {
+        min-width: 222px;
+        max-width: 222px;
+      }
+
+      span.size {
+          font-size: small;
+      }
+
+      .articleHeader {
+        position: relative !important;
+      }
+
+      .articleHeader > button {
+        position: absolute !important;
+        right: -1rem !important;
+      }
+
+      .articleBody {
+        font-size: .875rem !important;
+      }
+
+      .card-footer {
+        position: relative;
+      }
+
+    </style>
+
+    <div class="container main-container" contentEditable="true">
+       <div class="slds">
+        <div class="row">
+        <article class="teaserCardDesktop forceBaseCard witsNewsTeaserCard" >
+          <div class="card-header">
+            <h2 class="card-header-title" id="">
+              <a href="javascript:void(0);" class="">
+                <div class="panel-header" >
+                  <div class="header-icon" >
+                    <div class="small forceEntityIconCmp" style="background-color: #54698d" >
+                      <span class="uiImage">
+                        <img src="/img/icon/t4v35/standard/news_60.png" class="icon" alt="" title=""/>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="header-label">Account Insights</div>
+                </div>
+              </a>
+            </h2>
+          <div class="card-header-right"></div>
+        </div>
+          <div class="stats">
+            <div  class="cooperCompanyInsightTeaser">
+              <div class="listContainer">
+                <ul>
+                  <aura:renderIf isTrue="{!v.annual_revenue}">
+                    <li>
+                      <p class="title truncate">Annual Revenue</p>
+                      <p class="value truncate"> {!v.articles[0].InsightGroup__r.Annual_Revenue_Big__c}
+                        <span class="trendValue positive">{!v.articles[0].InsightGroup__r.Annual_Revenue_Small__c}</span>
+                      </p>
+                    </li>
+                  </aura:renderIf>
+                  <aura:renderIf isTrue="{!v.employees}">
+                    <li>
+                      <p class="title truncate">Employees</p>
+                      <p class="value truncate">{!v.articles[0].InsightGroup__r.Employees_Big__c}
+                        <span class="trendValue positive" >{!v.articles[0].InsightGroup__r.Employees_Small__c}</span>
+                      </p>
+                    </li>
+                  </aura:renderIf>
+                  <aura:renderIf isTrue="{!v.net_income}">
+                    <li>
+                      <p class="title truncate">Net Income</p>
+                      <p class="value truncate">{!v.articles[0].InsightGroup__r.Net_Income__c}</p>
+                    </li>
+                  </aura:renderIf>
+                </ul>
+                  </div>
+                  <div class="buttonItem">
+                    <button class="uiButton--default uiButton--neutral uiButton" type="button" title="See More">
+                      <span class="assistiveText">See More</span>
+                      <span class="icon-fallback-text d-icon forceIcon" aria-hidden="true" data-icon="" data-key="datadotcom">
+                        <span class="icon icon-key"></span>
+                      </span>
+                      <span class="newAssistiveText forceIcon">Data.com</span>See More Insights</button>
+                  </div>
+              </div>
+          </div>
+          <div class="carousel">
+          <aura:iteration items="{!v.articles}" var="p">
+            <p contenteditable="true"></p>
+                <article class="newsArticle">
+                  <div class="articleHeader">
+                    <span class="size">{!p.Name}</span>
+                    <button class="slds-button slds-button--icon-border-filled" aria-haspopup="true">
+                      <c:svg class="slds-button__icon" xlinkHref="/resource/down_arrow#down" />
+                      <span class="slds-assistive-text">More Actions</span>
+                    </button>
+                  </div>
+                  <div class="articleBody">
+                    <!-- <h3 class="title"></h3> -->
+                    <aura:unescapedHtml value="{!p.Article_Text__c}"/>
+                  </div>
+                  <div class="articleFooter">
+                  </div>
+                  <div class="newsFooter">
+                    <div class="sourceAttribution">
+                      <div class="matchedAccount">
+                        <span>{!p.News_Agency__c}</span>
+                        <span class="dash"> - </span>
+                        <span class="sourceDate">{!v.randomInt}h</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+          </aura:iteration>
+        </div>
+        <div class="card-footer">
+          <a href="javascript:void(0);">See More News</a>
+          <div class="buttonsContainerDupe">
+            <button class="previous" type="button" onclick="{!c.goPrevSlide}">
+              <span class=" label bBody truncate" dir="ltr"></span>
+              <span class="icon-fallback-text forceIcon" aria-hidden="true" data-icon="" data-key="chevronleft">
+                <span class="icon icon-key"></span>
+              </span>
+                <span class="newAssistiveText forceIcon"></span>
+            </button>
+            <button class="next" type="button" onclick="{!c.goNextSlide}">
+              <span class=" label bBody truncate" dir="ltr"></span>
+              <span class="icon-fallback-text forceIcon" aria-hidden="true" data-icon="" data-key="chevronright">
+                <span class="icon icon-key"></span>
+              </span>
+                <span class="newAssistiveText forceIcon"></span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+   </div>
+	</div>
+
+</aura:component>

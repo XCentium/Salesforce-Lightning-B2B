@@ -1,0 +1,12 @@
+<aura:component controller="EMC_InsightsCtrl">
+	<aura:attribute name="assignment" type="Object"></aura:attribute>
+    
+    <aura:registerEvent name="deleteAssignment" type="c:EMC_InsightEvent"></aura:registerEvent>
+    
+    <div class="assignment">
+        <div class="assignment-owner">{!v.assignment.Owner.Name}</div>
+        <div class="assignment-actions">
+            <a href="javascript:void(0)" class="assignment-action" onclick="{!c.deleteAssignment}">delete</a>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,22 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="campaignInsightId" type="string"></aura:attribute>
+    <aura:attribute name="rationale" type="object"></aura:attribute>
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    
+    <div class="row border-around">
+        <div class="column">
+            <div>{!v.rationale.InsightType}</div>
+            <div class="slds-text-body_small">
+                {!v.rationale.Rationale}
+            </div>
+        </div>
+        <lightning:buttonMenu class="column flex-right"
+                              aura:id="menu" 
+                              onselect="{! c.handleSelect }" 
+                              menuAlignment="right"
+                              alternativeText="Show menu">
+            <lightning:menuItem value="edit" label="Edit" />
+            <lightning:menuItem value="delete" label="Delete" />
+        </lightning:buttonMenu>
+    </div>
+</aura:component>

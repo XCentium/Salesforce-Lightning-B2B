@@ -1,0 +1,8 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="StoreOperations">
+	<aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="Offers" type="Store_Offers__c[]"/>
+    
+    <aura:iteration items="{!v.Offers}" var="offer">
+        <img src="{!offer.Offer_Image__c}" class="promotionImage" />
+    </aura:iteration>
+</aura:component>

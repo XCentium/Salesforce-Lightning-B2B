@@ -1,0 +1,72 @@
+<aura:component controller="knowledgeSearch_CT" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.getDataCategories}" />
+    <aura:registerEvent name="category_click_event" type="c:KnowledgeDataCategoryEvent"/>
+    <aura:attribute name="data_category_records" type="ArticleDataCategory"></aura:attribute>
+    <div class="category-panel">
+	<aura:iteration items="{!v.data_category_records}" var="record">
+    	<div class="filter-item" id="{!'filter_item_' + record.api_name}" onclick="{!c.toggleSubcategories}">
+        <span class="current-item hidden" data-category-api-name="" data-subcategory-api-name=""></span>
+  			<span class="category-item" data-api-name="{!record.api_name}" data-name="{!record.data_category_name}">{!record.data_category_name}<i class="fa fa-caret-square-o-down"></i></span>
+	      <ul class="filter-item-overlay hidden">
+          <aura:iteration items="{!record.category_list}" var="record_top_category_list">
+            <li>
+              <a onclick="{!c.showCategoryArticles}" class="menu-item"
+                data-category-api-name="{!record.api_name}" data-subcategory-api-name="{!record_top_category_list.api_name}"
+                data-category-name="{!record.data_category_name}" data-subcategory-name="{!record_top_category_list.data_category_name}">
+                {!record_top_category_list.data_category_name}
+              </a>
+              <ul class="filter-item-overlay-child">
+                <aura:iteration items="{!record_top_category_list.category_list}" var="record_child_category_list">
+                  <li>
+                    <a onclick="{!c.showCategoryArticles}" class="menu-item menu-item-1"
+                      data-category-api-name="{!record.api_name}" data-subcategory-api-name="{!record_child_category_list.api_name}"
+                      data-category-name="{!record.data_category_name}" data-subcategory-name="{!record_child_category_list.data_category_name}">
+                      {!record_child_category_list.data_category_name}
+                    </a>
+                  </li>
+                  <aura:iteration items="{!record_child_category_list.category_list}" var="record_child2_category_list">
+                    <li>
+                      <a onclick="{!c.showCategoryArticles}" class="menu-item menu-item-2"
+                        data-category-api-name="{!record.api_name}" data-subcategory-api-name="{!record_child2_category_list.api_name}"
+                        data-category-name="{!record.data_category_name}" data-subcategory-name="{!record_child2_category_list.data_category_name}">
+                        {!record_child2_category_list.data_category_name}
+                      </a>
+                    </li>
+                    <aura:iteration items="{!record_child2_category_list.category_list}" var="record_child3_category_list">
+                      <li>
+                        <a onclick="{!c.showCategoryArticles}" class="menu-item menu-item-3"
+                          data-category-api-name="{!record.api_name}" data-subcategory-api-name="{!record_child3_category_list.api_name}"
+                          data-category-name="{!record.data_category_name}" data-subcategory-name="{!record_child3_category_list.data_category_name}">
+                          {!record_child3_category_list.data_category_name}
+                        </a>
+                      </li>
+                      <aura:iteration items="{!record_child3_category_list.category_list}" var="record_child4_category_list">
+                        <li>
+                          <a onclick="{!c.showCategoryArticles}" class="menu-item menu-item-4"
+                            data-category-api-name="{!record.api_name}" data-subcategory-api-name="{!record_child4_category_list.api_name}"
+                            data-category-name="{!record.data_category_name}" data-subcategory-name="{!record_child4_category_list.data_category_name}">
+                            {!record_child4_category_list.data_category_name}
+                          </a>
+                        </li>
+                        <aura:iteration items="{!record_child4_category_list.category_list}" var="record_child5_category_list">
+                          <li>
+                            <a onclick="{!c.showCategoryArticles}" class="menu-item menu-item-5"
+                              data-category-api-name="{!record.api_name}" data-subcategory-api-name="{!record_child5_category_list.api_name}"
+                              data-category-name="{!record.data_category_name}" data-subcategory-name="{!record_child5_category_list.data_category_name}">
+                              {!record_child5_category_list.data_category_name}
+                            </a>
+                          </li>
+                        </aura:iteration>
+                      </aura:iteration>
+                    </aura:iteration>
+                  </aura:iteration>
+                </aura:iteration>
+              </ul>
+            </li>
+          </aura:iteration>
+        </ul>
+      </div>
+  	</aura:iteration>
+    <div class="clear"></div>
+    </div>
+</aura:component>

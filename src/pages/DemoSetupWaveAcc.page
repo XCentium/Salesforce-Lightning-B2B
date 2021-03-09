@@ -1,0 +1,32 @@
+<apex:page controller="DemoConfigurator">
+<script type="text/javascript">
+getRemoteAccount();
+function getRemoteAccount() {
+    Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.DemoConfigurator.DataConnectors}' ,
+            function(result, event){
+                var resp = result;
+                var connectorURL = resp.dataConnectors[0].id;
+                /*console.log("ID: " + connectorURL);*/
+                
+                Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.DemoConfigurator.RunDataConnector}', 
+                connectorURL, 
+                function(result, event){
+                    if (event.status) {
+                        console.log("Success");
+                    } else if (event.type === 'exception') {
+                        console.log("Exception: " + event.message); 
+                    } else {
+                        console.log("Exception: " + event.message); 
+                    }
+                }, 
+                {escape: true}
+            );
+                
+            }, 
+        );
+    }
+
+</script>
+</apex:page>

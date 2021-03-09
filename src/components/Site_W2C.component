@@ -1,0 +1,32 @@
+<apex:component controller="SDOSiteController">
+<div class = "W2C">
+    <div class="sidebarModule">
+       
+        <div class="sidebarModuleHeader">
+       
+                Need Help? <br/>
+          
+        </div>
+        <div class="sidebarModuleBody">
+            
+            <table cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                    <tr>
+                        <td><label for="username"><b>Log a Case, and we will help you</b></label></td>
+                    </tr>
+                </tbody>
+            </table>
+          
+        </div>
+      
+       <div style ="margin-left: 40px;">
+            <a href = "Site_ContactUs?cuA=w2c" target="_top">
+                    <apex:image url="{!URLFOR($Resource.Site_ContactUsButton)}"/>
+            </a>
+       </div>
+ 
+            
+     
+     </div>
+</div>
+</apex:component>

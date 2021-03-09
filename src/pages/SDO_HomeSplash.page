@@ -1,0 +1,143 @@
+<apex:page showHeader="false" sidebar="false">
+	<head>
+		<!-- 
+		<apex:includeScript value="{!URLFOR($Resource.jquery1112)}"/>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'/>
+        <apex:stylesheet value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/css/bootstrap.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.BfFontAwesome, 'font-awesome-4.3.0/css/font-awesome.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/simple-line-icons.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/bootstrap-switch.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/jquery.gritter.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/uniform.default.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/layout.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/components.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/plugins.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/boothforce.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/custom.css')}"/>
+		<link rel="stylesheet" href="/resource/animate"/>
+		-->
+		<style>
+            @media (max-width: 480px)
+                .page-header.navbar .top-menu {
+                  clear: inherit;
+                }
+		</style>
+	</head>
+    <apex:composition template="SDO_ToolsTemplate">
+        <apex:define name="_layouthome">
+    		<!-- 
+    		<div id="logoWrapper">
+				<div style="margin:0px auto; width:500px;background:white;opacity:.5;">
+				</div>
+				<apex:image id="qLogo" styleClass="qLogo animated" value="{!$Resource.qLogo}"></apex:image>
+			</div> 
+			-->
+			<div class="page-header-fixed">
+				<!-- //////// BOOTHFORCE HEADER BAR //////// -->
+				<div class="page-header navbar navbar-fixed-top">
+				    <div class="page-header-inner">
+				        <div class="page-logo">
+				            <a href="#" style="text-decoration:none;" onclick="showHome();"> 
+				                <apex:image styleClass="qLogo" value="{!$Resource.qLogo}"/>
+				            </a>
+				            <div class="menu-toggler sidebar-toggler hide"></div>
+				        </div>
+				        <a class="menu-toggler responsive-toggler" data-target=".navbar-collapse" data-toggle="collapse" href="javascript:;"></a>
+				        <div class="top-menu">
+				            <ul class="nav navbar-nav pull-right">
+				                <li>
+				                    <a class="cloudLink" href="/" target="_blank">
+				                        <apex:image styleClass="cloud" value="{!$Resource.cloud}"/>
+				                    </a>
+				                </li>
+				                <li>
+				                    <i class="fa fa-bullhorn"></i>
+				                </li>
+				                <li class="dropdown dropdown-user">
+				                    <a class="dropdown-toggle" data-close-others="" data-hover="dropdown" data-toggle="dropdown" href="#">
+				                        <!-- 
+				                        <img alt="{!$User.FirstName}" class="img-circle" width="29" height="29" src="{!$User.SmallPhotoURL}" />
+				                        -->
+				                        <span class="username">{!$User.FirstName}</span>
+				                        <i class="fa fa-angle-down"></i>
+				                    </a>
+				                    <ul class="dropdown-menu">
+				                        <li>
+				                            <a href="#">
+				                                <i class="icon-user"></i>
+				                                Add this org to Stockpile
+				                            </a>
+				                        </li>
+				                    </ul>
+				                </li>
+				            </ul>
+				        </div>
+				    </div>
+				</div>
+			</div>
+
+
+			<!-- ////////  CONTENT //////// -->
+            <div class="clearfix">
+            	<div class="page-container">
+            		 <!-- ////////  SIDEBAR //////// -->
+                    <div class="page-sidebar-wrapper">
+                        <div class="page-sidebar navbar-collapse collapse">
+                            <ul class="page-sidebar-menu page-sidebar-menu-hover-submenu" data-auto-scroll="true" data-slide-speed="200">
+                                <li class="sidebar-toggler-wrapper">
+                                    <div class="sidebar-toggler"></div>
+                                </li>
+                                <!-- /// Sidebar Search /// -->
+                                <li data-toggle="false" class="start">
+                                	<a href="/apex/SDO_HomeSplash" class="start-active"> 
+	                                    <i class="icon-home"></i>
+	                                    <span class="title">Home</span>          
+                                    </a>
+                                </li>
+                                <li data-toggle="false" class="nav-header">
+                                	<a href="javascript:;" class="start-active"> 
+	                                    <i class="icon-wrench"></i>
+	                                    <span class="title">Tools</span>          
+	                                    <span class="arrow "></span>
+                                    </a>
+                                </li>
+                                <li data-toggle="false" class="">
+                                	<a href="javascript:;" class="start-active"> 
+	                                    <i class="fa fa-bullhorn"></i>
+	                                    <span class="title">News</span>          
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End Sidebar -->
+
+  					<!-- //////// BOOTHFORCE PAGE CONTENT: VARIABLE //////// -->
+                    <!-- Create an Apex Composition with this element to use the page
+                    The first element inside the Apex Define needs to be this:
+                    <div class="page-content" data-tab="admin"> -->
+                    <div class="page-content-wrapper">
+                        <div >
+                            <apex:insert name="_content"/>
+                            <apex:insert name="_tools"/>
+                            <apex:insert name="_news"/>
+                        </div>
+                        <div class="page-content">
+                        </div>
+                    </div>
+                
+
+
+
+            	</div>
+            </div>
+
+
+			<script>
+				$(document).ready(function (){
+
+				});
+			</script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

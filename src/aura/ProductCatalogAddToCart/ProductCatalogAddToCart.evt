@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Adding catalog items to cart">
+    <aura:attribute name="Product" type="Product2"></aura:attribute>
+    <aura:attribute name="Quantity" type="Integer"></aura:attribute>
+</aura:event>

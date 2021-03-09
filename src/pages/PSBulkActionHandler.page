@@ -1,0 +1,39 @@
+<apex:page showheader="false" sidebar="false" standardStylesheets="false">
+    <apex:includeLightning />
+    <body style="background-image: url('/_slds/images/themes/lightning_blue/lightning_blue_background.png'); background-repeat:no-repeat; background-color: #b1c4de;">
+    <div id="app" />
+
+    <script>
+    var bulkConfig = null;
+
+    /////////////////////////////////
+    // DO NOT EDIT BELOW THIS LINE //
+    /////////////////////////////////
+    var tmpStr = '{!$CurrentPage.URL}';
+    var params = {};
+    tmpStr.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        params[key] = value;
+    });
+
+    var query = decodeURIComponent(params['query']);  
+
+    // replace all '+' characters with a space bot not inside quotes
+    query = query.replace(/(\+)(?=(?:[^"]|"[^"]*")*$)/gm, ' ');
+
+    $Lightning.use("c:PSBulkActionApp",
+                   function(){
+                       $Lightning.createComponent(
+                           "c:PSBulkAction",
+                           {"query": query,
+                           "bulkConfig": bulkConfig},
+                           "app",
+                           function(cmp){
+                               console.log('done');
+                           }
+                       );
+                   }
+                  )
+
+    </script>
+    </body>
+</apex:page>

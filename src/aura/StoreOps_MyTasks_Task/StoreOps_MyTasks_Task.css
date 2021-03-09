@@ -1,0 +1,57 @@
+.THIS .strike{
+    text-decoration: line-through;
+    opacity:0.5;
+}
+.THIS .taskTitle{
+    max-width:50%;
+}
+.THIS.checkboxwrapper{
+    padding:5px 0px;
+    display:block;
+    margin-top:10px;
+}
+.THIS.checkboxwrapper:not(:last-child) { 
+    margin-bottom:10px;
+    padding-bottom:10px;
+    border-bottom:1px solid #ddd;
+} 
+.THIS .checkbox{
+    float:left;
+    margin-right:10px;
+}
+.THIS .checkbox input{
+    padding:10px;
+    border:1px solid #ddd;
+}
+.THIS .SmallText{
+    font-size:10px;
+} 
+.THIS .smallpadding{
+    padding:3px;
+}
+.THIS h3{
+    font-size:14px;
+    display:block;
+}
+.THIS .left{
+    float:left;
+}
+.THIS .iconwrapper{
+    position:relative;
+    top:-5px;
+}
+.THIS .right{
+    float:right;
+}
+.THIS .marginright{
+    margin-right:10px;
+}
+.THIS .clear{
+    clear:both;
+}
+.THIS .text{
+    float:left;
+    font-size:16px;
+    position:relative;
+    top:0px;
+}

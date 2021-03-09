@@ -1,0 +1,33 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="Industry" type="String" />
+    <aura:attribute name="Apps" type="String[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="paddingleftright">
+        <div class="textright">
+            <button class="slds-button hovereffect"  onclick="{!c.GoToApps}">
+                <lightning:icon iconName="utility:edit" size="xx-small"/><span class="buttonsmalltext">Edit All Apps ></span>
+            </button>
+        </div>
+    </div>
+    <div class="cardWrapper">
+        <aura:iteration items="{!v.Apps}" var="app">
+            <div class="card">
+                <div class="textleft">
+                    <div class="paddingsmall ">
+                        <div class="owner brandrecord">
+                            <h3 class="borderbottom smallh3">
+                                <div class="padding">
+                                    <img src="{!app.logourl__c }" class="personaimg" />
+                                    <span >{!app.name}</span>
+                                </div>
+                            </h3>
+                            <div class="padding BrandDescSetHeight">
+                                <ui:outputRichText value="{!app.description__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aura:iteration>
+    </div>
+</aura:component>

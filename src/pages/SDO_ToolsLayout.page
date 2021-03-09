@@ -1,0 +1,356 @@
+<apex:page controller="SDOToolsHomepage" extensions="SDO_Tools" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" showHeader="false">
+  
+    <apex:composition template="SDO_ToolsTemplate">
+    
+    
+        <apex:define name="_layout">
+            <div class="page-header-fixed">
+                <!-- //////// BOOTHFORCE HEADER BAR //////// -->
+                <div class="page-header navbar navbar-fixed-top">
+                    <div class="page-header-inner">
+                        <div class="page-logo">
+                            <a href="#" style="text-decoration:none;" onclick="showHome();toggleActive('homenav');"> 
+                                <!-- <apex:image styleClass="qLogo" value="{!$Resource.qLogo}"/> -->
+                                <h3 style="color:white;margin-top:10px;">SDO<small style="color:white;"> Tools</small></h3>
+                            </a>
+                            <div class="menu-toggler sidebar-toggler hide"></div>
+                        </div>
+                        <a class="menu-toggler responsive-toggler" data-target=".navbar-collapse" data-toggle="collapse" href="javascript:;"></a>
+                        <div class="top-menu">
+                            <ul class="nav navbar-nav pull-right">
+                                <!-- 
+                                <li style="background-color:#F0F1F2;">
+                                    <a class="cloudLink" style="" href="/" target="_blank">
+                                        <img class="companyLogo" style="height:20px;" src="/servlet/servlet.ImageServer?id=0155Y000004ltq7&oid=00D5Y000001QDuq&lastMod=1427307409000"/>
+                                    </a>
+                                </li>
+                                -->
+                                <li class="dropdown dropdown-user">
+                                    <a class="dropdown-toggle" data-close-others="" data-hover="dropdown" data-toggle="dropdown" href="#">
+                                        <img alt="{!currentUser.FirstName}" class="img-circle" width="29" height="29" src="{!currentUser.SmallPhotoURL}" />
+                                        <span class="username">{!currentUser.FirstName}</span>
+                                        <i class="fa fa-angle-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="cloudLink" style="" href="/" target="_self">
+                                                <i class="fa fa-arrow-left"></i>
+                                                <span class="title">Back to your SDO</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-warning"></i>
+                                                <span href="#" data-toggle="modal" data-target="#learnMoreModal" class="title" onclick="reportAnIssue();">
+                                                     Report an issue
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="NewToolNotification" class="alert alert-Success" style="visibility: hidden;">
+                          <center><span style="color:white;"><strong>Hooray!</strong> New Tools have been added to your (BETA) toolsets. Please reload this page to view them.</span></center>
+                        </div>
+                    </div>           
+                </div>
+                
+
+                <!-- ////////  CONTENT //////// -->
+                
+                <div class="clearfix"/>
+                <div style="min-height:800px" class="page-container">
+
+                    <!-- ////////  SIDEBAR //////// -->
+                    <div class="page-sidebar-wrapper">
+                        <div class="page-sidebar navbar-collapse collapse">
+                            <ul class="page-sidebar-menu" data-auto-scroll="true" data-slide-speed="200">
+                                <li class="sidebar-toggler-wrapper">
+                                    <div class="sidebar-toggler"></div>
+                                </li>
+                                <li>
+                                    <a onclick="trackClick('Go to Your SDO')" href="/" target="_self" >
+                                        <i class="fa fa-share-square-o"></i>
+                                        Go to your SDO
+                                    </a>
+                                </li>
+                                <!-- /// Sidebar Search /// -->
+                                <li class="sidebar-search-wrapper hidden-xs">
+                                    <div class="sidebar-search">
+                                        <a class="remove" href="#">
+                                            <i class="icon-close"/>
+                                        </a>
+                                        <div class="input-group">
+                                            <input id="sidebarSearch" class="form-control" type="text" placeholder="Search"/>
+                                            <span class="input-group-btn">
+                                                <a class="btn submit" href="javascript:;">
+                                                    <i class="icon-magnifier"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li data-toggle="false" class="homenavtab start active homenav">
+                                    <span class="selected"></span>
+                                    <a href="javascript:;" onclick="showHome();toggleActive('homenav');trackClick('Home Side Nav');" class=" "> 
+                                        <i class="icon-home"></i>
+                                        <span class="title">Home</span>          
+                                    </a>
+                                </li>
+                                <li data-toggle="false" class="homenavtab startHereNav">
+                                    <a href="javascript:;" onclick="showPage('StartHere','SDOToolsHome');welcomeButton('walkthrough');toggleActive('startHereNav');trackClick('Start Here Side Nav');" class=" "> 
+                                        <i class="fa fa-power-off"></i>
+                                        <span class="title">Start Here</span>          
+                                    </a>
+                                    <ul  style="display:block;list-style:none;padding: 0px;">
+                                        <apex:repeat value="{!toolsWizard.wizard_steps__r}" var="ws">
+                                            <li class="nav-sub-header start-here-subnav">
+                                                <a onclick="trackClick('Start Here Sub Nav {!ws.name}');selectChevron('{!ws.id}-cloudLi');" href="#{!ws.id}-tab" data-toggle="tab" >{!ws.name}</a>
+                                           </li>
+                                        </apex:repeat>
+                                   </ul>
+                                </li>
+                                <!--
+                                <li data-toggle="false" class="newsnav homenavtab">
+                                    <a href="javascript:;" onclick="showNews();toggleActive('newsnav');" > 
+                                        <i class="fa fa-bullhorn"></i>
+                                        <span class="title">What's New</span>          
+                                    </a>
+                                </li>
+                                <li data-toggle="false" class="scriptsnav homenavtab">
+                                    <a href="javascript:;" onclick="showScripts();toggleActive('scriptsnav');" > 
+                                        <i class="fa  fa-file-text-o"></i>
+                                        <span class="title">Demo Stories</span>          
+                                    </a>
+                                </li>
+                                -->
+                                <!--
+                                <li data-toggle="false" class="industriesnav homenavtab">
+                                    <a href="javascript:;" onclick="showIndustries();toggleActive('industriesnav');" > 
+                                        <i class="fa fa-sellsy"></i>
+                                        <span class="title">Industries</span>          
+                                    </a>
+                                </li>
+                                -->
+                               <!-- <li data-toggle="false" class="stockpilenav homenavtab">
+                                    <a href="https://sdo-tools.herokuapp.com" target="_blank" onclick="trackClick('Stockpile Side Nav');" > 
+                                        <i class="fa fa-plus"></i>
+                                        <span class="title">Stockpile</span>          
+                                    </a>
+                                </li>-->
+                                <!-- <apex:repeat value="{!category_list}" var="c"> -->
+                                <li data-toggle="false" class="nav-header homenavtab toolsnav">
+                                    <a href="javascript:;" onclick="trackClick('Demo Tools Side Nav');showTools();toggleActive('toolsnav');" class=""> 
+                                      <!--<i class="icon-wrench"></i>-->
+                                      <!-- <span class="title">{!c.category_title}</span>-->
+                                      <!--<span  class="title">Demo Tools</span>-->
+                                    </a>
+                                    <ul  style="display:block;list-style:none;padding: 0px;">
+                                        <!--  <apex:repeat value="{!c.category_tools}" var="t"> 
+                                                class="sub-menu"
+                                        -->
+                                       <li class="nav-sub-header">
+                                            <table class="navTable" data-search="Authenticate" data-name="Authenticate">
+                                                    <tr>
+                                                        <td>
+                                                            <!--<span onclick="trackClick('Authenticate Side Nav');" style="cursor:pointer;" id="authenticate" class=" navLink btn-green" href="https://sdo-tools.herokuapp.com/auth/salesforce?returnURL=/auth/successful" data-search="Authenticate" data-name="Authenticate" data-width="" data-height=""  >
+                                                                <span class="authenticate">Authenticate</span>
+                                                            </span>-->
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                       </li>
+                                        <apex:repeat value="{!tools}" var="t">
+                                            <li  class="nav-sub-header">
+                                                <table class="navTable" data-search="{!t.Name}" data-name="{!t.Name}">
+                                                    <tr>
+                                                        <td>
+                                                            <span onclick="trackClick('{!t.name} Demo Tools Sub Nav');" data-new-window="{!t.pop_new_window__c}" style="cursor:pointer;" id="{!t.id}" class="navLink" href="{!t.url__c}" data-search="{!t.Name}" data-name="{!t.Name}" data-width="{!t.width__c}" data-height="{!t.height__c}"  >
+                                                            {!t.Name}
+                                                            </span>
+                                                            <input id="{!t.id}-name" type="hidden" value="{!t.name}"/>
+                                                            <input id="{!t.id}-i" type="hidden" value="{!t.description__c}"/>
+                                                            <input id="{!t.id}-instructions" type="hidden" value="{!t.instructions__c}"/>
+                                                            <input id="{!t.id}-advanced-instructions" type="hidden" value="{!t.Advanced_Information__c}"/>
+                                                        </td>
+                                                        <!--
+                                                        <td>
+                                                            <apex:outputPanel rendered="{!t.Description__c != null && t.Description__c != ''}">
+                                                                <i style="float: right;" data-original-title="{!t.description__c}" data-toggle="tooltip" data-container="body" data-placement="right" class="fa fa-info-circle tooltips"></i>
+                                                            </apex:outputPanel>
+                                                        </td>
+                                                        -->
+                                                    </tr>
+                                                </table>
+
+                                            </li>
+                                        </apex:repeat>
+                                    </ul>
+                                    </li>
+                                <!-- </apex:repeat> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End Sidebar -->
+
+                    <!-- //////// BOOTHFORCE PAGE CONTENT: VARIABLE //////// -->
+                    <!-- Create an Apex Composition with this element to use the page
+                    The first element inside the Apex Define needs to be this:
+                    <div class="page-content" data-tab="admin"> -->
+                    <div class="page-content-wrapper">
+                        <div id="SDOToolsHome">
+                            <apex:insert name="_content"/>
+                            <!-- <apex:include pageName="SDO_ToolsPage"/> -->
+                        </div>
+                        <div id="newspage">
+                            <!-- <apex:include pageName="SDO_News"/> -->
+                            <div class="page-content">
+                                <iframe id="newsFrame" src="/apex/SDO_Blog"/>
+                            </div>
+                        </div>
+                        <div id="scriptsPage">
+                            <apex:include pageName="SDO_ScriptsPage"/>
+                        </div>
+                      
+                        <div id="toolspage">
+                           <apex:include pageName="SDO_ToolsPage"/>
+                        </div>
+                        <div id="toolContentWrapper" class="page-content">
+                            <div class="toolIcons">
+                                <i id="homeicon" style="color:#293f54;float:none;" class="fa fa-arrow-circle-left" onclick="showPage('StartHere','SDOToolsHome');welcomeButton('walkthrough');toggleActive('startHereNav');"></i>
+                            </div>
+                            <!-- 
+                                <a href="https://org62.my.salesforce.com/_ui/core/chatter/groups/GroupProfilePage?g=0F95Y000000hhpw" style="float:right;display:inline;">Report an issue</a>
+                            </div>-->
+                            <div id="tool_info_box" class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i id="tool_info_icon" class="fa fa-info-circle tooltips" data-container="body" data-original-title="" data-placement="bottom" data-toggle="tooltip" ></i>
+                                        <span id="tool_info_header">Tool Info</span>
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse" data-original-title="" title="">
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="portlet-body">
+                                    <div id="tool_info_wrapper" class="note note-info">
+                                        <!-- <h4 id="tool_info_header" class="block"></h4> -->
+                                        <p id="tool_info"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <iframe id="tool_frame" frameborder="no" scrolling="auto" width="100%" height="2400px" src=""/>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- reusable modal -->
+                <div class="modal fade" id="learnMoreModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Enable Sites Information</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p>
+                        Each Site is assigned a unique domain name.  We automatically generate a unique Site name so that you won't accidentally cause conflicts with other SDOs (or even Customer deployments). That's why it's such a long, convoluted URL.
+                        </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+
+                <!-- //////// BOOTHFORCE FOOTER //////// -->
+                <div class="page-footer">
+                    <div class="text-muted text-center">
+                        Built by 
+                        <a href="https://org62.my.salesforce.com/_ui/core/chatter/groups/GroupProfilePage?g=0F95Y000000hhpx" class="navbar-link">Q</a>
+                    </div>
+                    <div class="scroll-to-top">
+                        <i class="icon-arrow-up"></i>
+                    </div>
+                </div>
+                
+   
+                <!-- //////// BOOTHFORCE FOOTER //////// -->
+
+                <!--///////  COMETD Scripts  ////////-->
+
+                 <script type="text/javascript">
+                 <apex:includeScript value="{!$Resource.sdo_tools_cometd}"/>
+                 <apex:includeScript value="{!$Resource.sdo_tools_json2}"/>
+                 <apex:includeScript value="{!$Resource.sdo_tools_jquery_cometd}"/>
+                 
+                 // Connect to the CometD endpoint
+                    $.cometd.init({
+                        url: window.location.protocol+'//'+window.location.hostname+'/cometd/28.0/',
+                        requestHeaders: { Authorization: 'OAuth {!$Api.Session_ID}'},
+                       // logLevel: 'debug',
+                        'appendMessageTypeToURL': false
+                    });
+            
+
+                   // Subscribe to a topic. JSON-encoded update will be returned
+                   // in the callback
+                   $.cometd.subscribe('/topic/SDOToolNotice', function(message) {
+              
+                            $('#NewToolNotification').css('visibility','visible');
+                            
+                    });
+                
+                </script>
+
+                <script>
+                $("document").ready( function() {
+                   
+                   
+                    var eList = document.getElementsByClassName('icon-count');
+                    var i =0;
+                    for(i=0;i<eList.length;i++) {
+                           eList[i].innerHTML = i+1; 
+                    }
+
+                    // Set the 'data-tab' attribute on the 'page-content' element in order to 'activate' a particular tab
+                    // Feel free to replace this functionality with something that actually makes sense
+                    var activeTabData = $(".page-content").attr("data-tab");
+                    if( activeTabData ) {
+                        console.log("current activeTabData: " + activeTabData);             
+                        switch ( activeTabData ) {
+                            case "home":
+                                $("#sidebar-tab-home").addClass("active"); 
+                                break;
+                            case "signup":
+                                $("#sidebar-tab-signup").addClass("active"); 
+                                break;
+                            case "myshifts":
+                                $("#sidebar-tab-myshifts").addClass("active"); 
+                                break;
+                            case "admin":
+                                $("#sidebar-tab-admin").addClass("active"); 
+                                break;
+                            default:
+                                console.log("You need to set a valid 'data-tab' on the '.page-content' element.");
+                                break;
+                        }
+                    } else {
+                        console.log("You need to set a valid 'data-tab' on the '.page-content' element.");
+                    }
+                });
+
+                function reportAnIssue() {
+                    var s = "<p>Please take a look at the <a href='https://docs.google.com/a/salesforce.com/spreadsheets/d/1k3CPIa3nB6j2W5RchjvY1b_e7rGM5ScdqGhnFXH2hQ4/edit#gid=0' target='_blank'>Known Issues &amp; Workarounds</a> document featured in the sidebar of the SDO Updates group in 62 org. If the error you're experiencing isn't listed there, please post to the SDO Updates chatter group.<p><a target='_blank' href='https://org62.my.salesforce.com/_ui/core/chatter/groups/GroupProfilePage?g=0F95Y000000hhpw'>Click Here to login to 62 org and navigate to the SDO Updates Chatter Group</a></p> ";
+                    showModal('Report an Issue',s);
+                }
+                </script>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

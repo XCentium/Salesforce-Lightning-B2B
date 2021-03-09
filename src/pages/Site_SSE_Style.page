@@ -1,0 +1,364 @@
+<apex:page cache="false" showHeader="false" contentType="text/css">
+    
+    a {
+        outline: none;
+    }
+    
+    table#table_portal{
+        box-shadow: 0px 3px 12px #333;
+        -moz-box-shadow: 0px 3px 12px #333;
+        -webkit-box-shadow: 0px 3px 12px #333;
+    }
+    
+    .tabNavigation { 
+
+    }
+    
+        .tab td.currentTab,
+        #tabBar td,
+        #tabBar div,
+        #tabBar td.currentTab primaryPalette,
+        #tabBar td.currentTab primaryPalette div,
+        #tabBar td.currentTab primaryPalette div a{
+        /*
+            background:none;
+            background-color:transparent;
+            border:none;
+            padding:0;
+            margin:0;
+        */
+        }
+    
+            #tabBar a {
+                text-decoration: none; 
+            }
+            
+            #tabBar a:hover { 
+              
+            }
+              
+            #tabBar .currentTab a {
+            
+            }
+        
+            #tabBar .last a {
+            
+            }
+    
+    body {
+
+    }
+      
+    .bodyDiv {  
+        min-height: 1500px;
+        width:1000px; /* If your portal is a different width change this */
+        left:0px;
+        margin:0pt auto;
+        position:relative;
+        text-align:left;  
+        border-bottom: 0; 
+    }
+    
+    #sidebarCell{
+        background:none;
+    }
+    
+    #bodyDiv, #container_pageFooter{ 
+        width:1000px; /* If your portal is a different width change this too */
+        left:0px;
+        margin:0pt auto;
+        position:relative;
+        text-align:left;
+    }
+    
+    .bodyDiv, #bodyDiv{
+        border: none;
+    }
+    
+    #ideaSubtabs ul#nav .ideasCurrentTab div a, .ideaViewCategory, .workspaceTab .bPageBlock .pbButton label, h1.search, h1.recent, .ideaViewStatus{
+        color: white;
+    }
+    
+/** Rounded Sidebar **/
+    
+    .sidebarModule{
+        background: none;
+        box-shadow: 0px 2px 6px #ccc;
+        -webkit-box-shadow: 0px 2px 6px #ccc;
+        -moz-box-shadow: 0px 2px 6px #ccc;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+    }
+    
+        .sidebarModuleHeader{
+            -moz-border-radius-topleft: 6px;
+            -webkit-border-top-left-radius: 6px;
+            -moz-border-radius-topright: 6px;
+            -webkit-border-top-right-radius: 6px;
+        }
+        
+        .sidebarModuleBody{
+            -moz-border-radius-bottomleft: 6px;
+            -webkit-border-bottom-left-radius: 6px;
+            -moz-border-radius-bottomright: 6px;
+            -webkit-border-bottom-right-radius:  6px;
+        }
+        
+        .sidebarModuleBodyNoHeader{
+            -moz-border-radius-topleft: 6px;
+            -webkit-border-top-left-radius: 6px;
+            -moz-border-radius-topright: 6px;
+            -webkit-border-top-right-radius: 6px;
+        }
+        
+        .nestedModule .sidebarModuleBody{
+            margin: 0;
+            padding: 10px;
+        }
+
+
+/* The following CSS is for a 980px-wide portal. If your portal is bigger or smaller just add or subtract the difference (i.e. if your portal is 1000px there's a 20px difference so the width of the #wsTabs section below would become 765px). */
+
+    /* This section governs Content, Workspaces, and the Content Previews. Make sure the !important is after each attribute as shown below. */
+    #wsTabs{
+        width: 765px !important;
+    }
+
+    .x-tab-panel-body, .x-panel-noborder .x-panel-body-noborder {
+        width: 740px !important;
+    }
+            
+    #div_rendition_small {
+        width: 370px !important;
+    }
+
+
+    .x-panel-body dl, div.tabset dl.tabcontent dd.tc.on dl {
+        width: 380px;   
+    }
+    
+    .x-panel-body dt.chead, div.tabset dl.tabcontent dt.chead {
+        width: 354px;
+    }
+
+    
+    /* This section governs Ideas. */
+    .sectionHeaderWithCommunityNavLinks .bPageTitle {
+        width: 750px;
+    }
+      
+    .ideaNavCommunity  {
+        width: 740px;
+    }
+      
+    .communityIntro {
+        width: 750px;
+    }
+      
+    #ideaSubtabs {
+        width: 750px;
+    }
+      
+    .ideaBlock {
+        width: 750px;
+    }
+      
+    .ideaBody {
+        width: 605px;
+    }
+    
+    .ideaContentWidth {
+        width: 570px;
+    }
+    
+    .ideaSide {
+        padding: 0 17px 0 0;
+    }
+   
+    #ideaSubtabs ul#nav .ideasCurrentTab div a {
+        
+    }
+
+    .ideaViewCategory {
+        
+    }
+    
+    #ideaSubtabs .bg {
+    
+    }
+    
+/*This code is to reduce the font/header size on the old CustomerPortalWelcome VF page. Replace the current span code with these 4 in the VF page itself */  
+  /*
+  span {
+    font-size: 12px;
+  }
+  
+  .list .headerRow th, .list .headerRow th a {
+    font-size: 14px;
+  }
+  
+ .list tr.even th, .list tr.odd th, .list tr.even td, .list tr.odd td {
+    font-size: 12px;
+  }
+  
+  .bPageBlock .pbTitle {
+    font-size: 12px;
+  }
+  */
+  
+/** SDO Site - Knowledge **/
+
+    .pkbSearchBox {
+        background: transparent url() no-repeat scroll center center;
+        margin:10px 10px 6px 18px;
+        border: 1px solid #bbb;
+        box-shadow: 0px 2px 6px #ccc;
+        -webkit-box-shadow: 0px 2px 6px #ccc;
+        -moz-box-shadow: 0px 2px 6px #ccc;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+    }
+    
+    .pkbResultPanel {
+        box-shadow: 0px 2px 6px #ccc;
+        -webkit-box-shadow: 0px 2px 6px #ccc;
+        -moz-box-shadow: 0px 2px 6px #ccc;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+    }
+    
+        .pkbResultPanel .pkbResultInner{
+            -moz-border-radius: 6px;
+            -webkit-border-radius: 6px;
+        }
+        
+    .knowledgeTOCRendererSections {
+        background-color:transparent;
+        border-right:medium none;
+        display:block;
+        height:27px;
+        position:absolute;
+        right:0;
+        top:-2px;
+        width:760px;
+        z-index:1;
+    }
+    
+    .knowledgeTOCRendererSections .knowledgeTOCRendererSection {
+        background-color:#FFFFFF;
+        border-bottom:1px solid #FFFFFF;
+        border-left:1px solid #FFFFFF;
+        border-right:1px solid #FFFFFF;
+        color:#5684B2;
+        float:left;
+        font-family:Arial,Helvetica,sans-serif;
+        width:144px;
+    }
+    .pkbFullWidthInner .knowledgeTOCRendererContent .sectionName.selected {
+        background-color:#5684B2;
+    }
+    
+    .articleRendererHeader{
+        padding-top:11px;
+    }
+/** Uncomment below for Rounded Tabs **/
+   
+  
+    #tabBar div{
+
+        -moz-border-radius-topleft: 8px;
+        -webkit-border-top-left-radius: 11px;
+        -moz-border-radius-topright: 6px;
+        -webkit-border-top-right-radius: 11px;
+       }
+       
+    #tabBar a {
+        text-decoration: none; 
+        padding: 7px 9px 5px 7px; 
+        -moz-border-radius-topleft: 8px;
+        -webkit-border-top-left-radius: 8px;
+        -moz-border-radius-topright: 11px;
+        -webkit-border-top-right-radius: 11px;
+    }
+    
+    .tab .currentTab {
+        background-image:none !important;
+        border-right:0 !important;
+        padding-bottom:1px;
+    }
+    
+    
+/** Uncomment below for Rounded Data Tables on Homepage **/
+    
+    
+    .bPageBlock .pbHeader { 
+        padding: 4px;
+        
+            -webkit-border-top-left-radius: 6px;
+            -moz-border-radius-topright: 6px;
+            -webkit-border-top-right-radius: 6px;
+        box-shadow: 0px 2px 6px #ccc;
+        -moz-border-radius-topleft:6px;
+        -moz-border-radius-topright:6px;
+        border-left:1px solid #C1C1C1;
+        border-right:1px solid #C1C1C1;
+        border-top:1px solid #C1C1C1;
+    }
+    .bPageBlock .pbBody {
+        -moz-border-radius-bottomleft:6px;
+        -moz-border-radius-bottomright:6px;
+        background:none repeat scroll 0 0 white;
+        border-bottom:1px solid #C1C1C1;
+        border-left:1px solid #C1C1C1;
+        border-right:1px solid #C1C1C1;
+        background-color:#FFFFFF;
+    }
+    .bPageBlock, .individualPalette .bPageBlock {
+        background:none repeat scroll 0 0 transparent;
+        border:medium none;
+        background-color:#FFFFFF;
+    }
+           
+    @import url("../../apex/Site_SSE_Style"); 
+    
+    
+/* This is the temporary fix for the pink border issue, Remove after 5/1/2011
+.tabNavigation { 
+        background-image:none;
+        background:none;
+        margin-top:5px;
+     }
+    
+        .tab td.currentTab,
+        #tabBar td,
+        #tabBar div,
+        #tabBar td.currentTab primaryPalette,
+        #tabBar td.currentTab primaryPalette div,
+        #tabBar td.currentTab primaryPalette div a{
+        
+            background:none;
+            background-color:transparent;
+            border:none;
+            padding:0;
+            margin:0;
+        
+        }
+    
+            #tabBar a {
+                text-decoration: none; 
+                color:#39A8E5;
+                padding:14px; 
+            
+ }
+*/
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

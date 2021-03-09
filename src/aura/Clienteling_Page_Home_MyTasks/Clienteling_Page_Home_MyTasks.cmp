@@ -1,0 +1,99 @@
+<aura:component controller="ClientellingController" access="global">
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="allTasks" type="Task[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.getTasks}"/>
+    <aura:attribute name="SelectedTaskId" type="String"  />
+    <aura:attribute name="currentTask" type="Task[]"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index">
+	<div class="slds-card">
+        <div class="slds-media padding">
+                <div class="profilepicture">
+                    <lightning:icon iconName="standard:task" size="small" alternativeText="Indicates approval"/> 
+                </div>
+                <div class="slds-media__body"> 
+                	<h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">{!setting.My_Tasks_Label__c}</h1>
+                </div>
+        </div>
+        <div class="padding">
+            <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+              <thead>
+                <tr class="slds-text-title_caps">
+                  <th scope="col">
+                    <div class="slds-truncate" title="Close Date">Task Subject
+                      <button class="slds-button slds-button_icon slds-button_icon" title="Sort">
+                        <span class="slds-assistive-text">Sort</span>
+                      </button>
+                    </div>
+                  </th>
+            	  <th scope="col">
+                    <div class="slds-truncate" title="Close Date">Status
+                      <button class="slds-button slds-button_icon slds-button_icon" title="Sort">
+                        <span class="slds-assistive-text">Sort</span>
+                      </button>
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="slds-truncate" title="Close Date">Due Date
+                      <button class="slds-button slds-button_icon slds-button_icon" title="Sort">
+                        <span class="slds-assistive-text">Sort</span>
+                      </button>
+                    </div>
+                  </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <aura:iteration var="task" items="{!v.allTasks}" indexVar="index"> 
+                        <tr>
+                            <td><button class="buttonnostyle" onclick="{!c.OpenTaskDialog}" id='{!task.Id}'>{!task.Subject}</button></td>
+                        	<td>{!task.Status}</td>
+                        	<td><ui:outputDate value="{!task.ActivityDate}"/></td>
+                        </tr>
+                    </aura:iteration>
+            	</tbody>
+			</table>
+    	</div>
+    </div>
+    <!--Existing Task Modal -->
+        <section role="dialog" aura:id="ViewTaskModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Update Task</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <aura:iteration var="currentTask" items="{!v.currentTask}" indexVar="index"> <br/>
+                        <div class="panelHalf">
+                            <div class="padding">
+                            	<label class="slds-form-element__label">Subject</label>
+                            	<input type="text" id="text-input-id-1" class="slds-input" placeholder="Placeholder Text" value="{!currentTask.Subject}"/>
+                            </div>
+                        </div>
+                        <div class="panelHalf">
+                            <div class="padding">
+                                <label class="slds-form-element__label">Status</label>
+                                <select class="slds-select" id="select-01" selected="{!currentTask.Status}">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Deferred">Deferred </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="padding">
+                        	<label class="slds-form-element__label">Comments</label>
+                            <textarea id="textarea-id-01" class="slds-textarea" placeholder="Description">{!currentTask.Description}</textarea>
+                        </div>
+                    </aura:iteration>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick="{!c.SaveTask}" style="{!'background-color:' + setting.Primary_Button_Color__c + ';border-color:' + setting.Primary_Button_Color__c + ';'}">Save</button>
+                    <button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}" style="{!'background-color:' + setting.Primary_Button_Color__c + ';border-color:' + setting.Primary_Button_Color__c + ';'}">Close</button>
+                </footer>
+            </div>
+        </section>
+        <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+    </aura:iteration>    
+</aura:component>

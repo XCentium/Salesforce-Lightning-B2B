@@ -1,0 +1,137 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="ImageURL" default="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/Retail/Restaurant/images/scotts-homepage.jpg" type="String" />
+    <aura:attribute name="ImageHeight" default="200" type="String" />
+    <aura:attribute name="ImagePosition" default="Overlay" type="String" />
+    <aura:attribute name="CaptionHeight" default="150" type="String" />
+    <aura:attribute name="CaptionBackgroundColor" default="rgba(0,0,0,0.4)" type="String" />
+    <aura:attribute name="CaptionAlignment" default="Left" type="String" />
+    <aura:attribute name="CaptionTitle" default="" type="String" />
+    <aura:attribute name="CaptionTitleColor" default="#fff" type="String" />
+    <aura:attribute name="CaptionTitleTextSize" default="28" type="String" />
+    <aura:attribute name="CaptionBodyText" default="" type="String" />
+    <aura:attribute name="CaptionBodyColor" default="#fff" type="String" />
+    <aura:attribute name="CaptionBodyTextSize" default="13" type="String" />
+    <aura:attribute name="CaptionActionLabel" default="" type="String" />
+    <aura:attribute name="CaptionActionURL" default="https://trailhead.salesforce.com/en/home" type="String" />
+    <aura:attribute name="CaptionActionVariant" default="Brand" type="String" />
+    
+    
+    <aura:if isTrue="{!v.ImagePosition == 'Card'}">
+        
+        <div class="cardImg" style="{! 'background-position:' + v.ImagePosition + ';background-image:url(' + v.ImageURL + ');height:' + v.ImageHeight + 'px;' }"></div>
+        
+        <div class="captionWrapper" style="{! 'background-color:' + v.CaptionBackgroundColor + ';height:' + v.CaptionHeight + 'px;'}">
+            <div class="padding" style="{!'text-align:' + v.CaptionAlignment + ';'}">
+                <h2 style="{! 'color:' + v.CaptionTitleColor + ';font-size:' + v.CaptionTitleTextSize + 'px'  }" >{!v.CaptionTitle}</h2>
+                <aura:if isTrue="{!v.CaptionBodyText != ''}">
+                    <p style="{! 'color:' + v.CaptionBodyColor + ';font-size:' + v.CaptionBodyTextSize + 'px' }">{!v.CaptionBodyText}</p>
+                </aura:if>
+                <aura:if isTrue="{!v.CaptionActionLabel != ''}">
+                    <aura:if isTrue="{!v.CaptionActionVariant == 'Brand'}">
+                        <button class="slds-button slds-button_brand" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                    </aura:if>
+                    <aura:if isTrue="{!v.CaptionActionVariant == 'Base'}">
+                        <button class="slds-button" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                    </aura:if>
+                    <aura:if isTrue="{!v.CaptionActionVariant == 'Neutral'}">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                    </aura:if>
+                </aura:if>
+            </div>
+        </div>
+        <aura:set attribute="else">
+            <div class="wrapper" style="{! 'background-position:' + v.ImagePosition + ';background-image:url(' + v.ImageURL + ');height:' + v.ImageHeight + 'px;' }">
+                <aura:if isTrue="{!v.ImagePosition == 'Middle'}">
+                    <div class="captionWrapper captionMiddle" >
+                        <div class="captionPosition" style="{! 'background-color:' + v.CaptionBackgroundColor + ';height:' + v.CaptionHeight + 'px;'}">
+                            <div class="padding centertopbottom" style="{!'text-align:' + v.CaptionAlignment + ';'}">
+                                <h2 style="{! 'color:' + v.CaptionTitleColor + ';font-size:' + v.CaptionTitleTextSize + 'px'  }" >{!v.CaptionTitle}</h2>
+                                <aura:if isTrue="{!v.CaptionBodyText != ''}">
+                                    <p style="{! 'color:' + v.CaptionBodyColor + ';font-size:' + v.CaptionBodyTextSize + 'px' }">{!v.CaptionBodyText}</p>
+                                </aura:if>
+                                <aura:if isTrue="{!v.CaptionActionLabel != ''}">
+                                    <aura:if isTrue="{!v.CaptionActionVariant == 'Brand'}">
+                                        <button class="slds-button slds-button_brand" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.CaptionActionVariant == 'Base'}">
+                                        <button class="slds-button" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.CaptionActionVariant == 'Neutral'}">
+                                        <button class="slds-button slds-button_neutral" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                    </aura:if>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.ImagePosition == 'Top'}">
+                    <div class="captionWrapper" style="{! 'background-color:' + v.CaptionBackgroundColor + ';height:' + v.CaptionHeight + 'px;'}">
+                        <div class="padding centertopbottom" style="{!'text-align:' + v.CaptionAlignment + ';'}">
+                            <h2 style="{! 'color:' + v.CaptionTitleColor + ';font-size:' + v.CaptionTitleTextSize + 'px'  }" >{!v.CaptionTitle}</h2>
+                            <aura:if isTrue="{!v.CaptionBodyText != ''}">
+                                <p style="{! 'color:' + v.CaptionBodyColor + ';font-size:' + v.CaptionBodyTextSize + 'px' }">{!v.CaptionBodyText}</p>
+                            </aura:if>
+                            <aura:if isTrue="{!v.CaptionActionLabel != ''}">
+                                <aura:if isTrue="{!v.CaptionActionVariant == 'Brand'}">
+                                    <button class="slds-button slds-button_brand" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                </aura:if>
+                                <aura:if isTrue="{!v.CaptionActionVariant == 'Base'}">
+                                    <button class="slds-button" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                </aura:if>
+                                <aura:if isTrue="{!v.CaptionActionVariant == 'Neutral'}">
+                                    <button class="slds-button slds-button_neutral" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                </aura:if>
+                            </aura:if>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.ImagePosition == 'Bottom'}">
+                    <div class="captionWrapper">
+                        <div class="captionbottom" style="{! 'background-color:' + v.CaptionBackgroundColor + ';height:' + v.CaptionHeight + 'px;'}">
+                            <div class="padding centertopbottom" style="{! 'text-align:' + v.CaptionAlignment + ';'}">
+                                <h2 style="{! 'color:' + v.CaptionTitleColor + ';font-size:' + v.CaptionTitleTextSize + 'px'  }" >{!v.CaptionTitle}</h2>
+                                <aura:if isTrue="{!v.CaptionBodyText != ''}">
+                                    <p style="{! 'color:' + v.CaptionBodyColor + ';font-size:' + v.CaptionBodyTextSize + 'px' }">{!v.CaptionBodyText}</p>
+                                </aura:if>
+                                <aura:if isTrue="{!v.CaptionActionLabel != ''}">
+                                    <aura:if isTrue="{!v.CaptionActionVariant == 'Brand'}">
+                                        <button class="slds-button slds-button_brand" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.CaptionActionVariant == 'Base'}">
+                                        <button class="slds-button" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.CaptionActionVariant == 'Neutral'}">
+                                        <button class="slds-button slds-button_neutral" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                    </aura:if>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.ImagePosition == 'Overlay'}">
+                    <div class="captionWrapper" style="{! 'background-color:' + v.CaptionBackgroundColor + ';height:' + v.ImageHeight + 'px;'}">
+                        <div class="captionPosition">
+                            <div class="paddingleftright" style="{!'text-align:' + v.CaptionAlignment + ';'}">
+                                <h2 style="{! 'color:' + v.CaptionTitleColor + ';font-size:' + v.CaptionTitleTextSize + 'px'  }" >{!v.CaptionTitle}</h2>
+                                <aura:if isTrue="{!v.CaptionBodyText != ''}">
+                                    <p style="{! 'color:' + v.CaptionBodyColor + ';font-size:' + v.CaptionBodyTextSize + 'px' }">{!v.CaptionBodyText}</p>
+                                </aura:if>
+                                <aura:if isTrue="{!v.CaptionActionLabel != ''}">
+                                    <aura:if isTrue="{!v.CaptionActionVariant == 'Brand'}">
+                                        <button class="slds-button slds-button_brand" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.CaptionActionVariant == 'Base'}">
+                                        <button class="slds-button" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.CaptionActionVariant == 'Neutral'}">
+                                        <button class="slds-button slds-button_neutral" onclick="{!c.goToURL}">{!v.CaptionActionLabel}</button>
+                                    </aura:if>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

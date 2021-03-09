@@ -1,0 +1,47 @@
+<aura:component >
+
+  <aura:attribute type="String" name="customFilterFields" />
+  <aura:attribute name="searchResultImageField" type="String" default="Image__c"/>    
+    <!-- Once a product is selected in the catalog, an event will be fired to return the productId.
+         This event will also include the sendBackData -->  
+  <aura:attribute name="sendBackData" type="String" />
+  <aura:attribute name="pricebookId" type="String" default=""/>  
+  <aura:attribute name="pricebookName" type="String" default=""/>
+ 
+  
+  <aura:method name="hide" action="{!c.hide}"  description="hide the modal"/>   
+  <aura:method name="show" action="{!c.show}"  description="show the modal"> 
+    <aura:attribute name="pricebookId" type="string" /> 
+    <aura:attribute name="sendBackData" type="String" /> 
+  </aura:method>  
+   
+    
+  <div aura:id="modaldialog" role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+    <div class="slds-modal__container" style="width:95%; max-width: unset; padding: 1rem 0;">
+      <div class="slds-modal__header" style="padding: 0.5rem;">
+
+        <lightning:buttonicon iconName="utility:close" size="large" alternativeText="icon" class="slds-modal__close" variant="bare-inverse" onclick="{!c.closeModal}"/>
+        <h2 id="header43" class="slds-text-heading--medium">{!$Label.c.Catalog_Product_catalog}</h2>
+      </div>
+      <div class="slds-modal__content slds-p-around--medium" style="height: 100%;">
+       
+       
+          <c:Catalog customFilterFields="{!v.customFilterFields}"
+                     searchResultImageField="{!v.searchResultImageField}"
+                     sendBackData="{!v.sendBackData}"
+                     pricebookId="{!v.pricebookId}"
+                     showActiveProductsOnly="true"/> 
+                     
+   
+
+      </div>
+      <div class="slds-modal__footer" style="padding: .25rem 1rem;">
+        <button class="slds-button slds-button--brand" onclick="{!c.closeModal}">{!$Label.c.Catalog_Close}</button>
+      </div>
+    </div>
+  </div>
+  <div aura:id="backdrop" class="slds-backdrop slds-backdrop--open"></div>
+
+
+
+</aura:component>

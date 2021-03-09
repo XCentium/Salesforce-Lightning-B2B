@@ -1,0 +1,55 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="SearchType" type="String" /> 
+    <aura:attribute name="SearchPhrase" type="String" /> 
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="Filter" type="String" /> 
+    <aura:attribute name="ComponentTitle" type="String" />
+    <aura:attribute name="SolutionParentId" type="String" />
+    <aura:attribute name="Solutions" type="String[]"/>
+    <aura:attribute name="recid" type="String" />
+    <div class="owner">
+    	<ul class="slds-accordion customAccordion">
+        <aura:iteration items="{!v.Solutions}" var="solution">
+            <aura:if isTrue="{!solution.parent_demo_solution__c == v.SolutionParentId}">
+                <aura:if isTrue="{!solution.isactive__c == true}">
+                    <li class="slds-accordion__list-item ">
+                        <section class="slds-accordion__section nopadding" aura:id="{!solution.id + '_parent'}" id="{!solution.id + '_parent'}" >
+                            <div class="slds-accordion__summary">
+                                <div class="padding">
+                                    <h3 class="slds-accordion__summary-heading">
+                                        <button aria-controls="accordion-details-01" aura:id="{!solution.id}" id="{!solution.id}" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.handleSetActiveSectionC}">
+                                            <lightning:icon class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true" iconName="utility:chevrondown" size="xx-small"/>
+                                            <span class="inlineblock" title="Accordion summary">
+                                                <aura:if isTrue="{!and(solution.icon_url__c != '',solution.icon_url__c != null)}">
+                                                	<img src="{!solution.icon_url__c}" class="accordionimg floatleft" />
+                                                    <aura:set attribute="else">
+                                                        <aura:if isTrue="{!solution.lds_icon__c != ''}">
+                                                            <lightning:icon iconName="{!solution.lds_icon__c}" size="medium" class="marginright floatleft accordionicon"/>
+                                                            <aura:set attribute="else">
+                                                                <lightning:icon iconName="standard:category" size="medium" class="marginright floatleft accordionicon"/>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <h3 class="floatleft solutionname">
+                                                	{!solution.name}
+                                                	<span class="subsolutiondesc"><aura:unescapedHtml value="{!solution.description__c}"/></span>
+                                                </h3>
+                                                <div class="clear"></div>
+                                            </span>
+                                        </button>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="slds-accordion__content" id="accordion-details-01">
+                            	<c:FIDO_Solutions_DemoScripts SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" Filter="{!v.Filter}" SolutionId="{!solution.sfid }" Industry="{!v.Industry}" />
+                            </div>
+                        </section>
+                    </li> 
+                </aura:if>
+            </aura:if>
+        </aura:iteration>
+    </ul>
+    </div>
+</aura:component>

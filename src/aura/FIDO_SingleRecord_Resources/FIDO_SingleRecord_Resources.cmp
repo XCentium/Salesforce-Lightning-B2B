@@ -1,0 +1,71 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="ScriptId" type="String" />
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Data" type="String[]" />
+    <aura:attribute name="RelatedRecords" type="String[]" />
+    <aura:attribute name="RelatedPersonas" type="String[]" />
+    <aura:attribute name="RelatedVideos" type="String[]" />
+    <aura:attribute name="featuredetailjunctionid" type="String"/>
+    <aura:attribute name="featureId" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="UserEmail" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <button class="slds-button backButton" onclick="{!c.back}">
+        <lightning:icon iconName="utility:back" size="xx-small"/> 
+    </button> 
+    <aura:if isTrue="{!not(empty(v.Data))}">
+        <div class="owner">
+            <aura:iteration items="{!v.Data}" var="resource">
+                <div class="padding">
+                    <div class="tile-header slds-p-vertical_xx-small  slds-m-bottom_xx-small">
+                        <h3 class="slds-text-heading_small">
+                            {!resource.name}
+                        </h3>
+                    </div>
+                    <aura:if isTrue="{!resource.type__c != ''}">
+                        <span class="slds-text-title_caps slds-list_horizontal slds-has-dividers_right">Resource Type - {!resource.type__c}</span>
+                    </aura:if>
+                    
+                    <div class="paddingtopbottom">
+                        <aura:if isTrue="{!resource.image__c != NULL}">
+                            <div class="fifth">
+                                <img src="{!resource.image__c}" class="brandlogo resourcepic"/>
+                            </div>
+                            <div class="fourfifths">
+                                <ui:outputRichText value="{!resource.description__c}"/>
+                                <aura:if isTrue="{!resource.email__c != null}">
+                                    <strong>Contact Info: </strong> <a href="{! 'mailto:' + resource.email__c}">{!resource.email__c}</a>
+                                </aura:if>
+                                <aura:if isTrue="{!resource.url__c != NULL}">
+                                    <div class="paddingtopbottom">
+                                        <button class="slds-button slds-button_neutral"  aura:id="{!resource.url__c}" id="{!resource.url__c}" onclick="{!c.toURL}">
+                                            View
+                                        </button>
+                                    </div>
+                                </aura:if>
+                            </div>
+                            <div class="clear"></div>
+                            <aura:set attribute="else">
+                                <ui:outputRichText value="{!resource.description__c}"/>
+                                <aura:if isTrue="{!resource.email__c != null}">
+                                    <strong>Contact Info: </strong> <a href="{! 'mailto:' + resource.email__c}">{!resource.email__c}</a>
+                                </aura:if>
+                                <aura:if isTrue="{!resource.url__c != NULL}">
+                                    <div class="paddingtopbottom">
+                                        <button class="slds-button slds-button_neutral"  aura:id="{!resource.url__c}" id="{!resource.url__c}" onclick="{!c.toURL}">
+                                            View
+                                        </button>
+                                    </div>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                        <div class="clear"></div>
+                    </div>                       	
+                </div>
+            </aura:iteration>
+        </div>
+    </aura:if>
+</aura:component>

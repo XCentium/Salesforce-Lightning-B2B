@@ -1,0 +1,16 @@
+<aura:component >
+   <aura:attribute name="label" type="String" default="Search"/>
+   <aura:attribute name="searchText" type="String" default=""/>
+   <aura:attribute name="fields" type="String" default="Name"/>
+   <aura:attribute name="uniqueFilterName" type="String" default="ToBeDefined"/>
+    
+    
+   <aura:registerEvent name="sendFilter" type="c:CatalogSendFilterEvent"/>
+   
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    
+   <lightning:input type="search" name="searchInput"
+                    value="{!v.searchText}" label="{!v.label}" onchange="{!c.doChange}"
+                    autocomplete="false"/>
+
+</aura:component>

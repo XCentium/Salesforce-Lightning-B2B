@@ -1,0 +1,79 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="IndustryName" type="String"/>
+    <aura:attribute name="industryHeader" type="String"/>
+    <aura:attribute name="ComponentTitle" type="String" />
+    <aura:attribute name="Industries" type="String[]"/>
+    <aura:attribute name="ParentIndustry" type="String" default=""/>
+    <aura:attribute name="Loaded" type="boolean" default="false"/>
+    <aura:handler name="change" value="{!v.Loaded}" action="{!c.LoadIndustries}"/>
+    <aura:attribute name="OrgId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <aura:if isTrue="{!and(v.industryHeader != '', v.industryHeader != null)}">
+        <div class="industryHeader" style="{! 'background-image:url('+ v.industryHeader +')'}">
+            <div class="center">
+                <div class="centerVertically">
+                    <h1>Get To Know Your Demo Org</h1>
+                    <div class="blueborderbottom margin0auto"></div>
+                    <p class="threequarterscentered importantText">This tool provides you the documentation and information needed to be successful with your demo org.</p>
+                </div>
+            </div>
+        </div>
+        <aura:set attribute="else">
+            <div class="industryHeader" style="background-image:url(https://sfdc-ckz-b2b.s3.amazonaws.com/gtkido/headers/default.jpg)">
+                <div class="center">
+                    <div class="centerVertically">
+                        <h1>Get To Know Your Demo Org</h1>
+                        <div class="blueborderbottom margin0auto"></div>
+                        <p class="threequarterscentered importantText">This tool provides you the documentation and information needed to be successful with your demo org.</p>
+                    </div>
+                </div>
+            </div>
+        </aura:set>
+    </aura:if>
+    
+    <div class="paddingtopbottom">
+        <div class="minicard">
+            <div class="padding">
+                <h1>Select an Industry</h1>
+                <div class="blueborderbottom"></div>
+                <div class="scriptWrapper">
+                    <aura:iteration items="{!v.Industries}" var="ind">
+                        <aura:if isTrue="{!ind.haschildrenindustries__c == true}">
+                            <button class="slds-button slds-button_neutral cardforth greybutton industrybutton parentIndustry" aura:id="{!ind.sfid}" id="{!ind.sfid}" onclick="{!c.ShowSubCategories}">
+                                <div class="paddingtopbottom">{!ind.name}</div>
+                            </button>
+                        </aura:if>
+                        <aura:if isTrue="{!ind.haschildrenindustries__c != true}">
+                            <aura:if isTrue="{!ind.parent_industry__c == null}">
+                                <aura:if isTrue="{!v.ParentIndustry == ''}">
+                                    <button class="slds-button slds-button_neutral cardforth greybutton industrybutton parentIndustry" aura:id="{!ind.sfid}" id="{!ind.sfid}" onclick="{!c.IndustryChoice}">
+                                        <div class="paddingtopbottom">{!ind.name}</div>
+                                    </button> 
+                                </aura:if>
+                            </aura:if>
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+                <div class="subverticals hide" aura:id="sub" id="sub" >
+                    <h4>Select Sub Industry</h4>
+                    <div class="scriptWrapper">
+                        <aura:iteration items="{!v.Industries}" var="subind">
+                            <aura:if isTrue="{!subind.parent_industry__c == v.ParentIndustry}">
+                                <button class="slds-button slds-button_neutral cardforth greybutton industrybutton" aura:id="{!subind.sfid}" id="{!subind.sfid}" onclick="{!c.IndustryChoice}">
+                                    <div class="paddingtopbottom">{!subind.name}</div>
+                                </button> 
+                            </aura:if>
+                        </aura:iteration>
+                    </div>
+                </div>
+                <div class="poweredByQ hide" aura:id="PoweredLogo">
+                    <img src="https://i.imgur.com/7qruuSd.gif" alt="Powered by Q" />
+                    <div class="spacer80px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

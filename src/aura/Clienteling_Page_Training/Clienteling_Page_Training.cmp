@@ -1,0 +1,73 @@
+<aura:component>
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:iteration var="setting" items="{!v.appSettings}" indexVar="index"> 
+        <div class="slds-page-header">
+            <div class="slds-media">
+                <div class="profilepicture">
+                    <lightning:icon iconName="standard:answer_best" size="small" alternativeText="Indicates approval"/> 
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Training">{!setting.Training_Page_Label__c}</h1>
+                    <p class="slds-text-body_small slds-line-height_reset">Training and Help materials</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="panelHalf">
+            <div class="slds-card marginright">
+                <div class="slds-media padding">
+                        <div class="profilepicture">
+                            <lightning:icon iconName="standard:sales_path" size="small" alternativeText="Indicates approval"/> 
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">NTO Hiking Guide</h1>
+                        </div>
+                </div>
+                <div class="padding">
+                    <iframe width="100%" height="300" src="{!setting.YouTube_Video__c}" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+                </div>
+                <div class="slds-media padding ">
+                        <div class="profilepicture">
+                            <lightning:icon iconName="standard:reward" size="small" alternativeText="Indicates approval"/> 
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">Our Most Popular Products</h1>
+                        </div>
+                </div>
+                <div class="padding">
+                    <c:RecommendedProducts ProductID="{!setting.Recommended_Product_Name_1__c}" ProductID2="{!setting.Recommended_Product_Name_2__c}" height="600" showAddtoChat="false"/>
+                </div>
+            </div>
+        </div>
+        <div class="panelHalf ">
+            <div class="slds-card marginleft">
+                <div class="slds-media padding">
+                        <div class="profilepicture">
+                            <lightning:icon iconName="standard:sales_path" size="small" alternativeText="Indicates approval"/> 
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">Search Knowledge</h1>
+                        </div>
+                </div>
+                <div class="padding">
+                    <c:Clienteling_Page_Training_Knowledge />
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="slds-card ">
+            <div class="slds-card marginleft">
+                <div class="slds-media padding">
+                    <div class="profilepicture">
+                        <lightning:icon iconName="standard:coaching" size="small" alternativeText="Indicates approval"/> 
+                    </div>
+                    <div class="slds-media__body">
+                        <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Store Promotions">Your Assigned Badges</h1>
+                    </div>
+                </div>
+            </div>
+            <c:myTrailheadMock Heading="" FirstTrailTitle="{!setting.Trailhead_First_Title__c}" FirstTrailDescripton="{!setting.Trailhead_First_Title__c}" FirstTrailLink="{!setting.Trailhead_First_Link__c}" SecondTrailTitle="{!setting.Trailhead_Second_Title__c}" SecondTrailDescripton="{!setting.Trailhead_Second_Description__c}" SecondTrailIcon="standard:coaching" SecondTrailLink="{!setting.Trailhead_Second_Link__c}"  ThirdTrailTitle="{!setting.Trailhead_Third_Title__c}" ThirdTrailDescripton="{!setting.Trailhead_Third_Description__c}"   ThirdTrailIcon="standard:bot_training" ThirdTrailLink="{!setting.Trailhead_Third_Link__c }" />
+            <div class="clear"></div>
+        </div>
+    </aura:iteration>
+</aura:component>

@@ -1,0 +1,78 @@
+<!--
+ - Created by brandon.rogers on 2/12/19.
+ -->
+
+<apex:component id="ckz_ProductCompare">
+
+    <script id="CKZ-Product-Compare-Tray-View" type="text/template">
+        {{#ifDisplay 'PCP.Enabled'}}
+            {{#if this.length}}
+                <div class="navbar-fixed-bottom container cc_container col-md-12 cc_navbar-fixed-bottom well well-sm">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a class="minimize-tray pull-right" data-toggle="collapse" href="#compareCollapse" aria-expanded="false" aria-controls="compareCollapse">
+                                <i class="far fa-minus"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="collapse in" id="compareCollapse">
+                        <div class="col-md-10">
+                            <div class="row compare-tray-row">
+                                {{#each this}}
+                                    <div class="col-xs-3 compareTrayProd">
+                                        <div class="panel panel-default">
+                                            <button type="button" class="compareTrayRemButton removeFromCompare close cc_remove_from_compare pull-right" aria-label="Close" data-id="{{this.sfid}}">&#215;</button>
+                                            <div class="panel-body">
+                                                <div class="col-xs-3">
+                                                    <div class="compareTrayProdImageSec cc_compare_tray_img">
+                                                        {{#if EProductMediasS.[0]}}
+                                                        {{productLink this 'cc_product_name_img' image=(displayImage this 'img-responsive center-block' src=(displayEProductMedia this.EProductMediasS.[0]) alt=this.sfdcName dataId=this.SKU)}}
+                                                        {{/if}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-9 compareTrayProdName cc_compare_tray_name">
+                                                    {{#if this.alternateName}}
+                                                    {{productLink this 'cc_product_name' text=this.alternateName}}
+                                                    {{else}}
+                                                    {{productLink this 'cc_product_name' text=this.sfdcName}}
+                                                    {{/if}}
+                                                    <p>{{this.SKU}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+
+                                {{#fill_upto this 4}}
+                                    <div class="compareTrayProd col-xs-3 panel panel-default">
+                                        <div class="panel-body"></div>
+                                    </div>
+                                {{/fill_upto}}
+                            </div>
+                        </div>
+
+                        <div class="compareTrayControls col-md-2 cc_compare_tray_controls">
+                            <button type="button" class="btn btn-primary btn-sm btn-block gotoProductCompare cc_goto_prod_compare {{#ifLessThan this.length 2}}disabled{{/ifLessThan}}" data-id="{{this.prodBean.id}}" {{#ifLessThan this.length 2}}disabled{{/ifLessThan}}>
+                                <i class="fal fa-sync"></i>
+                                {{pageLabelMap 'ProductCompare_CompareProducts'}}
+                            </button>
+
+                            <button type="button" class="btn btn-link btn-sm btn-block compareTrayClear clearCompare cc_clear_compare">
+                                <i class="fal fa-times"></i>
+                                {{pageLabelMap 'ProductCompare_ClearAll'}}
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            {{/if}}
+        {{/ifDisplay}}
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function($){
+            CCRZ.uiProperties.productCompareTrayView.desktop.tmpl = 'CKZ-Product-Compare-Tray-View';
+        });
+    </script>
+</apex:component>

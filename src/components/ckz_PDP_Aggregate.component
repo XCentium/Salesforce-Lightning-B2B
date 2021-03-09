@@ -1,0 +1,291 @@
+<!--
+ - Created by brandon.rogers on 1/15/19.
+ -->
+
+<apex:component id="ckz_PDP_Aggregate">
+
+    <script id="CKZ-ProductDetail-Aggregated" type="text/template">
+        <div class="product_detail_container product_type_aggregate phoneProductItem cc_product_detail_container cc_product_type_aggregate">
+            <div class="messagingSection-Error" role="alert" style="display: none"></div>
+            <div class="messagingAction-Info" role="alert" style="display: none">
+                <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&#215;</span></button>
+            </div>
+
+            <div class="row product_detail_main">
+                <div class="col-sm-5">
+                    <div class="pd_content cc_pd_content">
+                        {{> mainContentDesktop}}
+                    </div>
+                </div>
+
+                <div class="col-sm-7">
+
+                    <!-- PRODUCT NAME -->
+                    <div class="row m-t-1">
+                        <div class="col-sm-12">
+                            <h2 class="cc_title">
+                                {{this.product.prodBean.name}}
+                            </h2>
+                        </div>
+                    </div>
+
+                    <!-- SKU -->
+                    {{#ifDisplay 'PD.DsplSku'}}
+                    <div class="sku cc_sku m-b-1">
+                        <span class="cc_label">{{pageLabelMap 'ProductDetailsInc_SKU'}}:</span>
+                        <span class="value cc_value">{{this.product.prodBean.sku}}</span>
+                    </div>
+                    {{/ifDisplay}}
+
+                    {{#ifDisplay 'PD.DsplSDesc'}}
+                    <div class="shortDesc cc_short_desc small">
+                        {{{this.product.prodBean.shortDesc}}}
+                    </div>
+                    {{/ifDisplay}}
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="aggSection cc_agg_section m-y-2"></div>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <div class="row quantity_block gp_quantity_block cc_quantity_block addSection hidden">
+                        <!-- QTY -->
+                        <div class="col-sm-4">
+                            {{#if this.product.qtySkipIncrement}}
+                                <div class="row cc_qty_control_row">
+                                    <div class="col-md-10 col-md-offset-2">
+                                        <div class="form-group">
+                                            <div class="input-group cc_input_group">
+                                                <span class="input-group-btn cc_input_group_btn">
+                                                    <input type="button" value="{{pageLabelMap 'Prod_QtyDecrFF'}}" class="btn btn-default btn-sm minusFF cc_minusff"/>
+                                                    <input type="button" value="{{pageLabelMap 'Prod_QtyDecrSingle'}}" class="btn btn-default btn-sm minus cc_minus"/>
+                                                </span>
+
+                                                <input type="text" readonly="true" name="qty" value="0" class="entry form-control input-sm cc_entry" maxlength="7"/>
+
+                                                <span class="input-group-btn cc_input_group_btn">
+                                                    <input type="button" value="{{pageLabelMap 'Prod_QtyIncrSingle'}}" class="btn btn-default btn-sm plus cc_plus"/>
+                                                    <input type="button" value="{{pageLabelMap 'Prod_QtyIncrFF'}}" class="btn btn-default btn-sm plusFF cc_plusff"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{else}}
+                                {{#ifEquals this.product.qtyIncrement 1}}
+                                    <div class="row cc_qty_control_row">
+                                        <div class="col-md-6 col-md-offset-6">
+                                            <div class="form-group">
+                                                <div class="input-group cc_input_group">
+                                                    <span class="input-group-btn cc_input_group_btn">
+                                                        <input type="button" value="{{pageLabelMap 'Prod_QtyDecrSingle'}}" class="btn btn-default btn-sm minus cc_minus"/>
+                                                    </span>
+
+                                                    <input id="qty{{index}}" name="quickadd[{{index}}].qty" value="0" class="qty entry form-control input-sm cc_entry" maxlength="7"/>
+
+                                                    <span class="input-group-btn cc_input_group_btn">
+                                                        <input type="button" value="{{pageLabelMap 'Prod_QtyIncrSingle'}}" class="btn btn-default btn-sm plus cc_plus"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{else}}
+                                    <div class="row cc_qty_control_row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="qty" class="control-label cc_qty sr-only">{{pageLabelMap 'Qty'}}</label>
+                                                <input type="text" id="qty" name="qty" value="1" class="input-text entry plus_minus cc_entry form-control cc_agg_entry" maxlength="7"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/ifEquals}}
+                            {{/if}}
+
+                            <input type="hidden" name="qtyIncrement" value="{{this.product.qtySingleIncrement}}" class="item_qtyIncrement"/>
+                            <input type="hidden" name="qtySkipIncrement" value="{{this.product.qtySkipIncrement}}" class="item_qtySkipIncrement"/>
+                        </div>
+
+                        <!-- WISHLIST -->
+                        <div class="col-sm-4">
+                            <div class="wishButtons plus_minus addSection cc_add_section cc_wish_buttons hidden"></div>
+                        </div>
+
+                        <!-- ADD TO CART -->
+                        <div class="col-sm-4">
+                            <div class="action cc_action">
+                                <button type="button" class="btn btn-primary btn-block addSection addItem cc_add_item hidden" data-sku="{{this.product.prodBean.sku}}" data-parent="{{this.product.prodBean.id}}" onclick="addAggItem(this)">
+                                    <i class="far fa-cart-plus"></i>
+                                    {{pageLabelMap 'Component_MiniwishList_AddToCart'}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="tabSection"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="widgetSection"></div>
+    </script>
+
+
+    <script id="CKZ-ProductDetail-AggContent-Desktop" type="text/template">
+        <div class="cc_product_detail_photo_container" id="photoContainer">
+
+            <div class="panel panel-default prod_media cc_prod_media">
+                <div class="panel-body">
+                    {{#if this.mediaWrappers.[SVG Interactive Diagram]}}
+                    {{#each this.mediaWrappers.[SVG Interactive Diagram]}}
+                    <div class="interactive cc_interactive">{{displaySVG this 'mainProdImage prodDetail img-responsive'}}</div>
+                    {{/each}}
+                    {{/if}}
+
+                    <div id="altImageModal" class="modal fade cc_alt_image_modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog cc_modal-dialg" role="document">
+                            <div class="modal-content cc_modal-content">
+                                <div class="modal-header cc_modal-header">
+                                    <button type="button" class="close cc_close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&#215;</span></button>
+                                    <h4 class="modal-title cc_modal-title" id="myModalLabel"></h4>
+                                </div>
+                                <div class="modal-body cc_modal-body">
+                                    <img class="modalImg cc_modal_img img-responsive center-block" src=""/>
+                                    <p class="modalText cc_modal_text"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{#if this.product.mediaWrapper }}
+                    <div class="cc_product_detail_photo_container m-t-1" id="photoContainer">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="cc_main_prod_image m-b-1">{{displayImage this.product.mediaWrapper 'mainProdImage prodDetail img-responsive center-block'}}</div>
+                            </div>
+
+                            {{#if this.mediaWrappers.[Alternate Images]}}
+                            <div class="col-sm-10 col-sm-offset-1 hidden-xs">
+                                <div class="ckz_alt_image_container">
+                                    {{#each this.mediaWrappers.[Product Image]}}
+                                    <img class="alternate cc_alternate img-responsive thumbnail m-a-1" src="{{productImage this}}" data-id="{{this.uri}}"/>
+                                    {{/each}}
+
+                                    {{#each this.mediaWrappers.[Alternate Images]}}
+                                    <img class="alternate cc_alternate img-responsive thumbnail m-a-1" src="{{productImage this}}" data-id="{{this.uri}}"/>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{else}}
+                    {{#if this.mediaWrappers.[SVG Interactive Diagram]}}
+                    <!-- SVG INTERACTIVE DIAGRAM -->
+                    {{else}}
+                    <div class="cc_product_detail_photo_container m-t-1" id="photoContainer">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="cc_main_prod_image img-responsive">{{displayImage this.product.mediaWrapper 'mainProdImage prodDetail'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{/if}}
+                </div>
+            </div>
+
+            <!--<div class="col-sm-12">
+                <div id="altImageModal" class="modal fade cc_alt_image_modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog cc_modal-dialg" role="document">
+                        <div class="modal-content cc_modal-content">
+                            <div class="modal-body cc_modal-body">
+                                <img class="modalImg cc_modal_img" src=""/>
+                                <p class="modalText cc_modal_text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc_main_prod_image">{{displayImage this.product.mediaWrapper 'mainProdImage prodDetail img-responsive'}}</div>
+                {{#if this.mediaWrappers.[Alternate Images]}}
+                <div class="row">
+                    {{#each this.mediaWrappers.[Product Image]}}
+                    <div class="col-xs-3">
+                        <img class="alternate cc_alternate img-responsive thumbnail" src="{{productImage this}}" data-id="{{this.uri}}"/>
+                    </div>
+                    {{/each}}
+                    {{#each this.mediaWrappers.[Alternate Images]}}
+                    <div class="col-xs-3">
+                        <img class="alternate cc_alternate img-responsive thumbnail" src="{{productImage this}}" data-id="{{this.uri}}"/>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+            </div>-->
+        </div>
+    </script>
+
+    <script id="CKZ-ProductDetail-Aggregate" type="text/template">
+        <select class="aggSelection form-control cc_agg_selection cc_form-control" name="aggSelection">
+            {{#each this}}
+            {{#ifEquals product.prodBean.ProductType 'Aggregated'}}
+            <option value="{{product.prodBean.id}}">{{pageLabelMap 'Select_NoSelection'}}</option>
+            {{else}}
+            <option value="{{product.prodBean.id}}" data-sku="{{product.prodBean.sku}}">{{product.prodBean.name}} {{#ifDisplay 'PD.DsplPrc'}}{{#ifNotEquals product.price 0 }} - {{{price product.price}}} {{/ifNotEquals}}{{/ifDisplay}}</option>
+            {{/ifEquals}}
+            {{/each}}
+        </select>
+    </script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            if (CCRZ.detailData.jsonProductData && CCRZ.detailData.jsonProductData.product) {
+                if (CCRZ.detailData.jsonProductData.product.prodBean.ProductType === 'Aggregated') {
+                    console.log("CCRZ Product Type: Aggregated");
+
+                    CCRZ.uiProperties.productDetailView.desktop.tmpl = 'CKZ-ProductDetail-Aggregated';
+                    CCRZ.uiProperties.aggregateView.desktop.aggContent.tmpl = 'CKZ-ProductDetail-AggContent-Desktop';
+                    CCRZ.uiProperties.aggregateView.desktop.tmpl = 'CKZ-ProductDetail-Aggregate';
+                }
+            }
+        });
+
+        function addAggItem(item) {
+            console.log("addAggItem: " + item);
+
+            CCRZ.views.QuickOrderView = CCRZ.CloudCrazeView.extend({
+                className: "cc_RemoteActionController",
+                viewName: "QuickOrderView"
+            });
+
+            qoView = new CCRZ.views.QuickOrderView();
+
+            var aggSKU = $('.cc_agg_selection').find(':selected').data('sku').toString();
+            var aggQty = $('#qty').val().toString();
+
+            addRequest = [];
+
+            addRequest.push({
+                "sku": aggSKU,
+                "qty": aggQty
+            });
+
+            console.log("addRequest" + JSON.stringify(addRequest));
+
+            //pass list of sku and qty
+            qoView.invokeCtx("addBulk", JSON.stringify(addRequest), function (response) {
+                if (response && response.success) {
+                    CCRZ.pubSub.trigger('cartChange', response.data.cartId);
+                }
+            });
+        }
+    </script>
+</apex:component>

@@ -1,0 +1,549 @@
+<apex:page standardstylesheets="false" showheader="false" sidebar="false" applyhtmltag="false" applybodytag="false" doctype="html-5.0">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+<head>
+<apex:slds />
+<title>Create Service Analytics App - Product</title>
+<!-- Move the styles into a CSS file -->
+<style>
+            body {
+                margin: 0;
+                padding: 0;
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+            .slds-scope .progress-container {
+                width: 28rem;
+                margin: 1rem auto 2rem;
+            }
+            .slds-scope .progress-container h2{
+                margin-top: 1rem;
+                font-size: 1.1rem;
+            }
+            .slds-scope .slds-checkbox .slds-form-element__label {
+                font-size: 1rem;
+            }
+            .slds-scope ul li.item {
+                position: relative;
+            }
+            .slds-scope ul li.item .label {
+                clear: both;
+            }
+            .slds-scope ul li.item {
+                border: 1px solid #D8DDE6;
+                border-radius: 5px;
+                height: 11rem;
+            	width: 31%
+            }
+            .slds-scope ul li.item:hover {
+                border: 1px solid #90AAE1;
+                cursor: pointer;
+            }
+            .slds-scope ul li.item .checkbox.slds-icon_container {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+            .slds-scope ul li.item .checkbox.slds-icon_container.checkbox-icon {
+                visibility: hidden;
+            }
+            .slds-scope ul li.item .checkbox.slds-icon_container.plus-icon {
+                visibility: visible;
+            }
+            .slds-scope ul li.item.selected .checkbox.slds-icon_container.checkbox-icon {
+                visibility: visible;
+            }
+            .slds-scope ul li.item.selected .checkbox.slds-icon_container.plus-icon {
+                visibility: hidden;
+            }
+            .disabled {
+            	background-color:#eff4f9;
+            	pointer-events:none; //This makes it not clickable
+            }
+            .slds-scope .slds-icon__container--circle, .slds-scope .slds-icon_container--circle {
+            }
+            .slds-scope .clear {
+                clear: both;
+            }
+            .slds-scope .slds-m-around--x-large {
+                margin: 1rem;
+            }
+            .slds-scope .slds-icon__container--circle, .slds-scope .slds-icon_container--circle {
+                padding: .2rem;
+            }
+            .slds-scope .slds-m-horizontal--large {
+                margin-right: .8rem;
+                margin-left: .8rem;
+            }
+            svg {
+                height: 100%;
+                display:block;
+                width: 100%;
+                position: relative;
+                top:0;
+                left:0;
+            }
+            svg text {
+                font-size: 1.05rem;
+            }
+</style>
+</head>
+<body>
+<div class="slds-scope">
+	<div class="slds-container--medium" id="container">
+		<div class="progress-container slds-m-around-xx--small slds-align--absolute-center">
+			<h2>Add Data and Features to Your App</h2>
+		</div>
+		<!-- <text text-anchor="middle" x="50%" y="50" >Choose additional objects to include in your app</text> -->
+		<div class="slds-form--stacked slds-m-horizontal_xx-large" id="form">
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="/analytics/wave/sdk/js/41.0/wizard-min.js"></script>
+<script>
+function hasClass(ele, cls) {
+    var classes = ele.getAttribute('class');
+    var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+    return reg.test(classes);
+}
+function addClass(ele, cls) {
+    var clses = Array.isArray(cls) ? cls : [cls];
+    for (var i = 0; i < clses.length; i++) {
+        var c = clses[i];
+        if (! hasClass(ele, c)) {
+            var existing = ele.getAttribute('class');
+            ele.setAttribute('class', existing+" "+c);
+        }
+    };
+}
+function removeClass(ele, cls) {
+    if (hasClass(ele, cls)) {
+        var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+        var classes = ele.getAttribute('class');
+        var newClasses = classes.replace(reg, ' ');
+        ele.setAttribute('class', newClasses);
+    }
+}
+// Note that the SLDS sizes are smaller than the wizard counterparts
+var containerSizeClasses = {
+    "small": ["slds-container--medium"],
+    "medium": ["slds-container--large"],
+    "large": ["slds-container--x-large"]
+};
+function setSize(size) {
+    var c = document.querySelector("#container");
+    for (var key in containerSizeClasses) {
+        removeClass(c, containerSizeClasses[key].join("\",\""));
+    }
+    addClass(c, containerSizeClasses[size].join("\",\""));
+}
+function selectItem(el) {
+    //console.warn("selectItem: ", el);
+    var selected = document.querySelectorAll(".item.selected");
+    for (var i = 0; i < selected.length; i++) {
+        e = selected[i];
+        removeClass(e, "selected");
+    };
+    addClass(el, "selected");
+}
+function createFormElement() {
+    var el = document.createElement("div");
+    addClass(el, ["slds-form-element", "slds-m-bottom--x-large"]);
+    return el;
+}
+function createFormElementControl() {
+    var el = document.createElement("div");
+    addClass(el, "slds-form-element__control");
+    return el;
+}
+function createFormElementLabel(value, targetId) {
+    var el = document.createElement("label");
+    addClass(el, ["slds-form-element__label", "slds-text-heading--small"]);
+    el.setAttribute("for", targetId);
+    el.innerHTML = value;
+    return el;
+}
+function createFormElementDescription(value) {
+    var el = document.createElement("p");
+    addClass(el, ["slds-text-color--weak", "slds-text-title", "slds-m-bottom--small"]);
+    el.innerHTML = value;
+    return el;
+}
+function updateValue(name, value) {
+    //console.warn("updateValue: ", name, value);
+    Controller.update({name: name, value: value}, function(variables) {
+        //console.warn("update returned: ", variables);
+    });
+}
+function createSVGIcon(type, name) {
+    var outer = document.createElement("div");
+    addClass(outer, "slds-float--left", "slds-m-around--small");
+    var container = document.createElement("span");
+    var cname = name.toLowerCase();
+    // "CSAT",
+    // "Knowledge",
+    // "Queues",
+    // "Case History",
+    // "Opportunity",
+    // "Case Record Types",
+    // "Opportunity Record Types",
+    // "Business Hours",
+    // "Chat" ,
+    // "Events",
+    // "Omni",
+    // "Telephony"
+    if(name === "CSAT")
+    {
+        imgSrc = "{!$Resource.reward}";
+        cname = "reward";
+    }
+    else if(name === "Knowledge")
+    {
+        imgSrc = "{!$Resource.article}";
+        cname = "article";
+    }
+    else if(name === "QueueNames")
+    {
+        cname = "groups";
+        imgSrc = "{!$Resource.groups}";
+    }
+    else if(name === "CaseHistory")
+    {
+        imgSrc = "{!$Resource.call_history}";
+        cname = "call-history";
+    }
+    else if(name === "Opportunity")
+    {
+        imgSrc = "{!$Resource.opportunity}";
+        cname = "opportunity";
+    }
+	else if(name === "CaseRecordTypes")
+    {
+      imgSrc = "{!$Resource.record}";
+      cname = "case";
+    }
+    else if(name === "OpportunityRecordTypes")
+    {
+        imgSrc = "{!$Resource.record}";
+        cname = "opportunity";
+    }
+    else if(name === "BusinessHours")
+    {
+        imgSrc = "{!$Resource.business_hours}";
+        cname = "business-hours";
+    }
+    else if(name === "Chat")
+    {
+        imgSrc = "{!$Resource.live_chat}";
+        cname = "live-chat"
+    }
+    else if(name === "Telephony")
+    {
+        imgSrc = "{!$Resource.call}";
+        cname = "call";
+    }
+    else if(name === "Event")
+    {
+        imgSrc = "{!$Resource.event}";
+        cname = "event";
+    }
+    else if(name === "Omni")
+    {
+        imgSrc = "{!$Resource.omni_supervisor}";
+        cname = "contact";
+    }
+    //console.warn("imgsrc: ", imgSrc);
+    var iconType = cname;
+    var iconClass = "slds-icon-" + type + "-" + iconType.replace(/_+/g, '-');
+    if(type==="disabled")
+    {
+       iconClass = "slds-icon-standard-default";
+    }
+    addClass(container, ["slds-icon_container", iconClass, "clear"]);
+    var imageName = cname.replace(/\ /g, "") + ".svg";
+    var img = document.createElement("img");
+    addClass(img);
+    //console.warn("imagename: ", imageName);
+    img.setAttribute("src",imgSrc);
+    img.setAttribute("width","30");
+    container.appendChild(img);
+    outer.appendChild(container);
+    return outer;
+}
+function createSVGCheckbox(type, colorType) {
+     var container = document.createElement("span");
+    colorType = colorType || "view-relationship";
+    addClass(container, ["checkbox", "slds-float--right", "slds-icon_container", "slds-m-around--x-small", ]);
+    var svgns = "http://www.w3.org/2000/svg";
+    var xlinkns = "http://www.w3.org/1999/xlink";
+    var img = document.createElement("img");
+    addClass(img);
+    img.setAttribute("src",type);
+    img.setAttribute("width","20");
+    container.appendChild(img);
+    return container;
+}
+function createItemList(name, options, value, def,values) {
+    //console.warn("createItemList: name -  ", name);
+    //console.warn("createItemList: options -  ",  options);
+    //console.warn("createItemList: value -  ", value);
+    //console.warn("createItemList: def -  ",def);
+    //console.warn("createItemList: values -  ",values);
+    var formEl = createFormElement();
+    var control = createFormElementControl();
+    var list = document.createElement("ul");
+    addClass(list, ["slds-grid","slds-wrap", "slds-p-top--xx-small"]);
+    var valueMap = {};
+    var valueStr = null;
+    if (value.length) {
+        for (var i = 0; i < value.length; i++) {
+            var v = value[i];
+            valueMap[v] = true;
+        };
+        valueStr = value.join();
+    }
+    //console.warn("createItemList: valueStr -  ",valueStr);
+    var listItem = null;
+    var item = null;
+    var label = null;
+    var plus = null;
+    var checkbox = null;
+    var icon = null;
+    var desc = null;
+    options.de
+    for (opt in options) {
+        var option = options[opt];
+        var disabled = false;
+        item = document.createElement("li");
+        addClass(item, ["item", "slds-size--1-of-3", "slds-m-around_x-small"]);
+        item.setAttribute("data-value", option.value);
+        item.setAttribute("data-name", name);
+        item.setAttribute("data-values", valueStr);
+        item.setAttribute("data-values", valueStr);
+		//console.warn(" Aha !! Value: "+option.value.replace(/\ /g, ""), values["Include"+option.value.replace(/\ /g, "")+"_Visible"]);
+        //console.warn(" Aha1 !! Values[]: ",values["Include"+option.value.replace(/\ /g, "")+"_Visible"]);
+        var iconType = "standard";
+        if (values["Include"+option.value.replace(/\ /g, "")+"_Visible"] === "Disabled") {
+        	disabled = true;
+            addClass(item, "disabled");
+            iconType = "disabled";
+        }
+        else if (values["Include"+option.value.replace(/\ /g, "")+"_Visible"] === "Selected")
+        {
+            plus = createSVGCheckbox("{!$Resource.plus}");
+            addClass(plus, "plus-icon");
+            item.appendChild(plus);
+            checkbox = createSVGCheckbox("{!$Resource.check}");
+            addClass(checkbox, "checkbox-icon");
+            item.appendChild(checkbox);
+            //console.warn(" In Selected: "+option.value.replace(/\ /g, ""), values["Include"+option.value.replace(/\ /g, "")+"_Visible"]);
+            addClass(item, "selected");
+        }
+        else
+        {
+            plus = createSVGCheckbox("{!$Resource.plus}");
+            addClass(plus, "plus-icon");
+            item.appendChild(plus);
+            checkbox = createSVGCheckbox("{!$Resource.check}");
+            addClass(checkbox, "checkbox-icon");
+            item.appendChild(checkbox);
+                //console.warn(" Value Map: " + valueMap[option.value]);
+                //console.warn(" Option Value: " + option.value);
+            if (valueMap[option.value]) {
+                //console.warn(" In Selected: "+option.value.replace(/\ /g, ""), values["Include"+option.value.replace(/\ /g, "")+"_Visible"]);
+                addClass(item, "selected");
+            }
+        }
+        icon = createSVGIcon(iconType, option.value);
+        addClass(icon, ["clear", "slds-m-around--small"]);
+        item.appendChild(icon);
+        label = document.createElement("div");
+        addClass(label, ["label", "slds-text-heading--x-small",  "slds-m-around--x-large"]);
+        	//label.innerHTML = option.label;
+            label.innerHTML = _sobjectLabels[opt].value
+        item.appendChild(label);
+        if (_sobjectDescriptions && _sobjectDescriptions[opt]) {
+            desc = document.createElement("p");
+            addClass(desc, ["description", "slds-text-body--small", "slds-align--absolute-center", "slds-m-horizontal--large"]);
+            if(!disabled)
+        	{
+            	desc.innerHTML = _sobjectDescriptions[opt].value;
+            }
+        	else
+        	{
+            	desc.innerHTML = "Service Analytics has detected that you are not currently using this feature.";
+        	}
+            item.appendChild(desc);
+        }
+        if (option.value === value) {
+            addClass(item, "selected");
+        }
+        item.onclick = function(evt) {
+            //console.warn("item click: ", evt);
+            var target = evt.target;
+            while (target && target.nodeName !== "LI") {
+                target = target.parentNode;
+                //console.warn("target: ", target);
+            }
+            //console.warn("lets see the target: ", target);
+            target.classList.toggle("selected");
+            var dataValue = target.getAttribute("data-value");
+            var objName = "Include"+ target.getAttribute("data-value");
+            var objSelectionName = "Include"+ target.getAttribute("data-value")+"_Visible";
+            var objValue = null;
+            var objSelectionValue = null;
+            if (hasClass(target, "selected")) {
+                objValue = "Yes";
+                objSelectionValue = "Selected";
+            }
+            else {
+                objValue = "No";
+                objSelectionValue = "Visible";
+            }
+            var payload = {name: objName, value: objValue};
+            //console.warn("payload: ", payload);
+            Controller.update(payload, function(variables) {
+                //console.warn("update returned: ", variables);
+            });
+            payload = {name: objSelectionName, value: objSelectionValue};
+            //console.warn("payload: ", payload);
+            Controller.update(payload, function(variables) {
+                //console.warn("update returned: ", variables);
+            });
+        }
+        list.appendChild(item);
+    };
+    control.appendChild(list);
+    formEl.appendChild(control);
+    return formEl;
+}
+function renderControl(name, index, options, value, def, values) {
+    var form = document.querySelector("#form");
+    var control = null;
+    control = createItemList(name, options, value, def, values);
+    form.appendChild(control);
+}
+// Cache the descriptions for the demo
+var _sobjectDescriptions = null;
+var _sobjectLabels = null;
+function renderControls(metadata) {
+    //console.warn("renderControls: ", metadata);
+
+// todo: code to retain old knowledge and csat values 
+   //  if (metadata.values.IncludeCSAT == 'Yes'){
+   //  Controller.update({name: "IncludeCSAT_Visible", value: "Selected"}, function(variables) {
+   //         console.warn("Check CSAT if it was present earlier: ", variables);
+   //     });
+   //  }
+   //
+   //  if (metadata.values.IncludeKnowledge == 'Yes'){
+   // Controller.update({name: "IncludeKnowledge_Visible", value: "Selected"}, function(variables) {
+   //         console.warn("Check Knowledge if it was present earlier: ", variables);
+   //     });
+   // }
+
+    Controller.options("SObjectDescriptions", 0, function(name, index, options) {
+        //console.warn("SObjectDescriptions: ", options);
+        _sobjectDescriptions = options;
+    });
+    Controller.options("SObjectChoicesLabels", 0, function(name, index, options) {
+        //console.warn("SObjectChoicesLabels: ", options);
+        _sobjectLabels = options;
+    });
+    var page = metadata.page;
+    var values = metadata.values;
+    //console.warn("values: ", values);
+    var defs = metadata.variableDefinitions;
+    var name = null;
+    var value = null;
+    var def = null;
+    for (var i = 0; i < page.variables.length; i++) {
+        var v = page.variables[i];
+        //console.warn("variable: ", v.name, v.visibility, v);
+        if (v.visibility !== "Hidden") {
+            Controller.options(v.name, i, function(name, index, options) {
+                //console.warn("in render control options: ", options);
+                def = defs[name];
+                value = values[name]
+                //console.warn("index: ", index, ", name: ", name, ", value: ", value, ", def: ", def, ", options: ", options);
+                if (name === "SObjectChoices")
+                {
+                renderControl(name, index, options, value, def, values);
+                }
+            });
+        }
+    };
+}
+function addLoadEvent(func) {
+    var oldonload = window.onload;
+    if (typeof window.onload != 'function') {
+        window.onload = func;
+    }
+    else {
+        window.onload = function() {
+            if (oldonload) {
+                oldonload();
+            }
+            func();
+        }
+    }
+}
+(function (global, wave) {
+    "use strict";
+    var metadata = {};
+    var methods = {
+        ready: function(size, callback) {
+            size = size || "small";
+            var visible = false;
+            wave.wizard.publish({name : 'wizard.ready',  "payload" : {size : size, banner: {visible: visible}}, callback : function (response) {
+                //console.warn("response: ", response);
+                var payload = response.payload;
+                metadata = {
+                    page : payload.page,
+                    variableDefinitions : payload.variableDefinitions,
+                    values : payload.initialValues
+                };
+                if (callback instanceof Function) {
+                    callback(metadata);
+                }
+            }});
+        },
+        options: function (name, index, callback) {
+            wave.wizard.publish({name : 'wizard.options',  payload : {name: name}, callback : function (response) {
+                //console.warn("wizard.options returned: ", response);
+                var options = response.payload.options;
+                if (callback instanceof Function) {
+                    callback(name, index, options);
+                }
+            }});
+        },
+        update: function (payload, callback) {
+            wave.wizard.publish({name : 'wizard.update',  payload : payload, callback : function (response) {
+                //console.warn("wizard.update returned: ", response);
+                var variables = response.payload;
+                if (callback instanceof Function) {
+                    callback(variables);
+                }
+            }});
+        },
+    };
+    if (!global.Controller) {
+        global.Controller = {};
+    }
+    global.Controller = methods;
+} (window, Wave));
+addLoadEvent(function() {
+    var size = "medium";
+    setSize(size);
+
+
+
+
+    Controller.ready(size, function(metadata) {
+        //console.warn("ready: ", metadata);
+        renderControls(metadata);
+    });
+});
+        </script>
+</body>
+</html>
+</apex:page>

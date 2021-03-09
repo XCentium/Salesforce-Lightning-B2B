@@ -1,0 +1,45 @@
+.THIS{
+    font-family: 'SalesforceSans-Regular',Arial,sans-serif;
+}
+.THIS .pageTitle{
+    padding: 5px 5px 20px 5px;
+}
+.THIS .flds {
+    padding: 10px 0;
+}
+.THIS .loadingSimilarIdeas{
+    display: none;
+}
+.THIS .similarIdeaTitle{
+    padding: 10px 0 0 20px;
+}
+.THIS .similarIdeaTitle span{
+    font-weight: bold;
+}
+.THIS .similarIdeasCont ul {
+    margin: 0;
+}
+.THIS .zoneError, .THIS .titleError{
+    color: #CE2A10;
+    display: none;
+    font-size: 12px;
+    padding: 0 0 0 50px;
+}
+.THIS .flds input {
+    width: 90%;
+}
+.THIS .required {
+    color: red;
+}
+.THIS .btn{
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 7px 20px;
+    margin: 0 2px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: #2574a9;
+}
+.THIS label {
+    padding-right: 10px;
+}

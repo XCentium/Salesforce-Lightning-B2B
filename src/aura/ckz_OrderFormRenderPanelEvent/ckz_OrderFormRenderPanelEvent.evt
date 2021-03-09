@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="ckz_OrderFormRenderPanelEvent">
+    <aura:attribute name="type" type="String" required="true"/>
+    <aura:attribute name="attributes" type="Object" required="true" />
+</aura:event>

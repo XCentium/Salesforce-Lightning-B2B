@@ -1,0 +1,13 @@
+<aura:component implements="c:panel">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="urlItems" type="Object[]"/>
+
+    <lightning:buttonMenu iconName="utility:list" alternativeText="Settings" onselect="{!c.urlSelected}">
+        <aura:iteration items="{!v.urlItems}" var="obj">
+            <lightning:menuItem label="{!obj.theLabel}" value="{!obj.theValue}" iconName="utility:chevronright"/>
+        </aura:iteration>
+    </lightning:buttonMenu>
+
+
+</aura:component>

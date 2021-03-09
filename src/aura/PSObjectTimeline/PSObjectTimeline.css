@@ -1,0 +1,44 @@
+.THIS .vis-timeline {
+    border-style: none!important;
+}
+
+
+.THIS #timelineContainerObject {
+	position: relative;
+    border-style: none!important;
+}
+
+.THIS #controlDiv {
+	position: absolute; top: 0px; right: 0px; z-index: 5; padding: 3px; 
+}
+
+.THIS #dateSelDiv {
+	position: absolute; top: 30px; right: 40px; z-index: 5; padding: 3px; 
+    border-color: #259feb!important;
+    border-width: thin!important;
+    border-style: solid;
+    background-color: #FFFFFF;
+}
+
+.THIS #infoDiv {
+  position: absolute; bottom: 0px; right: 0px; z-index: 5; padding: 3px; 
+  color: #259feb;
+  font-size: 10px;
+}
+
+.THIS .imageDiv {
+	vertical-align:middle; 
+    text-align:center;
+}
+
+.THIS .Complete {
+	background-color: #99d199;
+}
+
+.THIS .Overdue {
+	background-color: #d39698;
+}
+
+.THIS .hide {
+    display: none;
+}

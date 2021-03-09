@@ -1,0 +1,890 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+    <head>
+        <apex:slds />
+        <title>Create Sales Analytics App - Product</title>
+        <!-- Move the styles into a CSS file -->
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+            
+            .slds-scope .progress-container {
+                width: 25rem;
+                margin: 1rem auto 1rem;
+            }
+            
+            .slds-scope .progress-container h2{
+                margin-top: 1rem;
+                font-size: 1.1rem;
+            }
+
+            .slds-scope .slds-checkbox .slds-form-element__label {
+                font-size: 1rem;
+            }
+
+            .slds-scope ul li.item {
+                position: relative;
+            }
+
+            .slds-scope ul li.item .label {
+                clear: both;
+            }
+			
+            .slds-scope ul li.item {
+                border: 1px solid #D8DDE6;
+                border-radius: 5px;
+                height: 11rem;
+            	width: 31%
+            }
+           
+
+            .slds-scope ul li.item:hover {
+                border: 1px solid #90AAE1;
+                cursor: pointer;
+            }
+
+            .slds-scope ul li.item .checkbox.slds-icon_container {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
+            .slds-scope ul li.item .checkbox.slds-icon_container.checkbox-icon {
+                visibility: hidden;
+            }
+
+            .slds-scope ul li.item .checkbox.slds-icon_container.plus-icon {
+                visibility: visible;
+            }
+
+            .slds-scope ul li.item.selected .checkbox.slds-icon_container.checkbox-icon {
+                visibility: visible;
+            }                  
+            
+            .slds-scope ul li.item.selected .checkbox.slds-icon_container.plus-icon {
+                visibility: hidden;
+            }                  
+           
+            .disabled {
+            	background-color:#eff4f9;   	
+            	pointer-events:none; //This makes it not clickable   
+            }
+            
+            .exclude {
+            	background-color:#eff4f9;   	
+            	pointer-events:none; //This makes it not clickable   
+            }   
+            .slds-scope .slds-icon__container--circle, .slds-scope .slds-icon_container--circle {
+
+            }
+
+            .slds-scope .clear {
+                clear: both;
+            }
+            .slds-scope .slds-m-around--x-large {
+                margin: 1rem;     
+            }
+            .slds-scope .slds-icon__container--circle, .slds-scope .slds-icon_container--circle {
+                padding: .2rem;
+            }
+            .slds-scope .slds-m-horizontal--large {
+                margin-right: .8rem;
+                margin-left: .8rem;
+            }                   
+        </style>    
+    </head>
+    <body>
+        <div class="slds-scope">
+            <div class="slds-container--medium" id="container">
+                <div class="progress-container slds-m-around--xx-small">
+                    <h2>Choose additional objects to include in your app</h2>
+                </div>
+                <div class="slds-form--stacked slds-m-horizontal_xx-large" id="form"></div>
+            </div>
+        </div>                        
+        
+        <script type="text/javascript" src="/analytics/wave/sdk/js/40.0/wizard-min.js"></script>
+
+        <script>
+function hasClass(ele, cls) {
+    var classes = ele.getAttribute('class');
+    var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+    return reg.test(classes);
+}
+
+function addClass(ele, cls) {
+    var clses = Array.isArray(cls) ? cls : [cls];
+    for (var i = 0; i < clses.length; i++) {
+        var c = clses[i];
+        if (! hasClass(ele, c)) {
+            var existing = ele.getAttribute('class');
+            ele.setAttribute('class', existing+" "+c);
+        }
+    };
+}
+
+function removeClass(ele, cls) {
+    if (hasClass(ele, cls)) {
+        var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+        var classes = ele.getAttribute('class');
+        var newClasses = classes.replace(reg, ' ');
+        ele.setAttribute('class', newClasses);
+    }
+}
+
+function getIndex(items, text) {
+  for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      if (item.dataset.value == text) {
+          return i;
+      }
+     
+  };
+  return -1;
+}
+
+
+
+// Note that the SLDS sizes are smaller than the wizard counterparts
+var containerSizeClasses = {
+    "small": ["slds-container--medium"],
+    "medium": ["slds-container--large"],
+    "large": ["slds-container--x-large"]
+};
+
+function setSize(size) {
+    var c = document.querySelector("#container");
+    for (var key in containerSizeClasses) {
+        removeClass(c, containerSizeClasses[key].join("\",\""));
+    }
+    addClass(c, containerSizeClasses[size].join("\",\""));
+}
+
+function selectItem(el) {
+    console.warn("selectItem: ", el);
+    var selected = document.querySelectorAll(".item.selected");
+    for (var i = 0; i < selected.length; i++) {
+        e = selected[i];
+        removeClass(e, "selected");
+    };
+
+    addClass(el, "selected");
+}
+
+function createFormElement() {
+    var el = document.createElement("div");
+    addClass(el, ["slds-form-element", "slds-m-bottom--x-large"]);
+    return el;
+}
+
+function createFormElementControl() {
+    var el = document.createElement("div");
+    addClass(el, "slds-form-element__control");
+    return el;
+}
+
+function createFormElementLabel(value, targetId) {
+    var el = document.createElement("label");
+    addClass(el, ["slds-form-element__label", "slds-text-heading--small"]);
+    el.setAttribute("for", targetId);
+    el.innerHTML = value;
+    return el;
+}
+
+function createFormElementDescription(value) {
+    var el = document.createElement("p");
+    addClass(el, ["slds-text-color--weak", "slds-text-title", "slds-m-bottom--small"]);
+    el.innerHTML = value;
+    return el;
+}
+
+function updateValue(name, value) {
+    console.warn("updateValue: ", name, value);
+    Controller.update({name: name, value: value}, function(variables) {
+        console.warn("update returned: ", variables);
+    });            
+}
+
+function createSVGIcon(type, name) {
+    var outer = document.createElement("div");
+    addClass(outer, "slds-float--left", "slds-m-around--small");
+    
+    var container = document.createElement("span");
+                    
+    var cname = name.toLowerCase();
+    if (cname.substring(name.length - 1) === "s") {
+        cname = cname.substring(0, cname.length - 1);
+        
+    }
+	console.warn("cname: ", cname);
+    if(cname === "collaborative forecasting")
+    {        
+        imgSrc = "{!$Resource.forecasts}";
+        cname = "forecasts";
+    }
+	else if(cname === "case")
+    {
+        imgSrc = "{!$Resource.case}";
+    }
+    else if(cname === "campaign")
+    {
+        imgSrc = "{!$Resource.campaign}";
+    }
+    else if(cname === "product")
+    {
+        imgSrc = "{!$Resource.product}";
+    }
+    else if(cname === "lead")
+    {
+        imgSrc = "{!$Resource.lead}";
+    }
+    else if(cname === "opportunity split")
+    {
+        imgSrc = "{!$Resource.opportunity_splits}";
+    }
+    else if(cname === "product schedule")
+    {
+        imgSrc = "{!$Resource.product_schedules}";
+    }
+        
+    var iconClass = "slds-icon-" + type + "-" + cname.split(' ')[0];
+
+    if(type==="disabled")
+    {
+       iconClass = "slds-icon-standard-default";
+    }
+    
+    addClass(container, ["slds-icon_container", iconClass, "clear"]);
+    
+
+    var imageName = cname.replace(/\ /g, "") + ".svg";
+    var img = document.createElement("img");
+    addClass(img);
+    console.warn("imagename: ", imageName);
+    img.setAttribute("src",imgSrc);
+    img.setAttribute("width","30");
+    
+    container.appendChild(img);
+    
+    outer.appendChild(container);
+    return outer;                 
+
+}
+
+function createSVGCheckbox(type, colorType) {
+
+     var container = document.createElement("span");
+    colorType = colorType || "view-relationship";
+    addClass(container, ["checkbox", "slds-float--right", "slds-icon_container", "slds-m-around--x-small", ]);
+   
+    var svgns = "http://www.w3.org/2000/svg";
+    var xlinkns = "http://www.w3.org/1999/xlink";
+                    
+   
+    
+    var img = document.createElement("img");
+    
+    addClass(img);
+    img.setAttribute("src",type);
+    img.setAttribute("width","20");
+    
+    container.appendChild(img);
+    return container;
+}
+
+function createItemList(name, options, value, def,values) {
+    console.warn("createItemList: ", name, options, value, def);
+    var formEl = createFormElement();
+    var control = createFormElementControl();
+    var list = document.createElement("ul");
+    addClass(list, ["slds-grid","slds-wrap", "slds-p-top--xx-small"]);
+    
+    var valueMap = {};
+    var valueStr = null;
+    if (value.length) {
+        for (var i = 0; i < value.length; i++) {
+            var v = value[i];
+            valueMap[v] = true;
+        };
+        valueStr = value.join();
+    }
+
+    var listItem = null;
+    var item = null;
+    var label = null;
+    var plus = null;
+    var checkbox = null;
+    var icon = null;
+    var desc = null;
+    options.de
+    for (opt in options) {
+        var option = options[opt];
+        var disabled = false;
+        var disabledfalse = false;
+        item = document.createElement("li");
+        addClass(item, ["item", "slds-size--1-of-2", "slds-m-around_x-small"]);
+        item.setAttribute("data-value", option.value);
+        item.setAttribute("data-name", name);
+        item.setAttribute("data-values", valueStr);
+        item.setAttribute("data-values", valueStr);
+		console.warn("Value: "+option.value.replace(/\ /g, ""), values["Has_"+option.value.replace(/\ /g, "")+"_Visible"]);
+        var iconType = "standard";
+        if (values["Has_"+option.value.replace(/\ /g, "")+"_Visible"] === "Disabled") {
+        	disabled = true;
+            addClass(item, "disabled");
+            iconType = "disabled";
+        }
+        
+        else
+        {
+            
+            plus = createSVGCheckbox("{!$Resource.plus}");
+            addClass(plus, "plus-icon");
+            item.appendChild(plus);
+            
+            checkbox = createSVGCheckbox("{!$Resource.check}");
+            addClass(checkbox, "checkbox-icon");
+            item.appendChild(checkbox);
+            
+            if (valueMap[option.value]) {
+                addClass(item, "selected");
+            } 
+        }
+       
+        icon = createSVGIcon(iconType, option.value);
+        addClass(icon, ["clear", "slds-m-around--small"]);
+        item.appendChild(icon);
+
+        label = document.createElement("div");
+        addClass(label, ["label", "slds-text-heading--x-small",  "slds-m-around--x-large"]);
+        
+        	label.innerHTML = option.label;
+        
+        item.appendChild(label);
+        
+        
+        if (_sobjectDescriptions && _sobjectDescriptions[opt]) {
+            desc = document.createElement("p");
+            desc.id = "innerText-" + opt;
+            addClass(desc, ["description", "slds-text-body--small", "slds-align--absolute-center", "slds-m-horizontal--large"]);
+            if(!disabled)
+        	{
+            	desc.innerHTML = _sobjectDescriptions[opt].value;
+            }
+           
+        	else
+        	{
+            	desc.innerHTML = "Sales Analytics has detected that you are not currently using this feature.";
+        	}
+            item.appendChild(desc);
+        }
+        
+        if (option.value === value) {
+            addClass(item, "selected");
+        }
+        
+        
+        item.onclick = function(evt) {
+            console.warn("item click: ", evt);
+            var target = evt.target;
+            while (target && target.nodeName !== "LI") {
+                target = target.parentNode;
+                console.warn("target: ", target);
+            }
+            console.warn("target: ", target);
+            
+            
+            target.classList.toggle("selected");
+            
+            
+            
+            var items = document.querySelectorAll(".item");
+            checkSelections();
+            if (items && items.length > 0) {
+                var value = null;
+                var values = [];
+                var Amountvisbility = "Visible";
+                var PriceVisibility = "Visible";
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];                   
+                    if (hasClass(item, "selected")) {
+                        value = item.getAttribute("data-value");                        
+                        console.warn("data-name: ", item); 
+                        values.push(value);
+                        
+                        
+                    }
+                };
+                var payload = {name: name, value: values};
+                console.warn("payload: ", payload);                        
+                Controller.update(payload, function(variables) {
+                    console.warn("update returned: ", variables);
+                });
+                
+                              
+               
+            }
+        }
+        list.appendChild(item);
+    };
+    
+    control.appendChild(list);
+    formEl.appendChild(control);
+                    
+    return formEl;
+}
+
+function createSelect(name, options, value, def) {
+    var formEl = createFormElement();
+
+    var uid = name.replace(/\ /g, "_");
+    var label = createFormElementLabel(def.label, uid);
+    formEl.appendChild(label);
+    var desc = createFormElementDescription(def.description, uid);
+    formEl.appendChild(desc);
+    var control = createFormElementControl();
+    var container = document.createElement("div");
+    addClass(container, "slds-select_container");
+    var select = document.createElement("select");
+    select.setAttribute("data-name", name);
+    addClass(select, "slds-select");
+    var optEl = null;
+    for (var i = 0; i < options.length; i++) {
+        var option = options[i];
+        optEl = document.createElement("option");
+        optEl.setAttribute("value", option.value);                    
+        optEl.innerHTML = option.label;
+        if (option.value === value) {
+            optEl.setAttribute("selected", "selected");
+        }
+        select.appendChild(optEl);
+    };
+    select.onchange = function(e) {
+        console.warn("select.onchange: ", e);
+        var value = e.srcElement.value;
+        var name = e.srcElement.getAttribute("data-name");
+        updateValue(name, value);
+    }
+    control.appendChild(select);
+    formEl.appendChild(control);
+    
+    return formEl;         
+}
+
+// https://robertnyman.com/html5/forms/input-types.html
+var inputTypeMap = {
+    "BooleanType": "checkbox",
+    "StringType": "text",
+    "NumberType": "number",
+    "DateTimeType": "datetime"
+                    
+};
+
+function createInput(name, options, value, def) {
+    var type = def.variableType.type;
+    var formEl = createFormElement();
+    var uid = name.replace(/\ /g, "_");
+    var label = createFormElementLabel(def.label, uid);
+    formEl.appendChild(label);
+    var desc = createFormElementDescription(def.description, uid);
+    formEl.appendChild(desc);
+    var control = createFormElementControl();
+    var inputType = inputTypeMap[type] || "text";
+    //console.warn("inputType: ", inputType);
+    var input = null;
+    var range = null;
+    if (inputType === "number" && def.variableType.min && def.variableType.max) {
+        range = document.createElement("input");
+        range.setAttribute("data-name", name);
+        range.setAttribute("type", "range");
+        range.setAttribute("value", value || def.variableType.min);
+        range.setAttribute("min", def.variableType.min);
+        range.setAttribute("max", def.variableType.max);
+        range.setAttribute("data-uid", uid);
+        range.setAttribute("name", uid + "-range-slider");
+        control.appendChild(range);
+    }
+    
+    input = document.createElement("input");
+    addClass(input, "slds-input");
+    input.setAttribute("data-name", name);
+    input.setAttribute("type", inputType);
+    input.setAttribute("placeholder", "TBD");
+    input.setAttribute("value", value || "");
+    if (range !== null) {
+        input.setAttribute("type", "text");
+        input.setAttribute("data-uid", uid);
+        input.setAttribute("name", uid + "-range-input");
+        addClass(input, "slds-m-horizontal--small");
+        input.style.width = "8rem";
+        console.warn("range: ", range);
+        input.onchange = function(e) {
+            var value = e.srcElement.value;
+            var slider = document.querySelector("[name=" + uid + "-range-slider]");
+            console.warn("slider: ", slider);
+            slider.value = value;                        
+            var name = e.srcElement.getAttribute("data-name");
+            updateValue(name, value);
+        }
+        range.onmousemove = function(e) {
+            var value = e.srcElement.value;
+            var uid = e.srcElement.getAttribute("data-uid");
+            document.querySelector("[name=" + uid + "-range-input]").setAttribute("value", value);
+            var name = e.srcElement.getAttribute("data-name");
+            updateValue(name, value);
+        }
+
+    }
+    
+    control.appendChild(input);
+    formEl.appendChild(control);
+    return formEl;
+}
+
+function createCheckbox(name, options, value, def) {
+    var type = def.variableType.type;
+    var formEl = createFormElement();
+    var uid = name.replace(/\ /g, "_");
+    //var desc = createFormElementDescription(def.description, uid);
+    //formEl.appendChild(desc);
+    
+    var control = createFormElementControl();
+    var span = document.createElement("span");
+    addClass(span, "slds-checkbox");
+    
+    var input = document.createElement("input");
+    addClass(input, "slds-input");
+    input.setAttribute("type", "checkbox");
+    input.setAttribute("placeholder", "TBD");
+    input.setAttribute("checked", value ? "checked" : "");
+    input.setAttribute("data-checkbox-input", uid + "-" + name);
+    
+    span.appendChild(input);
+    
+    var label = document.createElement("label");
+    addClass(label, "slds-checkbox__label");
+    label.setAttribute("for", uid);
+    
+    var lspan = document.createElement("span");
+    addClass(lspan, "slds-checkbox--faux");
+    lspan.setAttribute("data-name", name);
+    lspan.onclick = function(e) {
+        console.warn("click: ", e);
+        var value = e.srcElement.value;
+        console.warn("value: ", value)
+        var name = e.srcElement.getAttribute("data-name");
+        var checkbox = document.querySelector("[data-checkbox-input=" + uid + "-" + name);
+        var checked = checkbox.checked;
+        if (checked === true) {                    
+            checkbox.checked = false;
+            value = false;
+        } else {
+            checkbox.checked = true;
+            value = true;
+        }
+        updateValue(name, value);                
+    }
+    
+
+    label.appendChild(lspan);
+    
+    lspan = document.createElement("span");
+    addClass(lspan, "slds-form-element__label", "slds-text-heading--small");
+    lspan.innerHTML = def.label;
+    label.appendChild(lspan);
+    
+    var desc = createFormElementDescription(def.description);
+    label.appendChild(desc);
+
+    span.appendChild(label);
+    control.appendChild(span);
+    formEl.appendChild(control);
+    return formEl;
+}
+
+function renderControl(name, index, options, value, def, values) {
+    //console.warn("renderControl: ", name, index, options, value, def);
+// Remove object from options if it is Hidden
+    for (opt in options) {
+        if (values["Has_"+options[opt].value.replace(/\ /g, "")+"_Visible"] === "Hidden") {
+            delete options[opt];
+        }
+    }
+var form = document.querySelector("#form");
+    var type = def.variableType.type;
+    //console.warn("type: ", type);
+    //console.warn("typeof value: ", typeof value, ", value: ", value);
+
+    /*
+     * Change this to pass value and def to creates
+     * The value is the current value
+     * The default value should be highlighted in the UI
+     * Not sure what computed value is... <- Maybe from an expression eval?
+     *
+     */
+    
+    var currentValue = null;
+    if (typeof value !== "object") {
+        currentValue = value;
+// fixes bug
+if (currentValue == undefined) { currentValue = def.defaultValue; }
+    } else {
+        currentValue = value || def.mostRecentValue || def.computedValue || def.defaultValue || null;
+        // Check object by default if it is visible
+if (currentValue.length == 0) {
+            for (opt in options) {
+               if (values["SObjectChoices"].indexOf( options[opt].value ) > -1){
+                    currentValue.push(options[opt].value);
+                }
+            }
+        }
+if (type === "SobjectType") {
+            currentValue = currentValue.sobjectName;
+        } else if (type === "SobjectFieldType") {
+            currentValue = currentValue.fieldName;
+        }
+    }
+    console.warn("currentValue: ", currentValue);
+    var control = null;
+    /*
+     * Special-case code for the 2RR demo
+     */
+    
+    
+    if (name === "SObjectChoices") {
+        control = createItemList(name, options, currentValue, def, values);
+    } else if (type === "BooleanType") {
+        control = createCheckbox(name, options, currentValue, def);                    
+    } else {
+        if (options && options.length > 0) {
+            control = createSelect(name, options, currentValue, def);
+        } else {
+            control = createInput(name, options, currentValue, def);                    
+        }
+    }
+    form.appendChild(control);
+    checkSelections();
+}
+
+// Cache the descriptions for the demo
+var _sobjectDescriptions = null;
+
+
+function renderControls(metadata) {
+    //console.warn("renderControls: ", metadata);
+    
+    Controller.options("SObjectDescriptions", 0, function(name, index, options) {
+        //console.warn("SObjectDescriptions: ", options);
+        _sobjectDescriptions = options;
+    });
+    
+    
+    var page = metadata.page;
+    var values = metadata.values;
+    console.warn("values: ", values);
+    var defs = metadata.variableDefinitions;
+    
+    var name = null;
+    var value = null;
+    var def = null;
+    
+    for (var i = 0; i < page.variables.length; i++) {
+        var v = page.variables[i];
+        console.warn("variable: ", v.name, v.visibility, v);
+        if (v.visibility !== "Hidden") {
+            Controller.options(v.name, i, function(name, index, options) {
+                //console.warn("options: ", options);
+                def = defs[name];
+                value = values[name]
+              //  console.warn("index: ", index, ", name: ", name, ", value: ", value, ", def: ", def, ", options: ", options);
+                renderControl(name, index, options, value, def, values);
+            });
+        }
+    };
+}
+function checkSelections()
+{
+  var items = document.querySelectorAll(".item");
+  if (items && items.length > 0) {
+    var ProdSched = getIndex(items,"Product Schedules");
+    var Prod = getIndex(items,"Products");
+    var OppSplit = getIndex(items,"Opportunity Splits");
+    var CollabForecast = getIndex(items,"Collaborative Forecasting");
+    var Amountvisbility = "Visible";
+    var PriceVisibility = "Visible";
+    
+    if(!hasClass(items[ProdSched],"disabled")) //Only Check if Product Schedules is not Disabled
+    {
+      if(!hasClass(items[Prod],"disabled") && !hasClass(items[Prod],"selected"))
+      {
+        //If products is not selected we need to deselect schedules
+        removeClass(items[ProdSched],"selected");
+        addClass(items[ProdSched],"exclude");
+        document.getElementById('innerText-'+ProdSched).innerHTML  = "Products must be selected to include Product Schedules";
+        if(!hasClass(items[CollabForecast],"disabled")) //Only Check if Collab Forecasting is not Disabled
+        {
+            removeClass(items[CollabForecast],"exclude");
+            document.getElementById('innerText-'+CollabForecast).innerHTML = _sobjectDescriptions[CollabForecast].value;
+        }
+          if(!hasClass(items[OppSplit],"disabled")) //Only Check if Opportunity Splits is not Disabled
+          {
+              removeClass(items[OppSplit],"exclude");
+              document.getElementById('innerText-'+OppSplit).innerHTML = _sobjectDescriptions[OppSplit].value;
+          }
+      }
+      else
+      {
+          if(!hasClass(items[CollabForecast],"selected") && !hasClass(items[OppSplit],"selected"))
+          {
+              //If Splits and Collab Forecasting is not selected, then enable Product Schedules
+              removeClass(items[ProdSched],"exclude");
+              document.getElementById('innerText-'+ProdSched).innerHTML = _sobjectDescriptions[ProdSched].value;
+          }
+          else
+          {
+              //Either Collab Forecasting or Splits or both are selected so make Product Schedueles exclude
+              addClass(items[ProdSched],"exclude");
+              document.getElementById('innerText-'+ProdSched).innerHTML  = "Cannot use Product Scheules with Collaborative Forecasting or Opportunity Splits";
+          }
+          
+          if(hasClass(items[ProdSched],"selected"))
+          {
+              //If Product Schedules has been selected, then make Collab Forecasting and Splits exclude
+              if(!hasClass(items[CollabForecast],"disabled")) //Only Check if Collab Forecasting is not Disabled
+              {
+                addClass(items[CollabForecast],"exclude");
+                document.getElementById('innerText-'+CollabForecast).innerHTML = "Cannot use Collaborative Forecasting with Product Schedules";
+              }
+              if(!hasClass(items[OppSplit],"disabled")) //Only Check if Opportunity Splits is not Disabled
+              {
+                addClass(items[OppSplit],"exclude");
+                document.getElementById('innerText-'+OppSplit).innerHTML = "Cannot use Opportunity Splits with Product Schedules";
+              }
+              if(!hasClass(items[Prod],"disabled")) //Only Check if Opportunity Splits is not Disabled
+              {
+                addClass(items[Prod],"selected") //also need to make sure Products is selected if Product Schedules is selected
+              }
+          }
+          else if (!hasClass(items[ProdSched],"selected"))
+          {
+              if(!hasClass(items[CollabForecast],"disabled")) //Only Check if Collab Forecasting is not Disabled
+              {
+                removeClass(items[CollabForecast],"exclude");
+                document.getElementById('innerText-'+CollabForecast).innerHTML = _sobjectDescriptions[CollabForecast].value;
+              }
+              if(!hasClass(items[OppSplit],"disabled")) //Only Check if Opportunity Splits is not Disabled
+              {
+                removeClass(items[OppSplit],"exclude");
+                document.getElementById('innerText-'+OppSplit).innerHTML = _sobjectDescriptions[OppSplit].value;
+              }
+          }
+     } 
+    }
+  }
+  if(hasClass(items[OppSplit],"selected") || hasClass(items[ProdSched],"selected"))
+  {
+      Amountvisbility = "Hidden";
+  }
+  if(hasClass(items[ProdSched],"selected"))
+  {
+      PriceVisibility = "Hidden";
+    
+  }
+  var payload = {name: "Amount_Visible", value: Amountvisbility};
+  console.warn("payload: ", payload);                        
+  Controller.update(payload, function(variables) {
+      console.warn("update returned: ", variables);
+  });
+  
+  payload = {name: "TotalPrice_Visible", value: PriceVisibility};
+  console.warn("payload: ", payload);                        
+  Controller.update(payload, function(variables) {
+      console.warn("update returned: ", variables);
+  });   
+}
+function addLoadEvent(func) { 
+    var oldonload = window.onload; 
+    if (typeof window.onload != 'function') { 
+        window.onload = func; 
+    } 
+    else { 
+        window.onload = function() { 
+            if (oldonload) { 
+                oldonload(); 
+            } 
+            func(); 
+        } 
+    } 
+}     
+
+
+
+(function (global, wave) {
+    "use strict";
+    var metadata = {};
+    
+    var methods = {
+    
+        ready: function(size, callback) {
+            size = size || "small";
+            
+            
+            var visible = false;
+            wave.wizard.publish({name : 'wizard.ready',  "payload" : {size : size, banner: {visible: visible}}, callback : function (response) {
+                //console.warn("response: ", response);
+                var payload = response.payload;
+                metadata = {
+                    page : payload.page,
+                    variableDefinitions : payload.variableDefinitions,
+                    values : payload.initialValues
+                };
+                if (callback instanceof Function) {
+                    callback(metadata);
+                }                    
+            }});
+        },
+        options: function (name, index, callback) {
+            wave.wizard.publish({name : 'wizard.options',  payload : {name: name}, callback : function (response) {
+                //console.warn("wizard.options returned: ", response);
+                var options = response.payload.options;
+                if (callback instanceof Function) {
+                    callback(name, index, options);
+                }
+            }});
+        },
+        update: function (payload, callback) {
+            wave.wizard.publish({name : 'wizard.update',  payload : payload, callback : function (response) {
+                //console.warn("wizard.update returned: ", response);
+                var variables = response.payload;
+                if (callback instanceof Function) {
+                    callback(variables);
+                }
+            }});
+        },                    
+
+    };
+    
+    if (!global.Controller) {
+        global.Controller = {};
+    }
+    
+    global.Controller = methods;
+    
+} (window, Wave));
+
+addLoadEvent(function() {
+    var size = "medium";
+    setSize(size);
+    Controller.ready(size, function(metadata) {
+        //console.warn("ready: ", metadata);
+        renderControls(metadata);
+    });
+});                              
+        </script>
+    </body>
+</html>    
+</apex:page>

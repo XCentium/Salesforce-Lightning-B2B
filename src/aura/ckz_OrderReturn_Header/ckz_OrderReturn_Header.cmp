@@ -1,0 +1,24 @@
+<aura:component description="ckz_OrderReturn_Header"
+                implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,lightning:availableForFlowScreens,force:lightningQuickActionWithoutHeader"
+                access="global">
+
+    <aura:attribute name="title" type="String" required="true" default="New Product"/>
+    <aura:attribute name="icon" type="String" required="true" default="utility:screen"/>
+
+    <lightning:layout class="slds-page-header slds-page-header_object-home">
+
+        <lightning:layoutItem size="1">
+            <div><lightning:icon iconName="{!v.icon}" alternativeText="{v.title}"/></div>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem padding="horizontal-small" size="8">
+
+            <div class="page-section page-header" style="width: 50%; float: left; white-space: nowrap; clear: both;">
+                <h1 class="slds-text-heading_medium">{!v.title}</h1>
+            </div>
+
+        </lightning:layoutItem>
+
+    </lightning:layout>
+
+</aura:component>

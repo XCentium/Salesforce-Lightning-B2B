@@ -1,0 +1,39 @@
+<!--
+ - Created by brandon.rogers on 2/12/19.
+ -->
+
+<apex:component id="ckz_SubscriptionPaymentModify">
+
+    <script id="CKZ-SubscriptionPaymentModify" type="text/template">
+
+        <div class="panel panel-default cc_panel cc_myaccount_subscription_detail m-t-1">
+            <div class="panel-body MyAccount_SubscriptionDetail_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">
+                            {{pageLabelMap 'MySubscriptions_ModifyStoredPaymentTitle'}}
+                        </h2>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <button type="button" class="btn btn-default mySubscriptionDetail cc_mysubscription_detail">{{pageLabelMap 'Back'}}</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body cc_body">
+                <!--<h4 class="title cc_title">{{pageLabelMap 'MySubscriptions_ModifyStoredPaymentTitle'}}</h4>-->
+                <!--<input class="btn btn-default btn-sm button mySubscriptionDetail cc_mysubscription_detail" type="button" value="{{pageLabelMap 'Back'}}" alt="{{pageLabelMap 'Back'}}"/>-->
+                <div class="messagingSection-Error" style="display: none"></div>
+                <div class="messagingSection-Info" style="display: none"></div>
+                <div class="messagingSection-Warning" style="display: none"></div>
+                <div class="subTarget subscriptionContainer"></div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.SubscriptionPaymentView.SubPaymentView.desktop.tmpl = 'CKZ-SubscriptionPaymentModify';
+        });
+    </script>
+</apex:component>

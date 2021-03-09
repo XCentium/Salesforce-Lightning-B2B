@@ -1,0 +1,286 @@
+<apex:page controller="SSEPortalHome" showHeader="false">
+    <title>SSE Portal Home</title>
+    <head>
+        <title>Portal Home Page - {!$Organization.Name}</title>
+        <style type="text/css">
+            @import url("/apex/SSEPortalCSSMain");
+            @import url("/apex/SSEPortalCSSMobile");
+            body{
+                min-width:0px;
+                width:98%;
+                margin:auto;
+                padding-left:5px;
+                padding-right:5px;
+                background:none;
+                padding-top:10px;
+            }
+            #chartCases{
+                float:left;
+            }
+            #chartEntitlements{
+                float:right;
+            }
+            #chartcontainer{
+                height:280px;
+                width:100%;
+            }
+        </style>
+        
+        <script type="text/javascript" src="/resource/SSEPortalResources/scripts/charts.js"/>
+        <script type="text/javascript">
+            <apex:outputPanel layout="none" rendered="{!userTemplate.Component_Charts__c == true}">
+                google.load('visualization', '1.0', {'packages':['corechart']});
+                google.setOnLoadCallback(drawCharts);
+                function drawCharts() {
+                
+                    var newcount = 0;
+                    var closedcount = 0;
+                    var escalatedcount = 0;
+                    var researchingcount = 0;
+                    
+                    <apex:repeat value="{!AllCases}" var="c">
+                        if('{!c.status}' == 'New')
+                            newcount++;
+                        if('{!c.status}' == 'Closed')
+                            closedcount++;
+                        if('{!c.status}' == 'Researching')
+                            researchingcount++;
+                        if('{!c.status}' == 'Escalated')
+                            escalatedcount++;
+                    </apex:repeat>
+                    
+                    var dataCases = google.visualization.arrayToDataTable([
+                        ['Status', 'Count'],
+                        ['New', newcount],
+                        ['Researching', researchingcount],
+                        ['Closed', closedcount],
+                        ['Escalated', escalatedcount]
+                    ]);
+                    
+                    var optionsCases = {'title':'My Cases',
+                        'width':284,
+                        'height':300,
+                        chartArea: { width:'75%' }, 
+                        backgroundColor: { fill:'transparent' },
+                        colors: [convertToHex('{!userTemplate.Back_Google_Chart_1__c}'), convertToHex('{!userTemplate.Back_Google_Chart_2__c}'), convertToHex('{!userTemplate.Back_Google_Chart_3__c}'), convertToHex('{!userTemplate.Back_Google_Chart_4__c}')]
+                    };
+                    
+                    var chartCases = new google.visualization.PieChart(document.getElementById('chartCases'));
+                    chartCases.draw(dataCases, optionsCases);
+                            
+                    var activecount = 0;
+                    var expiredcount = 0;
+                    
+                    <apex:repeat value="{!AllEntitlements}" var="e">
+                        if('{!e.status}' == 'Active')
+                            activecount++;
+                        if('{!e.status}' == 'Expired')
+                            expiredcount++;
+                    </apex:repeat>
+                    
+                    var dataEntitlements = google.visualization.arrayToDataTable([
+                        ['Status', 'Count'],
+                        ['Active', activecount],
+                        ['Expired', expiredcount]
+                    ]);
+                    
+                    var optionsEntitlements = {'title':'My Entitlements',
+                        'width':284,
+                        'height':300,
+                        chartArea: { width:'75%' }, 
+                        backgroundColor: { fill:'transparent'},
+                        colors: [convertToHex('{!userTemplate.Back_Google_Chart_1__c}'), convertToHex('{!userTemplate.Back_Google_Chart_2__c}'), convertToHex('{!userTemplate.Back_Google_Chart_3__c}'), convertToHex('{!userTemplate.Back_Google_Chart_4__c}')]
+                    };
+                    
+                    var chartEntitlements = new google.visualization.PieChart(document.getElementById('chartEntitlements'));
+                    chartEntitlements.draw(dataEntitlements, optionsEntitlements);
+                }
+                
+                function convertToHex(theValue){
+                    var splitElement = theValue.substring(5)
+                    var parts = splitElement.split(',');
+                    var r = parts[0];
+                    var g = parts[1];
+                    var b = parts[2]; 
+                    function rgbToHex(R,G,B) {return toHex(R)+toHex(G)+toHex(B)}
+                    function toHex(n) {
+                         n = parseInt(n,10);
+                         if (isNaN(n)) return "00";
+                         n = Math.max(0,Math.min(n,255));
+                         return "0123456789ABCDEF".charAt((n-n%16)/16) + "0123456789ABCDEF".charAt(n%16);
+                    }
+                    return rgbToHex(r,g,b);
+                } 
+            </apex:outputPanel>
+        </script>
+    </head>
+    
+    <apex:form >
+        <!-- Image -->
+       <apex:outputPanel layout="none" rendered="{!userTemplate.Component_Image__c == true}">
+           <div id="homepageimage">
+               <img src="{!userTemplate.Image_Body__c}" width="100%"/>  
+           </div>
+       </apex:outputPanel>
+
+       <!-- Products -->
+        <apex:pageBlock title="My Registered Products" rendered="{!userTemplate.Component_Products__c == true}">
+          <apex:pageBlockTable value="{!MyRegisteredProducts}" var="currentProduct" id="productTable">
+             <apex:column headerValue="Name">
+                <a href="/{!currentProduct.id}" target="_top">{!currentProduct.Name}</a>
+             </apex:column>
+             <apex:column headerValue="Image">
+                <apex:outputField value="{!currentProduct.Image__c}"/>
+             </apex:column>
+             <apex:column headerValue="Serial Number">
+                <a href="/{!currentProduct.id}" target="_top">{!currentProduct.SerialNumber}</a>
+             </apex:column> 
+             
+             <apex:column headerValue="Status">
+             <apex:outputField value="{!currentProduct.Status}"/>
+             </apex:column>
+          </apex:pageBlockTable>
+       </apex:pageBlock>
+        
+       <!-- Google charts-->
+       <apex:pageBlock title="Dashboard" rendered="{!userTemplate.Component_Charts__c == true}"> 
+           <div id="chartcontainer">
+               <div class="googlechart" id="chartCases"/>
+               <div class="googlechart" id="chartEntitlements"/>
+           </div>
+       </apex:pageBlock>
+        
+       <!-- This section shows the customer's recent cases in a table -->
+        <apex:pageBlock title="My Recent Cases" rendered="{!userTemplate.Component_Cases__c == true}">
+          <apex:pageBlockTable value="{!MyRecentCases}" var="currentCase" id="caseTable">
+             <apex:column headerValue="Case Number">
+                <a href="/{!currentCase.id}" target="_top">{!currentCase.CaseNumber}</a>
+             </apex:column>
+             <apex:column headerValue="Subject">
+                <a href="/{!currentCase.id}" target="_top">{!currentCase.Subject}</a>
+             </apex:column>
+             <apex:column headerValue="Status">
+                <apex:outputField value="{!currentCase.Status}"/>
+             </apex:column> 
+          </apex:pageBlockTable>
+       </apex:pageBlock>
+        
+       <!-- This section shows the top solutions in a table -->
+       <apex:pageBlock title="Popular Solutions" rendered="{!userTemplate.Component_Solutions__c == true}">
+          <apex:pageBlockTable value="{!TopSolutions}" var="currentSolution" id="solutionTable">
+             <apex:column headerValue="Solution Name">
+                <a href="/{!currentSolution.id}" target="_top">{!currentSolution.SolutionName}</a>
+             </apex:column>
+             <apex:column headerValue="Times Used">
+                <apex:outputField value="{!currentSolution.TimesUsed}"/>
+             </apex:column>
+          </apex:pageBlockTable>
+       </apex:pageBlock>
+    
+       <!-- This section shows the most popular ideas -->
+       <apex:pageBlock title="Popular Ideas" rendered="{!userTemplate.Component_Ideas__c == true}">
+           <apex:pageBlockTable value="{!PopularIdeas}" var="currentIdea" id="ideaTable">
+             <apex:column headerValue="Idea Name">
+                <a href="/{!currentIdea.id}" target="_top">{!currentIdea.Title}</a>
+             </apex:column>
+             <apex:column headerValue="Votes">
+                <apex:facet name="header">
+                     Votes
+                </apex:facet>         
+                <apex:outputField value="{!currentIdea.VoteTotal}"/>         
+             </apex:column>
+          </apex:pageBlockTable>
+       </apex:pageBlock>
+       
+       <!-- This section shows the entitlements -->
+       <apex:pageBlock title="My Entitlements" rendered="{!userTemplate.Component_Entitlements__c == true}">
+           <apex:pageBlockTable value="{!MyEntitlements}" var="me" id="entitlementTable">
+             <apex:column headerValue="Entitlment Name">
+                <a href="/{!me.id}" target="_top">{!me.name}</a>
+             </apex:column>
+             <apex:column headerValue="Type">         
+                <apex:outputField value="{!me.type}"/>
+             </apex:column>
+             <apex:column headerValue="Status">         
+                <apex:outputField value="{!me.status}"/>         
+             </apex:column>
+             <apex:column headerValue="Product">        
+                <a href="/{!me.assetid}" target="_top">{!me.asset.name}</a>
+             </apex:column>
+          </apex:pageBlockTable>
+       </apex:pageBlock>
+        
+       <!-- This section shows most viewed articles -->
+       <apex:pageBlock title="Most Viewed Articles" rendered="{!userTemplate.Component_Articles__c == true}"> 
+           <apex:outputPanel layout="block">
+               <ul>
+                   <knowledge:articleList articleVar="article" sortBy="mostViewed" pageSize="10">
+                       <li>
+                           <a href="{!URLFOR($Action.KnowledgeArticle.View, article.id)}" target="_top">{!article.title}</a>
+                       </li>
+                   </knowledge:articleList>
+               </ul>
+           </apex:outputPanel>
+        </apex:pageBlock>
+        
+        <!-- Lead Inbox-->
+        <apex:pageBlock title="Lead Inbox" rendered="{!userTemplate.Component_Leads__c == true}">
+            <apex:pageBlockTable value="{!LeadInbox}" var="lead" id="leadTable">
+                <apex:column headerValue="Name">
+                    <apex:outputField value="{!lead.Name}"/>
+                </apex:column>
+                <apex:column headerValue="Title">
+                    <apex:outputField value="{!lead.Title}"/>          
+                </apex:column>
+                <apex:column headerValue="Company">
+                    <apex:outputField value="{!lead.Company}"/>
+                </apex:column>
+                <apex:column headerValue="Lead Source">
+                    <apex:outputField value="{!lead.LeadSource}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:commandButton immediate="true" value="Accept Lead" action="{!AcceptLead}" reRender="redirect" status="Loading...">
+                        <apex:param name="LeadId" value="{!lead.id}"/>
+                    </apex:commandButton>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        
+        <!--Approval Requests-->
+        <apex:pageBlock title="Approval Requests" rendered="{!userTemplate.Component_Approvals__c == true}">
+          <apex:pageBlockTable value="{!ApprovalRequests}" var="req">
+               <apex:column headerValue="Related To">
+                   <apex:outputLink value="/{!req.pi.ProcessInstance.TargetObjectId}" target="_top">{!req.TargetObjectType}</apex:outputLink>
+               </apex:column>
+               <apex:column headerValue="Name">
+                   <apex:outputLink value="/{!req.pi.ProcessInstance.TargetObjectId}" target="_top">{!req.TargetObjectName}</apex:outputLink>
+               </apex:column>
+               <apex:column value="{!req.SubmittedDate}" headerValue="Submitted Date"/>
+               <apex:column value="{!req.pi.ProcessInstance.Status}" />
+           </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-36269828-3']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    
+    </script>  
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

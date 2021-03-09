@@ -1,0 +1,11 @@
+<design:component label="Platform Events - Bubble Chart">
+     <design:attribute name="title" label="Chart Title" default="Monitor Events" />
+	  <design:attribute name="eventName" label="Platform Event Name" required="true"  datasource="apex://rm_EventDesignPicklist"/>
+    <design:attribute name="deviceId" label="Device Key Field" required="false" default=""/>
+    <design:attribute name="yField" label="Vertical Axis Field"  /> 
+    <design:attribute name="xField" label="Horizontal Axis Field" />  
+     <design:attribute name="rField" label="Bubble Size Field"  />
+       <design:attribute name="showHistorical" label="Show Historical Data"  default="false"/>
+      <design:attribute name="height" label="Component Height"  default="300px"/>
+    <design:attribute name="color" label="Chart Color"  default="rgba(15, 8, 200, 0.4)"/>
+</design:component>

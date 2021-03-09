@@ -1,0 +1,67 @@
+<!--
+ - Created by brandon.rogers on 2019-06-03.
+ -->
+
+<apex:page id="ckz_tmpl_TwoCol_SDO" applyHtmlTag="false" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false">
+    <!-- Sidebar -->
+    <div class="wrapper">
+        <div id="sidebar">
+            <div id="dismiss">
+                <i class="fal fa-times fa-2x"></i>
+            </div>
+
+            <div class="sidebarMiniCart hide">
+                <apex:insert name="MiniCartBox"/>
+            </div>
+        </div>
+    </div>
+
+    <div id="CKZ-PLP-TopContainer">
+        <div id="ckz-section-categoryMedia"></div>
+        <div id="ckz-breadCrumbs" class="catBreadcrumbs navbar-collapse hidden-xs"></div>
+    </div>
+
+    <div class="container cc_main_container ckz_tmpl_TwoCol_RCG">
+
+        <div class="row cc_main_row">
+
+            <div class="col-sm-3">
+                <div class="effleft"></div>
+                <div class="effright"></div>
+
+                <div class="search-box-RightNav"></div>
+                <div id="MyAccount_navSection"></div> <!-- placeholder for MyAccount Nav in right nav -->
+                <apex:insert name="ContactUs"/>
+
+                <apex:insert name="SellerLocatorBox"/>
+
+                <div id="categories-right-nav"></div> 
+                <div class="filterContainer"></div>
+
+                <div class="widgetSection"></div>
+
+                <apex:insert name="SideNavigation"/>
+
+                <div class="promotion-box-LeftNav"></div>
+                <div class="promotion-box-RightNav"></div>
+                <apex:insert name="ReOrderBox" />
+
+            </div>
+
+            <div class="col-sm-9">
+                <apex:insert name="Banner"/>
+                <div class="promotion-box-Banner"></div>
+                <div class="effwig"></div>
+                <apex:insert name="ProductSearch"/>
+                <apex:insert name="body"/>
+                <apex:insert name="CrossSell"/>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.breadcrumbView.desktop.selector = '#ckz-breadCrumbs';
+        });
+    </script>
+</apex:page>

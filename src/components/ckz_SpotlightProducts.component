@@ -1,0 +1,245 @@
+<!--
+ - Created by brandon.rogers on 2019-06-04.
+ -->
+
+<apex:component id="ckz_SpotlightProducts">
+    <script id="CKZ-Spotlight-Desktop" type="text/template">
+        {{#if this.Spotlight}}
+            <div class="cc_spotlight_products">
+                {{#if this.crossSell}}
+
+                {{else}}
+                    <div class="ckz_heading_embellished">
+                        <h3 data-toggle="collapse" data-target="#ckzSpotlightProductsCollapse" style="cursor: pointer;" onclick="collapseRotate(this);">
+                            <span data-toggle="tooltip" data-placement="right" title="{{pageLabelMap 'CollapseLabel'}}">
+                                {{pageLabelMap 'Spotlight_Title'}}
+                                <i class="fal fa-angle-down"></i>
+                            </span>
+                        </h3>
+                    </div>
+
+                    <div class="ckz_spotlight_product_container collapse in" id="ckzSpotlightProductsCollapse">
+                        <div class="row ckz_spotlight_product_container_inner">
+                            {{#each this.Spotlight}}
+                                <div class="col-sm-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body text-center">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="spotlightProdImage m-t-1">
+                                                        <a href="javascript:void(0);" class="productName cc_product_name_img" data-id="{{this.mockProduct.sku}}">
+                                                            {{displayImage this.mediaWrapper 'spotlight img-responsive center-block' alt=this.mockProduct.name dataId=this.mockProduct.sku}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12">
+                                                    <div class="spotlightProdName m-t-1">
+                                                        <a href="javascript:void(0);" class="productName cc_product_name" data-id="{{this.mockProduct.sku}}">{{this.mockProduct.name}}</a>
+                                                    </div>
+
+                                                    <div class="spotlightProdSku m-t-1">
+                                                        {{pageLabelMap 'SKU'}}
+                                                        {{this.mockProduct.sku}}
+                                                    </div>
+
+                                                    <div class="spotlightProdPrice m-t-1">
+                                                        {{#if this.showNewSubscriptionSelection}}
+                                                        {{pageLabelMap 'Prod_SpotLightPrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}
+                                                        <i class="far fa-long-arrow-right"></i>
+                                                        {{else}}
+                                                        {{#if this.maxPrice}}
+                                                        {{#ifbothPricesZero this.minPrice this.maxPrice}}
+                                                        <span class="price">{{displayRangePrice 'ProductDetails_PriceRangeFormat' this.minPrice this.maxPrice}}</span>
+                                                        {{/ifbothPricesZero}}
+                                                        {{else}}
+                                                        {{#if this.displayPrice}}
+                                                        {{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}
+                                                        <i class="far fa-long-arrow-right"></i>
+                                                        {{else}}
+                                                        {{#if this.mockProduct.basePrice}}
+                                                        <span class="price">{{price this.price}}</span>
+                                                        <span class="basePrice"><small><s>{{price this.mockProduct.basePrice}}</s></small></span>
+                                                        {{else}}
+                                                        {{price this.price}}
+                                                        {{/if}}
+                                                        {{/if}}
+                                                        {{/if}}
+                                                        {{/if}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+        {{/if}}
+
+        <!-- FEATURED PRODUCTS -->
+        {{#if this.Featured}}
+        <div class="cc_featured_products">
+            {{#if this.crossSell}}
+
+            {{else}}
+            <div class="ckz_heading_embellished">
+                <h3 data-toggle="collapse" data-target="#ckzFeaturedProductsCollapse" style="cursor: pointer;" onclick="collapseRotate(this);">
+                    <span data-toggle="tooltip" data-placement="right" title="{{pageLabelMap 'CollapseLabel'}}">
+                        {{pageLabelMap 'Featured_Title'}}
+                        <i class="fal fa-angle-down"></i>
+                    </span>
+                </h3>
+            </div>
+
+            <div class="ckz_featured_product_container collapse in" id="ckzFeaturedProductsCollapse">
+                <div class="row ckz_featured_product_container_inner">
+                    {{#each this.Featured}}
+                        <div class="col-sm-4">
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="featuredProdImage">
+                                                <a href="javascript:void(0);" class="productName cc_product_name_img" data-id="{{this.mockProduct.sku}}">
+                                                    {{displayImage this.mediaWrapper 'featured img-responsive center-block' alt=this.mockProduct.name dataId=this.mockProduct.sku}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="featuredProdName m-t-1">
+                                                <a href="javascript:void(0);" class="productName cc_product_name" data-id="{{this.mockProduct.sku}}">{{this.mockProduct.name}}</a>
+                                            </div>
+
+                                            <div class="featuredProdSku m-t-1">
+                                                {{pageLabelMap 'SKU'}}
+                                                {{this.mockProduct.sku}}
+                                            </div>
+
+                                            <div class="featuredProdPrice m-t-1">
+                                                {{#if this.showNewSubscriptionSelection}}
+                                                <!--                                            {{pageLabelMap 'Prod_FeaturedPrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}-->
+                                                <!--                                            <i class="far fa-long-arrow-right"></i>-->
+                                                {{pageLabelMap 'ConfigureForPrice'}}
+                                                {{else}}
+                                                {{#if this.maxPrice}}
+                                                {{#ifbothPricesZero this.minPrice this.maxPrice}}
+                                                <span class="price">{{displayRangePrice 'ProductDetails_PriceRangeFormat' this.minPrice this.maxPrice}}</span>
+                                                {{/ifbothPricesZero}}
+                                                {{else}}
+                                                {{#if this.displayPrice}}
+                                                <!--                                                    {{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}-->
+                                                <!--                                                    <i class="far fa-long-arrow-right"></i>-->
+                                                {{pageLabelMap 'ConfigureForPrice'}}
+                                                {{else}}
+                                                {{#if this.mockProduct.basePrice}}
+                                                <span class="price">{{price this.price}}</span>
+                                                <span class="basePrice"><small><s>{{price this.mockProduct.basePrice}}</s></small></span>
+                                                {{else}}
+                                                {{#ifEquals this.price 0}}
+                                                {{pageLabelMap 'ConfigureForPrice'}}
+                                                {{else}}
+                                                {{price this.price}}
+                                                {{/ifEquals}}
+                                                {{/if}}
+                                                {{/if}}
+                                                {{/if}}
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+        </div>
+        {{/if}}
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            CCRZ.uiProperties.spotlightView.desktop.tmpl = "CKZ-Spotlight-Desktop";
+            CCRZ.uiProperties.spotlightView.desktop.selector = ".hp-featured-prod";
+
+            CCRZ.pubSub.on('view:spotlightView:refresh', function () {
+
+                $('.hp-featured-prod.spotlight').find('.cc_featured_products').remove();
+                $('.hp-featured-prod.featured').find('.cc_spotlight_products').remove();
+
+                $('.ckz_spotlight_product_container_inner').slick({
+                    infinite: true,
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    prevArrow: '<button type="button" class="slick-prev"><i class="fal fa-angle-left fa-lg"></i></button>',
+                    nextArrow: '<button type="button" class="slick-next"><i class="fal fa-angle-right fa-lg"></i></button>',
+                    dots: false,
+                    responsive: [
+                        {
+                            breakpoint: 768,
+                            settings: {
+                                slidesToShow: 1,
+                                slidesToScroll: 1,
+                                arrows: false
+                            }
+                        },
+                        {
+                            breakpoint: 992,
+                            settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 1,
+                                arrows: false
+                            }
+                        },
+                        {
+                            breakpoint: 1200,
+                            settings: {
+                                slidesToShow: 3,
+                                slidesToScroll: 1
+                            }
+                        }
+                    ]
+                });
+
+                $('.ckz_featured_product_container_inner').slick({
+                    infinite: true,
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    prevArrow: '<button type="button" class="slick-prev"><i class="fal fa-angle-left fa-lg"></i></button>',
+                    nextArrow: '<button type="button" class="slick-next"><i class="fal fa-angle-right fa-lg"></i></button>',
+                    dots: false,
+                    responsive: [
+                        {
+                            breakpoint: 768,
+                            settings: {
+                                slidesToShow: 1,
+                                slidesToScroll: 1,
+                                arrows: false
+                            }
+                        },
+                        {
+                            breakpoint: 992,
+                            settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 1,
+                                arrows: false
+                            }
+                        },
+                        {
+                            breakpoint: 1200,
+                            settings: {
+                                slidesToShow: 3,
+                                slidesToScroll: 1
+                            }
+                        }
+                    ]
+                });
+            });
+        });
+    </script>
+</apex:component>

@@ -1,0 +1,4 @@
+<design:component label="Knowledge Search (w Categories)">
+     <design:attribute name="searchPlaceholder" label="Search Box Instructions" />
+	 <design:attribute name="contactSupport" label="Allow Contact Support" />	 
+</design:component>

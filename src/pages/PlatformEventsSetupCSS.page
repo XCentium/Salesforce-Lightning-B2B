@@ -1,0 +1,74 @@
+<apex:page contentType="text/css">
+    html body * {box-sizing: border-box;font-family: 'Salesforce Sans', 'Arial';}
+    .main {margin: 0 auto; padding:1rem; max-width: 900px;}
+    .main-header {font-size: 2em; padding-bottom: .5em; margin-bottom: .5em; border-bottom: 1px solid #999;}
+    
+    .section-header {display:flex; flex-flow: row nowrap; width: 100%; justify-content: space-between; margin-bottom: 1rem;}
+    .section-title {display:flex; font-size: 1.5em; font-weight: 300;}
+    .section-actions {display:flex; flex-flow: row nowrap; justify-content: flex-end;}
+    .section-action {display:flex; max-width: 150px; min-width: 100px; text-align:center; border:1px solid #ccc;}
+    
+    .section-footer {padding: 1rem 1rem 0 1rem; border-top: 1px solid #ccc;margin-left: -1rem;margin-right: -1rem;}
+    
+    .cards {display:flex; flex-flow: row wrap; width: 100%; justify-content: space-between;}
+    
+    textarea {resize: vertical;}
+    
+    .card {
+    display:flex; 
+    flex-flow: column nowrap;
+    background-position: center;
+    background-size: cover;
+    padding: 1rem; 
+    justify-content: space-around;
+    margin: .5em;
+    flex: auto;
+    background-color: currentColor; 
+    border: 1px solid #d8dde6; 
+    border-radius: 5px;
+    }
+    
+    .card-details {display:flex; flex-flow: column nowrap;}
+    .card-name {font-size: 1.5em; margin-bottom: .25em; font-weight: 300;}
+    .card-subtitle { font-size: 1rem; margin-bottom: 1rem;}
+    .card-actions {display:flex;justify-content: center;}
+    
+    .launcher {border: 1px solid #ccc; border-radius: 3px; padding: 1rem;}
+    
+    .card-action {
+    display: block;
+    background-color: rgba(0,0,0,0);
+    max-width: 150px; 
+    min-width: 100px; text-align:center;
+    fill: black;
+    color: white;
+    border-left:1px solid currentColor;
+    border-top:1px solid currentColor;
+    border-bottom:1px solid currentColor;
+    border-right: 0px solid currentColor;
+    }
+    .card-action:first-child {border-radius: 3px 0 0 3px;}
+    .card-action:last-child {border-right:1px solid currentColor; border-radius: 0 3px 3px 0;}
+    .card-action-icon {height: 1rem; width: 1rem; fill: currentColor;}
+    
+    .slds-form-element {margin-bottom: 1rem;}
+    
+    .slds-notify_container {left: 50% !important; transform:translateX(-50%)}
+    
+    .button-definition {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 1rem;
+    margin: 1rem 0;
+    }
+    
+    .vertical-margin {
+    margin: 1rem 0;
+    }
+    
+    .action {
+    margin: 0 -1rem;
+    padding: 1rem;
+    border-top: 1px solid #ccc;
+    }
+</apex:page>

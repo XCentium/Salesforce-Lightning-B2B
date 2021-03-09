@@ -1,0 +1,76 @@
+.THIS {
+}
+.THIS .padding{
+    overflow:scroll;
+    padding:0px 10px;
+}
+.THIS .block{
+	width:100%;
+    margin-bottom:10px;
+}
+.THIS .center{
+    width:100%;
+   	text-align:center;
+    margin:5px 0px;
+    padding:10px 0px;
+}
+.THIS .product{
+    width:100%;
+    margin:5px 0px;
+    padding:10px 0px;
+}
+.THIS .product:last-child{
+    border-top:1px solid #ddd;
+}
+.THIS .productbutton{
+    width:100%;
+    margin:0 auto;
+    display:block;
+    margin:10px 0px;
+    background:transparent;
+    border:1px solid #2A5292;
+    color:#2A5292;
+    transition:ease all 0.4s;
+}
+.THIS .productbutton:hover{
+    background:#2A5292;
+    color:#fff;
+}
+.THIS img.product_image{
+    max-width:50%;
+    display:block;
+    margin:0 auto;
+}
+.THIS .stats{
+    margin:10px 0px;
+    text-align:center;
+}
+.THIS .circle{
+    width:50px;
+    height:50px;
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    border: 3px solid #07753F;
+    padding:10px;
+    color:#07753F;
+    text-align:center;
+    font-size:16px;
+    font-weight:bold;
+    float:left;
+    margin-right:20px;
+}
+.THIS .stat-info{
+    float:left;
+    font-size:12px;
+    font-weight:bold;
+    padding-top:16px;
+}
+.THIS .clear{
+    clear:both;
+}
+.THIS .slds-carousel__image>img{
+    width:50%;
+}
+.THIS .slds-carousel__image{
+    text-align:center!important;
+}

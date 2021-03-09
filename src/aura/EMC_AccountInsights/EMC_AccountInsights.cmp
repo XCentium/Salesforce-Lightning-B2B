@@ -1,0 +1,91 @@
+<aura:component controller="EMC_InsightsCtrl" 
+                implements="force:lightningQuickActionWithoutHeader,c:MixpanelInterface" 
+                extends="c:Mixpanel" 
+                access="global">
+    
+    <aura:attribute name="oldViewStates" type="Object[]"></aura:attribute>
+    <aura:attribute name="didInit" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="viewState" type="Object"></aura:attribute>
+    <aura:attribute name="recordId" type="String"></aura:attribute>
+    <aura:attribute name="account" type="Object"></aura:attribute>
+    
+    
+    <aura:attribute name="insightTypes" type="Object[]"></aura:attribute>
+    <aura:attribute name="insightTypesMap" type="Object"></aura:attribute>
+    <aura:attribute name="insights" type="Object[]"></aura:attribute>
+    
+    <aura:attribute name="activeInsight" type="Object" default="{sobjectType: 'Insight'}"></aura:attribute>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"></aura:handler>
+    
+    <aura:handler name="assignInsight" event="c:EMC_InsightEvent" action="{!c.assignInsight}"></aura:handler>
+    <aura:handler name="editInsight" event="c:EMC_InsightEvent" action="{!c.loadInsight}"></aura:handler>
+    <aura:handler name="deleteInsight" event="c:EMC_InsightEvent" action="{!c.deleteInsight}"></aura:handler>
+    
+    <div class="wrapper">
+        <aura:if isTrue="{!v.viewState.view == 'home'}">
+            <div class="header">
+                <div class="header-title">Insights</div>
+                <div class="header-actions">
+                    <lightning:button onclick="{!c.addInsight}">Add Insight</lightning:button>
+                </div>
+            </div>
+            <aura:iteration items="{!v.insights}" var="insight" indexVar="index">
+                <c:EMC_ExistingInsight insight="{!insight}" index="{!index}"></c:EMC_ExistingInsight>
+            </aura:iteration>
+            
+            <aura:if isTrue="{!v.insights.length == 0}">
+                No Insights Found
+            </aura:if>
+            
+            <div class="footer">
+                <lightning:button onclick="{!c.close}">close</lightning:button>
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.viewState.view == 'new'}">
+            <div class="header">
+                <div class="header-title">Insight Type</div>
+            </div>
+            <lightning:select label="Insight Type"
+                              aura:id="selectedInsightType"
+                              value="{!v.viewState.selectedInsightType}" 
+                              onchange="{!c.insightTypeChangeHandler}">
+                
+                <aura:iteration items="{!v.insightTypes}" var="insightType">
+                    <option value="{!insightType.DeveloperName}">{!insightType.MasterLabel}</option>
+                </aura:iteration>
+                
+            </lightning:select>
+            
+            <div class="footer">
+                <lightning:button onclick="{!c.handleBack}">back</lightning:button>
+                <lightning:button onclick="{!c.goToEdit}">next</lightning:button>
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.viewState.view == 'edit'}">
+            <div class="header">
+                <div class="header-title">Edit Insight</div>
+            </div>
+            <c:EMC_EditInsight insight="{!v.activeInsight.supportingData.insight}"
+                               supportingDataFields="{!v.activeInsight.supportingData.fields}"></c:EMC_EditInsight>
+            
+            <div class="footer">
+                <lightning:button onclick="{!c.handleBack}">back</lightning:button>
+                <lightning:button onclick="{!c.saveInsight}">save</lightning:button>
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.viewState.view == 'assign'}">
+            <div class="header">
+                <div class="header-title">Assign Insight</div>
+            </div>
+            <c:EMC_InsightAssignments insight="{!v.activeInsight}"></c:EMC_InsightAssignments>
+            
+            <div class="footer">
+                <lightning:button onclick="{!c.handleBack}">back</lightning:button>
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

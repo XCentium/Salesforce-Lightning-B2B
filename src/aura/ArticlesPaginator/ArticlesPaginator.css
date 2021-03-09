@@ -1,0 +1,44 @@
+.THIS {
+    margin: 8px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    text-align: center;
+    
+}
+
+.THIS .left {
+    /**width: 100px;**/
+}
+
+.THIS .right {
+    /**width: 100px;**/ 
+    text-align: right;
+}
+
+.THIS .center {
+    flex: 1;
+    color: #999999;
+    font-size: 0.9rem;
+    text-align: center;
+	align-self: center;
+}
+
+.THIS button {
+    font-size: 0.8rem;
+    background: #EFEFEF;
+    border: solid 1px #DDDDDD;
+    border-radius: 2px;
+    padding: 5px 6px 6px 6px;
+}
+
+.THIS button:focus {
+    outline:0;
+}
+
+.THIS button:active {
+	border: solid 1px #BBBBBB;
+}

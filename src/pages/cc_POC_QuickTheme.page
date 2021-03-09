@@ -1,0 +1,52 @@
+<!--
+ - Created by msobc on 5/21/2018.
+    Update CC Admin to reference this page in a "HTML Body Include End"
+ -->
+
+<apex:page id="cc_POC_QuickTheme" controller="ccPOCQuickTheme" sidebar="false" showHeader="false" standardStylesheets="false">
+
+    <script type="text/javascript">
+
+        //alert('currentUser = ' + CCRZ.currentUser.ContactId);
+
+    </script>
+
+    <style>
+
+        <apex:outputText value="{!QuickStyle}" escape="false"/>
+
+    </style>
+
+<script type="text/javascript">
+
+    // 2019-08-27  msobczak: added favicon code
+    var faviconUrl = '{!faviconUrl}';
+
+    $(function () {
+
+        if(faviconUrl != '' && faviconUrl != null) {
+            change_favicon(faviconUrl);
+        }
+        else {
+            change_favicon('https://sfdc-ckz-b2b.s3.amazonaws.com/SDO/favicon_cirrus.png');
+        }
+
+    });
+
+    function change_favicon(img) {
+        var favicon = document.querySelector('link[rel="shortcut icon"]');
+
+        if (!favicon) {
+            favicon = document.createElement('link');
+            favicon.setAttribute('rel', 'shortcut icon');
+            var head = document.querySelector('head');
+            head.appendChild(favicon);
+        }
+
+        favicon.setAttribute('type', 'image/png');
+        favicon.setAttribute('href', img);
+    }
+
+</script>
+
+</apex:page>

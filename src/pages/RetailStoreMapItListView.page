@@ -1,0 +1,10 @@
+<apex:page standardController="RetailStore" recordSetVar="records" extensions="maps.MapItController" showHeader="false" applyHtmlTag="false"  applyBodyTag="false">
+    <body onload="setObjectId()">
+        <apex:outputPanel id="information"><apex:pageMessages /></apex:outputPanel>
+        <apex:form >
+            <apex:actionFunction name="setObjectId" action="{!mapIt}" reRender="information">
+                <apex:param name="baseObjectId" value="aA25Y000000HZbZSAW"/>
+            </apex:actionFunction>
+        </apex:form>
+    </body>
+</apex:page>

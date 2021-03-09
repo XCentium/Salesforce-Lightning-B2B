@@ -1,0 +1,14 @@
+.THIS .myCheckbox{
+    padding:10px 0;
+}
+.THIS .slds-checkbox_standalone [type=checkbox]{
+    z-index: 10000000000000;
+    position: ABSOLUTE;
+    top: 0;
+}
+.THIS .myBtn{
+    margin-top: 20px !important;
+}
+.THIS .mytoggle{
+    margin-left: 20px !important;
+}

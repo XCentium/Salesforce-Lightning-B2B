@@ -1,0 +1,25 @@
+.THIS {
+    position: relative;
+    width: 100%;
+}
+.THIS .lookup-search {
+    position: relative;
+    width: 100%;
+}
+.THIS .lookup-values {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    border: 1px solid #dedede;
+    border-radius:  3px;
+    background: #fff;
+}
+.THIS .lookup-value {
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.THIS .lookup-value:hover {
+    cursor: pointer;
+    background: rgb(21, 137, 238);
+}

@@ -1,0 +1,275 @@
+<apex:page extensions="SCLeadHighlightController" showheader="false" standardController="Lead" >
+    <head>
+        <apex:includeScript value="{!URLFOR($Resource.SDO_jqueryui192, '/js/jquery-1.8.3.js')}"/>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" />
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <apex:includeScript value="{!$Resource.jqueryknob}" />
+        <script>
+            $(document).ready(function(){
+
+                var v = '{!l.Lead_Total__c}' != '' ? {!l.Lead_Total__c} * 4 : 0;
+                $(".dial").knob({
+                    'min':0,
+                    'max':100,
+                    'angleArc':180,
+                    'readOnly':true,
+                    'width':100,
+                    'angleOffset':270,
+                    'height': 50,
+                    'fgColor':"#149BC8",
+                    'inputColor':"#149BC8"
+                });
+
+                setValue(v);
+            });
+
+            function setValue(v) {
+                if(v){
+                    $({value: 0}).animate({value: v}, {
+                        duration: 1000,
+                        easing:'swing',
+                        step: function() 
+                        {
+                            $('.dial').val(Math.ceil(this.value)).trigger('change');
+                        }
+                    });
+                }
+            }
+        </script>
+        <style>
+            .container{
+                width: 100%;
+                padding: 0;
+            }
+            .leadpanel{
+                padding: 10px 0 10px 10px;
+                height: 100px;
+            }
+            .leadpanel2{
+                padding: 0;
+            }
+            .leadpanel:last-child{
+                padding: 5px;
+                float: right;
+            }
+            .dial{
+                z-index:-1;
+                margin-top: 23px !important;
+            }
+            .tac{
+                text-align: center;
+                padding-bottom: 4px;
+            }
+            .nored{
+                color: #BD3636;
+            }
+            .okgreen{
+                color: green;
+            }
+            .lcp{
+                background: #149BC8;
+                color: #fff;
+                text-align: center;
+                padding: 4px;
+                width: 120px;
+                text-shadow: 1px 1px 10px #49666B;
+            }
+            .row{
+                margin: 0;
+            }
+            .lcprow{
+                background: #fff;
+                color: #333;
+                text-shadow: none;
+                padding-bottom:2px;
+            }
+            .lcphead{
+                padding-bottom:2px;
+            }
+            .lsn{
+                margin-top: 1%;
+                padding: 0;
+            }
+            .lsn:first-child{
+                margin-top: 2%;
+            }
+            /* Side notes for calling out things */
+             
+            /* Base styles (regardless of theme) */
+            .bs-callout {
+                padding: 5px 30px 5px 15px;
+                border-left: 5px solid #eee;
+            }
+            .bs-callout h4 {
+                margin-top: 0;
+            }
+            .bs-callout p:last-child {
+                margin-bottom: 0;
+            }
+            .bs-callout code,
+            .bs-callout .highlight {
+                background-color: #fff;
+            }
+             
+            /* Themes for different contexts */
+            .bs-callout-danger {
+                background-color: #fcf2f2;
+                border-color: #BD3636;
+            }
+
+            .bs-callout-success {
+                background-color: #F2FCF4;
+                border-color: green;
+            }
+            .bs-callout-warning {
+                background-color: #fefbed;
+                border-color: #EBAF59;
+            }
+            .bs-callout-info {
+                background-color: #f0f7fd;
+                border-color: #149BC8;
+            }
+            .bs-callout-danger h4 {
+                color: #BD3636;
+                font-size:14px;
+            }
+
+            .bs-callout-warning h4 {
+                color: #EBAF59;
+                font-size:14px;
+            }
+
+            .bs-callout-info h4 {
+                color: #149BC8;
+                font-size:14px;
+            }
+            .lai{
+                max-width: 230px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <!-- Lead Personal Information -->
+                <div class="col-xs-4 col-lg-4 leadpanel">
+                    <div class="row">
+                        <div class="col-xs-12 col-lg-12">
+                            <h3>{!l.Name}</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-5 col-lg-5">
+                            {!l.Title}
+                        </div>
+                        <div class="col-xs-7 col-lg-7">
+                            <span class="glyphicon glyphicon-phone"></span> {!l.Phone}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-5 col-lg-5">
+                            {!l.Company}
+                        </div>
+                        <div class="col-xs-7 col-lg-7">
+                            <span class="glyphicon glyphicon-envelope"></span> {!l.Email}
+                        </div>
+                    </div>
+                </div>
+                <!-- Lead Score/Attributes -->
+                <div class="col-xs-4 col-lg-4 leadpanel2">
+                    <div class="row">
+                        <div class="col-xs-5 col-lg-5 lsn">
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12 tac">
+                                    <h4>Lead Score</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12 tac">
+                                    <input type="text" value="75" class="dial" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-7 col-lg-7 lsn">
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12">
+                                    <apex:outputPanel rendered="{!l.Know_Decision_Maker__c}">
+                                        <div class="bs-callout bs-callout-success"><span class="glyphicon glyphicon-ok okgreen"></span> Decision Maker</div>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!l.Know_Decision_Maker__c != true}">
+                                        <div class="bs-callout bs-callout-danger"><span class="glyphicon glyphicon-remove nored"></span> Decision Maker</div>
+                                    </apex:outputPanel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12">
+                                    <apex:outputPanel rendered="{!l.Project_Defined__c}">
+                                        <div class="bs-callout bs-callout-success"><span class="glyphicon glyphicon-ok okgreen"></span> Project Defined</div>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!l.Project_Defined__c != true}">
+                                        <div class="bs-callout bs-callout-danger"><span class="glyphicon glyphicon-remove nored"></span> Project Defined</div>
+                                    </apex:outputPanel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12">
+                                    <apex:outputPanel rendered="{!l.Has_Budget__c}">
+                                        <div class="bs-callout bs-callout-success"><span class="glyphicon glyphicon-ok okgreen"></span> Has Budget</div>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!l.Has_Budget__c != true}">
+                                        <div class="bs-callout bs-callout-danger"><span class="glyphicon glyphicon-remove nored"></span> Has Budget</div>
+                                    </apex:outputPanel>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lead Additional Information -->
+                <div class="col-xs-4 col-lg-4 leadpanel">
+                    <div class="row">
+                        <div class="col-xs-3 col-lg-3 lcp">
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12 lcphead">
+                                    <h5>Last Contact</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12 lcprow">
+                                    <h3>{!l.Days_Since_Last_Activity__c}</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12 lcprow">
+                                    <h5>Days</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-9 col-lg-9 lai">
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12 bs-callout bs-callout-info">
+                                    <h4>Status:</h4> {!l.Status}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12 bs-callout bs-callout-danger">
+                                    <h4>Source:</h4> {!l.LeadSource}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12 bs-callout bs-callout-warning">
+                                    <h4>Region:</h4> {!l.Region__c}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</apex:page>

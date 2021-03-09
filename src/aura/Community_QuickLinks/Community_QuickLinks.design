@@ -1,0 +1,17 @@
+<design:component label="Community Image Links" >
+    <design:attribute name="FirstImg" default="" description="Specify the URL path to your first image displayed." />
+    <design:attribute name="FirstLink" default="" description="Specify the URL to link the first image to." />
+    <design:attribute name="FirstText" default="" description="Specify the Text to display above the first image. You can leave this empty if no text is desired." />
+    
+    <design:attribute name="SecondImg" default="" description="Specify the URL path to your second image displayed." />
+    <design:attribute name="SecondLink" default="" description="Specify the URL to link the second image to." />
+    <design:attribute name="SecondText" default="" description="Specify the Text to display above the second image. You can leave this empty if no text is desired." />
+    
+    <design:attribute name="ThirdImg" default="" description="Specify the URL path to your third image displayed." />
+    <design:attribute name="ThirdLink" default="" description="Specify the URL to link the third image to." />
+    <design:attribute name="ThirdText" default="" description="Specify the Text to display above the third image. You can leave this empty if no text is desired." />
+    
+    <design:attribute name="HeadingBackgroundColor" default="#333333" description="Background Hex Color for the image Titles. Examples are 000000 for Black and ffffff for White" />
+    <design:attribute name="HeadingFontColor" default="#ffffff" description="Font Hex Color for the image Titles. Examples are 000000 for Black and ffffff for White" />
+    
+</design:component>

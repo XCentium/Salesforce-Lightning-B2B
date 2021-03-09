@@ -1,0 +1,5 @@
+<design:component label="Contact Recent Orders">
+	<design:attribute name="Label" default="Recent Purchases" label="Header Label" description="What would you like to label this componet?" />    
+    <design:attribute name="IconBackground" default="#7D9ED4" label="Icon Background Color" description="Background color for the header icon" />    
+    <design:attribute name="lim" default="10" label="Products to show" description="How many products would you like to show?" />    
+</design:component>

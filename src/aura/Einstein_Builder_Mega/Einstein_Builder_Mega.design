@@ -1,0 +1,11 @@
+<design:component >
+    <design:attribute name="predictionName" label="Prediction Name" description="The name of the prediction you want to display." />
+    <design:attribute name="obj" label="Object To Display" description="The field you want to display predictions for." />
+	<design:attribute name="field" label="Field To Display" description="The field you want to display predictions for." />
+	<design:attribute name="factors" label="Factors To Display" description="A comma-separated list of API field names to show in the Prediction Factors area." />
+    <design:attribute name="factorsField" label="Field Containing Factors" description="A field on the object containing a comma-separated list of API field names to show in the Prediction Factors area. Use this if you don't want to hardcode the factor fields in the above parameter - it will override whatever is set in the Factors To Display parameter." />
+    <design:attribute name="showHeader" label="Show Einstein Header" description="Shows or hides the Einstein Prediction Builder header area." />
+    <design:attribute name="redZoneThreshold" label="Red Zone Threshold" description="A number (usually between 0 and 100) beyond which this component will appear as red." />
+    <design:attribute name="showAsPercentage" label="Show As Percentage" description="Formats the score as a percentage." />
+    <design:attribute name="showFactors" label="Show Model Factors" description="Shows or hides the Model Factors area." />
+</design:component>

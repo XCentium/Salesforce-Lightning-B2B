@@ -1,0 +1,27 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" controller="LiveAgentIdController">
+	<ltng:require scripts='https://c.la1w1.salesforceliveagent.com/content/g/js/36.0/deployment.js'  />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <aura:attribute name="onlineButtonText" type="String" default="Chat"/>
+    <aura:attribute name="offlineButtonText" type="String" default="Offline"/>
+    
+    <aura:attribute name="liveAgentId" type="String" />
+    <aura:attribute name="deploymentID1" type="String" />
+    <aura:attribute name="deploymentID2" type="String" />
+
+    <a id="{!'liveagent_button_online_' + v.liveAgentId}" href="javascript://Chat" style="display: none;" onclick="{!c.startChat}"> 
+        <button class="uiButton forceCommunityAskCommunity mobile-button" accesskey="" type="button" style="width: 100%">
+            <!--render facet: 109:146;a-->
+        	<span class=" label bBody truncate" dir="ltr">{!v.onlineButtonText}</span>
+        	<!--render facet: 113:146;a-->
+        </button>
+    </a>
+    <div id="{!'liveagent_button_offline_' + v.liveAgentId}" class="button-div" style="display: none;">
+        <button class="uiButton forceCommunityAskCommunity mobile-button" accesskey="" type="button" style="width: 100%; background-color: #808080;">
+            <!--render facet: 109:146;a-->
+            <span class=" label bBody truncate" dir="ltr">{!v.offlineButtonText}</span>
+            <!--render facet: 113:146;a-->
+        </button>
+    </div>
+</aura:component>

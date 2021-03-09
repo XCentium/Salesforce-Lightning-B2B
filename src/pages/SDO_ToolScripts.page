@@ -1,0 +1,38 @@
+<apex:page showHeader="false" sidebar="">
+	<apex:stylesheet value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/css/bootstrap.min.css')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.jquery1112)}"/>
+	<style>
+		img {
+			height:85px;
+		}
+		h3{
+		    font-family: "Open Sans", sans-serif;
+			font-weight: 300;
+			font-size: 23px;
+			margin-top: 20px;
+			margin-bottom: 10px;
+		}
+	</style>
+	<div style="padding:15px;">
+		<div style="margin-top:10px;margin-bottom:10px;">
+			<h3 style="font-family:helvetica;color:#333333">Demo Scripts</h3>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<a href="#">
+					<apex:image value="{!$Resource.salesCloudLogo}"/>
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="#">
+					<apex:image value="{!$Resource.serviceCloudLogo}"/>
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="#">
+					<apex:image value="{!$Resource.platformLogo}"/>
+				</a>
+			</div>
+		</div>
+	</div>
+</apex:page>

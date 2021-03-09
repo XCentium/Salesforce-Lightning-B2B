@@ -1,0 +1,357 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes" access="global" controller="ProductCatalogCtrlRG">
+    <aura:attribute name="sitePrefix" type="String"/>
+    <aura:attribute name="products" type="PricebookEntry[]"/>
+    <aura:attribute name="cart" type="Map[]"/>
+    <aura:attribute name="cartRecord" type="RG_Cart__c"/>
+    <aura:attribute name="cartTotalPrice" type="Decimal" default="0"/>
+    <aura:attribute name="cartTotalQuantity" type="Decimal" default="0"/>
+    <aura:attribute name="taxPercentage" type="String" default="8.75"/>
+    <aura:attribute name="tax" type="Decimal"/>
+    <aura:attribute name="shipping" type="String" default="10.00"/>
+    <aura:attribute name="title" type="String" default="Product Catalog"/>
+    <aura:attribute name="pricebook" type="String" default="Standard Price Book"/>
+    <aura:attribute name="orderTotal" type="Decimal"/>
+    <aura:attribute name="formValues" type="Map"/>
+    <aura:attribute name="userInfo" type="User"/>
+    <aura:attribute name="expirationYears" type="String[]" default="2017,2018,2019,2020,2021,2022,2023,2024,2025"/>
+    <aura:handler name="change" value="{!v.cart}" action="{!c.sumCart}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="c:ProductCatalogAddToCartEvent" action="{!c.addedToCart}"/>
+    <div class="slds">
+        <div aura:id="catalog">
+            <div class="slds-text-heading--large">
+                {!v.title}
+            </div>
+            <div class="slds-grid">
+                <div class="slds-col slds-m-bottom--large">
+                    <button class="slds-button slds-button--brand addCartButton" onclick="{!c.showCart}">View Cart&nbsp;({!v.cartTotalQuantity}&nbsp;items) 
+                        &nbsp;<ui:outputCurrency value="{!v.cartTotalPrice}"/>
+                    </button>
+                </div>
+            </div>
+            <div class="slds-grid slds-wrap">
+                <aura:iteration items="{!v.products}" var="product" indexVar="index">
+                    <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-4 slds-p-around--x-small">
+                        <ul class="slds-has-dividers--around-space">
+                            <li class="slds-item board-item">
+                                <c:ProductCatalogItemRG sitePrefix="{!v.sitePrefix}" index="{!index}" product="{!product}" cart="{!v.cart}"/>
+                            </li>
+                        </ul>
+                    </div>
+                </aura:iteration>
+            </div>
+        </div>
+        <div aura:id="checkout" class="hidden">
+            <div class="slds-text-heading--large">
+                Checkout
+            </div>
+            <div class="slds-grid">
+                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-large-size--1-of-2">
+                    <div class="slds-text-heading--small slds-p-bottom--medium">
+                        Payment
+                    </div>
+                    <div class="slds-card slds-p-around--medium">
+                        <fieldset class="slds-form--compound">
+                            <legend class="slds-form-element__label slds-text-title--caps">Payment Card</legend>
+                            <div class="slds-form-element__group">
+                                <div class="slds-form-element__row">
+                                    <lightning:input aura:id="cardnumber" name="cardNumber" label="Card Number" minlength="16" maxlength="16"
+                                                     class="slds-form-element three-fourth"  messageWhenBadInput="Invalid Credit Card Number" required="true"/>
+
+                                    <lightning:input aura:id="securityCode" name="securityCode" label="Security Code" minlength="3" maxlength="4"
+                                                     class="slds-form-element one-fourth"  messageWhenBadInput="Invalid Security Code" required="true"/>
+                                </div>
+                                <div class="slds-form-element__row">
+                                    <lightning:select class="slds-form-element slds-size--1-of-2" aura:id="expMonth" name="expMonth" label="Expiration Month">
+                                        <option value="01">01 - Jan</option>
+                                        <option value="02">02 - Feb</option>
+                                        <option value="03">03 - Mar</option>
+                                        <option value="04">04 - Apr</option>
+                                        <option value="05">05 - May</option>
+                                        <option value="06">06 - Jun</option>
+                                        <option value="07">07 - Jul</option>
+                                        <option value="08">08 - Aug</option>
+                                        <option value="09">09 - Sep</option>
+                                        <option value="10">10 - Oct</option>
+                                        <option value="11">11 - Nov</option>
+                                        <option value="12">12 - Dec</option>
+                                    </lightning:select>
+                                    <lightning:select class="slds-form-element slds-size--1-of-2" aura:id="expYear" name="expYear" label="Expiration Year">
+                                        <aura:iteration items="{!v.expirationYears}" var="year">
+                                            <option value="{!year}">{!year}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="slds-text-heading--small slds-p-vertical--medium">
+                        Billing Address
+                    </div>
+                    
+                    <fieldset class="slds-form--compound">
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+
+                                <lightning:input aura:id="firstName" name="firstName" label="First Name" class="slds-size--1-of-2" value="{!v.userInfo.FirstName}"/>
+                                <lightning:input aura:id="lastName" name="lastName" label="Last Name" class="slds-size--1-of-2" value="{!v.userInfo.LastName}"/>
+
+                            </div>
+                            <div class="slds-form-element__row">
+                                <lightning:input aura:id="company" name="company" label="Company Name" class="slds-size--1-of-1" value="{!v.userInfo.CompanyName}"/>
+                            </div>
+                            <div class="slds-form-element__row">
+                                <lightning:input aura:id="street" name="street" label="Street" class="slds-size--1-of-1" value="{!v.userInfo.Street}"/>
+                            </div>
+                            <div class="slds-form-element__row">
+
+                                <lightning:input aura:id="city" name="city" label="City" class="three-fourth" value="{!v.userInfo.City}"/>
+
+                                <lightning:input aura:id="state" minlength="2" maxlength="2" name="state" label="State" class="one-fourth" value="{!v.userInfo.State}"/>
+                            </div>
+                            <div class="slds-form-element__row">
+                                <lightning:input aura:id="zip" minlength="5" maxlength="5" name="zip" label="Zip" class="slds-size--1-of-2" value="{!v.userInfo.PostalCode}"/>
+                           
+                                
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-large-size--1-of-2">
+                    <div class="slds-text-heading--small slds-p-bottom--medium">
+                        Your Order
+                    </div>
+                    <ul class="slds-has-dividers--bottom">
+                        <aura:iteration items="{!v.cart}" var="product" indexVar="index">
+                            <li class="slds-item">
+                                <div class="slds-tile slds-media">
+                                    <div class="slds-media__figure">
+                                        <aura:if isTrue="{!product.Product2.purl__c != '/servlet/servlet.FileDownload?file='}">
+                                            <img class="checkMedia" src="{!product.Product2.purl__c}"/>
+                                            <aura:set attribute="else">
+                                                <img class="checkMedia" src="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/General/noImage.png"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-media__body slds-p-vertical--large">
+                                        <h3 class="slds-truncate" title="{!product.Product2.Name}"><a href="javascript:void(0);">{!product.Product2.Name}</a></h3>
+                                        <div class="slds-tile__detail slds-text-body--small align-right">
+                                            <dl class="slds-list--horizontal slds-wrap">
+                                                <dt class="slds-item--label slds-text-color--weak slds-truncate" title="First Label">Unit Price</dt>
+                                                <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!product.price}"/></dd>
+                                                <dt class="slds-item--label slds-text-color--weak slds-truncate" title="Second Label">Quantity</dt>
+                                                <dd class="slds-item--detail slds-truncate"><ui:outputNumber value="{!product.quantity}"/></dd>
+                                                <dt class="slds-item--label slds-text-color--weak slds-truncate" title="Second Label">Total Price</dt>
+                                                <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!product.total}"/></dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </aura:iteration>
+                    </ul>
+                    <dl class="slds-list--horizontal slds-wrap align-right totals slds-p-top--large">
+                        <dt class="slds-item--label slds-text-color--weak slds-truncate">Item Subtotal</dt>
+                        <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!v.cartTotalPrice}"/></dd>
+                        <dt class="slds-item--label slds-text-color--weak slds-truncate">Tax</dt>
+                        <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!v.tax}"/></dd>
+                        <dt class="slds-item--label slds-text-color--weak slds-truncate">Shipping</dt>
+                        <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!v.shipping}"/></dd>
+                        <dt class="slds-item--label slds-text-color--weak slds-truncate">Order Total</dt>
+                        <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!v.orderTotal}"/></dd>
+                    </dl>
+                    <lightning:button variant="brand" class="slds-float--right slds-m-top--x-large clearBoth" label="Place Order" aura:id="placeOrder" name="placeOrder" onclick="{!c.placeOrder}"/>
+                </div> 
+                
+            </div>
+        </div>
+        <div aura:id="confirmation" class="hidden">
+            <div class="slds-text-heading--large">
+                Checkout
+            </div>
+            
+            <div class="slds-grid">
+                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-large-size--1-of-2">
+                    
+                    <div class="slds-text-heading--small slds-p-bottom--medium">
+                        Payment
+                    </div>
+                    <div class="slds-card slds-p-around--medium">
+                        <div class="slds-text-title">Payment Card</div>
+                        <div class="slds-text-heading--xx-small cardDetails">
+                            Cardnumber
+                        </div>
+                        <div class="slds-text-body--regular">{!v.formValues.cardnumber}</div>
+                        <div class="slds-text-heading--xx-small cardDetails">
+                            Expires
+                        </div>
+                        <div class="slds-text-body--regular">{!v.formValues.expiration}</div>
+                        <div class="slds-text-heading--xx-small cardDetails">
+                            Security Code
+                        </div>
+                        <div class="slds-text-body--regular">{!v.formValues.securityCode}</div>
+                    </div>
+                    <div class="slds-text-heading--small slds-p-vertical--medium">
+                        Billing Address
+                    </div>
+                    <div class="slds-text-heading--xx-small">
+                        {!v.formValues.firstName + ' ' + v.formValues.lastName}
+                    </div>
+                    <div class="slds-text-heading--xx-small">
+                        {!v.formValues.company}
+                    </div>
+                    <div class="slds-text-heading--xx-small">
+                        {!v.formValues.street}
+                    </div>
+                    <div class="slds-text-heading--xx-small">
+                        {!v.formValues.city + ', ' + v.formValues.state + ' ' + v.formValues.zip}
+                    </div>
+                </div>
+                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-large-size--1-of-2">
+                    <div class="slds-text-heading--small">
+                        Your Order
+                    </div>
+                    <ul class="slds-has-dividers--bottom">
+                        <aura:iteration items="{!v.cart}" var="product" indexVar="index">
+                            <li class="slds-item">
+                                <div class="slds-tile slds-media">
+                                    <div class="slds-media__figure">
+                                        <aura:if isTrue="{!product.Product2.purl__c != '/servlet/servlet.FileDownload?file='}">
+                                            <img class="checkMedia" src="{!product.Product2.purl__c}"/>
+                                            <aura:set attribute="else">
+                                                <img class="checkMedia" src="https://sfdc-ckz-b2b.s3.amazonaws.com/RCG/General/noImage.png"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-media__body slds-p-vertical--large">
+                                        <h3 class="slds-truncate" title="{!product.Product2.Name}"><a href="javascript:void(0);">{!product.Product2.Name}</a></h3>
+                                        <div class="slds-tile__detail slds-text-body--small align-right">
+                                            <dl class="slds-list--horizontal slds-wrap">
+                                                <dt class="slds-item--label slds-text-color--weak slds-truncate" title="First Label">Unit Price</dt>
+                                                <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!product.price}"/></dd>
+                                                <dt class="slds-item--label slds-text-color--weak slds-truncate" title="Second Label">Quantity</dt>
+                                                <dd class="slds-item--detail slds-truncate"><ui:outputNumber value="{!product.quantity}"/></dd>
+                                                <dt class="slds-item--label slds-text-color--weak slds-truncate" title="Second Label">Total Price</dt>
+                                                <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!product.total}"/></dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </aura:iteration>
+                    </ul>
+                    <dl class="slds-list--horizontal slds-wrap align-right totals slds-p-top--large">
+                        <dt class="slds-item--label slds-text-color--weak slds-truncate">Item Subtotal</dt>
+                        <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!v.cartTotalPrice}"/></dd>
+                        <dt class="slds-item--label slds-text-color--weak slds-truncate">Tax</dt>
+                        <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!v.tax}"/></dd>
+                        <dt class="slds-item--label slds-text-color--weak slds-truncate">Shipping</dt>
+                        <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!v.shipping}"/></dd>
+                        <dt class="slds-item--label slds-text-color--weak slds-truncate">Order Total</dt>
+                        <dd class="slds-item--detail slds-truncate"><ui:outputCurrency value="{!v.orderTotal}"/></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div aura:id="modal" role="dialog" tabindex="-1" class="slds-modal slds-modal--large" aria-labelledby="header43">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <lightning:buttonIcon class="slds-button slds-modal__close slds-button--icon-inverse" iconName="utility:close" variant="bare" onclick="{! c.closeCart }" alternativeText="Close Cart." />
+                    <h2 id="header43" class="slds-text-heading--medium">Shopping Cart</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Product Name">Product Name</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Unit Price">Unit Price</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Quantity">Quantity</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Total Price">Total Price</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Remove">&nbsp;</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.cart}" var="cartItem" indexVar="index">
+                                <tr>
+                                    <th scope="row">
+                                        <div class="slds-truncate">
+                                            <a href="javascript:void(0);">{!cartItem.name}</a>
+                                        </div>
+                                    </th>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <ui:outputCurrency value="{!cartItem.price}"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <input onchange="{!c.changeQuantity}" style="width: 150px;" type="number" class="slds-input" value="{!cartItem.quantity}" data-id="{!index}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <ui:outputCurrency value="{!cartItem.total}"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate"><a href="" onclick="{!c.removeItem}" data-id="{!index}">Remove</a></div>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                            <tr>
+                                <th scope="row">
+                                    <div class="slds-truncate">
+                                        <a href="javascript:void(0);"></a>
+                                    </div>
+                                </th>
+                                <td>
+                                    <div class="slds-truncate">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        Order Subtotal
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <ui:outputCurrency value="{!v.cartTotalPrice}"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-modal__footer">
+                    <div class="slds-float--left">
+                        <button class="slds-button slds-button--neutral" onclick="{! c.clearCart }" >Clear Cart</button>
+                    </div>
+                    <button class="slds-button slds-button--neutral" onclick="{! c.closeCart }" >Continue Shopping</button>
+                    <button class="slds-button slds-button--brand" onclick="{!c.checkout}">Checkout</button>
+                </div>
+            </div>
+        </div>
+        <div aura:id="backdrop" class="slds-backdrop"></div>
+        <lightning:spinner aura:id="mySpinner" class="slds-hide" alternativeText="Placing Order"/>
+
+    </div>
+</aura:component>

@@ -1,0 +1,69 @@
+<aura:component controller="ProductImageCtrl" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    <aura:attribute name="contactFields" type="String[]" access="global" default="purl__c,Name,MSRP__c, SKU__c,Id "/>
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="fields" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+    <aura:attribute name="ccProduct" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <force:recordData aura:id="recordHandler"
+                      recordId="{!v.recordId}"
+                      fields="{!v.contactFields}"                      
+                      targetRecord="{!v.record}"
+                      targetError="{!v.recordError}"
+                      targetFields="{!v.fields}"
+                      mode="VIEW"
+      				 />
+    <aura:if isTrue="{!empty(v.fields.purl__c)}">
+        <aura:set attribute="else">
+            <div class="slds-card card" aura:id="card" >
+                <div class="comptitle">
+                    <div class="padding">
+                        <h2>{!v.fields.Name}</h2>
+                    </div>
+                </div>
+                <div class="slds-media centertext">
+                    <div class="padding centertext">
+                        <img src="{!v.fields.purl__c}" class="prodimg"/>
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.ccProduct != null}" >
+                    <div class="centertext">
+                        <lightning:button label="View Commerce Record" onclick="{!c.handleClick}"/>
+                	</div>
+                </aura:if>
+                <lightning:layout horizontalAlign="center" class="slds-m-vertical_medium ">
+                	<lightning:layoutItem padding="horizontal-large" flexibility="auto,grow,shrink" class="slds-border_right" >
+                        <div class="slds-media slds-media_center slds-media_large" >
+                            <div class="slds-media_figure slds-m-right_x-small">
+                                <lightning:icon iconName="standard:topic2" size="large" class="grey-icon"/>
+                            </div>
+                            <div class="slds-media_body">
+                                <div class=" title-weight">
+                                    {!v.fields.SKU__c}
+                                </div>
+                                <div class="slds-text-color_weak">
+                                    SKU
+                                </div>
+                            </div>
+                        </div>                
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="horizontal-large" flexibility="auto,grow,shrink" class="slds-border_left" >
+                        <div class="slds-media slds-media_center slds-media_large" >
+                            <div class="slds-media_figure slds-m-right_x-small">
+                                <lightning:icon iconName="standard:pricebook" size="large" class="grey-icon"/>
+                            </div>
+                            <div class="slds-media_body">
+                                <div class=" title-weight">
+                                    <ui:outputCurrency aura:id="curr" value="{!v.fields.MSRP__c}" format="$##,##,###,###.00"/>
+                                </div>
+                                <div class="slds-text-color_weak">
+                                    MSRP
+                                </div>
+                            </div>
+                        </div>                
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </div>
+        </aura:set>
+    </aura:if>    
+</aura:component>

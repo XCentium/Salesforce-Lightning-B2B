@@ -1,0 +1,19 @@
+<aura:component controller="LogMeInCtrl" extends="c:Mixpanel" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome" access="global" >
+    <aura:attribute name="LoginUserIds" type="String"></aura:attribute>
+    <aura:attribute name="LoginUsers" type="Aura.Component[]"></aura:attribute>
+    <aura:attribute name="Title" type="String" default="Personas"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"></aura:handler>
+
+    <div class="slds-scope slds-card">
+        <div class="slds-card__header">
+            <h2 class="slds-text-heading--small">{!v.Title}</h2> 
+            <ui:button class="topright slds-button slds-button--neutral cuf-publisherShareButton qe-textPostDesktop WIDE uiButton--default uiButton--brand uiButton" 
+          			label="Demo Content" press="{!c.gotoURL}" />
+        </div>
+        <div class="slds-card__body slds-card__body--inner">
+            {!v.LoginUsers}
+        </div>
+        <div class="slds-card__footer">
+        </div>
+    </div>
+</aura:component>

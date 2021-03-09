@@ -1,0 +1,57 @@
+<aura:component controller="FIDO" extends="c:Mixpanel" implements="c:MixpanelInterface">
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Data" type="String[]" />
+    <aura:attribute name="RelatedScripts" type="String[]" />
+    <aura:attribute name="RelatedRecords" type="String[]" />
+    <aura:attribute name="featuredetailjunctionid" type="String"/>
+    <aura:attribute name="featureId" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="RecordName" type="String" />
+    <aura:attribute name="UserEmail" type="String"/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:if  isTrue="{!and(v.recid != '', v.recid != null)}" >
+        <button class="slds-button backButton" onclick="{!c.back}">
+            <lightning:icon iconName="utility:back" size="xx-small"/> 
+        </button> 
+    </aura:if> 
+    <aura:iteration items="{!v.Data}" var="persona">
+        <div class="owner">
+            <div class="padding">
+                <div class="tile-header slds-p-vertical_xx-small  slds-m-bottom_xx-small">
+                    <h3 class="slds-text-heading_small">
+                        <img src="{!persona.user_image_url__c}" class="personaimg" /> {!persona.name} 
+                        <aura:if isTrue="{!persona.title__c != ''}">
+                            | <span class="personaUserTitle" >{!persona.title__c}</span>
+                        </aura:if>
+                    </h3>
+                </div>
+                <div class="slds-text-longform article-body slds-m-top_x-small slds-m-bottom_small">
+                    <ui:outputRichText value="{!persona.description__c}"/>
+                </div>
+            </div>
+        </div>
+        <aura:if isTrue="{!not(empty(v.RelatedScripts))}">
+            <div class="owner">
+                <lightning:tabset>
+                    <lightning:tab label="Demo Scripts" id="1" class="padding0">
+                        <aura:iteration items="{!v.RelatedScripts}" var="script">
+                            <div>
+                                <button class="slds-button ScriptCard relative FullScriptCard" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.GoToScript}">
+                                    <div class="padding textleft">
+                                        <h3>{!script.name}</h3>
+                                        <p><ui:outputRichText value="{!script.excerpt__c}"/> </p>
+                                    </div>
+                                </button>
+                            </div>
+                        </aura:iteration>
+                    </lightning:tab>
+                </lightning:tabset>
+            </div>
+        </aura:if>
+    </aura:iteration> 
+</aura:component>

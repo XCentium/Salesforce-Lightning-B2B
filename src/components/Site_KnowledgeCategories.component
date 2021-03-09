@@ -1,0 +1,49 @@
+<apex:component controller="SDOSiteController">
+   
+<div class="kb2Categories">  
+    
+    <div class="sidebarModule">   
+        <apex:variable var="categoryGroupNameVar" value="{!categoryGroupName}" />
+        <apex:variable var="currentCategoryVar" value="{!currentCategory}" />
+        <apex:variable var="categoryParameterNameVar" value="{!categoryParameterName}" />
+        <apex:variable var="currentKeywordVar" value="{!currentKeyword}" />
+        <apex:variable var="keywordParameterNameVar" value="{!keywordParameterName}" />
+        <apex:variable var="linkUrlVar" value="{!productUrl}" />
+      
+      
+        <div class="sidebarModuleHeader">  
+        
+               Knowledge Categories
+
+         </div>
+     
+      
+     
+     <div class="sidebarModuleBody">
+            <apex:outputPanel styleClass="pkbResultInner" layout="block">
+
+                <ul>
+                        <knowledge:categoryList categoryGroup="{!categoryGroupNameVar}" rootCategory="{!rootCategoryName}" categoryVar="category" level="-1">
+                            <apex:variable var="liclass" value="{!IF(category.depth=1, 'maincategory', IF(category.depth=2, 'subcategory', 'subsubcategory'))}" />
+                            <li class="{!liclass} ">
+                               <apex:outputLink value="{!linkUrlVar}" styleClass="{!IF(currentCategoryVar==category.name, 'currentcategory', '')}">
+                                   <apex:outputText escape="false" value="{!IF(category.depth<4, '', IF(category.depth=4, '.&nbsp;&nbsp;', IF(category.depth=5, '.&nbsp;&nbsp;.&nbsp;&nbsp;', IF(category.depth=6, '.&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp;', '.&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp;'))))}" />
+                                   {!category.label}
+                                     <apex:param name="{!categoryParameterNameVar}" value="{!category.name}" />
+                                    <apex:param name="{!keywordParameterNameVar}" value="{!currentKeywordVar}" />
+                                </apex:outputLink>
+                             </li>
+                        </knowledge:categoryList>
+                </ul>
+
+            </apex:outputPanel>
+     
+    
+        </div>
+    
+    
+    
+    </div>
+</div>
+
+</apex:component>

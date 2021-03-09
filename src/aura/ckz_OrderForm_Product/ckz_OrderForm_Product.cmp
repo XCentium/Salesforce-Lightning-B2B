@@ -1,0 +1,43 @@
+<aura:component description="ckz_OrderForm_Product">
+
+    <aura:registerEvent name="productSelectChange" type="c:ckz_OrderForm_ProductSelectEvent"/>
+
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <aura:attribute name="product" type="Map" default="{}" required="true" />
+
+    <aura:attribute name="productSelected" type="Boolean" default="false" />
+
+    <tr aria-selected="false" class="slds-hint-parent">
+
+        <td class="slds-text-align_right" role="gridcell" tabindex="0">
+            <div class="slds-checkbox_add-button">
+
+                <lightning:input aura:id="productSelect" type="checkbox-button" label="Input One" variant="label-hidden" name="input1" value="{!v.product.sfid}"
+                                 checked="{!v.productSelected}"
+                                 onchange="{!c.handleProductSelect}"/>
+
+            </div>
+        </td>
+
+        <td role="gridcell">
+            <div class="slds-truncate" title="{!v.product.sfdcName}">
+                <img src="{!v.product.searchImage.URI}" width="65" height="65" />
+            </div>
+        </td>
+
+        <th scope="row">
+            <div class="slds-truncate" title="{!v.product.sfdcName}">{!v.product.sfdcName}</div>
+        </th>
+        <td role="gridcell">
+            <div class="slds-truncate" title="{!v.product.SKU}">{!v.product.SKU}</div>
+        </td>
+        <td role="gridcell">
+            <div class="slds-truncate" title="{!v.product.price}">
+                <lightning:formattedNumber value="{!v.product.price}" style="currency"/>
+            </div>
+        </td>
+
+    </tr>
+
+</aura:component>

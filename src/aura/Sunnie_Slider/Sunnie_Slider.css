@@ -1,0 +1,28 @@
+.THIS .padding,.THIS.padding{
+    padding:0px 40px;
+    padding-bottom:10px;
+}
+.THIS .slider{
+    padding-bottom:10px;
+}
+.THIS .slide{
+    width:70%;
+    margin:0 auto;
+}
+.THIS .slds-slider-label__range{
+    margin-bottom:10px!important;
+    display:block;
+}
+.THIS .center{
+    text-align:center;
+}
+.THIS .text strong{
+    font-size:20px;
+    font-weight:400;
+}
+.THIS .text .img{
+    display:inline-block;
+    width:30px;
+    height:auto;
+    margin-left:10px;
+}

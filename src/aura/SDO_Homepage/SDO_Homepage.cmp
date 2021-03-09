@@ -1,0 +1,33 @@
+<aura:component implements="lightning:homeTemplate">
+    <aura:attribute name="Dashboard" type="Aura.Component[]" />
+    <aura:attribute name="Section_1" type="Aura.Component[]" />
+    <aura:attribute name="Section_2" type="Aura.Component[]" />
+    <aura:attribute name="Content" type="Aura.Component[]" />
+    <aura:attribute name="Sidebar" type="Aura.Component[]" />
+
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size_2-of-3">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size_1-of-1 slds-p-bottom_small">
+                    {!v.Dashboard}
+                </div>
+                
+                <div class="slds-size_1-of-2 slds-p-bottom_small">
+                    {!v.Section_1}
+                </div>
+                <div class="slds-size_1-of-2 slds-p-left_small slds-p-bottom_small">
+                    {!v.Section_2}
+                </div>
+                
+                <div class="slds-size_1-of-1 slds-p-bottom_small">
+                    {!v.Content}
+                </div>
+            </div>
+        </div>
+        
+        <div class="slds-size_1-of-3 slds-p-left_small slds-p-bottom_small">
+            {!v.Sidebar}
+        </div>
+    </div>
+    
+</aura:component>

@@ -1,0 +1,104 @@
+<apex:page controller="DE_CustomerSurveyController" standardStylesheets="false" showheader="false">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>{!$label.SDO_CustomerSurvey}<!--Customer Survey--></title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+        
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css" />
+        
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+          
+        <style>
+            body{
+                background: url({!$Resource.surveybackground}) 50% 50% no-repeat;
+                background-color: #B1BAC1;
+                background-size: cover;
+                background-attachment: fixed;
+                color: #fff;
+                font-weight: 300;
+            }
+            .container{
+                margin-top: 40px;
+            }
+            label, h2 {
+                font-weight: 300;
+            }
+            .radio input[type=radio]{
+                margin-left: 0px;
+                margin-top: 3px;
+            }
+        </style>
+    </head>
+    <div class="container">
+        <apex:form >
+            <form role="form">
+                <div class="form-group">
+                    <h2>{!$label.SDO_CustomerSurvey_Thanks}<!--Thanks--> {!cName} {!$label.SDO_CustomerSurvey_Title} <!--for taking the time to fill out this quick survey.--> </h2>
+                    <h4>{!$label.SDO_CustomerSurvey_SubTitle}<!--Your comments will help us drive important improvements in our products and services.--></h4>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="question1"><apex:outputText value="{!$Label.SDO_CustomerSurvey_Q1}" escape="false"/><!--1. To what extent do you agree or disagree with the following statement:<br />
+                            The company made it easy for me to handle my issue.-->
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4 col-sm-9 col-xs-12">
+                            <apex:inputField value="{!cs.Question_1__c}" styleClass="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="question2">{!$label.SDO_CustomerSurvey_Q2}<!--2. How would you rate your overall satisfaction with your customer service experience?-->
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4 col-sm-9 col-xs-12">
+                            <apex:inputField value="{!cs.Question_2__c}" styleClass="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="question3">{!$label.SDO_CustomerSurvey_Q3}<!--3. How likely is it that you would recommend this company to a friend or colleague?-->
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4 col-sm-9 col-xs-12">
+                            <apex:inputField value="{!cs.Question_3__c}" styleClass="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="question4">{!$label.SDO_CustomerSurvey_Q4}<!--4. Was your issue completely resolved?-->
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4 col-sm-9 col-xs-12">
+                            <apex:selectRadio value="{!q4}" styleClass="radio" layout="pagedirection">
+                                <apex:selectOptions value="{!Q4Types}" />
+                            </apex:selectRadio>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <apex:commandButton action="{!saveCS}" value="{!$Label.site.submit}" styleClass="btn btn-success"/>
+                </div>
+            </form>
+        </apex:form>
+    </div>
+</apex:page>

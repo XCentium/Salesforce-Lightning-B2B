@@ -1,0 +1,38 @@
+<aura:component >
+    <aura:attribute name="DemoOrg" type="String" />
+    <aura:attribute name="AllOrgFeatures" type="String[]"/>
+    <aura:attribute name="FeatureName" type="String" />
+    <aura:attribute name="FeatureSFID" type="String" />
+    <aura:attribute name="icon" default="close"  type="String"/>
+    <aura:attribute name="OrgFeatures" type="String[]"/>
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="recid" type="String" />
+    <aura:iteration items="{!v.OrgFeatures}" var="feature">
+        <aura:if isTrue="{!feature.demo_org_feature__c == v.FeatureSFID}">
+            <button class="slds-button featureButton" onclick="{!c.SetRecord}" aura:id="{!feature.demo_org_feature__c}" id="{!feature.demo_org_feature__c}">
+                <div class="featureitem">
+                    <div class="center paddingtop5">
+                        <div class="featureinfo relative">
+                            <div class="featureicon">
+                                <aura:if isTrue="{!feature.isenabled__c == true}">
+                                    <lightning:icon iconName="action:approval" size="x-small" alternativeText=""/>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="featureitem">
+                    <div class="center paddingtop5">
+                        <div class="featureinfo">
+                            <div class="featureicon">
+                                <aura:if isTrue="{!feature.iscustomized__c == true}">
+                                    <lightning:icon iconName="action:approval" size="x-small" alternativeText="" />
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </aura:if>
+    </aura:iteration>
+</aura:component>

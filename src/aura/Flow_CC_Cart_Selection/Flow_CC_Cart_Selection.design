@@ -1,0 +1,3 @@
+<design:component label="CC Cart Selection">
+	<design:attribute name="ContactId" />
+</design:component>

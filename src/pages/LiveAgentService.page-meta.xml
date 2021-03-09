@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>31.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Built by Trevor Scott for Live Agent to Trialforce in Communities that are using the Community Template Designer since Apex can&apos;t work.  Used by Ajax</description>
+    <label>LiveAgentService</label>
+</ApexPage>

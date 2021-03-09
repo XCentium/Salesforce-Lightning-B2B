@@ -1,0 +1,6 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes">
+   <aura:attribute name="recordId" type="String"/>
+<iframe src="{!$SfdcSite.pathPrefix+'/apex/FSL__GetCandidates?id='+v.recordId}"       
+            frameborder = "0" width="100%" height="500px">
+    </iframe>
+</aura:component>

@@ -1,0 +1,38 @@
+<apex:component controller="SDOSiteController">
+
+       
+        <apex:attribute name="isNextAvailable" type="Boolean" required="true" description="Tells wether the component shows a 'NEXT 10' link. Most of the time, this information comes from the 'hasMore' parameter of 'knowledge:articleList' component." />
+        <apex:attribute name="urlLink" type="String" required="true" description="The URL to reload when the user changes the current page." />
+    
+        <apex:variable var="currentCategoryVar" value="{!currentCategory}" />
+        <apex:variable var="currentArticleTypeVar" value="{!currentArticleType}" />
+        <apex:variable var="currentArticleTypeLabelVar" value="{!currentArticleTypeLabel}" />
+        <apex:variable var="categoryParameterNameVar" value="{!categoryParameterName}" />
+        <apex:variable var="articleTypeParameterNameVar" value="{!articleTypeParameterName}" />
+        <apex:variable var="articleTypeLabelParameterNameVar" value="{!articleTypeLabelParameterName}" />
+    
+        
+    
+            <apex:outputPanel layout="block" style="text-align:right" >
+                <apex:outputLink value="{!urlLink}" rendered="{!currentPageNumber>1}">
+                    < Previous 10
+                    <apex:param name="{!categoryParameterName}" value="{!currentCategoryVar}" />
+                    <apex:param name="{!pageNumberParameterName}" value="{!currentPageNumber-1}" />
+                    <apex:param name="{!keywordParameterName}" value="{!currentKeyword}" />
+                    <apex:param name="{!articleTypeParameterNameVar}" value="{!currentArticleTypeVar}" />
+                    <apex:param name="{!articleTypeLabelParameterNameVar}" value="{!currentArticleTypeLabelVar}" />
+                </apex:outputLink>
+                <apex:outputText value="&lt; Previous 10" rendered="{!currentPageNumber=1}" escape="false" />
+                |
+                <apex:outputLink value="{!urlLink}" rendered="{!isNextAvailable=true}">
+                    Next 10 >
+                    <apex:param name="{!categoryParameterName}" value="{!currentCategoryVar}" />
+                    <apex:param name="{!pageNumberParameterName}" value="{!currentPageNumber+1 }" />
+                    <apex:param name="{!keywordParameterName}" value="{!currentKeyword}" />
+                    <apex:param name="{!articleTypeParameterNameVar}" value="{!currentArticleTypeVar}" />
+                    <apex:param name="{!articleTypeLabelParameterNameVar}" value="{!currentArticleTypeLabelVar}" />
+                </apex:outputLink>
+                <apex:outputText value="Next 10 &gt;" rendered="{!isNextAvailable=false}" escape="false" />
+            </apex:outputPanel>
+
+</apex:component>

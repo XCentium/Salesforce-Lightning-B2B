@@ -1,0 +1,55 @@
+<apex:page controller="IdeaListController" showHeader="false">
+  <title>Idea Home</title>
+      <table width="700px">
+         <tr><td><h1>Help shape the future of {!$Organization.Name} - with your ideas</h1></td></tr>
+      <tr><td>You know better than anyone else what you want from {!$Organization.Name}. So tell us. What's your {!$Organization.Name} Idea? 
+      Revolutionary or simple-we want to hear it. Share your ideas, tell us what you think of other people's ideas and 
+      join the discussion. We're here, and we're ready to make ideas happen. Let's get started. </td></tr></table>
+      <table>
+         <tr>
+            <td><a href="/ideas/editIdea.apexp" target="_top">
+               <img src="{!$Resource.Share}" /></a>
+            </td>
+            <td><a href="/ideas/ideaList.apexp" target="_top">
+               <img src="{!$Resource.Vote}" /></a>
+            </td>
+            <td><a href="/ideas/ideaList.apexp" target="_top">
+               <img src="{!$Resource.Discuss}" /></a>
+            </td>
+            <td><a href="/a0q/o" target="_top">
+               <img src="{!$Resource.See}" /></a>
+            </td>
+         </tr>
+      </table>
+   <apex:pageBlock title="Most Recent Ideas">   
+     <!--  <apex:pageBlockSection title="Most Recent Ideas">  -->
+         <apex:pageBlockTable value="{!RecentIdeas}" var="curIdea">
+            <apex:column value="{!curIdea.VoteTotal}" ></apex:column> 
+            <apex:column headerValue="Idea Title" >
+              <a href="/ideas/viewIdea.apexp?id={!curIdea.id}" target="_top">{!curIdea.Title}</a>
+            </apex:column>
+             
+            <apex:column value="{!curIdea.CreatedDate}"></apex:column>
+            <!--<apex:column value="{!curIdea.VoteTotal}" ></apex:column>       -->
+                  
+             
+         </apex:pageBlockTable>
+<!--       </apex:pageBlockSection>   -->
+     </apex:pageBlock>
+     
+     <style>
+        h1 {
+           font-size:24px;
+        }
+     </style>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

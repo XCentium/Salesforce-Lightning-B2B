@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>17.0</apiVersion>
+    <description>This is a component for the SDO site.  This lists the categories for this particular site.  This is controlled in the SDO Site Setup record.</description>
+    <label>Site_KnowledgeCategories</label>
+</ApexComponent>

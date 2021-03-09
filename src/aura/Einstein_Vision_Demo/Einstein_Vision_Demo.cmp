@@ -1,0 +1,86 @@
+<aura:component 
+                implements="flexipage:availableForRecordHome,force:hasRecordId" 
+                controller="EinsteinVisionCtrl"
+                extends="einsteinplay:EinsteinPlatformCard"
+                access="global" >
+    
+    <!-- Design Parameters -->
+    <aura:attribute name="title" type="String" />
+
+    <!-- Parameters -->
+    <aura:attribute name="recordId" type="String" />
+    
+    <!-- Variables -->
+    <aura:attribute name="positionKnown" type="Boolean" default="false"/>
+    <aura:attribute name="showImage" type="Boolean" default="false"/>
+    <aura:attribute name="showResults" type="Boolean" default="false"/>
+    
+    <aura:attribute name="leadRecord" type="Lead"/>
+    <aura:attribute name="recordLoadError" type="String"/>
+    
+    <force:recordData aura:id="recordLoader"
+        recordId="{!v.recordId}"
+        fields="Name,Street,Roof_Type__c,Shadow_Roof_Type__c"
+        targetFields="{!v.leadRecord}"
+        targetError="{!v.recordLoadError}"
+        recordUpdated="{!c.recordUpdated}"
+        mode="EDIT"
+    />
+    
+    <!-- Events -->    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    
+    
+    <div class="bottom-card">
+        <aura:if isTrue="{!v.positionKnown}">
+            
+            <div><!-- to fix rendering bug in Aura -->
+                <!-- Image Container -->
+                <aura:if isTrue="{! and(v.showImage, v.leadRecord.Shadow_Roof_Type__c == 'Pitched')}" >
+                    <img src="/resource/EinsteinVisionRooftopImages/RooftopPitched.jpeg"/>
+                </aura:if>
+                <aura:if isTrue="{! and(v.showImage, v.leadRecord.Shadow_Roof_Type__c == 'Flat')}" >
+                    <img src="/resource/EinsteinVisionRooftopImages/RooftopFlat.jpeg"/>
+                </aura:if> 
+                <br /> 
+                
+                <!-- Buttons -->
+                <aura:if isTrue="{!v.showImage}" >
+                    <lightning:button variant="neutral" label="Analyze Roof Type" onclick="{! c.analyzeRooftype }" />
+                    <aura:set attribute="else">
+                        <lightning:button variant="neutral" label="Get House Picture" onclick="{! c.findHouse }" />
+                    </aura:set>
+                </aura:if>
+
+                <!-- Results -->
+                <aura:if isTrue="{! v.showResults }">
+                    <aura:if isTrue="{! v.leadRecord.Shadow_Roof_Type__c == 'Pitched' }">
+                        <br />
+                        <br />
+                        <span class="slds-icon_container slds-icon_container--circle slds-icon-action-approval" title="Ok">
+                            <lightning:icon iconName="action:approval" size="medium" alternativeText="approval"/>
+                            <span class="slds-assistive-text">Pitched</span>
+                        </span>
+                        Roof Type is Pitched!
+                    </aura:if>
+                
+                    <aura:if isTrue="{! v.leadRecord.Shadow_Roof_Type__c == 'Flat' }">
+                        <br />
+                        <br />
+                            <span class="slds-icon_container slds-icon_container--circle slds-icon-action-close" title="Not Ok">
+                            <lightning:icon iconName="action:close" size="medium" alternativeText="close"/>
+                            <span class="slds-assistive-text">Flat</span>
+                        </span>
+                        Roof Type is Flat!
+                    </aura:if>   
+                    <br />
+                </aura:if>                
+            </div>
+            <aura:set attribute="else">
+                <br />
+                The location is not set, please complete the address
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

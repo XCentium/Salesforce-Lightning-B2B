@@ -1,0 +1,71 @@
+<aura:component controller="cqb_Orders_CT" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="recordId" type="String" default="0035Y00003nlywvQAZ"/>
+    <aura:attribute name="orders" type="OrderItem[]" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:if isTrue="{!not(empty(v.orders))}">
+        <div class="slds-card">
+            <div aura:id="flowContainer" style="margin-bottom:1rem;">
+                <!--lightning:flow aura:id="Service_Console_Returns_Flow" onstatuschange="{!c.statusChange}"/-->
+            </div>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Opportunity Name">Product Image</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Account Name">Order Number</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Close Date">Order Date</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Stage">Order Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Confidence">Order Total</div>
+                        </th>
+                        <th class="" scope="col">
+                        </th>                    
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.orders}" var="orderItem">
+                        <tr class="slds-hint-parent">                    
+                            <td data-label="Product Image">
+                                <div class="slds-truncate">
+                                    <img src="{!orderItem.Product2.purl__c}" style="height:50px;width:50px;"/>
+                                </div>
+                            </td>
+                            <td data-label="Order Number">
+                                <div class="slds-truncate">
+                                    <lightning:button class="recordButton" variant="base" label="{!orderItem.Order.OrderNumber}" title="{!orderItem.OrderId}" onclick="{! c.goToOrder }"/>
+                                </div>
+                            </td>
+                            <td data-label="Order Date">
+                                <div class="slds-truncate"><ui:outputDate aura:id="oDate" value="{!orderItem.Order.EffectiveDate}" /></div>
+                            </td>
+                            <td data-label="Order Name">
+                                <div class="slds-truncate">{!orderItem.Order.Name}</div>
+                            </td>
+                            <td data-label="Order Total">
+                                <div class="slds-truncate"><ui:outputCurrency value="{!orderItem.Order.TotalAmount}"/></div>
+                            </td>
+                            <td data-label="Order Number">
+                                <div class="slds-truncate">
+                                    <lightning:button variant="brand" label="Return" title="{!orderItem.OrderId}" onclick="{! c.goToFlow }"/>
+                                </div>
+                            </td>
+                        </tr>          
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+        <aura:set attribute="else">
+            <div class="center padding">
+            	<h3>No Orders Yet.</h3>
+            </div>    
+        </aura:set>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,51 @@
+<aura:component controller="DE_LiveAgentCtrl" implements="forceCommunity:availableForAllPageTypes" description="LiveAgent Button"  access="global">
+    <aura:attribute name="deploymentId" type="string"/>
+    <aura:attribute name="orgId" type="string"/>
+    <aura:attribute name="buttonId" type="string"/>
+    <aura:attribute name="onlineText" type="string"/>
+    <aura:attribute name="offlineText" type="string"/>
+    <aura:attribute name="scriptUrl" type="string"/>
+    <aura:attribute name="apiEndpoint" type="string"/>
+    <aura:attribute name="Color" type="String" default="0000ff"/>
+    <aura:attribute name="OfflineColor" type="String" />
+    <aura:attribute name="OnlineColor" type="String" />
+    <aura:attribute name="OfflineTextColor" type="String" />
+    <aura:attribute name="OnlineTextColor" type="String" />
+    <aura:attribute name="Width" type="String" default="100%"/>
+    <style>
+        .laBtn{
+        width:{!v.Width}!important;
+        }
+        .button-online{
+        background-color:{!v.OnlineColor};
+        color:{!v.OnlineTextColor} !important;
+        border-width: 0px;
+        }
+        .button-online:hover{
+        background-color:{!v.OnlineColor};
+        color:{!v.OnlineTextColor} !important;
+        border-width: 0px;
+        }
+        .button-offline{
+        background-color:{!v.OfflineColor};
+        color:{!v.OfflineTextColor} !important;
+        }
+        .button-offline:hover{
+        background-color:{!v.OfflineColor};
+        color:{!v.OfflineTextColor} !important;
+        }
+    </style>
+    
+    <ltng:require scripts="{!v.scriptUrl}"
+                  afterScriptsLoaded="{!c.doInit}"></ltng:require>
+    
+    <div class="slds">
+        <a id="{! 'liveagent_button_online_'+v.buttonId}" style="display: none;" class="slds-button slds-button--brand uiButton contactSupport laBtn toggle button button-online"
+           onclick="{!c.startChat}">
+            {!v.onlineText}
+        </a>
+        <div id="{! 'liveagent_button_offline_'+v.buttonId}" style="display: none;"  class="slds-button slds-button--neutral uiButton contactSupport laBtn disabled button button-offline">
+            {!v.offlineText}
+        </div>
+    </div>
+</aura:component>

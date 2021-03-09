@@ -1,0 +1,12 @@
+<aura:component implements="forceCommunity:themeLayout" access="global" description="Concierge Non-Home Layout">	
+    <aura:attribute name="search" type="Aura.Component[]" required="true"/>
+    <aura:attribute name="navBar" type="Aura.Component[]" required="true"/>
+
+    
+    <div>
+        {!v.navBar}
+        <div class="bodyContentArea">
+    	{!v.body}
+        </div>
+    </div>
+</aura:component>

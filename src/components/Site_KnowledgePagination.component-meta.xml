@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>17.0</apiVersion>
+    <description>This is a component in the SDO Site.  It manages the next 10/ previous 10 knowledge articles on the main page.</description>
+    <label>Site_KnowledgePagination</label>
+</ApexComponent>

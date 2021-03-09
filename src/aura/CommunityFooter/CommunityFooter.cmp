@@ -1,0 +1,39 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="Section1Heading" type="String" default="Company" />
+    <aura:attribute name="Section2Heading" type="String" default="Communities" />
+    <aura:attribute name="Section3Heading" type="String" default="Useful Links" />
+    
+	<aura:attribute name="LogoURL" type="String" default="/alpineconsumer/file-asset/alpinegroupprimarylogowhite" />    
+    <aura:attribute name="LogoWidth" type="String" default="150px" />
+    <aura:attribute name="footerBackground" type="String" />
+    <aura:attribute name="linkColor" type="String" />  
+
+    <div class="community-footer" style="{!'background-color:' + v.footerBackground + ';' }">
+        <div class="footercontainer">
+            <div class="logo">
+                <img src="{!v.LogoURL}" style="{!'width:' + v.LogoWidth + ';'}" class="footerLogo" />
+            </div>
+            <div class="third">
+                <h3>{!v.Section1Heading}</h3>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">About</a><br/>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">Jobs</a><br/>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">Press</a><br/>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">News</a><br/>
+            </div>
+            <div class="third">
+                <h3>{!v.Section2Heading}</h3>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">Discussions</a><br/>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">My Cases</a><br/>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">Shop Online</a><br/>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">Calendar</a><br/>
+            </div>
+            <div class="third">
+                <h3>{!v.Section3Heading}</h3>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">Help</a><br/>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">Knowledge</a><br/>
+                <a href="javascript:void(0);" style="{!'color:' + v.linkColor + ';' }">Contact Us</a><br/>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</aura:component>

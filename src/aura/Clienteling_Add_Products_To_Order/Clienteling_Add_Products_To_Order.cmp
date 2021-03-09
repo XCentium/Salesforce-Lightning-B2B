@@ -1,0 +1,26 @@
+<aura:component controller="Clienteling_Add_Products_To_Order" implements="lightning:availableForFlowScreens">
+	<aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:attribute name="OrderId" type="String"/>
+    <aura:attribute name="Products" type="PriceBookEntry[]"/>
+    <aura:attribute name="ProductAdded" type="Boolean" default="false"/>
+    <aura:attribute name="PricebookId" type="String" />
+    <aura:attribute name="ProductId" type="Boolean" default=""/>
+    <aura:attribute name="SearchText" type="String" default=""/>
+    <aura:attribute name="availableActions" type="String[]" />
+    <aura:registerEvent name="navigateFlowEvent" type="c:navigateFlow"/>
+    <aura:attribute name="Items" type="OrderItem[]"/>
+        <div class="slds-form-element slds-lookup box" data-select="single">
+            <div class="padding">
+                <h2>Search By Product Name, Description, Or Code</h2>
+                <div class="slds-form-element__control">
+                    <div class="slds-input-has-icon slds-input-has-icon--right">
+                        <lightning:buttonIcon iconName="utility:search" variant="bare" onclick="{! c.handleClick }" alternativeText="Search" class="slds-input__icon" />
+                        <ui:inputText value="{!v.SearchText}" class="slds-lookup__search-input slds-input" placeholder="Search" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    	<aura:iteration items="{!v.Products}" var="prod">
+            <c:Clienteling_Add_Products_To_Order_Single_Product ProductId="{!prod.Product2Id}" OrderId="{!v.OrderId}"  entryId="{!prod.Id}" Products="{!v.Products}" />        
+        </aura:iteration>
+</aura:component>

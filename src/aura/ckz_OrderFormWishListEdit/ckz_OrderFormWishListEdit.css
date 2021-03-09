@@ -1,0 +1,4 @@
+.THIS.slds-spinner_container {
+    z-index: 1000;
+    position: fixed;
+}

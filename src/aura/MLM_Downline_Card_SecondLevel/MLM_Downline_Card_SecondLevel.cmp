@@ -1,0 +1,29 @@
+<aura:component controller="MLMDownline">
+    <lightning:workspaceAPI aura:id="workspace"/>
+    <aura:handler name="init" value="{!this}" action="{!c.getDownline}"/>
+    <aura:attribute name="backgroundImageUrl" type="String" access="global"/>
+    <aura:attribute name="body" type="String" access="global"/>
+    <aura:attribute name="SelectedContactId" type="String" />
+    <aura:attribute name="backgroundHexColor" type="String" access="global" default="#0065CC" />
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="downline" type="Contact[]"/>
+    <aura:attribute name="downlineCount" type="String" />
+    <div class="wrapper">
+        <div class="inner">
+            <aura:iteration var="dl" items="{!v.downline}" indexVar="index">
+                <div class="subbox">
+                    <div class="padding">
+                        <aura:if isTrue="{!empty(dl.Profile_Image_URL__c)}">
+                            <img src="/_slds/images/themes/lightning_lite/lightning_lite_profile_avatar_160.png" class="customer-avatar"/>
+                            <aura:set attribute="else">
+                                <img src="{!dl.Profile_Image_URL__c}" class="customer-avatar"/>
+                            </aura:set>   
+                        </aura:if>
+                        <a onclick="{!c.viewMore}" id="{!dl.Id}"  class="titleSmall">{!dl.Name}</a>
+                    </div>
+                </div>
+            </aura:iteration>  
+        	<div class="clear"></div>
+        </div>
+    </div>	
+</aura:component>

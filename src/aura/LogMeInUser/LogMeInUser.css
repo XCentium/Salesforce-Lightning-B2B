@@ -1,0 +1,37 @@
+.THIS .slds-icon-utility-switch > span {
+    display: flex;
+}
+.THIS .relative{position:relative;}
+.THIS .rightalign{position:absolute;right:10px;text-align:right;}
+.THIS .persona_description{
+    padding:5px 20px;
+}
+.THIS .personaimg{
+    width:20px;
+    height:20px;
+    margin: 0 10px;
+    border-radius:50%
+}
+.THIS .paddingtop{
+    padding-top:10px;
+}
+.THIS .imgalighnleft{
+    display:inline-block;
+    float:left;
+    margin-right:10px;
+    margin-bottom:10px;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+}
+.THIS .persona_description h2{
+    font-weight:bold;
+    border-bottom:1px solid #ddd;
+    margin-bottom:10px;
+    padding:10px 0;
+}
+@media (max-width:1600px){
+    .THIS .hidesmallscreen{
+        display:none;
+    }
+}

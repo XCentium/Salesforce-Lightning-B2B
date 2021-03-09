@@ -1,0 +1,5 @@
+<design:component>
+    <design:attribute name="MenuItemTextColor" description="What Hex Color would you like the menu item to be? Example: #000000 for Black." default="#333333" />
+    <design:attribute name="isFeatured" label="Only Show Featured" description="Do you want to only show featured menu items and categories? This is set on the record." default="false"/>
+    <design:attribute name="hideCatDesc" label="Hide Category Description" description="Would you like to hide the category description? Check if so." default="false"/>
+</design:component>

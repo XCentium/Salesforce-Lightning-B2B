@@ -1,0 +1,12 @@
+.THIS .slds-textarea {
+    display: block;
+}
+.THIS .slds-textarea.strike-resizable {
+	resize: vertical;
+}
+.THIS .slds-textarea.strike-static {
+	resize: none;
+}
+.THIS .st-help-text-icon .slds-icon {
+    fill: #9ea9b5;
+}

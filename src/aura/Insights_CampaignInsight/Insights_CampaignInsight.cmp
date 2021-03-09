@@ -1,0 +1,27 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="insight" type="object"></aura:attribute>
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    
+    <div class="row border-around">
+        <div class="column">
+            <lightning:dynamicIcon type="trend" 
+                                   option="{!v.insight.TrendType == 'Positive' ? 'up' : v.insight.TrendType == 'Negative' ? 'down' : 'neutral'}"/>
+        </div>
+        <div class="column">
+            <div>{!v.insight.Title}</div>
+            <div class="rationale slds-text-body_small">
+                {!v.insight.Rationale}
+            </div>
+        </div>
+        <lightning:buttonMenu class="column flex-right"
+                              aura:id="menu" 
+                              onselect="{! c.handleSelect }" 
+                              menuAlignment="right"
+                              alternativeText="Show menu">
+            <lightning:menuItem value="edit" label="Edit" />
+            <lightning:menuItem value="rationale" label="Edit Rationale" />
+            <lightning:menuItem value="assign" label="Assign" />
+            <lightning:menuItem value="delete" label="Delete" />
+        </lightning:buttonMenu>
+    </div>
+</aura:component>

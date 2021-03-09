@@ -1,0 +1,69 @@
+<aura:component extends="c:EinsteinWrapperCard" controller="ED_OpptyCT" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <ltng:require scripts="/resource/jquery, /resource/ED_OpptyJS" 
+                  afterScriptsLoaded="{!c.doInit}"/>
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <aura:attribute name="recordId" type="Id" />
+    <div class="slds-grid slds-wrap slds-grid--pull-padded slds-p-top--small">
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end">
+            <!-- <div id='ttc_container' class="slds-wrap slds-m-horizontallarge" style="margin-bottom:5px">                    
+                        <div id='ttc' class='slds-itemlabel slds-text-headingmedium slds-text-colorweak slds-p-leftxx-large font-weight-bold' style="margin-left: -36px; !important; font-size: 1.3rem !important"/>
+                        <div id='ttc_label' class='slds-itemdetail slds-text-titlecaps slds-text-colorweak slds-p-leftsmall slds-p-topmedium' >
+                            Predicted Time to Close
+                        </div> 
+                    </div> -->
+            <div id='csat_container' class="slds-wrap slds-m-horizontal--large" style="margin-bottom:5px">                    
+                <div id='csat' class='slds-item--label slds-text-heading--medium slds-text-color--weak slds-p-left--xx-large font-weight-bold' style="margin-left: -36px; !important; font-size: 1.3rem !important"/>
+                <div id='csat_label' class='slds-item--detail slds-text-title--caps slds-text-color--weak slds-p-left--small slds-p-top--medium' >
+                    Predicted Close Date
+                </div> 
+            </div>
+            <div id='diff_container' class="slds-wrap slds-m-horizontal--large" style="margin-bottom:5px">                    
+                <span id='space' class='slds-item--label slds-text-heading--medium slds-text-color--weak slds-p-left--xx-large font-weight-bold' style="margin-left: -39px; !important; font-size: 1.3rem !important;">   </span>
+                <span id='plus' class='slds-item--label slds-text-heading--medium slds-text-color--weak slds-p-left--xx-large font-weight-bold' style="margin-left: -39px; !important; font-size: 1.3rem !important;" > + </span>
+                <span id='diff' class='slds-item--label slds-text-heading--medium slds-text-color--weak slds-p-left--xx-large font-weight-bold' style="margin-left: -48px; !important; font-size: 1.3rem !important"/>
+                <div id='green_diff_label' class='slds-item--detail slds-text-title--caps slds-text-color--weak slds-p-left--small slds-p-top--medium'>
+                    compared to listed close date
+                </div>
+            </div>
+        </div> 
+        
+    </div>
+    <div class="slds-border--bottom"/>
+    <div class="slds-grid slds-wrap slds-grid--pull-padded  slds-p-vertical--small">
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+            <div class='slds-text-heading--medium slds-text-title--caps slds-text-color--weak slds-p-horizontal--medium'>
+                Leading Causes
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+            <div id='leadingCauses' class="slds-list--horizontal slds-wrap slds-m-horizontal--large">
+                <div class='slds-text-body--regular slds-text-color--weak'>
+                    No causes detected
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-border--bottom" />
+    <div class="slds-grid slds-wrap slds-grid--pull-padded  slds-p-vertical--small">
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+            <div class='slds-text-heading--medium slds-text-title--caps slds-text-color--weak slds-p-horizontal--medium'>
+                How to Improve This
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small">
+            <div id='recommendedImprovements' class="slds-list--horizontal slds-wrap slds-m-horizontal--large" style="width:100%">
+                <div class='slds-text-body--regular slds-text-color--weak'>
+                    No recommendations detected
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="slds-grid slds-wrap slds-gridpull-padded slds-p-verticalsmall"> -->
+    <div class="meetingButton slds-size--1-of-1 slds-grid slds-nowrap slds-grid--vertical-align-end slds-p-vertical--x-small slds-p-horizontal--small slds-align--absolute-center">	
+        <button class="slds-button slds-button--neutral not-selected slds-not-selected uiButton" onclick="{!c.showModal}">Schedule a Meeting</button>
+    </div>
+    
+    
+    
+</aura:component>

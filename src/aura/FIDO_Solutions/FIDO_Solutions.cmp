@@ -1,0 +1,52 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="SearchType" type="String" /> 
+    <aura:attribute name="SearchPhrase" type="String" /> 
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="setScriptId" type="String" />
+    <aura:attribute name="SolutionView" type="String" default="Single" />
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="ComponentTitle" type="String" />
+    <aura:attribute name="Filter" type="String" />
+    <aura:attribute name="Solutions" type="String[]"/>
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="pagetype" type="String" default="Solution"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.ScreenChoice}" action="{!c.init}"/>
+    
+    <div class="textleft">
+        <aura:if  isTrue="{!or(v.recid == '', v.recid == null)}" >
+            <aura:if isTrue="{!v.pagetype == 'Solution'}">
+                <aura:iteration items="{!v.Settings}" var="setting">
+                    <aura:if isTrue="{!setting.demo_solution_view__c == 'Two Level Solution View'}">
+                        <aura:iteration items="{!v.Solutions}" var="solution" indexVar="index">
+                            <aura:if isTrue="{!solution.parent_demo_solution__c == null }">
+                                <aura:if isTrue="{!solution.isactive__c == true}">
+                                    <div class="padding">
+                                        <div class="center">
+                                            <h3>{!solution.name}</h3>
+                                            <ui:outputRichText value="{!solution.description__c}"/>
+                                        </div>
+                                    </div>                    
+                                    <div class="paddingbottom">
+                                        <c:FIDO_Solutions_SubSolution SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" Filter="{!v.Filter}" Industry="{!v.Industry}" SolutionParentId="{!solution.demo_solution__c}" Solutions="{!v.Solutions}"/> 
+                                    </div>
+                                    <div class="clear"></div>
+                                </aura:if>
+                            </aura:if>
+                        </aura:iteration>
+                        <aura:set attribute="else">
+                            <c:FIDO_Solutions_OneLevel SearchPhrase="{!v.SearchPhrase}" SearchType="{!v.SearchType}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" Filter="{!v.Filter}" Industry="{!v.Industry}" />
+                        </aura:set>
+                    </aura:if>
+                </aura:iteration>
+                <div class="clear"></div>
+            </aura:if>
+            <aura:set attribute="else">
+                <c:FIDO_SingleRecord OrgName="{!v.OrgName}" IndustryName="{!v.IndustryName}" ScreenChoice="{!v.ScreenChoice}" recid="{!v.recid}" Industry="{!v.Industry}" />
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

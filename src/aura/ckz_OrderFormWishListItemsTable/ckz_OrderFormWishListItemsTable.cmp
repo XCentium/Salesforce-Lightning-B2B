@@ -1,0 +1,71 @@
+<aura:component description="ckz_OrderFormWishListItemsTable">
+
+    <aura:registerEvent name="addMore" type="c:ckz_AddMoreOrderItems"/>
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+
+    <aura:attribute name="orderItems" type="List" required="false" />
+
+    <aura:attribute name="storefront" type="String" required="true" />
+    <aura:attribute name="locale" type="String" required="true" />
+    <aura:attribute name="enableTypeahead" type="Boolean" required="true" />
+    <aura:attribute name="cartStatus" type="String" required="false" />
+
+    <aura:attribute name="userId" type="String" access="global" />
+    <aura:attribute name="accountId" type="String" access="global" />
+    <aura:attribute name="currencyCode" type="String" access="global" default="USD" />
+
+    <!-- 2019-09-20  msobczak: added -->
+    <aura:attribute name="useCardLayout" type="Boolean" default="false" />
+
+    <!-- Table View -->
+    <aura:if isTrue="{! $Browser.formFactor == 'DESKTOP' &amp;&amp; (v.useCardLayout == false) }">
+        <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout">
+            <thead>
+            <tr class="slds-text-heading_label">
+                <th scope="col"><div class="" title="SKU">SKU/Product</div></th>
+                <th scope="col"><div class="slds-truncate" title="Name">Name</div></th>
+                <th scope="col"><div class="slds-truncate" title="Image"></div></th>
+                <th scope="col"><div class="slds-truncate" title="Actions">Actions</div></th>
+
+            </tr>
+            </thead>
+            <tbody>
+
+            <aura:iteration items="{!v.orderItems}" var="orderItem">
+                <c:ckz_OrderFormWishListItem
+                        orderItem="{!orderItem}"
+                        storefront="{!v.storefront}"
+                        locale="{!v.locale}"
+                        enableTypeahead="{!v.enableTypeahead}"
+                        userId="{!v.userId}"
+                        accountId="{!v.accountId}"
+                        currencyCode="{!v.currencyCode}"
+                        useCardLayout="{!v.useCardLayout}"
+                />
+            </aura:iteration>
+            </tbody>
+        </table>
+    </aura:if>
+
+    <!-- Card View -->
+    <aura:if isTrue="{! $Browser.formFactor != 'DESKTOP' || (v.useCardLayout == true) }">
+        <div class="slds-grid slds-gutters slds-wrap">
+            <aura:iteration items="{!v.orderItems}" var="orderItem">
+                <div class="slds-col slds-small-size_12-of-12 slds-large-size_6-of-12">
+                    <c:ckz_OrderFormWishListItem
+                            orderItem="{!orderItem}"
+                            storefront="{!v.storefront}"
+                            locale="{!v.locale}"
+                            enableTypeahead="{!v.enableTypeahead}"
+                            userId="{!v.userId}"
+                            accountId="{!v.accountId}"
+                            currencyCode="{!v.currencyCode}"
+                            useCardLayout="{!v.useCardLayout}"
+                    />
+                </div>
+            </aura:iteration>
+        </div>
+    </aura:if>
+
+</aura:component>

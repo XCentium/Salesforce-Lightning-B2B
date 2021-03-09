@@ -1,0 +1,242 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    <style>
+        .view-section {position: absolute; top: 0; height:  60%; background-color: #fdfdfd; width: 100%; overflow-y:auto;}
+        .edit-section {position: absolute; bottom: 0; height: 40%; background-color: #fdfdfd; overflow:auto; width: 100%; border-top: 1px solid #ccc; overflow-y:auto;}
+        .edit-section-left {position: absolute; left: 0; width: 50%; height: 100%; overflow-y:auto}
+        .edit-section-center {position:absolute; left: 33%; width: 34%; border-left: 1px solid #ccc; height: 100%; overflow-y:auto}
+        .edit-section-right {position:absolute; right: 0; width: 50%; border-left: 1px solid #ccc; height: 100%; overflow-y:auto}
+        
+        
+        .edit-section_header {position: absolute; width: 100%; border-bottom: 1px solid #ccc; background-color:#F4F6F9;}
+        .edit-section_body {position: absolute; top: 45px; width: 100%; height: calc(100% - 93px); overflow-y: auto;}
+        .edit-section_footer {position: absolute; width: 100%; bottom: 0; border-top: 1px solid #ccc; background-color:#FFF; }
+        
+        [class*='edit-section_'] { padding: .75rem; }
+        
+        .period-column:hover { cursor:pointer; }
+        .period-label { vertical-align: middle; }
+        
+        .prediction-column {
+        background-size: 8px 8px !important;
+        background-image: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.025) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.025) 50%, rgba(0, 0, 0, 0.025) 75%, transparent 75%, transparent);
+        background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.025) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.025) 50%, rgba(0, 0, 0, 0.025) 75%, transparent 75%, transparent);
+        background-size: 64px 64px;
+        }
+		.prediction-column:hover { cursor:pointer; }
+        
+        .selected-period {background-color: deepskyblue !important;}
+        tr.selected-period:hover td {background-color: deepskyblue !important;}
+        
+        .max-height{ height:100%; }
+        
+        .offset_small {margin-left: -.75rem; margin-right: -.75rem;}
+        .offset_medium {margin-left: -1rem; margin-right: -1rem;}
+        
+        .overflow-y_auto { overflow-y:auto}
+        
+        .reason-text {display: inline-block;width: calc(100% - 128px);vertical-align: middle;}
+        
+        .slds-icon-trend[data-slds-trend=up] {color: #028048;-webkit-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);}
+        .slds-icon-trend[data-slds-trend=down] {color: #FF0000;-webkit-transform: rotate(45deg);-ms-transform: rotate(45deg);transform: rotate(45deg);}
+        .slds-icon-trend {width: 1rem;height: 1rem;display: inline-block;}
+        
+        @media (max-height: 770px) {
+        .view-section {height: calc(100% - 300px)}
+        .edit-section {height: 300px;}
+        }
+    </style>
+    
+    <div xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="view-section slds-p-around_small">
+        <div class="slds-m-bottom_small">
+            <div class="slds-text-heading_large">Einstein Forecasting</div>
+        </div>
+        
+        <div class="slds-m-bottom_small">
+            <div class="slds-text-heading_small">Viewing as <b>{{rootUser.Name}}</b> (expand months to change user)</div>
+        </div>
+        
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th>Month</th>
+                    <th>Einstein Prediction</th>
+                    <th>Closed</th>
+                    <th>Commit</th>
+                    <th>Best Case</th>
+                    <th>Pipeline</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="period in periods" ng-controller="PeriodController as pc">
+                <tr ng-class="period.Id == selectedPeriod.Id && rootUser.Id == selectedUser.Id ? 'selected-period' : ''">
+                    <td ng-click="pc.collapsed = !pc.collapsed" class="period-column">
+                        <button class="slds-button slds-button_icon-bare">
+                            <svg ng-show="pc.collapsed" class="slds-icon slds-icon_xx-small slds-icon-text-default">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#chevronright')}"></use>
+                            </svg>
+                            <svg ng-show="!pc.collapsed" class="slds-icon slds-icon_xx-small slds-icon-text-default">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#chevrondown')}"></use>
+                            </svg>
+                        </button>
+                        <span class="period-label">{{period.FullyQualifiedLabel}}</span>
+                    </td>
+                    <td class="prediction-column" ng-click="setPrediction(rootUser, rootUser.Periods[period.Id], period)"> {{ rootUser.Periods[period.Id]['Prediction'] ? rootUser.Periods[period.Id]['Prediction'].Amount : 0 | currency }}</td>
+                    <td>{{ rootUser.Periods[period.Id]['ClosedOnly'] ? rootUser.Periods[period.Id]['ClosedOnly'].ForecastAmount : 0 | currency }}</td>
+                    <td>{{ rootUser.Periods[period.Id]['CommitForecast'] ? rootUser.Periods[period.Id]['CommitForecast'].ForecastAmount : 0 | currency }}</td>
+                    <td>{{ rootUser.Periods[period.Id]['BestCaseForecast'] ? rootUser.Periods[period.Id]['BestCaseForecast'].ForecastAmount : 0 | currency }}</td>
+                    <td>{{ rootUser.Periods[period.Id]['OpenPipeline'] ? rootUser.Periods[period.Id]['OpenPipeline'].ForecastAmount : 0 | currency }}</td>
+                </tr>
+                <tr ng-show="!pc.collapsed" ng-repeat="child in children" ng-class="period.Id == selectedPeriod.Id && child.Id == selectedUser.Id ? 'selected-period' : ''">
+                    <td class="period-column">
+                        <div class="slds-m-left_large">
+                            <a ng-if="child.hasChildren" href="#!/forecasting/{{child.Id}}">
+                                {{ child.Name }}
+                            </a>
+                            <div ng-if="!child.hasChildren">
+                                {{ child.Name }}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="prediction-column" ng-click="setPrediction(child, child.Periods[period.Id], period)">{{ child.Periods[period.Id]['Prediction'] ? child.Periods[period.Id]['Prediction'].Amount : 0 | currency }}</td>
+                    <td>{{ child.Periods[period.Id]['ClosedOnly'] ? child.Periods[period.Id]['ClosedOnly'].ForecastAmount : 0 | currency }}</td>
+                    <td>{{ child.Periods[period.Id]['CommitForecast'] ? child.Periods[period.Id]['CommitForecast'].ForecastAmount : 0 | currency }}</td>
+                    <td>{{ child.Periods[period.Id]['BestCaseForecast'] ? child.Periods[period.Id]['BestCaseForecast'].ForecastAmount : 0 | currency }}</td>
+                    <td>{{ child.Periods[period.Id]['OpenPipeline'] ? child.Periods[period.Id]['OpenPipeline'].ForecastAmount : 0 | currency }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    
+    
+    <div class="edit-section">
+        <div class="edit-section-left">
+            <div class="edit-section_header slds-text-heading_small">
+                Prediction
+            </div>
+            
+            <div class="edit-section_body">
+                <div ng-show="showEdit">
+                    <div class="slds-m-bottom_small">
+                        <div class="slds-text-heading_small">
+                            {{selectedUser.Name}} - {{selectedPeriod.FullyQualifiedLabel}}
+                        </div>
+                        
+                        <div class="slds-form-element">
+                            <label>Prediction Amount (Suggested: {{suggestedValue | currency}}) <a class="slds-button" ng-click="selectedPrediction.Amount = suggestedValue">Set Suggested Value</a></label>
+                            <div class="slds-form-element__control">
+                                <input class="slds-input" ng-model="selectedPrediction.Amount"/>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label>Delta (+/- percentage change)</label>
+                            <div class="slds-form-element__control">
+                                <input type="number" class="slds-input" ng-model="delta"/>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div>
+                        <div class="slds-text-heading_small">
+                            Prediction Amounts
+                        </div>
+                        <div>
+                            High Amount: {{selectedPrediction.AmountHigherBound | currency}}
+                        </div>
+                        <div>
+                            Median Amount: {{selectedPrediction.Amount | currency}}
+                        </div>
+                        <div>
+                            Low Amount: {{selectedPrediction.AmountLowerBound | currency}}
+                        </div>
+                    </div>
+                </div>
+                
+                <div ng-show="!showEdit" class="slds-align_absolute-center max-height">
+                    Click a on a prediction cell to create or edit predictions
+                </div>
+            </div>
+            
+            <div class="edit-section_footer slds-text-align_right slds-p-around_small">
+                <button ng-disabled="!selectedPrediction" ng-click="upsertPrediction()" class="slds-button slds-button_brand">
+                    Upsert
+                </button>
+            </div>
+        </div>
+        
+        
+        
+        <div class="edit-section-right">
+            <div class="edit-section_header slds-text-heading_small">
+                Prediction Reasons
+            </div>
+            <div class="edit-section_body">
+                <div ng-show="!showReasonPane" class="max-height">
+                    <div ng-repeat="reason in reasons" class="slds-box slds-p-around_small slds-m-vertical_small">
+                        <a ng-click="setPredictionReason(reason)" class="slds-button slds-m-right_small">
+                            Edit
+                        </a>
+                        <a ng-click="deletePredictionReason($index, reason.Id)" class="slds-button slds-m-right_small">
+                            Delete
+                        </a>
+                        <span class="trending-icon slds-m-right_small">
+                            <span class="slds-icon-trend slds-is-animated runtime_sales_insightsInsightsTrendingIcon" data-slds-trend="{{reason.TrendType == 'Positive' ? 'up' : 'down'}}">
+                                <svg aria-hidden="true" viewBox="0 0 16 16">
+                                    <path aria-hidden="true" d="M.75 8H11M8 4.5L11.5 8 8 11.5" class="slds-icon-trend__arrow">
+                                    </path>
+                                    <circle aria-hidden="true" class="slds-icon-trend__circle" transform="rotate(-28 8 8) scale(-1 1) translate(-16 0)" cy="8" cx="8" r="7.375">
+                                    </circle>
+                                </svg>
+                            </span>
+                        </span>
+                        <span class="reason-text">
+                        	{{reason.PredictionReasonFullText}}
+                        </span>
+                        
+                    </div>
+                    <div ng-show="reason || reasons.length == 0 || !showEdit" class="slds-align_absolute-center slds-text-align_center max-height">
+                        No prediction selected or prediction reasons do not exist. Please add create a prediction or press the add button below if you have already created a prediction.
+                    </div>
+                </div>
+                
+                <div class="max-height" ng-show="showReasonPane">
+                    <div class="slds-form-element">
+                        <label>Prediction Trend Type</label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container">
+                                <select class="slds-select" ng-model="selectedPredictionReason.TrendType" ng-options="option for option in forecastingTrendTypes"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="selectedPredictionReason.TrendType" class="slds-form-element">
+                        <label>Prediction Reason</label>
+                        <div class="slds-form-element__control">
+                            <select class="slds-select" ng-model="selectedPredictionReason.PredictionReasonKey" ng-options="option.value as option.label for option in predictionReasonKeys"/>
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label>Prediction Reason Stage</label>
+                        <div class="slds-form-element__control">
+                            <select class="slds-select" ng-model="selectedPredictionReason.StageName" ng-options="option.value as option.label for option in opportunityStageNames"/>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            
+            
+            <div class="edit-section_footer slds-text-align_right slds-p-around_small slds-clearfix">
+                <button ng-disabled="!selectedPredictionReason" ng-click="clearPredictionReason()" class="slds-button slds-button_neutral slds-float_left">
+                    Cancel
+                </button>
+                <button ng-disabled="(!selectedPrediction || !selectedPrediction.hasOwnProperty('Id') || selectedPredictionReason)" ng-click="setPredictionReason()" class="slds-button slds-button_brand">
+                    Add Reason
+                </button>
+                <button ng-disabled="!selectedPredictionReason" ng-click="upsertPredictionReason()" class="slds-button slds-button_brand">
+                    Upsert
+                </button>
+            </div>
+        </div>
+    </div>
+</apex:page>

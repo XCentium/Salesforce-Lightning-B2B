@@ -1,0 +1,6 @@
+<aura:component access="global" implements="lightning:availableForFlowScreens">
+    <aura:attribute name="saID" type="String" />
+    <aura:attribute name="numheight" type="Integer" default="550" />
+    <aura:attribute name="candidates" type="Boolean" default="true" />
+	<iframe aura:id="theIframe" src="{!'/apex/' + (v.candidates ? 'FSL__GetCandidates' : 'FSL__AppointmentBookingVf') + '?Id=' + v.saID}" style="{!'border:0px;width:100%;height:' + v.numheight + 'px;'}"/>
+</aura:component>

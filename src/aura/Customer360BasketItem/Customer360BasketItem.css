@@ -1,0 +1,26 @@
+.THIS .card-style{
+    border-style: solid;
+    border-color: lightgrey;
+    border-width: thin;
+    height: auto;
+}
+.THIS .interest-detail{
+    background-color: rgb(243, 242, 242);
+}
+
+.THIS .slds-card__body{
+    width: 100%;
+}
+.THIS .card-image{
+    height: 200px;
+}
+.THIS .card-detail{
+    min-height: 50px;
+}
+.THIS .card-amount{
+    min-height: 25px;
+}
+.THIS .image-class{
+    height: inherit;
+    width: 75%;
+}

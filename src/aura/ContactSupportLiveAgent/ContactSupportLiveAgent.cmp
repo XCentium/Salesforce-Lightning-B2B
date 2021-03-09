@@ -1,0 +1,109 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" controller="LiveAgentIdController">
+<ltng:require scripts='https://c.la1w1.salesforceliveagent.com/content/g/js/36.0/deployment.js,
+                       https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js'
+              afterScriptsLoaded="{!c.doneRendering}"/>	<aura:attribute name="title" type="String" default="Chat with customer support" />
+    <aura:attribute name="subtitle" type="String"/>
+    <aura:attribute name="subtitle1" type="String" default="Need an answer fast?"/>
+    <aura:attribute name="subtitle2" type="String" default="Chat now with customer support."/>
+    <aura:attribute name="subject" type="String" />
+    <aura:attribute name="onlineButtonText" type="String" default="Chat"/>
+    <aura:attribute name="offlineButtonText" type="String" default="Offline"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+     <!--<aura:handler event="aura:doneRendering" action="{!c.doneRendering}"/>-->
+        <aura:attribute name="liveAgentId" type="String" />
+    <aura:attribute name="deploymentID1" type="String" />
+    <aura:attribute name="deploymentID2" type="String" />
+    <style>
+        	.mobile.button-div{
+        		padding: 0px !important;
+          	}
+        	.mobile.mobile-button{
+        		width: 100% !important;
+        		max-width: none !important;
+        	}
+        	.mobile.header-message{
+				width: 100% !important;
+        		padding: 0px !important;
+        	}
+            .mobile.subtitle{
+				display: block;
+        	}
+        	.mobile.header{
+				margin-top: -100px;
+        	}
+        @media (max-width: 1150px) {
+        	.subtitle{
+				display: block;
+        	}
+        }
+    </style>
+        <div class="two-column selfServiceCaseCreate" data-aura-rendered-by="665:173;a" style="
+    padding-left: 5px;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 15px;                                                                  
+">
+    <div class="header" data-aura-rendered-by="342:437;a"><!--render facet: 363:437;a--><div class="header-message" data-aura-rendered-by="364:437;a" style="
+    width: 50%;
+    text-align: center;
+    padding: 0 40px;
+"><h2 class="header-title" data-aura-rendered-by="365:437;a" style="
+    text-transform: uppercase;   font-size: 1.125em;   font-weight: 700;   line-height: 30px; width: 100%
+"><span class="headerLabel titles truncate uiOutputText" dir="ltr" data-aura-rendered-by="24:437;a" style="
+">{!v.title}</span></h2><span class="sub-header-title" data-aura-rendered-by="367:437;a" style="
+    font-weight: 300;
+"><span class="headerLabel titles truncate uiOutputText" dir="ltr" data-aura-rendered-by="24:437;a" style="
+"><span class="subtitle">{!v.subtitle1}</span>&nbsp;{!v.subtitle2}</span></span></div></div>
+            <div style="padding: 0 25px; padding-right: 100px;" class="button-div">
+    <a id="{!'liveagent_button_online_' + v.liveAgentId}" href="javascript://Chat" style="display: none;" onclick="{!c.startChat}"> 
+        <button class="uiButton forceCommunityAskCommunity mobile-button buttonStyle" accesskey="" type="button" style="order-radius: .125rem;
+  outline: none;
+  color: #ffffff;
+  border: none;
+  font-family: Lato;
+  font-size: .875em;
+  font-weight: normal;
+  line-height: 1.4;
+  padding: 15px;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-transition: border .25s linear,color .25s linear,background-color .25s linear;
+  transition: border .25s linear,color .25s linear,background-color .25s linear;
+  display: block;
+  width: 100%;
+  vertical-align: middle;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 0;
+  text-transform: uppercase;float: left; width: 100%;  max-width: 475px;  margin-top: -20px;  margin: 0 auto; margin-top: 18px;">
+            <!--render facet: 109:146;a-->
+        	<span class=" label bBody truncate" dir="ltr">{!v.onlineButtonText}</span>
+        	<!--render facet: 113:146;a-->
+        </button>
+    </a>
+    </div>
+    <div id="{!'liveagent_button_offline_' + v.liveAgentId}" class="button-div" style="display: none; padding: 0 25px; padding-right: 100px;">
+        <button class="uiButton forceCommunityAskCommunity mobile-button" style=" outline: none;
+  color: #ffffff;
+  border: none;
+  font-size: .875em;
+  font-weight: normal;
+  line-height: 1.4;
+  padding: 15px;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-transition: border .25s linear,color .25s linear,background-color .25s linear;
+  transition: border .25s linear,color .25s linear,background-color .25s linear;
+  display: block;
+  width: 100%;
+  vertical-align: middle;
+  cursor: pointer;
+  font-family: Lato;
+  text-align: center;
+  margin-bottom: 0; background-color: #808080; float: left; width: 90%;  max-width: 475px;  margin-top: -20px;  margin: 0 auto; margin-top: 18px;" accesskey="" type="button">
+            <!--render facet: 109:146;a-->
+            <span class=" label bBody truncate" dir="ltr">{!v.offlineButtonText}</span>
+            <!--render facet: 113:146;a-->
+        </button>
+    </div>
+    </div>
+    <div style="height: 200px;"></div>
+</aura:component>

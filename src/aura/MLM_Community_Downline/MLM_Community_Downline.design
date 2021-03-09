@@ -1,0 +1,6 @@
+<design:component label="MLM Sponsor">
+    <design:attribute name="ComponentTitle" label="Component Title" default="My Consultant"/>
+    <design:attribute name="SponsorName" label="Sponsor Name" default="Dawn Distributor"/>
+    <design:attribute name="SponsorPhone" label="Sponsor Phone" default="(415) 555-1212"/>
+    <design:attribute name="SponsorEmail" label="Sponsor Email" default="ddistributor@example.com"/>
+</design:component>

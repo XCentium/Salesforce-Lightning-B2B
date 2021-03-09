@@ -1,0 +1,128 @@
+<aura:component >
+    <aura:attribute name="Filter" type="String" default=""/>
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="FiltersOpen" type="Boolean" default='false'/>
+    <aura:attribute name="value" type="String" default="option1"/>
+    <aura:attribute name="UpdateFilter" type="Boolean" />
+    <aura:attribute name="PersonaFilter" type="Boolean" />
+    <aura:attribute name="BrandFilter" type="Boolean" />
+    <aura:attribute name="ScriptFilter" type="Boolean" />
+    <aura:attribute name="FeatureFilter" type="Boolean" />
+    <aura:attribute name="CustomizationsFilter" type="Boolean" />
+    <aura:attribute name="PartnerFilter" type="Boolean" />
+    <aura:attribute name="VideoFilter" type="Boolean" />
+    <aura:attribute name="ResourceFilter" type="Boolean" />
+    <aura:attribute name="FilterTotal" type="Integer" default="1" />
+    <div class="ActionBar">
+        <div class="textright textright paddingleftright8">
+            <div class="paddingsmall">
+                <aura:if  isTrue="{!or(or(v.ScreenChoice == 'Persona', v.ScreenChoice == 'Scripts') , or(v.ScreenChoice == 'Partners',v.ScreenChoice == 'Brand')) }" >
+                    <aura:if isTrue="{!and(v.Filter != '',v.Filter != null)}">
+                        <span class="filterdetail">Filtered by {!v.Filter} | </span>
+                        <button class="slds-button filterclear" onclick="{!c.ClearFilters}">
+                            Clear <div class="filtertotal">
+                                <span>1</span>
+                            </div>
+                        </button>
+                    </aura:if>
+                    <lightning:buttonMenu label="Cloud"  menuAlignment="right" aura:id="menu" class="FilterMenu" onselect="{! c.FilterSelect }"  title ="Filter the List" tooltip="Filter the List By Cloud" iconSize="x-small" alternativeText="Show menu">
+                        <lightning:menuItem value="" label="Show All"  />
+                        <lightning:menuItem value="Analytics" label="Analytics"  />
+                        <lightning:menuItem value="Community" label="Community"  />
+                        <lightning:menuItem value="Marketing" label="Marketing"  />
+                        <lightning:menuItem value="Service" label="Service"  />
+                        <lightning:menuItem value="Sales" label="Sales"  />
+                        <lightning:menuItem value="Platform" label="Platform"  />
+                        <aura:if isTrue="{!v.OrgName == 'Retail and Consumer Goods'}">
+                            <lightning:menuItem value="Consumer Goods Cloud" label="CG Cloud"  />
+                        </aura:if>
+                        <c:FIDO_IfContains items="{!v.OrgName}"   element="Banking"> 
+                            <lightning:menuItem value="Financial Services Cloud" label="Fins Cloud"  />
+                        </c:FIDO_IfContains>
+                        <aura:if isTrue="{!or(v.OrgName == 'Healthcare',v.OrgName == 'Life Sciences')}">
+                            <lightning:menuItem value="Health Cloud" label="Health Cloud"  />
+                        </aura:if>
+                        <aura:if isTrue="{!v.OrgName == 'Manufacturing V2'}">
+                            <lightning:menuItem value="Manufacturing Cloud" label="MFG Cloud"  />
+                        </aura:if>
+                    </lightning:buttonMenu>
+                </aura:if>
+                <aura:if isTrue="{!v.ScreenChoice == 'Search'}">
+                    <lightning:buttonMenu label="Category" menuAlignment="right" aura:id="menu" class="FilterMenu pageFilter" onselect="{! c.FilterSelect }"  title ="Filter the List" tooltip="Filter the List By Category" iconSize="x-small" alternativeText="Show menu">
+                        <div class="textleft">
+                            <div class="padding">
+                                <div class="filterwrapper">
+                                    <div class="checkboxleft">
+                                        <ui:inputCheckbox aura:id="checkbox" label="" value="{!v.UpdateFilter}"/>
+                                    </div>
+                                    <label class="labelleft">Updates</label>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="filterwrapper">
+                                    <div class="checkboxleft">
+                                        <ui:inputCheckbox aura:id="checkbox" label="" value="{!v.BrandFilter}"/>  
+                                    </div>
+                                    <label class="labelleft">Brand</label>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="filterwrapper">
+                                    <div class="checkboxleft">
+                                        <ui:inputCheckbox aura:id="checkbox" label="" value="{!v.PersonaFilter}"/>  
+                                    </div>
+                                    <label class="labelleft">Personas</label>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="filterwrapper">
+                                    <div class="checkboxleft">
+                                        <ui:inputCheckbox aura:id="checkbox" label="" value="{!v.ScriptFilter}"/>
+                                    </div>
+                                    <label class="labelleft">Scripts</label>
+                                    <div class="clear"></div>
+                                </div >
+                                <div class="filterwrapper">
+                                    <div class="checkboxleft">
+                                        <ui:inputCheckbox aura:id="checkbox" label="" value="{!v.FeatureFilter}"/>
+                                    </div>
+                                    <label class="labelleft">Features</label>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="filterwrapper">
+                                    <div class="checkboxleft">
+                                        <ui:inputCheckbox aura:id="checkbox" label="" value="{!v.CustomizationsFilter}"/>
+                                    </div>
+                                    <label class="labelleft">Customizations</label>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="filterwrapper">
+                                    <div class="checkboxleft">
+                                        <ui:inputCheckbox aura:id="checkbox" label="" value="{!v.PartnerFilter}"/>
+                                    </div>
+                                    <label class="labelleft">Partners</label>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="filterwrapper">
+                                    <div class="checkboxleft">
+                                        <ui:inputCheckbox aura:id="checkbox" label="" value="{!v.VideoFilter}"/>
+                                    </div>
+                                    <label class="labelleft">Videos</label>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="filterwrapper">
+                                    <div class="checkboxleft">
+                                        <ui:inputCheckbox aura:id="checkbox" label="" value="{!v.ResourceFilter}"/>
+                                    </div>
+                                    <label class="labelleft">Resources</label>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </lightning:buttonMenu>
+                </aura:if>
+            </div>
+        </div>
+    </div>
+</aura:component>

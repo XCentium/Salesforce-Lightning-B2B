@@ -1,0 +1,9 @@
+.THIS.slds-spinner_container {
+    z-index: 1000;
+    position: fixed;
+}
+
+/* used for the card display of orders and carts, for mobile */
+.THIS .borderStyle {
+    border: 1px solid lightgray !important;
+}

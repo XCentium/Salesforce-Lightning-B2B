@@ -1,0 +1,674 @@
+<!--
+ - Created by brandon.rogers on 2019-10-28.
+ -->
+
+ <apex:component id="ckz_Header_Pro" controller="ckz_ctrl_Header_Pro">
+    <script id="ckz_HeaderPro" type="text/template">
+        <div class="ckzHeaderPro">
+            <div class="header-top">
+                <nav class="navbar navbar-default m-y-0">
+                    <div class="container-fluid">
+                        <ul class="nav navbar-nav navbar-left">
+                            <!-- LOCALE SWITCHER -->
+                            <li class="lssec cc_lssec"></li>
+
+                            <!-- EFFECTIVE ACCOUNT -->
+                            <li class="misc-function cc_misc_function"></li>
+
+                            <!-- CONTRACT SELECTOR -->
+                            <li class="contract_price_selector"></li>
+                        </ul>
+
+                        <ul class="nav navbar-nav navbar-right">
+
+                            <!-- QUICK ORDER -->
+                            {{#ifDisplay 'qo.dsplqohdr'}}
+                            <li class="cc_QuickOrder">
+                                <a href="#" onclick="goToQuickOrder()">
+                                    <i class="far fa-bolt"></i>
+                                    <span class="hidden-xs">{{pageLabelMap 'QuickOrder'}}</span>
+                                </a>
+                            </li>
+                            {{/ifDisplay}}
+
+                            <!-- CSV UPLOAD -->
+                            {{#ifDisplay 'h.displcartupload'}}
+                            <li class="cc_CartUpload">
+                                <a href="#" onclick="goToCartUpload()">
+                                    <i class="far fa-file-csv"></i>
+                                    <span class="hidden-xs">{{pageLabelMap 'CartUpload'}}</span>
+                                </a>
+                            </li>
+                            {{/ifDisplay}}
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="header-bottom">
+                <nav class="navbar navbar-default m-y-0">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse-header-bottom" aria-expanded="false">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+
+                            <a href="#" id="logoUrl">
+                                <div class="cc_store_logo_img"></div>
+                            </a>
+                        </div>
+
+                        <div class="collapse navbar-collapse" id="collapse-header-bottom">
+
+                            <!-- <p>{{#ifMegaEnabled 'h.mega'}}mega menu enabled!{{/ifMegaEnabled}}</p> -->
+                            <ul id="secnav cc_secnav" class="nav navbar-nav navbar-left menu_container_header {{#ifMegaEnabled 'h.mega'}}mega{{/ifMegaEnabled}}"></ul>
+
+                            <ul class="nav navbar-nav navbar-right">
+                                <!-- SEARCH -->
+                                <li>
+                                    <form class="navbar-form search_form cc_search_form"></form>
+                                </li>
+
+                                <li class="dropdown user_info">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <div id="ckz_Header_Pro_userInfo" class="avatar-header"></div>
+                                    </a>
+
+                                    <!-- USER ACTIONS/LOG IN/OUT -->
+                                    <ul class="dropdown-menu ddPro loginoutsec cc_loginoutsec"></ul>
+
+                                </li>
+
+                                <!-- CART -->
+                                <li class="cc_Cart" id="cartHeader"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </script>
+
+    <!-- LOCALE SWITCHER -->
+    <script id="CC-LocaleSwitcher-Desktop" type="text/template">
+        <a href="javascript:void(0);" class="changeLocale cc_change_locale">
+            <i class="far fa-globe"></i>
+            <span class="hidden-xs">
+                {{pageLabelPrefixMap 'LOC_' locale locale}}
+            </span>
+        </a>
+        <div id="modalSecLocale"></div>
+    </script>
+
+
+    <!-- EFFECTIVE ACCOUNTS -->
+    <script id="CC-EffAcctSel-Head-View-Desktop" type="text/template">
+        {{#if this.ro}}
+        <a href="#">
+            <i class="far fa-id-card"></i>
+            <span class="hidden-xs">
+                    {{pageLabelMap 'SELECTED_ACCOUNT' workingEffAccount.name workingEffAccount.accountNumber workingEffAccount.shippingAddress.address1 workingEffAccount.shippingAddress.city workingEffAccount.shippingAddress.state workingEffAccount.shippingAddress.countryCode}}
+                </span>
+        </a>
+        {{else}}
+        <a href="#" data-toggle="modal" data-target="#effAccounts">
+            <i class="far fa-id-card"></i>
+            <span class="hidden-xs">
+                    {{#if this.workingEffAccount }}
+                        {{pageLabelMap 'SELECTED_ACCOUNT' workingEffAccount.name workingEffAccount.accountNumber workingEffAccount.shippingAddress.address1 workingEffAccount.shippingAddress.city workingEffAccount.shippingAddress.state workingEffAccount.shippingAddress.countryCode}}
+                    {{else}}
+                        {{pageLabelMap 'SELECT_ACCOUNT' }}
+                    {{/if}}
+                </span>
+
+            <span class="launchSel cc_launch_sel" aria-hidden="true"></span>
+        </a>
+        {{/if}}
+
+        <div class="modal fade cc_modal cc_effective_accounts_modal" id="effAccounts" tabindex="-1" role="dialog" aria-labelledby="effAccountsLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content cc_modal_content">
+                    <div class="modal-header cc_modal_header">
+                        <button type="button" class="close cc_close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&#215;</span></button>
+                        <h4 class="modal-title cc_modal_title" id="effAccountsLabel">{{pageLabelMap 'EFFECTIVE_ACCOUNT_TITLE'}}</h4>
+                    </div>
+                    <div class="modal-body cc_modal_body">
+                        <div class="table-responsive">
+                            <table class="table table-hover cc_table">
+                                <thead class="cc_thead">
+                                <tr class="cc_tr">
+                                    <th class="cc_th_name">{{pageLabelMap 'Name'}}</th>
+                                    <th class="cc_th_account_number">{{pageLabelMap 'ACCOUNT_NUMBER'}}</th>
+                                    <th class="cc_th_address">{{pageLabelMap 'Address'}}</th>
+                                    <th class="cc_th_picked"></th>
+                                </tr>
+                                </thead>
+                                <tbody class="cc_tbody">
+                                {{#each this.effectiveList}}
+                                <tr class="cc_tr_values">
+                                    <td class="cc_td_name">{{name}}</td>
+                                    <td class="cc_td_account_number">{{accountNumber}}</td>
+                                    <td class="cc_td_address">{{pageLabelMap 'ADDRESS_FORMAT' shippingAddress.address1
+                                        shippingAddress.city shippingAddress.state shippingAddress.postalCode
+                                        shippingAddress.countryCode}}
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-default btn-sm pickAccount cc_pick_account" data-id="{{sfid}}">
+                                            <i class="far fa-check"></i>
+                                            <span class="sr-only">Select Account</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+    <!-- EFFECTIVE ACCOUNTS MODAL -->
+    <script id="CC-EffAcct-SelectDialog" type="text/template">
+        <div class="modal fade cc_modal cc_effective_accounts_modal" id="effAccounts" tabindex="-1" role="dialog" aria-labelledby="effAccountsLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content cc_modal_content">
+                    <div class="modal-header cc_modal_header">
+                        <button type="button" class="close cc_close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&#215;</span></button>
+                        <h4 class="modal-title cc_modal_title" id="effAccountsLabel">{{pageLabelMap 'EFFECTIVE_ACCOUNT_TITLE'}}</h4>
+                    </div>
+                    <div class="modal-body cc_modal_body">
+                        <div class="table-responsive">
+                            <table class="table table-hover cc_table">
+                                <thead class="cc_thead">
+                                <tr class="cc_tr">
+                                    <th class="cc_th_name">{{pageLabelMap 'Name'}}</th>
+                                    <th class="cc_th_account_number">{{pageLabelMap 'ACCOUNT_NUMBER'}}</th>
+                                    <th class="cc_th_address">{{pageLabelMap 'Address'}}</th>
+                                    <th class="cc_th_picked"></th>
+                                </tr>
+                                </thead>
+                                <tbody class="cc_tbody">
+                                {{#each this.effectiveList}}
+                                <tr class="cc_tr_values">
+                                    <td class="cc_td_name">{{name}}</td>
+                                    <td class="cc_td_account_number">{{accountNumber}}</td>
+                                    <td class="cc_td_address">{{pageLabelMap 'ADDRESS_FORMAT' shippingAddress.address1
+                                        shippingAddress.city shippingAddress.state shippingAddress.postalCode
+                                        shippingAddress.countryCode}}
+                                    </td>
+                                    <td>
+                                        <button type="button" id="ckz_pick_effAcct" class="btn btn-default btn-sm pickAccount" data-id="{{sfid}}">
+                                            <i class="far fa-check"></i>
+                                            <span class="sr-only">Select Account</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+    <!-- CART -->
+    <script id="CC-CartHeaderBrowser" type="text/template">
+        <a href="#" onclick="toggleMiniCart();">
+            <i class="far fa-shopping-cart"></i>
+            <span class="badge">{{this.cartCount}}</span>
+        </a>
+    </script>
+
+
+    <!-- USER ACTIONS/LOG IN/OUT -->
+    <!-- MY ACCOUNT VIEW STATE OPTIONS:
+            viewAccount,
+            changePassword,
+            myAddressBook,
+            myCarts,
+            myOrders,
+            myWishlists,
+            mySubscriptionsNew,
+            myWallet,
+            myInvoices  -->
+    <script id="CC-MyAccount-Desktop" type="text/template">
+        {{#if this}}
+        {{#ifEquals this.UserType 'Guest'}}
+        <li class="cc_log_in">
+            <a href="#login" class="goToLogin cc_goto_login">
+                <i class="far fa-sign-in"></i>
+                <span class="">{{pageLabelMap 'Component_SiteHeader_Login'}}</span>
+            </a>
+        </li>
+        {{else}}
+        <!-- MY ACCOUNT -->
+        <li class="cc_my_account">
+            <a href="#" onclick="goToMyAccount('viewAccount')">
+                <i class="fal fa-user-circle"></i>
+                <span class="">{{pageLabelMap 'Component_SiteHeader_MyAccount'}}</span>
+            </a>
+        </li>
+
+        <!-- MY CARTS -->
+        <li class="cc_my_carts">
+            <a href="#" onclick="goToMyAccount('myCarts')">
+                <i class="fal fa-shopping-cart"></i>
+                <span class="">{{pageLabelMap 'Component_SiteHeader_MyCarts'}}</span>
+            </a>
+        </li>
+
+        <!-- MY ORDERS -->
+        <li class="cc_my_orders">
+            <a href="#" onclick="goToMyAccount('myOrders')">
+                <i class="fal fa-receipt"></i>
+                <span class="">{{pageLabelMap 'Component_SiteHeader_MyOrders'}}</span>
+            </a>
+        </li>
+
+        <!-- MY WISHLISTS -->
+        <li class="cc_my_lists">
+            <a href="#" onclick="goToMyAccount('myWishlists')">
+                <i class="fal fa-clipboard-list"></i>
+                <span class="">{{pageLabelMap 'Component_SiteHeader_MyWishlists'}}</span>
+            </a>
+        </li>
+
+        <!-- MY SUBSCRIPTIONS -->
+        <li class="cc_my_subscriptions">
+            <a href="#" onclick="goToMyAccount('mySubscriptionsNew')">
+                <i class="fal fa-sync"></i>
+                <span class="">{{pageLabelMap 'Component_SiteHeader_MySubscriptions'}}</span>
+            </a>
+        </li>
+
+        <!-- LOG OUT -->
+        <li class="cc_log_out">
+            <a href="#logout" class="doLogout cc_do_logout">
+                <i class="far fa-sign-out"></i>
+                <span class="">
+                            {{pageLabelMap 'Component_SiteHeader_Logout'}}
+                            {{{this.FirstName}}}
+                            {{{this.LastName}}}
+                        </span>
+            </a>
+        </li>
+
+        {{/ifEquals}}
+        {{else}}
+        <li class="cc_log_in">
+            <a href="#login" class="cc_login">
+                <i class="far fa-sign-in"></i>
+                <span class="">{{pageLabelMap 'Component_SiteHeader_Login'}}</span>
+            </a>
+        </li>
+        {{/if}}
+    </script>
+
+    <!-- MENU -->
+    <script id="ckz_MenuPro" type="text/template">
+        {{#each .}}
+        {{log .}}
+        {{#if children}}
+        <li class="dropdown cc_dropdown {{#ifMegaEnabled 'h.mega'}}mega-fw{{/ifMegaEnabled}}" data-category="{{displayName}}">
+            <a href="{{linkURL}}" class="dropdown-toggle cc_dropdown_toggle" data-toggle="dropdown" data-menuid="{{menuId}}" {{linkTarget openInNewWindow}} role="button" aria-haspopup="true" aria-expanded="false">
+                <span>{{displayName}}</span>
+                <i class="far fa-chevron-down fa-sm"></i>
+            </a>
+
+            <ul class="dropdown-menu cc_dropdown-menu {{#ifMegaEnabled 'h.mega'}}{{else}}ddPro{{/ifMegaEnabled}}">
+                {{#ifMegaEnabled 'h.mega'}}
+                <div class="mega-content">
+                    {{> subMenuItem}}
+                </div>
+                {{else}}
+                {{> subMenuItem}}
+                {{/ifMegaEnabled}}
+            </ul>
+        </li>
+        {{else}}
+        {{#ifEquals mType 'Category'}}
+        <li class="dropdown cc_dropdown" data-category="{{displayName}}">
+            {{categoryLink this 'cc_category' text=displayName}}
+        </li>
+        {{/ifEquals}}
+
+        {{#ifEquals mType 'Product'}}
+        <li class="dropdown cc_dropdown" data-category="{{displayName}}">
+            {{productLink this 'cc_product' text=displayName}}
+        </li>
+        {{/ifEquals}}
+
+        {{#ifEquals mType 'URL'}}
+        <li class="dropdown cc_dropdown" data-category="{{displayName}}">
+            <a class="menuTypeURL" href="javascript:void(0);" data-href="{{linkURL}}" data-menuid="{{menuId}}" {{linkTarget openInNewWindow}}>{{displayName}}</a>
+        </li>
+        {{/ifEquals}}
+
+        {{#ifEquals mType 'None'}}
+        <li class="dropdown cc_dropdown" data-category="{{displayName}}">
+            <a href="javascript:void(0);" data-menuid="{{menuId}}">{{displayName}}</a>
+        </li>
+        {{/ifEquals}}
+        {{/if}}
+        {{/each}}
+    </script>
+
+    <!-- SUBMENUS -->
+    <script id="submenu-desktop-template" type="text/template">
+        {{#ifMegaEnabled 'h.mega'}}
+        <div class="row">
+            {{#each children}}
+            {{#if children}}
+            <div class="col-md-2">
+                <div class="mega-link-primary">
+                    {{#ifEquals mType 'Category'}}
+                    {{categoryLink this 'cc_category' text=displayName}}
+                    {{/ifEquals}}
+
+                    {{#ifEquals mType 'Product'}}
+                    {{productLink this 'cc_product' text=displayName}}
+                    {{/ifEquals}}
+
+                    {{#ifEquals mType 'URL'}}
+                    <a class="menuTypeURL" href="javascript:void(0);" data-href="{{linkURL}}" data-menuid="{{menuId}}" {{linkTarget openInNewWindow}}>
+                        {{displayName}}
+                    </a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals mType 'None'}}
+                    <a href="javascript:void(0);" data-menuid="{{menuId}}">
+                        {{displayName}}
+                    </a>
+                    {{/ifEquals}}
+                </div>
+
+                <ul class="list-unstyled mega-link-secondary">
+                    {{#each children}}
+                    <li>
+                        {{#ifEquals mType 'Category'}}
+                        {{categoryLink this 'cc_category' text=displayName}}
+                        {{/ifEquals}}
+
+                        {{#ifEquals mType 'Product'}}
+                        {{productLink this 'cc_product' text=displayName}}
+                        {{/ifEquals}}
+
+                        {{#ifEquals mType 'URL'}}
+                        <a class="menuTypeURL" href="javascript:void(0);" data-href="{{linkURL}}" data-menuid="{{menuId}}" {{linkTarget openInNewWindow}}>
+                            {{displayName}}
+                        </a>
+                        {{/ifEquals}}
+
+                        {{#ifEquals mType 'None'}}
+                        <a href="javascript:void(0);" data-menuid="{{menuId}}">
+                            {{displayName}}
+                        </a>
+                        {{/ifEquals}}
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{else}}
+            {{#ifEquals mType 'Category'}}
+            <div class="col-md-2">
+                <div class="mega-link-primary">
+                    {{categoryLink this 'cc_category' text=displayName}}
+                </div>
+            </div>
+            {{/ifEquals}}
+
+            {{#ifEquals mType 'Product'}}
+            <div class="col-md-2">
+                <div class="mega-link-primary">
+                    {{productLink this 'cc_product' text=displayName}}
+                </div>
+            </div>
+            {{/ifEquals}}
+
+            {{#ifEquals mType 'URL'}}
+            <div class="col-md-2">
+                <div class="mega-link-primary">
+                    <a class="menuTypeURL" href="javascript:void(0);" data-href="{{linkURL}}" data-menuid="{{menuId}}" {{linkTarget openInNewWindow}}>{{displayName}}</a>
+                </div>
+            </div>
+            {{/ifEquals}}
+
+            {{#ifEquals mType 'None'}}
+            <div class="col-md-2">
+                <div class="mega-link-primary">
+                    <a href="javascript:void(0);" data-menuid="{{menuId}}">{{displayName}}</a>
+                </div>
+            </div>
+            {{/ifEquals}}
+            {{/if}}
+            {{/each}}
+        </div>
+        {{else}}
+        {{#each children}}
+        {{#if children}}
+        <li class="menu-item dropdown dropdown-submenu">
+            {{#ifEquals mType 'Category'}}
+            <a class="category dropdown-toggle" data-toggle="dropdown" href="{{linkURL}}" data-id="{{linkURL}}" data-menuid="{{menuId}}" {{linkTarget openInNewWindow}}>
+                {{displayName}}
+                <!--<i class="fa fa-caret-down hidden-md hidden-lg" aria-hidden="true"></i>-->
+            </a>
+            {{/ifEquals}}
+
+            {{#ifEquals mType 'Product'}}
+            <a class="product dropdown-toggle" data-toggle="dropdown" href="{{linkURL}}" data-id="{{linkURL}}" data-menuid="{{menuId}}" {{linkTarget openInNewWindow}}>
+                {{displayName}}
+                <!--<i class="fa fa-caret-down hidden-md hidden-lg" aria-hidden="true"></i>-->
+            </a>
+            {{/ifEquals}}
+
+            {{#ifEquals mType 'URL'}}
+            <a class="menuTypeURL dropdown-toggle" data-toggle="dropdown" href="{{linkURL}}" data-href="{{linkURL}}" data-menuid="{{menuId}}" {{linkTarget openInNewWindow}}>
+                {{displayName}}
+                <!--<i class="fa fa-caret-down hidden-md hidden-lg" aria-hidden="true"></i>-->
+            </a>
+            {{/ifEquals}}
+
+            {{#ifEquals mType 'None'}}
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" data-menuid="{{menuId}}">
+                {{displayName}}
+                <!--<i class="fa fa-caret-down hidden-md hidden-lg" aria-hidden="true"></i>-->
+            </a>
+            {{/ifEquals}}
+
+            <ul class="dropdown-menu">
+                {{> subMenuItem}}
+            </ul>
+        </li>
+        {{else}}
+        {{#ifEquals mType 'Category'}}
+        <li>{{categoryLink this 'cc_category' text=displayName}}</li>
+        {{/ifEquals}}
+
+        {{#ifEquals mType 'Product'}}
+        <li>{{productLink this 'cc_product' text=displayName}}</li>
+        {{/ifEquals}}
+
+        {{#ifEquals mType 'URL'}}
+        <li>
+            <a class="menuTypeURL" href="{{linkURL}}" data-href="{{linkURL}}" data-menuid="{{menuId}}" {{linkTarget openInNewWindow}}>{{displayName}}</a>
+        </li>
+        {{/ifEquals}}
+
+        {{#ifEquals mType 'None'}}
+        <li><a href="javascript:void(0);" data-menuid="{{menuId}}">{{displayName}}</a></li>
+        {{/ifEquals}}
+        {{/if}}
+        {{/each}}
+        {{/ifMegaEnabled}}
+    </script>
+
+    <!-- PRODUCT SEARCH -->
+    <script id="CC-productSearchTemplateDesktop" type="text/template">
+        {{#ifDisplay 'H.DisplSearch'}}
+        <div class="navbar-form cc_navbar_form" role="search">
+            <div class="form-group">
+                <div class="input-group">
+                <span class="input-group-btn">
+                    <button type="button" id="doSearch" class="btn btn-default search_button">
+                        <i class="far fa-search"></i>
+                    </button>
+                </span>
+                    <input id="searchText" type="text" class="form-control search_input cc_search_input" placeholder="{{pageLabelMap 'ProductSearch'}}" title="{{pageLabelMap 'ProductSearch_Tooltip'}}" data-trigger="focus" autocomplete="off"/>
+                </div>
+            </div>
+            <div class="row">
+                <span id="cc_search_error" data-trigger="manual" data-placement="bottom" data-content="{{pageLabelMap 'ProductSearch_Tooltip'}}"></span>
+                <div class="searchTopBarErrorMessage searchBoxWidgetError"></div>
+            </div>
+        </div>
+        {{/ifDisplay}}
+    </script>
+
+    <!-- USER INFO TEMPLATE -->
+    <script id="ckz_tmpl_Header_Pro_userInfo" type="text/x-handlebars-template">
+        {{#each_upto this 1}}
+            <img alt="" src="{{FullPhotoUrl}}"/>
+        {{/each_upto}}
+    </script>
+
+    <script type="text/javascript">
+
+        let getUrlParameter = function getUrlParameter(sParam) {
+            let sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
+
+        $(function () {
+            
+            
+
+            Handlebars.registerHelper('ifMegaEnabled', function (config, options) {
+
+                let displayMega = false;
+
+                let megaParam = getUrlParameter('mega');
+                //console.log('megaParam: ' + megaParam);
+
+                let megaDisplay = false;
+                // Note that the actual config var is h.mega, while ifEquals requires H.mega
+                let megaConfig = CCRZ.pagevars.pageConfig[config];
+                //console.log('megaConfig: ' + megaConfig);
+
+                if (megaConfig === 'TRUE' || megaParam === 'yes') {
+                    displayMega = true;
+                }
+
+                return displayMega == true ? options.fn(this) : options.inverse(this);
+
+            });
+
+            CCRZ.uiProperties.headerView.desktop.tmpl = 'ckz_HeaderPro';
+            CCRZ.uiProperties.cartHeaderView.desktop.tmpl = 'CC-CartHeaderBrowser';
+            CCRZ.uiProperties.myAccountHeaderView.desktop.tmpl = 'CC-MyAccount-Desktop';
+            CCRZ.uiProperties.productSearchView.desktop.tmpl = 'CC-productSearchTemplateDesktop';
+            CCRZ.uiProperties.EffAccountSelView.header.tmpl = 'CC-EffAcctSel-Head-View-Desktop';
+            CCRZ.uiProperties.localeSwitcherView.desktop.tmpl = 'CC-LocaleSwitcher-Desktop';
+            CCRZ.uiProperties.Menu.desktop.selector = '.menu_container_header';
+            CCRZ.uiProperties.Menu.desktop.tmpl = 'ckz_MenuPro';
+
+            CCRZ.pubSub.on('view:myAccountHeaderView:refresh', function () {
+
+                console.log("ckz_Header_Pro");
+
+                if (CCRZ.currentUser) {
+                    //console.log("CCRZ.currentUser", CCRZ.currentUser);
+                    let fName = CCRZ.currentUser.FirstName;
+                    let lName = CCRZ.currentUser.LastName;
+                    let utype = CCRZ.currentUser.UserType;
+
+                    if (utype === 'Guest') {
+                        $(".currUserGuest").append(utype).removeClass("hide");
+                        $(".cc_my_account").addClass("hide");
+                    } else {
+                        $(".currUserFName").append(fName).removeClass("hide");
+                        $(".currUserLName").append(lName).removeClass("hide");
+                    }
+                }
+
+                //RENDER USER INFO
+                //if(!CCRZ.pagevars.isGuest) {
+                let userInfoContext = {!userInfoJSON};
+                console.log("ckz_Header_Pro:userInfo: " + JSON.stringify(userInfoContext));
+
+                let userInfoSource = $("#ckz_tmpl_Header_Pro_userInfo").html();
+                let userInfoTemplate = Handlebars.compile(userInfoSource);
+                //let userInfoContext = userInfo;
+                let userInfoHtml = userInfoTemplate(userInfoContext);
+                $("#ckz_Header_Pro_userInfo").html(userInfoHtml);
+                //}
+
+            });
+
+            CCRZ.pubSub.on('view:headerView:refresh', function () {
+                $(document).on('click', '.mega .dropdown-menu', function (e) {
+                    e.stopPropagation()
+                });
+
+                $('#dismiss, #sidebarBackdrop').on('click', function () {
+                    $('#sidebar').removeClass('active'); // hide sidebar
+                    $('#sidebarBackdrop').remove(); // hide overlay
+                });
+            });
+
+            CCRZ.pubSub.on('view:Menu:refresh', function () {
+                if (CCRZ.currentUser) {
+                    if (CCRZ.currentUser.UserType === "Guest") {
+                        $('li[data-category="Order Builder"]').hide()
+                    }
+                }
+            });
+        });
+    
+    	
+
+        function toggleMiniCart() {
+            $('#sidebar').addClass('active');
+            $('.sidebarMiniCart').removeClass('hide');
+            $('body').after("<div id='sidebarBackdrop' class='modal-backdrop fade in' style='z-index: 3;'></div>");
+        }
+
+        function goToQuickOrder() {
+            window.location.href = '/{!communityURL}'
+                + "/ccrz__ccPage?pageKey=qo&cartID="
+                + CCRZ.pagevars.currentCartID + getCSRQueryString();
+        }
+
+        function goToCartUpload() {
+            window.location.href = '/{!communityURL}'
+                + "/ccrz__ccPage?pageKey=csvup&cartID="
+                + CCRZ.pagevars.currentCartID + getCSRQueryString();
+        }
+
+        function goToMyAccount(viewState) {
+            window.location.href = '/{!communityURL}'
+                + "/ccrz__MyAccount?viewState=" + viewState + "&cartID="
+                + CCRZ.pagevars.currentCartID + getCSRQueryString();
+        }
+    </script>
+</apex:component>

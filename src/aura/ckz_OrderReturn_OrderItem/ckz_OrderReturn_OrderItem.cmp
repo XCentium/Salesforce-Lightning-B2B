@@ -1,0 +1,57 @@
+<aura:component description="ckz_OrderReturn_OrderItem">
+
+    <ltng:require styles="{!$Resource.ckz_OrderReturn_Theme}" />
+
+    <aura:attribute name="orderItem" default="{}" type="Map" required="true" />
+    <aura:attribute name="editable" default="true" type="Boolean" />
+
+    <tr>
+        <!-- Product Name -->
+        <td class="productCol">
+            {!v.orderItem.ccrz__Product_Name__c}
+            <br/>
+            {!v.orderItem.SKU__c}
+        </td>
+
+        <!-- Order Quantity -->
+        <td class="qtyCol">
+            {!v.orderItem.ccrz__Quantity__c}
+        </td>
+
+        <aura:if isTrue="{!v.editable}">
+            <!-- Selected -->
+            <td class="selectedCol">
+
+                <lightning:input name="selected"
+                             aura:id="selected"
+                             type="checkbox"
+                             label=""
+                             variant="label-hidden"
+                             value="{!v.orderItem.selected}"
+                             checked="{!v.orderItem.selected}"
+                              />
+
+            </td>
+        </aura:if>
+
+        <!-- Return Quantity -->
+        <td class="qtyCol">
+            <aura:if isTrue="{!v.editable}">
+                <lightning:input name="returnQty"
+                                 aura:id="returnQty"
+                                 type="number"
+                                 label=""
+                                 variant="label-hidden"
+                                 value="{!v.orderItem.returnQty}"
+                                 maxlength="255" min="0" step="1"/>
+
+            </aura:if>
+
+            <aura:if isTrue="{!v.editable == false}">
+                {!v.orderItem.returnQty}
+            </aura:if>
+        </td>
+
+    </tr>
+
+</aura:component>

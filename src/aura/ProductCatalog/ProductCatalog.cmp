@@ -1,0 +1,36 @@
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                controller="ProductCatalogController" access="global">
+    <meta name="viewport" content="initial-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <!-- Design Variables -->
+    <aura:attribute name="title" type="String" default="Product Catalog" access="global"/>
+    <aura:attribute name="subtitle" type="String" default="" access="global"/>
+    <aura:attribute name="logoTitlePosition" type="String" default="left" access="global"/>
+
+	<!-- Record Variables -->
+	<aura:attribute name="products" type="Product2[]"/>
+    <aura:attribute name="shownProducts" type="Product2[]"/>
+	<aura:attribute name="families" type="String[]"/> 
+    <aura:attribute name="selected" type="String" default="Home"/>
+
+	<!-- Javascript -->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:handler name="categorySelected" event="c:ProductCatalogCategorySelected" action="{!c.setSelected}"/>
+	<aura:registerEvent name="initProducts" type="c:ProductCatalogInitProductsEvent"/>
+
+
+    <!-- Page Components -->
+	<c:ProductCatalogHeader title="{!v.title}" subtitle="{!v.subtitle}" logoTitlePosition="{!v.logoTitlePosition}"/>
+	<c:ProductCatalogTabs families="{!v.families}" selected="{!v.selected}" />
+    
+    <div class="slds-grid slds-wrap slds-grid--pull-padded">
+        <div class="slds-col product-catalog-padding slds-size--1-of-1 slds-medium-size--1-of-2">
+            <c:ProductCatalogItems catalogItems="{!v.shownProducts}"/>
+        </div>
+        <div class="slds-col product-catalog-padding slds-size--1-of-1 slds-medium-size--1-of-2">
+            <c:ProductCatalogShoppingCart />
+        </div>
+    </div>
+
+</aura:component>

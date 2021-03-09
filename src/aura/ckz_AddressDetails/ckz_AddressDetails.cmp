@@ -1,0 +1,48 @@
+<!--
+ - Created by msobczak on 11/27/2018.
+ -->
+
+<aura:component description="ckz_AddressDetails">
+
+    <aura:attribute name="addressType" type="String" required="true"/>
+    <aura:attribute name="addressDetails" type="Map" required="true"/>
+
+    <aura:if isTrue="{!(v.addressDetails != null)}">
+
+        <article class="slds-card">
+
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+        
+                        <!-- put icon here -->
+                        <lightning:icon iconName="standard:location" alternativeText="address" />
+        
+                        <span class="slds-icon_container" title="item">
+                            <span class="slds-assistive-text">{!v.addressType + ' Address'}</span>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <span>{!v.addressType + ' Address'}</span>
+                        </h2>
+                    </div>
+        
+                </header>
+            </div>
+
+            <div class="slds-card__body slds-card__body_inner">
+
+                <p class="slds-p-horizontal--small">{!v.addressDetails.firstName} {!v.addressDetails.lastName}</p>
+                <p class="slds-p-horizontal--small">{!v.addressDetails.companyName}</p>
+                <p class="slds-p-horizontal--small">{!v.addressDetails.addressFirstline}</p>
+                <p class="slds-p-horizontal--small">{!v.addressDetails.city}, {!v.addressDetails.stateISOCode} &nbsp; {!v.addressDetails.postalCode}</p>
+                <p class="slds-p-horizontal--small">{!v.addressDetails.country}</p>
+        
+            </div>
+            
+        </article>
+
+    </aura:if>
+
+</aura:component>

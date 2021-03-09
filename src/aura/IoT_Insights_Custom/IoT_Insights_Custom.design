@@ -1,0 +1,12 @@
+<design:component label="IoT Insights - Custom">
+    <design:attribute name="showInventorySliders"  label="Show the Inventory List?" default="true" />
+	<design:attribute name="InventoryProduct1Label" label="Name of the First Product in the Inventory List" default="Pre - ED1L6-TCCON-622 Units" />
+    <design:attribute name="InventoryProduct2Label" label="Name of the Second Product in the Inventory List" default="During - HD1L4-TCPST-625 Units" />
+    <design:attribute name="InventoryProduct3Label" label="Name of the First Third in the Inventory List" default="Post - P4-012 Units" />
+    
+    <design:attribute name="showvibrationtile"  label="Show the Vibration Tile?" default="true" />
+    <design:attribute name="showvoltagetile"  label="Show the Voltage Tile?" default="true" />
+    <design:attribute name="showinternaltemptile"  label="Show the Internal Temp. Tile?" default="true" />
+    <design:attribute name="showexternaltemptile"  label="Show the External Temp. Tile?" default="true" />
+    <design:attribute name="doorOpenSetting"  label="Show the Door Open Tile?" default="true" />
+</design:component>

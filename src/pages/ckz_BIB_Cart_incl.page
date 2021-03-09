@@ -1,0 +1,15 @@
+<apex:page id="ckz_BIB_Cart_incl" sidebar="false" showHeader="false" standardStylesheets="false">
+
+    <c:ckz_CartDetail_v2 />
+    <c:ckz_CartHeader />
+    <c:ckz_CartWishlist />
+    <c:ckz_CartSpotlight />
+
+    <c:ckz_CartActionTotals />
+    <c:ckz_RewardsPoints />
+    <c:ckz_UserRolesCartInclude />
+    <c:ckz_CreditLimitCartInclude />
+
+    <c:ckz_SaveCartInclude />
+
+</apex:page>

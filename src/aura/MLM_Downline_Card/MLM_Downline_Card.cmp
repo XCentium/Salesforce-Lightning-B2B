@@ -1,0 +1,63 @@
+<aura:component controller="MLMDownline">
+    <lightning:workspaceAPI aura:id="workspace"/>
+    <aura:handler name="init" value="{!this}" action="{!c.getDownline}"/>
+    <aura:attribute name="backgroundImageUrl" type="String" access="global"/>
+    <aura:attribute name="body" type="String" access="global"/>
+    <aura:attribute name="SelectedContactId" type="String" />
+    <aura:attribute name="backgroundHexColor" type="String" access="global" default="#0065CC" />
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="downline" type="Contact[]"/>
+    <aura:attribute name="downlineCount" type="String" />
+	<aura:iteration var="dl" items="{!v.downline}" indexVar="index">
+            <div class="box" style="{! 'width:calc((100% / '+ v.downlineCount + ') - 20px)'}">
+                <div class="header-image" style = "{! 'background-image:url(' + (v.backgroundImageUrl) + '); background-color:' + (v.backgroundHexColor) + ';'}">
+                	<div class="tier">
+                        <div class="padding">
+                            <lightning:icon iconName="standard:hierarchy" size="x-small" class="icon"/> 
+                        	<strong>{!dl.Tier__c}</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-media slds-m-left_x-large">
+                <div class="slds-media_figure">
+                    <div class="customer-image-container ">
+                        <aura:if isTrue="{!empty(dl.Profile_Image_URL__c)}">
+                                <img src="/_slds/images/themes/lightning_lite/lightning_lite_profile_avatar_160.png" class="customer-avatar"/>
+                            <aura:set attribute="else">
+                                <img src="{!dl.Profile_Image_URL__c}" class="customer-avatar"/>
+                            </aura:set>   
+                        </aura:if>
+                    </div>
+                </div>
+                <div class="slds-media_body slds-m-left_medium slds-m-top_medium">
+                    <div class="slds-text-heading_small title-weight">{!dl.Name}</div>  <div class="xsmall"> | {!dl.Phone}</div>
+                </div>
+            </div>
+                <div class="padding">
+                    <div class="metric">
+                        <div class="padding">
+                            <lightning:icon iconName="standard:event" size="x-small" class="icon"/> 
+                            <strong>Total Activites: </strong> {!dl.Total_of_Activities__c}
+                        </div>    
+                    </div>
+                    <div class="metric">
+                        <div class="padding">
+                            <lightning:icon iconName="standard:proposition" size="x-small" class="icon"/> 
+                            <strong>Order Amount: </strong> <ui:outputCurrency aura:id="curr" value="{!dl.Total_Order_Amount__c}" format="¤#,##0.00;(¤#,##0.00)"/>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <aura:if isTrue="{!dl.Direct_Recruits__c > 0}">
+                        <div class="paddingleftright">
+                            <lightning:icon iconName="standard:team_member" size="x-small" class="icon"/> 
+                            <strong>{!dl.FirstName + '\'s'} Direct Recruits: </strong> {!dl.Direct_Recruits__c} <br/>
+                            <c:MLM_Downline_Card_SecondLevel recordId="{!dl.Id}" />
+                        </div>    
+                    </aura:if>
+                </div>
+                <div class="footer center">
+                    <a onclick="{!c.viewMore}" id="{!dl.Id}">View</a>            
+                </div>
+            </div>
+        </aura:iteration>   
+</aura:component>

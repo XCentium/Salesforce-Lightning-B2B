@@ -1,0 +1,48 @@
+<aura:component controller="MilestoneController" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
+
+<aura:attribute name="recordId" type="Id" />
+<aura:attribute name="caseMilestones" type="CaseMilestone"/>
+    
+<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <lightning:card variant="narrow" iconName="standard:case">
+        <aura:set attribute="title">Case Milestones</aura:set>
+        <aura:set attribute="footer">
+        <ui:button label="View All" press="{!c.doGetAllMilestones}"/>
+        <ui:button label="View Current" press="{!c.doGetCurrentMilestones}"/>
+        </aura:set>
+        
+        <div class="slds-card__body--inner">
+        <div class="{!v.caseMilestones[0] ? 'slds-show' : 'slds-hide'}">
+            <aura:iteration items="{!v.caseMilestones}" var="mstones">
+                <!-- Display names of all accounts -->
+                <div class="slds-tile">
+                    <h3 class="slds-truncate" title="{!mstones.MilestoneType.Name}">
+                        <a href="{!'/one/one.app?#/sObject/'+ mstones.Id + '/view'}">{!mstones.MilestoneType.Name}</a>&nbsp;
+                        <lightning:Badge class="{!mstones.IsCompleted == true ? 'slds-hide' : (mstones.IsViolated == true ? 'slds-hide' : 'slds-show--inline-block mstones-inProgress')}" label="In Progress"></lightning:Badge>
+                        <lightning:Badge class="{!mstones.IsCompleted == true ? 'slds-show--inline-block mstones-completed' : 'slds-hide'}" label="Completed"></lightning:Badge>
+                        <lightning:Badge class="{!mstones.IsCompleted == true ? 'slds-hide' : (mstones.IsViolated == true ? 'slds-show--inline-block mstones-overdue' : 'slds-hide')}" label="Overdue"></lightning:Badge>
+                    </h3>
+                    <div class="{!mstones.IsCompleted == true ? 'slds-hide' : (mstones.IsViolated == true ? 'slds-hide' : 'slds-show')}">
+                    <div class="slds-tile__detail slds-text-body--small">
+                        <dl class="slds-list--horizontal slds-wrap">
+                            <dd class="slds-item--detail">Due: <ui:outputDateTime value="{!mstones.TargetDate}"/> ({!mstones.TimeRemainingInMins} Remaining)</dd>
+                        </dl>
+                    </div>
+                	</div>
+                    <div class="{!mstones.IsCompleted == true ? 'slds-hide' : (mstones.IsViolated == true ? 'slds-show' : 'slds-hide')}">
+                    <div class="slds-tile__detail slds-text-body--small">
+                        <dl class="slds-list--horizontal slds-wrap">
+                            <dd class="slds-item--detail">Since: <ui:outputDateTime value="{!mstones.TargetDate}"/> ({!mstones.TimeSinceTargetInMins} Overdue)</dd>
+                        </dl>
+                    </div>
+                	</div>
+                </div>
+            </aura:iteration>
+        </div>
+        <div class="{!v.caseMilestones[0] ? 'slds-hide' : 'slds-show'}">
+            No Case Milesones
+        </div>
+        </div>
+    </lightning:card>
+</aura:component>

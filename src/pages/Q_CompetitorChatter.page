@@ -1,0 +1,11 @@
+<apex:page showHeader="false" controller="Q_CompetitorChatterController">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> 
+    <script src="/sforce/one/30.0/api.js"></script>
+    <script>
+        $(document).ready(function(){
+            if( (typeof sforce != 'undefined') && (sforce != null) ) {
+                sforce.one.navigateToSObject('{!competitor.id}', 'chatter');
+            }
+        });
+    </script>
+</apex:page>

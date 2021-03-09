@@ -1,0 +1,21 @@
+.THIS .slds-input-has-icon--right .slds-input__icon{
+    top:20%;
+}
+.THIS .box{
+    border:1px solid #ddd;
+    margin-bottom:10px;
+    border-radius:4px;
+    margin:0 10px;
+}
+.THIS .padding{
+    padding:20px;
+}
+.THIS .slds-button__icon{
+    margin-top:10px;
+}
+.THIS.border {
+    border:1px solid #ddd;
+}
+.THIS.margin{
+    margin-bottom:10px;
+}

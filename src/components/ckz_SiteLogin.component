@@ -1,0 +1,176 @@
+<!--
+ - Created by brandon.rogers on 2/8/19.
+ -->
+
+<apex:component id="ckz_SiteLogin" controller="ckz_ForgotPasswordController">
+
+    <script id="CKZ-SiteLogin" type="text/template">
+
+        <div class="component-site-login">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="messagingSection-Error" style="display: none"></div>
+                    <div class="messagingSection-Info" style="display: none"></div>
+                    <div class="messagingSection-Warning" style="display: none"></div>
+                </div>
+            </div>
+
+            <!--<div class="row">
+                <div class="col-sm-8 col-sm-offset-2 site-greeting">
+                    <div class="text-center">
+                        <h2>{{pageLabelMap 'SiteLogin_SiteGreeting'}}</h2>
+                        <p>{{pageLabelMap 'SiteLogin_SiteDesc'}}</p>
+                        
+                    </div>
+                </div>
+            </div>-->
+
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 form-box">
+                    <div class="card-container manual-flip text-center">
+                        <div class="card">
+                            <div class="front">
+                                <div class="b2b-logo m-t-3"></div>
+                                <h3 class="m-b-2">{{pageLabelMap 'SiteLogin_SiteGreeting'}}</h3>
+                                <p>{{pageLabelMap 'SiteLogin_Note'}}</p>
+                                <!--<h3 class="m-b-2">{{pageLabelMap 'SiteLogin_LoginHeader'}}</h3>-->
+
+                                <form id="loginFormDsk" class="cc_login_form">
+                                    <div class="form-group">
+                                        <label class="sr-only" for="emailField">{{pageLabelMap 'SiteLogin_Username'}} *</label>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-user" aria-hidden="true"></i>
+                                            </span>
+                                            <input id="emailField" name="emailField" type="email" class="form-control loginInput input-lg cc_login_input" value="{{displayUsername}}" title="{{pageLabelMap 'SiteLogin_Username'}}" placeholder="{{pageLabelMap 'SiteLogin_Username'}}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="sr-only" for="passwordField">{{pageLabelMap 'SiteLogin_Password'}} *</label>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon">
+                                                <i class="far fa-lock"></i>
+                                            </span>
+                                            <input id="passwordField" name="passwordField" type="password" class="form-control loginInput input-lg cc_password_input" placeholder="{{pageLabelMap 'SiteLogin_Password'}} *"/>
+                                        </div>
+                                    </div>
+
+                                    <input type="button" id="send2Dsk" class="btn btn-primary btn-block cc_login_button" value="{{pageLabelMap 'Component_SiteHeader_Login'}}"/>
+                                </form>
+
+                                <button type="button" class="btn btn-link btn-block" onclick="rotateCard(this)">{{pageLabelMap 'ForgotPassword_ForgotPassword'}}</button>
+                                {{#ifDisplay 'Login.DsplReg'}}
+                                <button type="button" class="btn btn-link btn-block register cc_register">
+                                    <i class="fal fa-plus"></i>
+                                    {{pageLabelMap 'SiteLogin_CreateAccount'}}
+                                </button>
+                                {{/ifDisplay}}
+                            </div>
+
+                            <div class="back">
+                                <div class="b2b-logo m-t-3"></div>
+                                <h3 class="m-b-2">{{pageLabelMap 'SiteLogin_ForgotPWHeader'}}</h3>
+
+                                <p class="small">{{pageLabelMap 'SiteLogin_ForgotPWInstructions'}}</p>
+
+                                <div class="form-group">
+                                    <label class="cc_email sr-only" for="email_address">{{pageLabelMap 'SiteLogin_Email'}}</label>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon">
+                                            <i class="far fa-at"></i>
+                                        </span>
+                                        <input id="email_address" type="text" name="email_address" class="form-control input-lg" alt="email" placeholder="{{pageLabelMap 'SiteLogin_Email'}}"/>
+                                    </div>
+                                </div>
+
+                                <input type="submit" name="forgotPwdSubmit" value="Submit" class="btn btn-primary btn-block cc_submit" onclick="forgotPwd(); return false;">
+
+                                <button class="btn btn-link btn-block" onclick="rotateCard(this)">
+                                    <i class="far fa-long-arrow-left"></i>
+                                    {{pageLabelMap 'SiteLogin_BackToLogin'}}
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3 misc-actions">
+                <div class="text-center">
+                    <!--<button type="button" class="btn btn-link btn-block forgotPass cc_forgot_pass">{{pageLabelMap 'ForgotPassword_ForgotPassword'}}</button>-->
+                    <!--{{#ifDisplay 'Login.DsplReg'}}
+                    <button type="button" class="btn btn-link btn-block register cc_register">{{pageLabelMap 'SiteLogin_CreateAccount'}}</button>
+                    {{/ifDisplay}}-->
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.loginView.desktop.tmpl = 'CKZ-SiteLogin';
+
+            CCRZ.pubSub.on('view:loginView:refresh', function (theView) {
+                if (CCRZ.pagevars.currentPageName === 'ccrz__CCSiteLogin') {
+                    console.log("Site Login");
+                    // $('.ckz_CCSiteLogin .ckz_tmpl_OneCol_RCG .cc_main_container').removeClass('container').addClass('container-fluid');
+                }
+            });
+
+            CCRZ.subsc = _.extend(CCRZ.subsc || {});
+
+            // remote invoke the function set in the controller
+            CCRZ.subsc.cartRemoteActions = _.extend({
+                className: "ckz_ForgotPasswordController",
+                pingSendMessage: function (username, callback) {
+
+                    $('.cc_submit').prop('disabled', true);
+                    CCRZ.pubSub.trigger('pageMessage', {});
+
+                    this.invokeCtx('sendMessage', username,
+                        function (resp) {
+                            // callback function
+                            console.log('back from remote call');
+
+                            callback(resp);
+                        },                      //end function
+                        {
+                            buffer: false,       //this call will be executed by itself
+                            nmsp: false        //defines that this is a call to a subscriber class
+                        }
+                    );                    //end invokeCtx block
+                }                       //end getCustomFields function block
+            }, CCRZ.RemoteInvocation); //end subscription block
+
+        });
+
+        function rotateCard(btn) {
+            var $card = $(btn).closest('.card-container');
+
+            console.log($card);
+            if ($card.hasClass('hover')) {
+                $card.removeClass('hover');
+            } else {
+                $card.addClass('hover');
+            }
+        }
+
+        function forgotPwd() {
+            var username = $('#email_address').val();
+            CCRZ.subsc.cartRemoteActions.pingSendMessage(username, forgotPwdCallback);
+        }
+
+        function forgotPwdCallback(response) {
+            $('.cc_submit').prop('disabled', false);
+            if (response.messages) {
+                CCRZ.pubSub.trigger('pageMessage', response);
+            }
+        }
+
+
+    </script>
+</apex:component>

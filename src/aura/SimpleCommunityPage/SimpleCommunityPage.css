@@ -1,0 +1,25 @@
+.THIS .big-search-container {
+    /*min-height:100vh;*/
+}
+
+.THIS {
+    min-height:100vh;
+    background-image: url(/sfsites/c/file-asset/concierge?v=1);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.THIS .navigationMenu {
+    position: fixed;
+    z-index: 2;
+    width:100%;
+}
+
+.THIS .forceCommunityOmniBox .no-assigned-image .default-bg-overlay{
+    background:none;
+}
+
+.THIS .bodyhider {
+    /*display:none;*/
+}

@@ -1,0 +1,10 @@
+<design:component >
+	<design:attribute name="developerName" label="Developer Name"/>
+    <design:attribute name="filter" label="Filter"/>
+    <design:attribute name="height" label="Height"/>
+    <design:attribute name="hideOnError" label="Hide on Error"/>
+    <design:attribute name="openLinksInNewWindow" label="Open Links in New Window"/>
+    <design:attribute name="showHeader" label="Show Header"/>
+    <design:attribute name="showSharing" label="Show Sharing"/>
+    <design:attribute name="showTitle" label="Show Title"/>
+</design:component>

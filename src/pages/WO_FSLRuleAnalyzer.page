@@ -1,0 +1,114 @@
+<apex:page docType="html-5.0" sidebar="false" showHeader="false" standardController="WorkOrder" extensions="ctr_WhyNot" cache="false">
+  <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+      <head>
+          <meta charset="utf-8" />
+          <meta http-equiv="x-ua-compatible" content="ie=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <apex:slds />
+          <apex:includescript value="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"/>
+          <script type="text/javascript">
+          function updateStatus()
+          {
+              var panelStatus = jQuery('[id$=responseStatusHidden]');
+              if (panelStatus.val().indexOf('Not Scheduled') >= 0)
+                  {
+                      jQuery('[id$=responseStatus]').css( "color", "#E07569" );
+                  }
+              else if (panelStatus.val().indexOf('asleep') >= 0)
+                  {
+                      jQuery('[id$=responseStatus]').css( "color", "orange" );
+                  }
+              else
+                  {
+                      jQuery('[id$=responseStatus]').css( "color", "#57C3B7" );
+                  }
+
+          }
+
+          function loadingCommand(val) {
+              if (val) {
+                  document.getElementById('commandProgressSection').style.display = 'block';
+              }
+              else
+              {
+                if (jQuery('[id$=responseHidden]').val() != null && jQuery('[id$=responseHidden]').val() != '')
+                {
+                    document.getElementById('commandProgressSection').style.display = 'none';
+                }
+              }
+          }
+          
+          function checkLoading() {
+              if (jQuery('[id$=isRunningHidden]').val() == 'true')
+              {
+                  
+                  document.getElementById('commandProgressSection').style.display = 'block';
+              }
+              else
+              {
+                  document.getElementById('commandProgressSection').style.display = 'none';
+                  
+              }
+          }
+          </script>
+          <style>
+          .overlay {
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, .4);
+              position: fixed;
+              top: 0;
+              left: 0
+              }
+
+              .container {
+              display: inline-block;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 350px;
+              overflow: hidden;
+              box-shadow: 0 0 6px 0 rgba(0, 0, 0, .2)
+              }
+          </style>
+      </head>
+      <body style="padding:0;">
+          <apex:form id="mainForm" style="text-align:left;">
+              <apex:outputpanel id="mainSection">
+                  <apex:inputHidden value="{!scheduledStatus}" id="responseStatusHidden"/>
+                  <apex:inputHidden value="{!strCommResponse}" id="responseHidden"/>
+                  <apex:inputHidden value="{!isRunning}" id="isRunningHidden" />
+
+                
+                  <div style="font-size:2rem;text-align:center;position:absolute;top:50%;left:50%;margin-left:-100px;margin-top:-70px;"><apex:outputText id="responseStatus" value="{!scheduledStatus}" escape="false"></apex:outputText></div>
+                <apex:outputText value="{!strCommResponse}" id="strResponse" escape="false"/><br /><br />
+                <apex:outputPanel id="btnWhyNot" styleClass="slds-button slds-button_brand" style="background-color:#43A0DA;border-color:#43A0DA;width:100%;height:50px;line-height:45px;font-size:1rem;cursor: pointer;position:absolute;bottom:0px;">Analyze Scheduling Rules
+                      <apex:actionSupport id="aWhyNot" event="onclick" action="{!WhyNot}" rerender="mainSection" onsubmit="loadingCommand(true);" />
+                </apex:outputPanel>
+                  
+                  <apex:actionPoller action="{!refreshSA}" reRender="mainSection" interval="5" oncomplete="checkLoading();" enabled="{!blTimer}"/>
+              </apex:outputpanel>
+              
+              
+              <div class="dialog" id="commandProgressSection" tabindex="-1" style="display:none;z-index:10000;font-size:1rem;color:rgb(22, 50, 92);">
+                      <div class="overlay"></div>
+                      <div class="container">
+                          <div class="focusable content" role="dialog" tabindex="0" style="background-color: #fff;padding:15px;">
+                              <center><apex:image url="{!$Resource.SLDSLoadingGif}" width="50"/><br /><br />
+                                  <apex:outputpanel id="loadingSection"><h3>Analyzing Scheduling Rules...</h3></apex:outputpanel>
+                              </center>
+                          </div>
+                      </div>
+               </div>
+
+          </apex:form>
+          <script type="text/javascript">
+          $(function() {
+              updateStatus();
+              checkLoading();
+          });
+          </script>
+      </body>
+  </html>
+</apex:page>

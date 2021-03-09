@@ -1,0 +1,117 @@
+<aura:component controller="SalesforceRewind" implements="flexipage:availableForAllPageTypes" access="global">
+    <lightning:empApi aura:id="empApi"/>
+    <aura:attribute name="channel" type="String" default="/topic/SalesforceRewindRecords"/>
+    <aura:attribute name="subscription" type="Map"/>    
+    <aura:attribute name="sessionId" type="String"/>
+    <aura:attribute name="notifications" type="Salesforce_Rewind_History_Record__c[]"/>
+    <aura:attribute name="isRecording" type="Boolean" default="false"/>    
+    <aura:attribute name="showhelp" type="Boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+    
+    <aura:registerEvent name="toastEvent" type="force:showToast"/>
+
+    <div class="container slds-scope slds-card">
+        <!-- Header -->
+        <div class="slds-p-around--x-small slds-border--bottom slds-theme--shade">
+            <div class="slds-grid slds-grid--align-spread slds-grid--vertical-align-center">
+                <div>
+                    <span class="slds-badge">{!v.notifications.length}</span>  
+                </div>
+                <div>
+                    <lightning:buttonGroup >
+                        <aura:if isTrue="{!!v.isRecording}">        
+                            <lightning:buttonIcon onclick="{!c.startRecording}" iconName="utility:record" title="Record"
+                                                  alternativeText="Record" variant="border-filled"/>
+                            <aura:set attribute="else">
+                                <lightning:buttonIcon onclick="{!c.stopRecording}" iconName="utility:record" title="Stop Recording"
+                                                      alternativeText="Stop Recording" variant="border-filled" iconClass="red"/> 
+                            </aura:set>
+                        </aura:if>
+                    </lightning:buttonGroup>
+                    <lightning:buttonGroup >
+                        <lightning:buttonIcon onclick="{!c.onRewindAll}" iconName="utility:undo" title="Rewind All"
+                                              alternativeText="Rewind All" variant="border-filled" disabled="{!v.isRecording}"/>
+                        <lightning:buttonIcon onclick="{!c.onDeleteAll}" iconName="utility:delete" title="Delete All"
+                                              alternativeText="Delete All" variant="border-filled" disabled="{!v.isRecording}"/>
+                    </lightning:buttonGroup>
+                    <lightning:buttonGroup >
+                        <lightning:buttonIcon onclick="{!c.showhelp}" iconName="utility:help" title="Informationl"
+                                              alternativeText="Help" variant="bare"/>
+                    </lightning:buttonGroup>
+                </div>
+            </div>
+        </div>
+        
+        <aura:if isTrue="{!!v.showhelp}">
+            <!-- Notification list -->
+            <div class="slds-container--fluid slds-scrollable--y content">
+                <aura:iteration items="{!v.notifications}" var="notification" indexVar="index">
+                    <div class="slds-p-around--small slds-border--top">
+                        <div class="slds-grid slds-grid--align-spread slds-has-flexi-truncate notificationRecords" style="text-align: center">
+                            <div class="slds-col slds-size_1-of-6">
+                                <ui:outputDateTime value="{!notification.CreatedDate}" class="slds-align_absolute-center" format="HH:mm:ss"/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-6">
+                                <ui:outputText value="{!notification.Action__c}"/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-6 slds-truncate">
+                                <ui:outputText value="{!notification.SObject__c}" title="{!notification.SObject__c}" />
+                            </div>
+                            <div class="slds-col slds-size_2-of-6 slds-truncate">
+                                <a href="{!'/one/one.app?#/sObject/'+ notification.Id + '/view'}" target="_blank">
+                                    <ui:outputText value="{!notification.Record_Name__c}" title="{!notification.Record_Name__c}" />
+                                </a>
+                            </div>
+                            <div class="slds-col slds-size_1-of-12">                        
+                                <aura:if isTrue="{!notification.Status__c == 'Undone'}">
+                                    <lightning:helptext content="Undone" iconName="utility:success"/>
+                                </aura:if>
+                                <aura:if isTrue="{!notification.Status__c == 'Undoable'}">
+                                    <lightning:helptext content="{!notification.Error__c}" iconName="utility:error"/>
+                                </aura:if>
+                            </div>
+                            <div class="slds-col slds-size_1-of-12">
+                                <lightning:buttonGroup >
+                                    <aura:if isTrue="{!notification.Status__c == 'Done'}">
+                                        <lightning:buttonIcon tabindex="{!index}" onclick="{!c.onRewind}" iconName="utility:undo" title="Rewind"
+                                                              alternativeText="Rewind" variant="border-filled" disabled="{!v.isRecording}" size="x-small" />
+                                    </aura:if>
+                                    
+                                    <lightning:buttonIcon tabindex="{!index}" onclick="{!c.onDelete}" iconName="utility:delete" title="Delete"
+                                                          alternativeText="Delete" variant="border-filled" disabled="{!v.isRecording}" size="x-small"/>
+                                    
+                                </lightning:buttonGroup>
+                            </div> 
+                        </div>
+                    </div>
+                </aura:iteration>
+            </div>   
+            <aura:set attribute="else">
+                <div class="slds-container--fluid slds-scrollable--y content">
+                    <div class="slds-box">
+                    <p>
+                        <lightning:buttonIcon iconName="utility:record" variant="border-filled" size="x-small"/>
+                        
+                        Use the record button to start recording changes to records in your Salesforce Org. Press the button again to stop recording
+                    </p><br/>
+                    <p>
+                        <lightning:buttonIcon iconName="utility:undo" variant="border-filled" size="x-small"/>                        
+                        Use the Rewind button on an individual record to rollback that change, use the Rewind button at the top of the list to rollback all changes in reverse order.
+                    </p><br/>
+                    <p>
+                        <lightning:buttonIcon iconName="utility:delete" variant="border-filled" size="x-small"/>                        
+                        Use the Delete button to remove the record recording that change, use the Delete All button at the top of the list to delete all records recording changes.   
+                    </p>
+                    <hr/>
+                    <p><h2 class="slds-align_absolute-center">Technical Info</h2>
+                        This functionality uses triggers on the main Salesforce objects to create records in the "Salesforce_Rewind__c" object recording details of the change. Triggers have been put on 
+                        most objects but these can be extended to any remaining objects by copying the trigger code from Contact and using it on the new object. Some actions aren't 
+                        possible to completely rollback (such as Lead Conversion) in which case the status icon <lightning:helptext iconName="utility:error" content="Hover Over Text"/> will display on the affected record with details when you hover over.                        
+                    </p>
+                    </div>
+                </div>
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

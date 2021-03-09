@@ -1,0 +1,73 @@
+<apex:page standardController="Contact" extensions="ContactSuggestedKnowledgeClass" tabstyle="Contact" sidebar="false" showheader="false">
+        <title>Contact Suggested KB Comp</title>
+
+    <apex:includeScript value="/support/console/22.0/integration.js"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        function openSubtabs(url,tabTitle) {
+            var openSubtabsFunction=
+            function openSubtabsFunction(result) {
+                sforce.console.openSubtab(result.id,url,true,tabTitle,null,openSuccess,tabTitle);
+            }
+            sforce.console.getEnclosingPrimaryTabId(openSubtabsFunction);
+        }
+        var openSuccess = function openSuccess(result) {
+            //Report whether we succeeded in opening the subtab
+            if (result.success == false) {
+                alert('Unable to open subtab');
+            }
+        };
+    </script>
+    <apex:form >
+    
+    <div class="mp">
+        <apex:pageBlock >           
+            <apex:pageblockSection collapsible="false"/>
+            <span style="font-size:12.0pt;mso-bidi-font-size:15.0pt;line-height:130%">
+            Suggested Articles
+            </span>
+            <apex:inputText styleClass="kbTarget headerSearchBoxGhostText kbSearchText"/>
+            <apex:commandButton value="Search" styleClass="kbSearchButton">
+                    <apex:actionSupport event="onclick" rerender="kbArea"/>
+            </apex:commandButton>
+    
+            <apex:outputPanel id="kbArea"> 
+            <table id="kbTable" class="list">
+            <tr class="headerRow">
+                <th>Type</th>
+                <th>Title</th>
+                <th>Last Updated</th>
+            </tr>
+            <knowledge:articleList articlevar="article" categories="{!catFilter}" keyword="{!subject}" pageSize="10" sortBy="mostViewed">
+            <tr class="dataRow">
+                <td width="10%">
+                    {!article.articletypelabel}
+                </td>
+                <td width="80%">
+                    <a href="javascript:sforce.console.openPrimaryTab(null,'/{!article.id}',true,'{!article.title}');">
+                    {!article.title}</a>
+                </td>
+                <td width="10%">
+                    <apex:outputText value="{0,date,MM-dd-yyyy}">
+                        <apex:param value="{!article.lastModifiedDate}" />
+                    </apex:outputText>
+                </td>
+            </tr>
+        </knowledge:articleList>
+        </table>
+        </apex:outputPanel>
+    </apex:pageBlock>
+</div>
+
+</apex:form>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

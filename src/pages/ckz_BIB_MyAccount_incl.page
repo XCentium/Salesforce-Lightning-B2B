@@ -1,0 +1,67 @@
+<apex:page id="ckz_BIB_MyAccount_incl" sidebar="false" showHeader="false" standardStylesheets="false">
+
+    <c:ckz_MyAccount_Navigation />
+    <c:ckz_MyAccount_ContactInfo />
+    <c:ckz_MyAccount_ContactInfoEdit />
+    <c:ckz_MyAccount_ChangePassword />
+    <c:ckz_MyAccount_AddressBook />
+    <c:ckz_MyAccount_MyCarts />
+    <c:ckz_MyAccount_MyOrders />
+    <c:ckz_MyAccount_MyWishlists />
+    <c:ckz_MyAccount_MySubscriptions />
+    <c:ckz_MyAccount_MyWallet />
+    <c:ckz_MyAccount_MyInvoices />
+    <c:ckz_MyAccount_UserRoles />
+
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            //pubSub listener, called when the My Account view needs to initialize the side menu
+            CCRZ.pubSub.on('view:myaccountView:awaitingSubViewInit', function (viewRef) {
+                //pubSub listener function, viewRef is the Backbone view for My Account
+                console.log('ckz_BIB_MA_incl: view:myaccountView:awaitingSubViewInit');
+
+                /*
+                   The User Roles menu option should only appear when User Roles has been enabled for the Storefront,
+                   and the user is a User Roles Admin.
+                */
+                if (CCRZ.pagevars.pageConfig["ma.budlim"]) {
+                    if (CCRZ.pagevars.pageConfig["ma.budlim"] == "TRUE") {
+
+                        console.log('ckz_BIB_MA_incl: ma.budlim is TRUE');
+
+                        if (CCRZ.myaccountModel.attributes.contactBean.ckzBudgetAdministrator) {
+                            if (CCRZ.MyAccount.UserRoles) {
+                                CCRZ.MyAccount.UserRoles.register(viewRef);
+                            }
+                        }
+                    }
+                }
+
+                //Tell the My Account view that it should proceed with rendering the view
+                CCRZ.pubSub.trigger("view:myaccountView:subViewInit", true);
+
+            });
+
+            //pubSub listener, called when the My Account view needs to initialize the side menu
+            CCRZ.pubSub.on('view:myaccountHDRView:awaitingSubViewInit', function (viewRef) {
+                //pubSub listener function, viewRef is the Backbone view for My Account
+                if (CCRZ.HDRMyAccount.contactInfo) {
+                    CCRZ.HDRMyAccount.contactInfo.register(viewRef);
+                }
+                if (CCRZ.HDRMyAccount.changePassword) {
+                    CCRZ.HDRMyAccount.changePassword.register(viewRef);
+                }
+                if (CCRZ.HDRMyAccount.myOrders) {
+                    CCRZ.HDRMyAccount.myOrders.register(viewRef);
+                }
+                //if(CCRZ.HDRMyAccount.myWishlists){
+                //    CCRZ.MyAccount.myWishlists.register(viewRef);
+                //}
+
+                //Tell the My Account view that it should proceed with rendering the view
+                CCRZ.pubSub.trigger("view:myaccountHDRView:subViewInit", true);
+            });
+        });
+    </script>
+</apex:page>

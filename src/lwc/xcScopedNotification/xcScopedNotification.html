@@ -1,0 +1,37 @@
+<template>
+    <div if:true={mIsInfo} class="slds-scoped-notification slds-media slds-media_center slds-theme_info" role="status">
+        <div class="slds-media__figure">
+            <lightning-icon icon-name="utility:info" alternative-text="info" size="small" title="info" variant="inverse"></lightning-icon>
+        </div>
+        <div class="slds-media__body">
+            <p>{message}</p>
+        </div>
+    </div>
+
+    <div if:true={mIsSuccess} class="slds-scoped-notification slds-media slds-media_center slds-theme_success" role="status">
+        <div class="slds-media__figure">
+            <lightning-icon icon-name="utility:success" alternative-text="success" size="small" title="success" variant="inverse"></lightning-icon>
+        </div>
+        <div class="slds-media__body">
+            <p>{message}</p>
+        </div>
+    </div>
+
+    <div if:true={mIsWarning} class="slds-scoped-notification slds-media slds-media_center slds-theme_warning" role="status">
+        <div class="slds-media__figure">
+            <lightning-icon icon-name="utility:warning" alternative-text="warning" size="small" title="warning" variant="inverse"></lightning-icon>
+        </div>
+        <div class="slds-media__body">
+            <p>{message}</p>
+        </div>
+    </div>
+
+    <div if:true={mIsError} class="slds-scoped-notification slds-media slds-media_center slds-theme_error" role="status">
+        <div class="slds-media__figure">
+            <lightning-icon icon-name="utility:error" alternative-text="error" size="small" title="error" variant="inverse"></lightning-icon>
+        </div>
+        <div class="slds-media__body">
+            <p>{message}</p>
+        </div>
+    </div>
+</template>

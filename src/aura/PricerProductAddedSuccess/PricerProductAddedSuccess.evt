@@ -1,0 +1,1 @@
+<aura:event type="COMPONENT" description="Fires when a product line is successfully added" />

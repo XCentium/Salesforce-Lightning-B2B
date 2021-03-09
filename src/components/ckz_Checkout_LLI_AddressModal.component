@@ -1,0 +1,259 @@
+<!--
+ - Created by brandon.rogers on 1/23/19.
+ -->
+
+<apex:component id="ckz_Checkout_LLI_AddressModal">
+    <script id="CKZ-Shipping-LII-Address-Edit-Modal-Desktop" type="text/template">
+        <div id="editAddressMod_{{sfid}}" class="modal fade cc_modal cc_address_edit_modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content cc_modal_content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#215;</button>
+                        {{#if sfid}}
+                        <h3 id="myModalLabel" class="modal-title">{{pageLabelMap 'Edit'}} {{pageLabelMap 'Address'}}</h3>
+                        {{else}}
+                        <h3 id="myModalLabel" class="modal-title">{{pageLabelMap 'LLICheckOut_AddHeader'}}</h3>
+                        {{/if}}
+                    </div>
+
+                    <div class="modal-body cc_modal-body">
+                        <div class="shipModal-messagingSection-Error" style="display: none"></div>
+
+                        <div id="addrEditCarousel" class="addrEditCarousel"></div>
+
+                        <form id="addrEdit" name="addrEdit" class="addressForm lliForm form desktop m-t-3">
+                            <div class="addrEditForm"></div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default btn-sm cancelAddr" data-id="{{sfid}}" value="{{pageLabelMap 'Cancel'}}"/>
+                        <input type="button" class="btn btn-default btn-sm saveAddr" data-id="{{sfid}}" value="{{pageLabelMap 'Save'}}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- ADDRESS EDIT FORM -->
+    <script id="CKZ-LLI-AddressForm-Desktop" type="text/template">
+        <div class="addressForm lliForm">
+            <input type="hidden" value="{{sfid}}" name="groupId"/>
+            <input type="hidden" value="{{shipTo.sfid}}" name="shipTo.sfid"/>
+
+            <div class="form-group">
+                <label for="name">{{pageLabelMap 'LLICheckOut_GroupName'}}</label>
+                <input class="form-control" type="text" placeholder="Shipping Group Name" value="{{groupName}}" name="groupName"/>
+            </div>
+
+            <hr/>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.firstName">{{pageLabelMap 'LLICheckOut_FirstName'}}</label>
+                        <input type="text" class="form-control shippingField" placeholder="First Name" value="{{shipTo.firstName}}" name="shipTo.firstName"/>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.lastName">{{pageLabelMap 'LLICheckOut_LastName'}}</label>
+                        <input type="text" class="form-control shippingField" placeholder="Last Name" value="{{shipTo.lastName}}" name="shipTo.lastName"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.Email">{{pageLabelMap 'LLICheckOut_Email'}}</label>
+                        <input type="email" class="form-control shippingField" placeholder="Email" value="{{shipTo.email}}" name="shipTo.email"/>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.daytimePhone">{{pageLabelMap 'LLICheckOut_Phone'}}</label>
+                        <input type="tel" class="form-control shippingField" placeholder="Phone" value="{{shipTo.daytimePhone}}" name="shipTo.daytimePhone"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.companyName">{{pageLabelMap 'LLICheckOut_CompanyName'}}</label>
+                        <input type="text" class="form-control shippingField" placeholder="Company Name" value="{{shipTo.companyName}}" name="shipTo.companyName"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.addressFirstline">{{pageLabelMap 'LLICheckOut_Address1'}}</label>
+                        <input type="text" class="form-control shippingField" placeholder="{{pageLabelMap 'LLICheckOut_Address1'}}" value="{{shipTo.addressFirstline}}" name="shipTo.addressFirstline"/>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.addressFirstline">{{pageLabelMap 'LLICheckOut_Address2'}}</label>
+                        <input type="text" class="form-control shippingField" placeholder="{{pageLabelMap 'LLICheckOut_Address2'}}" value="{{shipTo.addressSecondline}}" name="shipTo.addressSecondline"/>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.addressFirstline">{{pageLabelMap 'LLICheckOut_Address3'}}</label>
+                        <input type="text" class="form-control shippingField" placeholder="{{pageLabelMap 'LLICheckOut_Address3'}}" value="{{shipTo.addressThirdline}}" name="shipTo.addressThirdline"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.countryListing">{{pageLabelMap 'LLICheckOut_Country'}}</label>
+                        {{{selectGeo 'countryISO' this.countryList shipTo.countryISOCode 'countryListing shippingField form-control' 'shipTo.'}}}
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.stateSection">{{pageLabelMap 'LLICheckOut_State'}}</label>
+                        <div class="stateSection"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.city">{{pageLabelMap 'LLICheckOut_City'}}</label>
+                        <input type="text" class="form-control shippingField" placeholder="City" value="{{shipTo.city}}" name="shipTo.city"/>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="shipTo.postalCode">{{pageLabelMap 'LLICheckOut_Postal'}}</label>
+                        <input type="text" class="form-control shippingField" placeholder="Postal Code" value="{{shipTo.postalCode}}" name="shipTo.postalCode"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- LLI MOVE ITEM MODAL -->
+    <script id="CKZ-Shipping-LII-Move-Item-Modal" type="text/template">
+        <div id="moveItemMod" class="modal fade cc_modal cc_address_edit_modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content cc_modal_content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close cc_close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&#215;</span></button>
+                        <h3 id="myModalLabel" class="modal-title">{{pageLabelMap 'LLICheckOut_MoveItemHeader'}}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="shipModal-messagingSection-Error" style="display: none"></div>
+
+                        <div id="addrMoveCarousel" class="addrEditCarousel"></div>
+
+                        <form id="moveItemForm" name="moveItem" class="m-t-3">
+                            <input type="hidden" name="moveSingleItem" value="{{stringify this.singleItem}}"/>
+                            <input type="hidden" name="moveBulkIds" value="{{stringify this.bulkIds}}" />
+
+                            <div class="row">
+                                {{#if this.singleItem}}
+                                    <div class="col-sm-6">
+                                        {{#if this.singleItem.splitEligible}}
+                                            <div class="form-group">
+                                                <label for="moveQty" class="qty">{{pageLabelMap 'LLICheckOut_MoveQuantity'}}</label>
+                                                <div class="quantity_block">
+                                                    <div class="input-group">
+                                                        {{#with this.singleItem.productRecord}}
+                                                            <input type="text" id="qty" name="moveQty" value="{{../this.singleItem.quantity}}" class="form-control qty input-text entry plus_minus" maxlength="7" />
+                                                        {{/with}}
+                                                        <span class="input-group-addon">{{pageLabelMap 'LLI_CheckOut_Of' this.singleItem.quantity}}</span>
+                                                    </div>
+
+                                                    {{#with this.singleItem.productRecord}}
+                                                        <input type="hidden" name="qtyIncrement" value="{{this.qtySingleIncrement}}" class="item_qtyIncrement" />
+                                                    {{/with}}
+                                                </div>
+                                            </div>
+                                        {{else}}
+                                            <div class="splitError">{{pageLabelMap 'LLICheckOut_NotSplitEligible'}}</div>
+                                        {{/if}}
+
+                                        {{#if this.singleItem.mergeEligible}}
+                                            <div class="form-group">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="mergeLines" name="mergeLines" value="false"/>{{pageLabelMap 'LLICheckOut_Merge'}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        {{/if}}
+                                    </div>
+                                {{else}}
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="mergeLines" name="mergeLines" value="false"/>{{pageLabelMap 'LLICheckOut_Merge'}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="moveToGroup">{{pageLabelMap 'LLICheckOut_GroupDropDown'}}</label>
+                                        <select name="moveToGroup" class="form-control moveToGroup">
+                                            {{#each this.itemGroups}}
+                                                {{#with this.attributes}}
+                                                    {{#ifNotEquals ../../singleItem.cartItemGroup this.sfid}}
+                                                        <option value="{{this.sfid}}">
+                                                            {{this.groupName}} - {{this.shipTo.addressFirstline}}, {{this.shipTo.city}}
+                                                        </option>
+                                                    {{/ifNotEquals}}
+                                                {{/with}}
+                                            {{/each}}
+                                            <option value="newGroup">{{pageLabelMap 'LLICheckOut_NewGroup'}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cc_newShipGroup">
+                                <div id="newGroupForm" class="addrEditForm" style="display:none"></div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <input type="button" class="btn btn-default btn-sm cancelMove" data-id="{{sfid}}" value="{{pageLabelMap 'Cancel'}}"/>
+                            {{#if this.singleItem}}
+                                <input type="button" class="btn btn-primary btn-sm executeMove" data-id="{{sfid}}" data-type="single" value="Move Item"/>
+                            {{else}}
+                                <input type="button" class="btn btn-primary btn-sm executeBulkMove" data-id="{{sfid}}" data-type="bulk" value="Move Items"/>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.LLIShippingDetailView.addressEditModal.desktop.tmpl = 'CKZ-Shipping-LII-Address-Edit-Modal-Desktop';
+            CCRZ.uiProperties.LLIShippingDetailView.lliAddressFormView.desktop.tmpl = 'CKZ-LLI-AddressForm-Desktop';
+            CCRZ.uiProperties.LLIShippingDetailView.moveItemModal.tmpl = 'CKZ-Shipping-LII-Move-Item-Modal';
+        });
+    </script>
+</apex:component>

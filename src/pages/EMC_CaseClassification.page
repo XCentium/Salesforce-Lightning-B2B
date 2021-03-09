@@ -1,0 +1,266 @@
+<apex:page title="Case Classifier" standardController="Case" extensions="MixpanelCtrl" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    <apex:slds />
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"/>
+    
+    <apex:includeScript value="/support/console/40.0/integration.js"/>
+    
+    <apex:includeScript value="/apex/EMC_SFDCCtrl"/>
+    <apex:includeScript value="/apex/EMC_MixpanelCtrl"/>
+    
+    <style>
+        .slds-form.slds-form_inline.offset {margin-left: -.75rem; margin-right: -.75rem;}
+        .slds .slds-form.slds-form_inline > fieldset.slds-form-element  {
+        width: 33.3333% !important;
+        margin: 0 !important;
+        margin-right: 0 !important;
+        }
+        legend {width: 100%;}
+    </style>
+    
+    <script>
+    
+    const referenceDate = (new Date).toISOString().substring(0,19)+'Z'
+    
+    function CaseRecommendation(score, targetId, action){
+        this.definitionName = "Case.CaseDefinition"
+        this.referenceDate = referenceDate;
+        this.targetId = targetId
+        this.score = score;
+        this.actions = [action];
+    }
+    
+    function Action(actionType, actionValue){
+        //For future use will default to update in the mean time
+        this.actionType = 'Update';
+        this.values = [actionValue];
+    }
+    
+    function ActionValue(sobject, type, field, literalValue){
+        this.fieldName = sobject + '.' + field;
+        this.type = type;
+        this.literalValue = literalValue;
+    }
+    
+    const caseId = '{!Case.Id}';
+    const session = '{!$Api.Session_ID}';
+    
+    const allowedFieldTypes = {'picklist': null, 'boolean': null}
+    
+    const app = angular.module('ClassificationApp', [])
+    .service('Mixpanel', MixpanelController)
+    .service('SFDC', SFDCCtrl)
+    .controller('MainCtrl', function($scope){
+        $scope.back = function(){
+            history.back();
+        }
+    })
+    .controller('ClassificationCtrl', function($scope, SFDC, Mixpanel){
+        $scope.caseRecord;
+        $scope.recommendations = [];
+        $scope.caseRecommendations = [];
+        
+        //Record meta data
+        $scope.classificationFields; 
+        $scope.allowedFields;
+        $scope.fieldsTypeMap;
+        $scope.selectedField;
+        $scope.confidenceOptions = {'High': 100, 'Medium': 85, 'Low': 80};
+        
+        $scope.init = function(){
+            SFDC.get('/sobjects/Case/describe')
+            .then(function(res){
+                console.log(res)
+                return $scope.getAllowedFields(res.data.fields);
+            })
+            .then(function(res){
+                return SFDC.getRecord('Case', caseId, res);
+            })
+            .then(function(res){
+                $scope.setClassificationFields(res.data);
+            })
+        }
+        
+        $scope.getAllowedFields = function(fields){
+            let caseFields = fields;
+            return new Promise(function(resolve,reject){
+                try {
+                    let fieldsTypeMap = {}
+                    caseFields.map(function(caseField){
+                        if(allowedFieldTypes.hasOwnProperty(caseField.type) && caseField.updateable){
+                            fieldsTypeMap[caseField.name] = caseField;
+                        }
+                    })
+                    
+                    $scope.fieldsTypeMap = fieldsTypeMap;
+                    $scope.allowedFields = Object.keys(fieldsTypeMap);
+                    
+                    resolve($scope.allowedFields);
+                } catch(err){
+                    reject(err);
+                }
+            })
+        }
+        
+        $scope.setClassificationFields = function(caseRecord){
+            let classificationFields = {};
+            let fieldsTypeMap = $scope.fieldsTypeMap;
+            
+            Object.keys(caseRecord).reduce(function(data, field){
+                if(field != 'attributes' && field != 'Id'){
+                    data[field] = {
+                        label: fieldsTypeMap[field].label,
+                        name: fieldsTypeMap[field].name,
+                        value: caseRecord[field],
+                        type: fieldsTypeMap[field].type,
+                        picklistValues: fieldsTypeMap[field].picklistValues,
+                        confidence: 'Medium'
+                    }
+                }
+                return data;
+            }, classificationFields)
+            
+            $scope.classificationFields = classificationFields;
+            $scope.selectedField = classificationFields['Type'];
+            console.log(classificationFields['Type'])
+            $scope.$apply();
+        }
+        
+        $scope.addField = function(){
+            let newField = angular.copy($scope.selectedField)
+            let actionValue = new ActionValue('Case', 'Field', newField.name, newField.value);
+            let action = new Action(null, actionValue);
+            let caseRecommendation = new CaseRecommendation(100, caseId, action);
+            console.log('New Case Recommendation', caseRecommendation);
+            newField['data'] = caseRecommendation;
+            $scope.recommendations.push(newField)
+        }
+        
+        $scope.removeField = function(recommendations, index){
+        	recommendations.splice(index,1);
+        }
+        
+        $scope.upsert = function(){
+            let promises = [];
+            $scope.recommendations.map(function(recommendation){
+                let recommendationJson = {"RecommendationJson": angular.toJson(recommendation.data)};
+                console.log('recommendationJson',recommendationJson);
+                promises.push(SFDC.upsert('IncomingRecommendation',  recommendationJson, [],[]));
+            })
+            
+            Promise.all(promises)
+            .then(function(res){
+            	Mixpanel.sendEvent('Case Classification', {action: 'Create Classifications', records: res.length})
+            })
+            .then(function(res){
+                $scope.recommendations = [];
+                $scope.$apply();
+                sforce.one.back();
+            })
+        }
+        
+        $scope.init();
+    })
+    </script>
+    
+    <div ng-app="ClassificationApp" ng-controller="MainCtrl" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="slds slds-container_center slds-container_large">
+        
+        <div ng-controller="ClassificationCtrl" class="slds-card slds-p-around_small">
+            
+            <div class="slds-m-bottom_medium">
+                <div class="slds-text-heading_large">Case Classifier</div>
+            </div>
+            
+            
+            <div class="slds-form slds-form_inline slds-m-bottom_small">
+                <fieldset class="slds-form-element">
+                    <legend class="slds-form-element_label slds-text-title_caps slds-m-bottom_small">Select which field to update and click add.</legend>
+                    <div class="slds-form-element">
+                        <div class="slds-form-element_group">
+                            <div class="slds-form-element_row">
+                                <div class="slds-select-container">
+                                    <select class="slds-select"
+                                            ng-model="selectedField" 
+                                            ng-options="classificationField as classificationField.label for classificationField in classificationFields"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <div class="slds-form-element_group">
+                            <div class="slds-form-element_row">
+                                <button ng-click="addField()" class="slds-button slds-button_brand">
+                                    Add Field
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            
+            <div class="slds-form slds-grid slds-wrap slds-grid_pull-padded">
+                <fieldset ng-repeat="recommendation in recommendations" class="slds-form-element slds-size_1-of-3">
+                    <div class="slds-box slds-m-around_small">
+                        <legend class="slds-form-element_label slds-text-title_caps">
+                            {{recommendation.label}}
+                            <a ng-click="removeField(recommendations, $index)" class="slds-float_right remove">
+                                <span class="slds-icon_container" title="Description of icon when needed">
+                                    <svg class="slds-icon slds-icon_xx-small slds-icon-text-default">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                    </svg>
+                                </span>
+                            </a>
+                        </legend>
+                        
+                        <div class="slds-form-element_group">
+                            <div class="slds-form-element_row">
+                                <!-- INPUT TYPES START -->
+                                <div ng-if="recommendation.type == 'boolean'" class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <span class="slds-checkbox">
+                                            <input ng-model="recommendation.data.actions[0].values[0].literalValue" type="checkbox" name="options" id="checkbox-{{$index}}"/>
+                                            <label class="slds-checkbox__label" for="checkbox-{{$index}}">
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label">Recommendation Value</span>
+                                            </label>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div ng-if="recommendation.type == 'picklist'" class="slds-form-element">
+                                    <label class="slds-form-element__label">Recommendation Value</label>
+                                    <div class="slds-select-container">
+                                        <select class="slds-select" 
+                                                ng-model="recommendation.data.actions[0].values[0].literalValue" 
+                                                ng-options="option.value as option.label for option in recommendation.picklistValues"/>
+                                    </div>
+                                </div>
+                                <!-- INPUT TYPES END -->
+                                
+                                
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Confidence Level</label>
+                                    <div class="slds-select-container">
+                                        <select class="slds-select" 
+                                                ng-model="recommendation.data.score" 
+                                                ng-options="value as key for (key,value) in confidenceOptions"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            
+            <div class="slds-text-align_center slds-m-top_small">
+                <button ng-click="upsert()" class="slds-button slds-button_neutral">
+                    Cancel
+                </button>
+                <button ng-click="upsert()" class="slds-button slds-button_brand">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</apex:page>

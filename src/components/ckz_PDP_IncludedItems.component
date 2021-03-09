@@ -1,0 +1,91 @@
+<!--
+ - Created by brandon.rogers on 2/25/19.
+ -->
+
+<apex:component id="ckz_PDP_IncludedItems">
+
+    <script id="CKZ-ProductDetail-IncludedSection" type="text/template">
+        <div class="widget_container cc_widget_container cc_included_items">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="m-t-1">{{pageLabelMap 'IncludedItems'}}</h3>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-2"></th>
+                                <th>{{pageLabelMap 'IncludedItems_Name'}}</th>
+                                <th>{{pageLabelMap 'IncludedItems_SKU'}}</th>
+                                <th>{{pageLabelMap 'IncludedItems_QTY'}}</th>
+                                <th>{{pageLabelMap 'IncludedItems_Price'}}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {{#each this}}
+                            <tr class="quick_wishlist cc_quick_wishlist {{product.prodBean.sku}} phoneProductItem">
+                                <!-- PRODUCT IMAGE -->
+                                <td class="">
+                                    {{#if product.mediaWrapper}}
+                                        {{productLink product.prodBean '' image=(displayImage product.mediaWrapper 'prodDetailIncl img-responsive img-thumbnail center-block' alt=product.prodBean.name dataId=product.prodBean.sku)}}
+                                    {{/if}}
+                                </td>
+
+                                <!-- PRODUCT NAME -->
+                                <td class="cc_name">
+                                    {{productLink product.prodBean 'productName cc_product_name'}}
+
+                                    {{#if this.tiersList}}
+                                        <i class="far fa-info-circle fa-sm" data-toggle="tooltip" data-placement="bottom" title="{{pageLabelMap 'ProductPricingTiers_VolumePricing'}}"></i>
+                                    {{/if}}
+                                </td>
+
+                                <!-- PRODUCT SKU -->
+                                <td class="cc_sku">
+                                    {{this.product.prodBean.sku}}
+                                </td>
+
+                                <!-- PRODUCT QTY -->
+                                <td class="cc_quantity">
+                                    {{product.minQty}}
+                                </td>
+
+                                <!-- PRODUCT PRICE -->
+                                <td class="cc_pricing">
+                                    {{#if product.showPricing}}
+                                        {{#ifDisplay 'PD.DsplPrc' }}
+                                            {{#if product.price}}
+                                                {{{price product.price}}}
+                                            {{/if}}
+                                        {{/ifDisplay}}
+                                    {{/if}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            if (CCRZ.detailData.jsonProductData && CCRZ.detailData.jsonProductData.product) {
+                if (CCRZ.detailData.jsonProductData.product.prodBean.ProductType === 'Assembly') {
+                    CCRZ.uiProperties.assemblyInclItemsView.desktop.tmpl = 'CKZ-ProductDetail-IncludedSection';
+
+                    CCRZ.pubSub.on('view:assemblyInclItemsView:refresh', function (theView) {
+                        $('[data-toggle="tooltip"]').tooltip();
+                    });
+                } else if (CCRZ.detailData.jsonProductData.product.prodBean.ProductType === 'Kit' || CCRZ.detailData.jsonProductData.product.prodBean.ProductType === 'Bundle') {
+                    CCRZ.uiProperties.bundleInclItemsView.desktop.tmpl = 'CKZ-ProductDetail-IncludedSection';
+
+                    CCRZ.pubSub.on('view:bundleInclItemsView:refresh', function (theView) {
+                        $('[data-toggle="tooltip"]').tooltip();
+                    });
+                }
+            }
+        });
+    </script>
+</apex:component>

@@ -1,0 +1,42 @@
+<aura:component controller="FIDO" extends="c:Mixpanel" implements="c:MixpanelInterface">
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Data" type="String[]" />
+    <aura:attribute name="RelatedRecords" type="String[]" />
+    <aura:attribute name="featuredetailjunctionid" type="String"/>
+    <aura:attribute name="featureId" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="RecordName" type="String" />
+    <aura:attribute name="UserEmail" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.recid}" action="{!c.init}"/>
+    <button class="slds-button backButton" onclick="{!c.back}">
+        <lightning:icon iconName="utility:back" size="xx-small"/> 
+    </button> 
+    <div class="owner">
+        <aura:iteration items="{!v.Data}" var="video">
+            <div class="padding">
+                <div class="tile-header slds-p-vertical_xx-small  slds-m-bottom_xx-small">
+                    <h3 class="slds-text-heading_small">
+                        {!video.name}
+                    </h3>
+                </div>
+                <aura:if isTrue="{!video.type__c != ''}">
+                    <span class="slds-text-title_caps slds-list_horizontal slds-has-dividers_right">Type - {!video.video_type__c}</span>
+                </aura:if>
+                <div class="paddingtopbottom">
+                    <ui:outputRichText value="{!video.video_description__c}"/>
+                </div>
+                <div class="paddingtopbottom">
+                    <aura:if isTrue="{!video.video_url__c != null}">
+                        <button class="slds-button slds-button_neutral" aura:id="{!video.video_url__c}" id="{!video.video_url__c}" onclick="{!c.toURL}">Watch Video</button>
+                    </aura:if>
+                </div>
+            </div>
+        </aura:iteration>
+    </div>
+</aura:component>

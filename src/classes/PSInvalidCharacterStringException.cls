@@ -1,0 +1,1 @@
+global class PSInvalidCharacterStringException extends Exception {}

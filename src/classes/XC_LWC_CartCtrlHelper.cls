@@ -46,9 +46,4 @@ public inherited sharing class XC_LWC_CartCtrlHelper {
 
         return results;
     }
-
-    public static List<ConnectApi.BatchResult> fillCartFromCSV(String csvContents, String effectiveAccountId) {
-        XC_LWC_CSVImportWrapper wrapper = new XC_LWC_CSVImportWrapper(csvContents);
-        return addItemsToCart(wrapper.items, effectiveAccountId);
-    }
 }

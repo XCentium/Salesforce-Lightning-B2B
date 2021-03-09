@@ -1,0 +1,18 @@
+<aura:component >
+	<aura:attribute name="families" type="List"/>
+	<aura:attribute name="selected" type="String" default="Home"/>
+
+	<div class="tab-bar">
+		<div class="tab-bar-secondary">
+			<ul class="slds-grid slds-has-flexi-truncate">
+				<!-- HERE ARE THE TABS -->
+				<!-- "value" and "key" are the name of properties on objects in our "families" Array -->
+		        <aura:iteration items="{!v.families}" var="List" indexVar="Key">
+					<c:ProductCatalogTab familyList="{!List.value}" familyKey="{!List.key}" selected="{!v.selected == List.key}" />
+		        </aura:iteration>
+			</ul>
+		</div>
+	</div>
+
+
+</aura:component>

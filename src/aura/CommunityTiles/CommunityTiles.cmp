@@ -1,0 +1,153 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes">
+    <ltng:require styles="/resource/benslds" />
+    <aura:attribute name="prefix" type="String" />
+   
+    <aura:attribute name="NumberOfBlocks" type="String" default="9"/>
+    
+    <aura:attribute name="Title1" type="String" default="Title"/>
+    <aura:attribute name="Title2" type="String" default=""/>
+    <aura:attribute name="Title3" type="String" default=""/>
+    <aura:attribute name="Title4" type="String" default=""/>
+    <aura:attribute name="Title5" type="String" default=""/>
+    <aura:attribute name="Title6" type="String" default=""/>
+    <aura:attribute name="Title7" type="String" default=""/>
+    <aura:attribute name="Title8" type="String" default=""/>
+    <aura:attribute name="Title9" type="String" default=""/>
+    
+    <aura:attribute name="Link1" type="String" default="https://www.google.com"/>
+    <aura:attribute name="Link2" type="String" default=""/>
+    <aura:attribute name="Link3" type="String" default=""/>
+    <aura:attribute name="Link4" type="String" default=""/>
+    <aura:attribute name="Link5" type="String" default=""/>
+    <aura:attribute name="Link6" type="String" default=""/>
+    <aura:attribute name="Link7" type="String" default=""/>
+    <aura:attribute name="Link8" type="String" default=""/>
+    <aura:attribute name="Link9" type="String" default=""/>
+    
+    <aura:attribute name="Image1" type="String" default=""/>
+    <aura:attribute name="Image2" type="String" default=""/>
+    <aura:attribute name="Image3" type="String" default=""/>
+    <aura:attribute name="Image4" type="String" default=""/>
+    <aura:attribute name="Image5" type="String" default=""/>
+    <aura:attribute name="Image6" type="String" default=""/>
+    <aura:attribute name="Image7" type="String" default=""/>
+    <aura:attribute name="Image8" type="String" default=""/>
+    <aura:attribute name="Image9" type="String" default=""/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.myAction}"/>
+    
+    <div class="slds">
+        <div class="slds-grid slds-wrap">
+            <ul class="tiles">
+                <aura:if isTrue="{!v.NumberOfBlocks>0}" > 
+                    <li class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2  slds-small-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="block">
+                            <a href="{!v.Link1}" class="blocklink">
+                                <div class="backgroundimage" style="{!'background-image: url('+$SfdcSite.pathPrefix  +'/resource/'+v.Image1+')'}"></div>
+                                <div class="blockcontent">
+                                    <div class="blocktitle">{!v.Title1}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </aura:if>
+                <aura:if isTrue="{!v.NumberOfBlocks>1}" > 
+                    <li class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-small-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="block" >
+                            <a href="{!v.Link2}" class="blocklink">
+                                <div class="backgroundimage" style="{!'background-image: url('+$SfdcSite.pathPrefix +'/resource/'+v.Image2+')'}"></div>
+                                <div class="blockcontent">
+                                    <div class="blocktitle">{!v.Title2}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </aura:if>
+                <aura:if isTrue="{!v.NumberOfBlocks>2}" >    
+                    <li class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-small-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="block">
+                            <a href="{!v.Link3}" class="blocklink">
+                                <div class="backgroundimage" style="{!'background-image: url('+$SfdcSite.pathPrefix  +'/resource/'+v.Image3+')'}"></div>
+                                <div class="blockcontent">
+                                    <div class="blocktitle">{!v.Title3}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </aura:if>
+                <aura:if isTrue="{!v.NumberOfBlocks>3}" >
+                    <li class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2  slds-small-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="block">
+                            <a href="{!v.Link4}" class="blocklink">
+                                <div class="backgroundimage" style="{!'background-image: url('+$SfdcSite.pathPrefix  +'/resource/'+v.Image4+')'}"></div>
+                                <div class="blockcontent">
+                                    <div class="blocktitle">{!v.Title4}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </aura:if>
+                <aura:if isTrue="{!v.NumberOfBlocks>4}" >
+                    <li class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-small-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="block">
+                            <a href="{!v.Link5}" class="blocklink">
+                                <div class="backgroundimage" style="{!'background-image: url('+$SfdcSite.pathPrefix  +'/resource/'+v.Image5+')'}"></div>
+                                <div class="blockcontent">
+                                    <div class="blocktitle">{!v.Title5}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </aura:if>
+                <aura:if isTrue="{!v.NumberOfBlocks>5}" >
+                    <li class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-small-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="block">
+                            <a href="{!v.Link6}" class="blocklink">
+                                <div class="backgroundimage" style="{!'background-image: url('+$SfdcSite.pathPrefix  +'/resource/'+v.Image6+')'}"></div>
+                                <div class="blockcontent">
+                                    <div class="blocktitle">{!v.Title6}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </aura:if>
+                <aura:if isTrue="{!v.NumberOfBlocks>6}" >    
+                    <li class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2  slds-small-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="block">
+                            <a href="{!v.Link7}" class="blocklink">
+                                <div class="backgroundimage" style="{!'background-image: url('+$SfdcSite.pathPrefix  +'/resource/'+v.Image7+')'}"></div>
+                                <div class="blockcontent">
+                                    <div class="blocktitle">{!v.Title7}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </aura:if>
+                <aura:if isTrue="{!v.NumberOfBlocks>7}" >
+                    <li class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-small-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="block">
+                            <a href="{!v.Link8}" class="blocklink">
+                                <div class="backgroundimage" style="{!'background-image: url('+$SfdcSite.pathPrefix  +'/resource/'+v.Image8+')'}"></div>
+                                <div class="blockcontent">
+                                    <div class="blocktitle">{!v.Title8}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </aura:if>
+                <aura:if isTrue="{!v.NumberOfBlocks>8}" >   
+                    <li class="slds-col slds-size--1-of-2 slds-medium-size--1-of-2 slds-small-size--1-of-2 slds-large-size--1-of-3">
+                        <div class="block">
+                            <a href="{!v.Link9}" class="blocklink">
+                                <div class="backgroundimage" style="{!'background-image: url('+$SfdcSite.pathPrefix  +'/resource/'+v.Image9+')'}"></div>
+                                <div class="blockcontent">
+                                    <div class="blocktitle">{!v.Title9}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </aura:if>
+            </ul>
+        </div>
+    </div>
+</aura:component>

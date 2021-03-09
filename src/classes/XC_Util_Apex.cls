@@ -24,7 +24,6 @@ public inherited sharing class XC_Util_Apex {
     }
 
     /*
-     * @Name        filterOnFieldChange
      * @Description Check a list of records for field changes
      * @Author      Graeme Ward
      * @Params      newRecords: list of new versions of records

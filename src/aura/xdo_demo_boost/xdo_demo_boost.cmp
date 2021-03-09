@@ -1,0 +1,11 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+    <div class="slds-grid slds-wrap">
+
+        <div class="slds-col slds-size_12-of-12">
+    	<force:canvasApp namespacePrefix="xdo" developerName="XDO_Automation" width="100%" height="700px"/>
+  </div>
+
+    	
+    </div>
+	 
+</aura:component>

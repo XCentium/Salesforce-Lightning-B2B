@@ -1,0 +1,25 @@
+<aura:component controller="FIDO">
+    <aura:attribute name="Industry" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Pricebooks" type="PriceBook2[]"/>
+    <aura:attribute name="BrandName" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    	<aura:iteration items="{!v.Pricebooks}" var="pricebook">
+            <div class="owner brandrecord">
+            	<h3 class="borderbottom">
+                	<div class="padding relative">
+                    	<lightning:icon iconName="standard:pricebook" size="medium" alternativeText=""/> 
+                        <span class="marginleft">{!pricebook.Name}</span>
+                        <div class="menu">
+                        <button class="slds-button slds-button_neutral" aura:id="{!pricebook.Id}" id="{!pricebook.Id}" onclick="{!c.GoToPricebook}">
+                        	View
+                        </button>
+                        </div>
+                    </div>
+                </h3> 
+                <div class="padding contentarea">
+                    <c:FIDO_Brand_Products PricebookId="{!pricebook.Id}" />
+                </div>
+            </div>
+        </aura:iteration>
+</aura:component>

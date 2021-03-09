@@ -1,0 +1,75 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="ClientelingBrander">
+    <aura:attribute name="ClientelingSettings" type="IDO_Clienteling__c[]" />
+    <aura:attribute name="LogoId" type="String" />
+    <aura:attribute name="AppBackgroundColor" type="String" />
+    <aura:attribute name="HeaderBackgroundColor" type="String" />
+    <aura:attribute name="LogoBackgroundColor" type="String" />
+    <aura:attribute name="PrimaryButtonColor" type="String" />
+    <aura:attribute name="SecondaryButtonColor" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+        <div class="slds-card ">
+            <div class="padding">
+                <div class="box">
+                    <h3>
+                        <div class="padding">
+                            Update Logo
+                        </div>
+                    </h3>
+                    <div class="padding">
+                        <div style="{!'background-color:' + v.LogoBackgroundColor}" class="logowrapper">
+                            <img class="myLogo" src="{!$Resource.NTOWhite}"/>
+                        </div>
+                        <a href="{! '/' + v.LogoId}" target="_blank">Replace Logo</a>
+                    </div>
+                </div>
+                <div class="box">
+                    <h3>
+                        <div class="padding">
+                            Layout Colors
+                        </div>
+                    </h3>
+                    <div class="padding">
+                        <div class="half">
+                            <div class="paddingsmall">
+                                <lightning:input type="color" label="App Background Color" name="AppBackgroundColor" value="{!v.AppBackgroundColor}"/>
+                            </div>
+                        </div>
+                        <div class="half">
+                            <div class="paddingsmall">
+                                <lightning:input type="color" label="Navigation Background Color" name="HeaderBackgroundColor" value="{!v.HeaderBackgroundColor}"/>
+                            </div>
+                        </div>
+                         <div class="half">
+                            <div class="paddingsmall">       
+                                <lightning:input type="color" label="Header Background Color" name="LogoBackgroundColor" value="{!v.LogoBackgroundColor}"/>
+                             </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="box">
+                    <h3>
+                        <div class="padding">
+                            Button Colors
+                        </div>
+                    </h3>
+                    <div class="padding">
+                        <div class="half">
+                            <div class="paddingsmall">
+                                <lightning:input type="color" label="Primary Button Color" name="PrimaryButtonColor" value="{!v.PrimaryButtonColor}"/>
+                            </div>
+                        </div>
+                        <div class="half">
+                            <div class="paddingsmall">
+                                <lightning:input type="color" label="Secondary Button Color" name="SecondaryButtonColor" value="{!v.SecondaryButtonColor}"/>                
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="center">
+                	<lightning:button label="Update Branding" onclick="{!c.handleClick}" class="slds-button slds-button_brand"/>
+                </div>
+        	</div>
+        </div>
+</aura:component>

@@ -1,0 +1,27 @@
+<apex:page showHeader="false" cache="false" controller="SDOSiteController">
+<title>Site SSE Template</title>
+    <apex:composition template="{!$Site.Template}">
+    
+        <apex:define name="sidebarDiv">
+            <!-- This is where you can add custom sidebar components -->
+        
+            <div class="sidebarModule">
+                <div class="sidebarModuleHeader">
+                    Header goes here
+                </div>
+                <div class="sidebarModuleBody">
+                    Body goes here
+                </div>
+            </div>
+        </apex:define>
+    
+    
+        <apex:define name="body">
+            <!-- This is the main part of the page. -->
+
+            Main body...
+        
+        </apex:define>
+    
+    </apex:composition>
+</apex:page>

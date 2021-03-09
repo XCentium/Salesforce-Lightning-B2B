@@ -1,0 +1,7 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global">
+    <aura:attribute name="callscript" type="String" default="Hello" access="global" />
+    <div>
+        <lightning:icon class="icon" iconSize="small" iconName="utility:chat" variant="error"/>
+        <span class="greeting">{!v.callscript} </span>
+    </div>
+</aura:component>

@@ -1,0 +1,41 @@
+<apex:component controller="Community_Recent_Cases_Controller">
+    <apex:includeScript value="{!URLFOR($Resource.SDO_jqueryui192, '/js/jquery-1.8.3.js')}"/>
+   
+    <style type="text/css" media="all">
+        @import url("{!$Site.prefix}/apex/Community_Widget_CSS_Override");
+    </style>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log("Recent Cases Widget Ready!");
+        });
+    </script>
+    
+    <div class="widget_outer">
+        <div class="widget_inner">
+            <div class="widget_header">
+                <div>My Recent Cases</div>
+            </div>
+            <div class="widget_body">
+                <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <!--<th>Case Number</th>-->
+                                <th>Subject</th>
+                                <th>Status</th>
+                            </tr>
+                            <apex:repeat value="{!recentCases}" var="c">
+                                <tr>
+                                    <!--<td><apex:outputLink value="/{!c.Id}">{!c.CaseNumber}</apex:outputLink></td>-->
+                                    <td><apex:outputLink value="/{!c.Id}">{!c.Subject}</apex:outputLink></td>
+                                    <td><apex:outputField value="{!c.Status}"/></td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+            </div>
+            <div class="widget_footer">
+            </div>
+        </div>
+    </div>
+</apex:component>

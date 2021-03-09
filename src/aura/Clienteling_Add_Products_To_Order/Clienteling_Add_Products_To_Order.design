@@ -1,0 +1,4 @@
+<design:component>
+	<design:attribute name="OrderId" default="" label="Order ID" description="" />
+    <design:attribute name="PricebookId" default="" label="Pricebook ID" description="" />
+</design:component>

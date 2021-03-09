@@ -1,0 +1,81 @@
+<aura:component description="ckz_QT_DeepClone"
+implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,lightning:availableForFlowScreens,force:lightningQuickActionWithoutHeader,force:hasRecordId"
+controller="ckzQuickThemeDeepCloneController"
+access="global">
+
+    <aura:attribute name="recordId" type="String" />
+
+    <aura:attribute name="newQuickThemeName" type="String" />
+    <aura:attribute name="currentQuickThemeName" type="String" />
+
+    <aura:attribute name="pageMessages" type="List" default="[]"/>
+
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    
+    <div class="root">
+        <aura:if isTrue="{!v.showSpinner}">
+            <div class="slds-spinner_container">
+                <lightning:spinner alternativeText="Loading" size="medium" />
+            </div>
+        </aura:if>
+
+        <div class="slds-page-header">
+            <div class="slds-page-header__row">
+              <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                  <div class="slds-media__figure">
+                    <lightning:icon iconName="action:clone" alternativeText="Clone"/>
+                  </div>
+                  <div class="slds-media__body">
+                    <div class="slds-page-header__name">
+                      <div class="slds-page-header__name-title">
+                        <h1>
+                          <span class="slds-page-header__title slds-truncate" title="Quick Theme Deep Clone">Quick Theme Deep Clone</span>
+                        </h1>
+                      </div>
+                    </div>
+                    <p class="slds-page-header__name-meta">{!v.currentQuickThemeName}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <!-- Add Name field and button here -->
+
+        <aura:if isTrue="{!(v.pageMessages.length > 0)}">
+            <ul>
+                <aura:iteration items="{!v.pageMessages}" var="msg">
+                    <li><c:ckz_QT_MessageDisplay severity="{!msg.severity}" message="{!msg.message}"/></li>
+                </aura:iteration>
+            </ul>
+        </aura:if>
+
+        <form class="slds-form--stacked">
+
+            <lightning:input aura:id="inputForm"
+            value="{!v.newQuickThemeName}"
+            label="Quick Theme Name"
+            required='true'
+            maxlength="80"
+            placeholder="Enter new name"/>
+
+            <div class="slds-grid slds-grid_align-spread">
+
+                <div class="slds-col">
+                    <lightning:button aura:id="cloneMe"
+                                    label="Clone Me"
+                                    class="slds-m-top_medium"
+                                    variant="neutral"
+                                    onclick="{!c.handleCloneMe}" />
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</aura:component>

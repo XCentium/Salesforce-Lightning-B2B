@@ -1,0 +1,7 @@
+<design:component label="Idea List">
+    <design:attribute name="listingTitle" label="Page Header" Description="Idea page list view header" default="Ideas"/>
+    <design:attribute name="viewName" label="View to Load" description="Choose which list view to laod"  datasource="Popular,Recent,My" default="Popular" />
+    <design:attribute name="ideasPerPage" description="Set number of Ideas per page" label="Ideas per Page" default="20" />
+    <design:attribute name="ideaDetailPath" label="Idea Detail Path" description="Path to the idea detail page." default="idea/" />
+    <design:attribute name="ideaPostPath" label="Idea Post Path" description="Path to the page used to post new ideas." default="postidea/" />
+</design:component>

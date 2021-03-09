@@ -1,0 +1,101 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" docType="html-5.0">
+    <style>
+        .full-height {
+        min-height:160px;
+        height: 100%;
+        }
+        
+        .card {
+        display:flex; 
+        flex-flow: column nowrap;
+        justify-content: space-between;
+        flex: 1 1 auto;
+        position: relative; 
+        border: 1px solid #d8dde6; 
+        border-radius: 3px;
+        padding: 1em; 
+        height: 100%;
+        }
+        
+        .card-content {
+        display: flex; 
+        flex-flow: row wrap; 
+        width: 100%;
+        }
+        
+        .card-header {
+        display:flex; 
+        flex-flow: row nowrap; 
+        width: 100%; 
+        justify-content: space-between;
+        margin-bottom: 1rem; 
+        font-weight: 300; 
+        align-items: flex-start;
+        }
+        
+        .card-title {
+        padding-right: 1rem;
+        }
+        
+        .card .card-header .card-action {
+        white-space: nowrap;
+        }
+        
+        .card-body {
+        overflow:hidden;
+        whitespace: nowrap;
+        text-overflow: ellipsis;
+        }
+        
+        .card-footer {
+        justify-self: flex-end; 
+        align-self: flex-end; 
+        margin-top: 1rem;
+        }
+        
+        .card-tag {
+        display: inline-block;
+        font-size: 10px; 
+        padding: .5rem; 
+        border-radius: 15px; 
+        background-color: #fff; 
+        color: #333; 
+        margin-left: .5rem; 
+        border: 1px solid #ccc;
+        }
+    </style>
+    
+    <div xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="slds-p-around_small">
+        <div class="slds-m-bottom_small">
+            <div class="slds-text-heading_large">EMC Home</div>
+        </div>
+        
+        <div>
+            <input class="slds-input" placeholder="Search.." ng-model="filter"/>
+        </div>
+        
+        <div class="slds-grid slds-wrap slds-grid_pull-padded">
+            <div ng-repeat="tool in tools | filter: filter" class="full-height slds-p-around_small slds-size_1-of-1  slds-small-size_1-of-1  slds-medium-size_1-of-1 slds-large-size_1-of-3">
+                <div class="card">
+                    <div class="card-content">
+                        
+                        <div class="card-header slds-text-heading_medium">
+                            <div class="card-title">
+                                {{tool.title}}
+                            </div>
+                            <a class="card-action slds-button slds-button_brand" href="{{tool.link}}" target="_blank">View Quip</a>
+                        </div>
+                        <div class="card-body">
+                            {{tool.description}}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span ng-repeat="tag in tool.tags" class="card-tag">
+                            {{tag}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</apex:page>

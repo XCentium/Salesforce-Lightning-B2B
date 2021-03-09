@@ -1,0 +1,30 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    <aura:attribute name="campaignInsightId" type="string"></aura:attribute>
+    <aura:attribute name="rationales" type="object[]"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <div class="row flex-between">
+        <div class="column">
+            <div class="slds-text-heading_medium ">Campaign Insight Rationales</div>
+        </div>
+        <div class="column">
+            <lightning:buttonGroup>
+                <lightning:button variant="neutral" 
+                                  label="New Insight" 
+                                  onclick="{! c.newInsight }"
+                                  disabled="{! (v.insights.length + v.contactSuggestions.length) ge 5}"></lightning:button>
+            </lightning:buttonGroup>
+        </div>
+    </div>
+    
+    <aura:iteration items="{!v.rationales}" var="rationale">
+        <c:Insights_CampaignRationale recordId="{!v.recordId}" rationale="{!rationale}" campaignInsightId="{!v.campaignInsightId}"></c:Insights_CampaignRationale>
+    </aura:iteration>
+    
+    <div class="action-footer">
+        <div class="row">
+            <lightning:button label="Back" class="column" variant="neutral" onclick="{!c.goBack}"></lightning:button>
+        </div>
+    </div>
+</aura:component>

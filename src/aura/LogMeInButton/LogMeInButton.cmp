@@ -1,0 +1,9 @@
+<aura:component implements="c:MixpanelInterface">
+    <aura:attribute name="loginUserId" type="String"></aura:attribute>
+    <aura:attribute name="orgId" type="String"></aura:attribute>
+	<aura:attribute name="networkLabel" type="String"></aura:attribute>
+	<aura:attribute name="networkId" type="String"></aura:attribute>
+    <aura:attribute name="isInternal" type="Boolean"></aura:attribute>
+    
+    <button onclick="{!c.login}" class="slds-button slds-button--neutral slds-m-bottom--x-small">{!v.networkLabel}</button>
+</aura:component>

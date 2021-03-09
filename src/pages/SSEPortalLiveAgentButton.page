@@ -1,0 +1,50 @@
+<apex:page controller="SSEPortalLiveAgentButton" sidebar="false" showHeader="false" cache="false">
+    <title>SSE Portal Live Agent Button</title>
+        <style>
+            .buttonBackground{
+                background: {!userTemplate.Back_Side_Button_G_T__c};
+            }
+            #button_online:hover{
+                background: {!userTemplate.Back_Side_Button_H_G_T__c};
+                cursor:pointer;
+            }
+        </style>
+        <!--
+        <div id="button_online" href="javascript://Chat" style="display: none;" onclick="liveagent.startChat('{!LEFT(liveChatBtnId, 15)}')"  class="buttonBackground">
+        -->
+        <div id="button_online" href="javascript://Chat" style="display: none;" onclick="liveagent.startChat('{!LEFT(liveChatBtnId, 15)}')"  class="buttonBackground">
+            <apex:image value="{!URLFOR($Resource.SSEPortalResources, '/images/LiveAgentOn.png')}"/>
+        </div>
+        
+        <div id="button_offline" style="display: none;" class="buttonBackground">
+            <apex:image value="{!URLFOR($Resource.SSEPortalResources, '/images/LiveAgentOff.png')}"/>
+        </div>
+        
+        <script>
+            if (!window._laq) window._laq = [];
+            window._laq.push(function() {
+                liveagent.showWhenOnline('{!LEFT(liveChatBtnId, 15)}', document.getElementById('button_online'));
+                liveagent.showWhenOffline('{!LEFT(liveChatBtnId, 15)}', document.getElementById('button_offline'));
+            }); 
+        </script>
+        <!-- dylan: latest deployment code as of 04/2015 -->
+        <!--<script type='text/javascript' src='https://c.la1w1.salesforceliveagent.com/content/g/deployment.js'></script>-->
+        <script type='text/javascript' src='https://c.la1w1.salesforceliveagent.com/content/g/js/32.0/deployment.js'></script>
+        
+        <script type='text/javascript'>
+            liveagent.addCustomDetail('Contact Email', '{!liveAgentUserEmail}').map('Contact', 'Email', false, true); 
+            liveagent.addCustomDetail('Contact Name', '{!liveAgentUserName}').map('Contact', 'Name', true, false); 
+            liveagent.setName('{!liveAgentUserName}');
+            liveagent.init('https://d.la1w1.salesforceliveagent.com/chat', '{!LEFT(liveChatDepId, 15)}&userId={!$User.id}', '{!LEFT($Organization.id, 15)}');
+        </script>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

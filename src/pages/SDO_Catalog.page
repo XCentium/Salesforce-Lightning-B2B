@@ -1,0 +1,490 @@
+<apex:page showHeader="false" sidebar="false" docType="html">
+<!-- 
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.2.0
+Version: 3.4
+Website: http://www.keenthemes.com/
+-->
+<script type="text/javascript">
+      var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+<!-- Head BEGIN -->
+<head>
+  <meta charset="utf-8"/>
+  <title>Product Catalog</title>
+
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+  <link rel="shortcut icon" href="/resource/qfavicon"/>
+
+  <!-- Fonts START -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all" rel="stylesheet" type="text/css"/> 
+  <link href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css"/><!-- for slider-range -->
+  <!-- Fonts END -->
+
+  <!-- Global styles START -->          
+  <apex:stylesheet value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/css/bootstrap.min.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.BfFontAwesome, 'font-awesome-4.3.0/css/font-awesome.min.css')}"/>
+  <!-- Global styles END --> 
+   
+  <!-- Page level plugin styles START -->
+  <apex:stylesheet value="{!URLFOR($Resource.CatalogResources, '/css/jquery.fancybox.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.CatalogResources, '/css/owl.carousel.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.CatalogResources, '/css/uniform.default.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.CatalogResources, '/css/rateit.css')}"/>
+  <!-- Page level plugin styles END -->
+
+  <!-- Theme styles START -->
+  <apex:stylesheet value="{!URLFOR($Resource.CatalogResources, '/css/components.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.CatalogResources, '/css/style.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.CatalogResources, '/css/style-shop.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.CatalogResources, '/css/style-responsive.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.CatalogResources, '/css/red.css')}"/>
+
+  <!-- Theme styles END -->
+  <apex:includeScript value="{!URLFOR($Resource.jquery1112)}"/>
+  <script src="/soap/ajax/33.0/connection.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/resource/animate"/>
+  <style>
+
+    html *
+    {
+       /*font-family:Arial,Helvetica,sans-serif !important;*/
+       font-family:'Helvetica Neue',Helvetica,Arial,sans-serif !important;
+    }
+    .sidebar-filter label {
+      font-family:'Helvetica Neue',Helvetica,Arial,sans-serif !important;
+      padding-bottom: 0px;
+    }
+    .table>tbody>tr>td{
+      padding:2px;
+    }
+
+    body{
+      margin-top: 10px !important;
+      overflow-x: hidden;
+
+    }
+    .description{
+      font-size: 12px;
+      color:#393f49;
+      font-family:'Helvetica Neue',Helvetica,Arial,sans-serif !important;
+    }
+    .container {
+      width:100% !important;
+    }
+    .checkbox-group {
+      margin-bottom:10px;
+    }
+    #topcontrol{
+      display: none;
+    }
+    .header .top-cart-block {
+      margin-top:5px;
+      margin-bottom:5px;
+    }
+    .checkout-wrapper {
+        margin-left: 20px;
+        float: right;
+        margin-top: 10px;
+    }
+    div.checker input {
+      opacity: 1 !important;
+      -webkit-appearance:checkbox;
+    }
+    .pi-price{
+      color:black;
+      position: relative;
+      top:10px;
+      font-weight: bold;
+    }
+    .top-cart-block .fa-shopping-cart {
+      background:#008ad6;
+    }
+    .top-cart-content {
+      border-top: solid 2px #008ad6;
+    }
+    #searchInput::selection {
+      background:#008ad6;
+    }
+    .product-item::selection{
+      background:#008ad6;
+    }
+    .btn:hover{
+      background:#008ad6;
+    }
+
+    ::selection{
+      background:#008ad6 !important;
+    }
+
+    .product-item .btn:hover {
+      background: #87ae2e !important;
+      border-color: #87ae2e !important;
+      color:white !important;
+    }
+
+    .product-item{
+      border:1px solid #ccc;
+    }
+
+    .product-list .product-item{
+      margin-bottom: 13px;
+    }
+
+    .page-title{  
+        top: 10px;
+        position: relative;
+    }
+    .checkbox-list{
+
+    }
+    .sidebar form-title {
+      font-weight:bold !important;
+    }
+    .sidebar-filter {
+      border:1px solid #ccc;
+      padding-top:0px;
+      padding-bottom: 0px;
+    }
+
+      
+  .product-item .add2cart {
+    border-radius: 5px !important;
+    float: right;
+    padding: 7px 6px;
+    background: white;
+    border-color: #87ae2e;
+    color: #87ae2e;
+  }
+
+  .product-page h1 {
+    border-bottom:0px;
+  }
+  .ecommerce h1 {
+    font-size: 16px !important;
+    text-transform: none !important;
+    font-weight: bold;
+  }
+  .ecommerce h2 {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: none;
+  }
+
+  .ecommerce .sidebar {
+    max-width: 260px;
+    min-width: 260px;
+    position: fixed;
+    height: 550px;
+    overflow-x:hidden;
+  }
+  .sidebar .form-group {
+    margin-bottom: 10px;
+  }
+  .form-title label {
+    font-weight:bold !important;
+  }
+  .form-title{
+    font-weight:bold !important;
+  }
+  .price-availability-block{
+    margin-top:17px;
+    border-bottom:0px;
+    border-bottom:none;
+  }
+  .price-availability-block .price strong {
+    color: #000;
+    font-size: 24px;
+  }
+  .price{
+    font-weight: bold;
+    font-size:16px;
+  }
+
+  .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    background: #87ae2e;
+  }
+  .nav-tabs {
+  border-color: #87ae2e;
+}
+
+.green-btn {
+  /*
+  border-radius: 5px !important;
+  float: right;
+  padding: 7px 6px;
+  background: white;
+  border-color: #87ae2e;
+  color: #87ae2e;
+  */
+    font-size: 15px;
+  border-radius: 5px !important;
+  float: right;
+  padding: 8px 13px;
+  background: #87ae2e;
+  border-color: #ccc;
+  color: white;
+  margin-top: -4px;
+}
+}
+.product-item h3 a {
+  text-transform: none !important;
+  }
+
+  .product-page-cart {
+    border-bottom:none;
+  }
+  .product-page-options{
+     border:none !important;
+  }
+  .product-page-cart {
+    border:none !important;
+  }
+
+  .product-page-options .pull-left {
+    margin-right:10px;
+  }
+
+  .product-qty{
+    width:40px;
+  }
+  .recommended-price{
+    font-size: 16px;
+  font-weight: bold;
+  position: relative;
+  top: 10px;
+  }
+  .owl-item{
+    width:242px;
+  }
+  .recommended-products-header{
+    margin-top:10px;margin-bottom:10px;display: block;
+  }
+  .product-content{
+        margin-left: 257px;
+        padding-right: 30px;
+        width: auto;
+    }
+    .product-wrapper{
+        padding-right:0px;
+        min-width:222px;
+    }
+
+  </style>
+
+</head>
+<!-- Head END -->
+<body class="ecommerce">
+    <apex:insert name="_layout"/>
+
+    <apex:includeScript value="/support/console/32.0/integration.js"/>
+
+
+    <!-- Load javascripts at bottom, this will reduce page load time -->
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery-migrate.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/bootstrap.min.js')}"/>   
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/back-to-top.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery.slimscroll.min.js')}"/> 
+    <!-- END CORE PLUGINS -->
+
+    <!-- BEGIN PAGE LEVEL JAVASCRIPTS (REQUIRED ONLY FOR CURRENT PAGE) -->
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery.fancybox.pack.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/owl.carousel.min.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery.zoom.min.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/bootstrap.touchspin.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery.uniform.min.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery.rateit.js')}"/> 
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript"></script><!-- for slider-range -->
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/layout.js')}"/> 
+    <script type="text/javascript">
+        var attr1 = '';
+        var attr2 = '';
+        var attr3 = '';
+        var attr4 = '';
+        var attr5 = '';
+        var attrMaster = '';
+
+        jQuery(document).ready(function() {
+            Layout.init();    
+            Layout.initOWL();
+            Layout.initTwitter();
+            Layout.initImageZoom();
+            //Layout.initTouchspin();
+            Layout.initUniform();
+            Layout.initSliderRange();
+
+            $('.product-wrapper').each(function(i,v) {
+              $(v).attr('data-name',$(v).attr('data-name').toLowerCase()); 
+              $(v).attr('data-id',$(v).attr('data-id').toLowerCase()); 
+              $(v).attr('data-catalog',$(v).attr('data-catalog').toLowerCase()); 
+            });
+
+            $('input[type=checkbox]').change(function() {
+              attr1 = '';
+              attr2 = '';
+              attr3 = '';
+              attr4 = '';
+              attr5 = '';
+              attrMaster = '';
+
+              $('.attribute1 input[type=checkbox]').each(function () {
+                   //value/label of the checkbox
+                   var sThisVal = (this.checked ? $(this).val() : "");
+                   attr1 += sThisVal + ',';
+                   attrMaster += sThisVal + ' ';
+              });
+              $('.attribute2 input[type=checkbox]').each(function () {
+                   //value/label of the checkbox
+                   var sThisVal = (this.checked ? $(this).val() : "");
+                   attr2 += sThisVal + ',';
+                   attrMaster += sThisVal + ' ';
+              });
+              $('.attribute3 input[type=checkbox]').each(function () {
+                   //value/label of the checkbox
+                   var sThisVal = (this.checked ? $(this).val() : "");
+                   attr3 += sThisVal + ',';
+                   attrMaster += sThisVal + ' ';
+              });
+              $('.attribute4 input[type=checkbox]').each(function () {
+                   //value/label of the checkbox
+                   var sThisVal = (this.checked ? $(this).val() : "");
+                   attr4 += sThisVal + ',';
+                   attrMaster += sThisVal + ' ';
+              });
+              $('.attribute5 input[type=checkbox]').each(function () {
+                   //value/label of the checkbox
+                   var sThisVal = (this.checked ? $(this).val() : "");
+                   attr5 += sThisVal + ',';
+                   attrMaster += sThisVal + ' ';
+              });
+              //getCheckBoxes();
+              doSearch();
+            });
+
+
+        //set primary tab name
+       
+        });
+
+
+        function searchProducts() {
+          doSearch();
+        }
+
+        function setProductCatalog() {
+          doSearch();
+        }
+
+        function doSearch() {
+          var attributes = attr1 + '--' + attr2 + '--' + attr3 + '--' + attr4 + '--' + attr5;
+
+          //console.log('serach input: ' + $('#searchInput').val());
+          //console.log('catalog: ' + $('.productCatalogInput').val());
+          console.log('Attributes sent via action function: ');
+          console.log(attributes);
+
+          var searchInput = $('#searchInput').val().toLowerCase();
+          var catalogInput = $('.productCatalogInput').val();
+          var sortInput = $('.sortInput').val();
+          //console.log('sort input : ' + sortInput);
+          search3(searchInput,catalogInput,attributes,sortInput);
+
+          /*
+
+          $(".product-wrapper").hide();
+          if(searchInput != null && searchInput != '') {
+            $('.product-wrapper[data-name*="'+searchInput+'"]').show();
+          }
+          if(catalogInput != null && catalogInput != '') {
+            $('.product-wrapper[data-name*="'+catalogInput+'"]').show();
+          }
+          */
+
+            
+
+          //});
+        }
+
+        function getCheckBoxes() {
+          //get all checkbox values
+          //var attMaster = attr1 + ' ' + attr2 + ' ' + attr3 + ' ' + attr4 + ' ' + attr5;
+          //attMaster = attMaster.replace(',',' ');
+          attrMaster = attrMaster.trim();
+          console.log(attrMaster);
+          if(attrMaster != null && attrMaster != '') {
+            $('.product-wrapper').each(function () {
+              var attrString = $(this).attr('data-attributes').replace(';', ' ');
+              //console.log(attrString);
+              var AttrArray = attrString.split(' ');
+              //console.log(AttrArray);
+              for(var i = 0;i<AttrArray.length;i++) {
+                //console.log(AttrArray[i]);
+                if(attrMaster.indexOf(AttrArray[i]) >=0 && AttrArray[i] != ' ' && AttrArray[i] != '' && AttrArray[i] != null) {
+                  //console.log('found match!');
+                  //console.log(this);
+                  $(this).css('display','block');
+                  break;
+                }else {
+                  $(this).css('display','none');
+                }
+              }
+            });
+          }else {
+             $('.product-wrapper').each(function () {
+               $(this).css('display','block');
+             });
+          }
+        }
+
+
+        ///show product
+        // add product to shopping cart
+        var url;
+        var tabName;
+        var callOpenSubtab=function callOpenSubtab(result) {
+          console.log(result.id);
+            sforce.console.openSubtab(result.id, 
+               '/apex/sdo_productpage?id='+url, true, tabName);
+        };
+        
+        function openSubtab(myUrl,myTabName) {
+            url = myUrl;
+            tabName = myTabName;
+            sforce.console.getEnclosingPrimaryTabId(callOpenSubtab);
+        }
+
+
+        function addProductToShoppingCart(pricebookEntryId,orderId) {
+            var quantity = $('.qty-' + pricebookEntryId).val();
+            if(!quantity) quantity = 1;
+            sforce.console.fireEvent('AddProductToShoppingCart', pricebookEntryId+':'+quantity, callback);
+        }
+
+        var callback = function(result) { 
+            if (result.success) { 
+                   console.log('The custom event is fired!');
+            } else { 
+                   console.log('The custom event could not be fired!');
+            } 
+         };
+
+         function sortItems(){
+          doSearch();
+         }
+
+         //Google Analytics Code
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-46606102-1', 'salesforce.com');
+          ga('send', 'pageview');
+         
+    </script>
+    <!-- END PAGE LEVEL JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</apex:page>

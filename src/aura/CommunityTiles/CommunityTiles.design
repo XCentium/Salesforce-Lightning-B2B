@@ -1,0 +1,41 @@
+<design:component >
+    
+    <design:attribute name="NumberOfBlocks" datasource="1,2,3,4,5,6,7,8,9" label="Number of Blocks" description="Enter a number between 1 and 9 for the number of blocks that you want to appear"/>	
+    
+    <design:attribute name="Title1" label="1st Title" description="Enter the text you want to appear in the first block" />
+    <design:attribute name="Link1" label="1st Link" description="Enter in the target url for this block. For internal links only enter what follows the '/s/'. ('https://sdodemo-main-14e454a4fb6.force.com/audiophiles/s/groups' becomes 'groups'). For external links enter in the entire url (ex: 'https://www.google.com/')"/>
+    <design:attribute name="Image1" label="1st Image" description="After uploading your desired image as a static resource enter the name of the resource here. Ideal image size is a square 400 * 400."/>
+    
+    <design:attribute name="Title2" label="2nd Title"  />
+    <design:attribute name="Link2" label="2nd Link" />
+    <design:attribute name="Image2" label="2nd Image" />
+	
+    <design:attribute name="Title3" label="3rd Title"  />
+    <design:attribute name="Link3" label="3rd Link" />
+    <design:attribute name="Image3" label="3rd Image" />
+   
+    <design:attribute name="Title4" label="4th Title"  />
+    <design:attribute name="Link4" label="4th Link" />
+    <design:attribute name="Image4" label="4th Image" />
+	
+    <design:attribute name="Title5" label="5th Title"  />
+    <design:attribute name="Link5" label="5th Link" />
+    <design:attribute name="Image5" label="5th Image" />
+	
+    <design:attribute name="Title6" label="6th Title"  />
+    <design:attribute name="Link6" label="6th Link" />
+    <design:attribute name="Image6" label="6th Image" />
+    
+    <design:attribute name="Title7" label="7th Title"  />
+    <design:attribute name="Link7" label="7th Link" />
+    <design:attribute name="Image7" label="7th Image" />
+	
+    <design:attribute name="Title8" label="8th Title" />
+    <design:attribute name="Link8" label="8th Link" />
+    <design:attribute name="Image8" label="8th Image" />
+	
+    <design:attribute name="Title9" label="9th Title" />
+    <design:attribute name="Link9" label="9th Link" />
+    <design:attribute name="Image9" label="9th Image" />
+    
+</design:component>

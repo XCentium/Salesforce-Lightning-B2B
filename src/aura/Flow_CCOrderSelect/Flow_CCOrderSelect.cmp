@@ -1,0 +1,17 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global" controller="Flow_getProductstoRegister">
+    <aura:attribute name="selectedCard" type="String" default="Please click a product"/>
+	<aura:attribute name="PreviousCard" type="String" default=""/>
+    <aura:attribute name="ReturnedProduct" type="Product2[]"/>
+    <aura:attribute name="ProductId" type="String"/>
+    <aura:attribute name="OrderId" type="String"/>
+    <aura:attribute name="ContactId" type="String"/>
+    <aura:attribute name="OrderName" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.GetProducts}"/>
+    <div class="bigpadding">
+        <div class="center">
+            		<strong>The following order qualifies for a FREE Cirrus Service.</strong>
+                    <h3>Order #{!v.OrderName}</h3>
+                    
+        </div>
+    </div>
+</aura:component>

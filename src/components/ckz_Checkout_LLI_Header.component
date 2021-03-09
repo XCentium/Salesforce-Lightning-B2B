@@ -1,0 +1,59 @@
+<!--
+ - Created by brandon.rogers on 1/22/19.
+ -->
+
+<apex:component id="ckz_Checkout_LLI_Header">
+    <script id="CKZ-CheckoutHeader-LLI-Desktop" type="text/template">
+
+        <div class="container ckz_CheckoutHeader_LLI">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="ckz_heading_embellished text-center m-y-2">
+                        <h3>{{pageLabelMap 'Component_Checkout_LLI_Title'}} -
+                            {{#each this.views}}
+                                {{#ifEquals @index ../index}}
+                                    {{{this.title}}}
+                                {{/ifEquals}}
+                            {{/each}}
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="col-xs-12">
+                    <ul class="list-unstyled multi-steps m-b-3">
+                        {{#each this.views}}
+                        <li class="{{#ifEquals @index ../index}}active{{else}}disabled{{/ifEquals}} cc_checkoutStep{{@index}} cc_checkoutStep">
+                            {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="container ckz_CheckoutHeader_LLI">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2>{{pageLabelMap 'Component_Checkout_LLI_Title'}}</h2>
+                </div>
+
+                <div class="col-xs-12">
+                    <ul class="nav nav-pills nav-justified m-y-3">
+                        {{#each this.views}}
+                        <li class="{{#ifEquals @index ../index}}active{{else}}disabled{{/ifEquals}} cc_checkoutStep{{@index}} cc_checkoutStep">
+                            <a><h4 class="list-group-item-heading">{{{this.title}}}</h4></a>
+                        </li>
+                        {{/each}}
+                        <li class="disabled cc_checkoutStepOrderConfirmation cc_checkoutStep">
+                            <a><h4 class="list-group-item-heading">{{pageLabelMap 'LLICheckOut_OrderConfirmationStep'}}</h4></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>-->
+    </script>
+
+    <script type="text/javascript">
+        $(function(){
+            CCRZ.uiProperties.LLICheckoutNav.desktop.tmpl = 'CKZ-CheckoutHeader-LLI-Desktop';
+        });
+    </script>
+</apex:component>

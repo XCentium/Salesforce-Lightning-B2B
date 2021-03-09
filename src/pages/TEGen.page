@@ -1,0 +1,98 @@
+<apex:page controller="TEGenController" action="{!init}" showHeader="false">
+<title>TE Gen</title>
+    <apex:form >
+        <apex:pageBlock title="Tasks">
+
+
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!clearAll}" value="Clear All" />
+                <apex:commandButton action="{!save}" value="Go!" />
+
+            </apex:pageBlockButtons>
+            <apex:dataTable value="{!ts}" var="t"  cellspacing="15"
+                rowClasses="odd,even" styleClass="tableClass">
+                <apex:column >
+                    <apex:facet name="header">Selected</apex:facet>
+                    <apex:inputCheckbox value="{!t.selected}" />
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Subject</apex:facet>
+                    <apex:inputField value="{!t.t.Subject}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Who</apex:facet>
+                    <apex:inputField value="{!t.t.WhoId}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">What</apex:facet>
+                    <apex:inputField value="{!t.t.WhatId}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Status</apex:facet>
+                    <apex:inputField value="{!t.t.Status}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Priority</apex:facet>
+                    <apex:inputField value="{!t.t.Priority}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Date</apex:facet>
+                    <apex:inputField value="{!t.t.ActivityDate}"/ >
+                </apex:column>
+            </apex:dataTable>
+
+        </apex:pageBlock>
+    <apex:pageBlock title="Events"> 
+
+
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!clearAll}" value="Clear All" />
+                <apex:commandButton action="{!save}" value="Go!" />
+
+            </apex:pageBlockButtons>
+            <apex:dataTable value="{!es}" var="e" cellspacing="15"
+                rowClasses="odd,even" styleClass="tableClass">
+                <apex:column >
+                    <apex:facet name="header">Selected</apex:facet>
+                    <apex:inputCheckbox value="{!e.sel}" />
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Subject</apex:facet>
+                    <apex:inputField value="{!e.e.Subject}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Who</apex:facet>
+                    <apex:inputField value="{!e.e.WhoId}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">What</apex:facet>
+                    <apex:inputField value="{!e.e.WhatId}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Location</apex:facet>
+                    <apex:inputField value="{!e.e.Location}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">End Time</apex:facet>
+                    <apex:inputField value="{!e.e.ActivityDateTime}"/ >
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Duration</apex:facet>
+                    <apex:inputField value="{!e.e.DurationInMinutes}"/ >
+                </apex:column>
+
+            </apex:dataTable>
+    </apex:pageBlock>
+    </apex:form>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

@@ -1,0 +1,74 @@
+<apex:page controller="SSETriggerBuilder" showHeader="false">
+    <head>
+        <title>Trigger Builder</title>
+        <link class="user" href="{!URLFOR($Resource.SSETriggerBuilder, '/styles/triggercreate.css')}" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript">
+            __sfdcSessionId = "{!$API.Session_ID}";
+        </script>
+        <script type="text/javascript" src="/soap/ajax/26.0/connection.js"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSETriggerBuilder, '/scripts/sffix.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSETriggerBuilder, '/scripts/Metadata.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSETriggerBuilder, '/scripts/jszip.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSETriggerBuilder, '/scripts/jszipload.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSETriggerBuilder, '/scripts/jszipinflate.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSETriggerBuilder, '/scripts/jszipdeflate.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSETriggerBuilder, '/scripts/jqueryneales.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.SSETriggerBuilder, '/scripts/triggercreate.js')}"></script>
+    </head>
+    <body>
+        <div id="builderTitleBar">
+            <div id="builderTitle">Trigger Builder</div>
+            <div id="builderButton" onclick="if($('#builderButton').html() == 'Create'){createTrigger();}">Create</div>
+        </div>
+        <div class="builderPanel">
+            <h2>Setup</h2>
+            <div class="builderContainer">
+                <h1>1. Name</h1>
+                <input type="text" value="myFirstTrigger" id="triggerName"/>
+            </div>
+            <div class="builderContainer">
+                <h1>2. Object</h1>
+                <select class="triggerObject" id="triggerObject"/>
+            </div>
+            <div class="builderContainer">
+                <h1>3. When</h1>
+                <input type="checkbox" id="triggerInsert"/>Insert<br/>  
+                <input type="checkbox" id="triggerUpdate"/>Update<br/>
+            </div>
+            <div class="builderContainer">
+                <h1>4. Criteria</h1>
+                <div class="triggerRuleSection">
+                    <div class="triggerRule" id="triggerRule1">
+                        <select class="triggerFields"/><select class="triggerOperator"/><input class="triggerComparisonText"/><select class="triggerAndOr"><option value="&&">AND</option><option value="||">OR</option></select>
+                    </div>
+                    <div class="triggerRule" id="triggerRule2">
+                        <select class="triggerFields"/><select class="triggerOperator"/><input class="triggerComparisonText"/><select class="triggerAndOr"><option value="&&">AND</option><option value="||">OR</option></select>
+                    </div>
+                    <div class="triggerRule" id="triggerRule3">
+                        <select class="triggerFields"/><select class="triggerOperator"/><input class="triggerComparisonText"/>
+                    </div>
+                </div>
+           </div>
+           <div class="builderContainer">
+               <h1>5. Actions</h1>
+                <input type="checkbox" id="triggerCancel"/>Cancel update<br/> 
+                <input type="checkbox" id="triggerSend"/>Send email<br/>
+                <input type="checkbox" id="triggerChatter"/>Chatter post<br/> 
+                <input type="checkbox" id="triggerCreate"/>Create record<select class="triggerObject" id="triggerCreateObject" style="margin-left:23px;"/><br/> 
+           </div>                     
+        </div>
+    </body>
+    <script type="text/javascript">
+    
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36269828-4']);
+        _gaq.push(['_trackPageview']);
+        
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    
+    </script>
+</apex:page>

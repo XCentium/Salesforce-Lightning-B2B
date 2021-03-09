@@ -1,0 +1,40 @@
+<aura:component >
+    <aura:attribute name="currentIndex" type="Integer" default="0"></aura:attribute>
+    <aura:attribute name="totalSteps" type="Integer" default="2"></aura:attribute>
+    <aura:attribute name="steps" type="Integer[]"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="{!c.totalStepsChange}"/>
+    <aura:handler name="change" value="{!v.totalSteps}" action="{!c.totalStepsChange}"/>
+
+    <div class="slds-progress slds-progress_shade">
+        <ol class="slds-progress__list">
+            <aura:iteration items="{!v.steps}" var="step">
+            	<aura:if isTrue="{!step > v.currentIndex}">
+                    <li class="slds-progress__item">
+                        <button class="slds-button slds-progress__marker">
+                            <span class="slds-assistive-text">not completed</span>
+                        </button>
+                    </li>
+                </aura:if>
+            	<aura:if isTrue="{!step == v.currentIndex}">
+                    <li class="slds-progress__item slds-is-active">
+                        <button class="slds-button slds-progress__marker">
+                            <span class="slds-assistive-text">Active</span>
+                        </button>
+                    </li>
+                </aura:if>
+                <aura:if isTrue="{!lessthan(step,v.currentIndex)}">
+                    <li class="slds-progress__item slds-is-completed">
+                        <button class="slds-button slds-button_icon slds-button_icon slds-progress__marker slds-progress__marker_icon" title="Step 1 - Completed">
+                            <lightning:icon iconName="utility:success" variant="brand" size="x-small" class="slds-button__icon"></lightning:icon>
+                            <span class="slds-assistive-text">Completed</span>
+                        </button>
+                    </li>
+                </aura:if>
+            </aura:iteration>
+        </ol>
+        <div class="slds-progress-bar slds-progress-bar_x-small" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" role="progressbar">
+            <span class="slds-progress-bar__value" style="{! 'width:' + (v.currentIndex / (v.totalSteps - 1)) * 100 + '%;'}">
+            </span>
+        </div>
+    </div>
+</aura:component>

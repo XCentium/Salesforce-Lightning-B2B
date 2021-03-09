@@ -1,0 +1,83 @@
+<aura:component access="global" controller="MLMJourneyOptIn" implements="force:hasRecordId">
+	<aura:attribute name="journeyid" type="String"  />
+    <aura:attribute name="journeys" type="IDO_Customer_Journey__c[]"  />
+    <aura:attribute name="journeyDetails" type="IDO_Journey__c[]"  />
+    <aura:attribute name="showByDefault" type="Boolean" default="false" />
+    <aura:attribute name="optCount" type="String" access="global" />
+    <aura:attribute name="cID" type="string" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:if isTrue="{!v.showByDefault == false}">
+        <aura:iteration var="j" items="{!v.journeys}" indexVar="index">
+            <aura:if isTrue="{!j.Id == v.journeyid}">
+                <aura:if isTrue="{!v.optCount > 0}">
+                    <hr/>
+                    <aura:iteration var="detail" items="{!v.journeyDetails}" indexVar="index">
+                        <div class="section">
+                            <div class="icon">
+                                <div class="padding">
+                                    <aura:if isTrue="{!detail.Status__c == 'Completed' }">
+                                        <img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/icons/components/icon-completed.png" alt="" class="iconimg" />
+                                        <aura:set attribute="else">
+                                            <img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/icons/components/icon-notcompleted.png" alt="" class="iconimg" />    
+                                        </aura:set>
+                                    </aura:if>
+                                    <aura:if isTrue="{! (index + 1) != v.journeyDetails.length}">
+                                        <div class="line"></div>
+                                    </aura:if>    
+                                </div>
+                            </div>
+                            <div class="half">
+                                <div class="padding">
+                                    <h3>{!detail.Name}</h3>
+                                    <i>{!detail.Timing_Information__c}</i>
+                                </div>
+                            </div>
+                            <div class="half">
+                                <div class="padding">
+                                    <aura:unescapedHtml value="{!detail.Description__c}" />
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </aura:iteration>
+                </aura:if>
+            </aura:if>
+        </aura:iteration>  
+    	<aura:set attribute="else">
+        	<aura:iteration var="j" items="{!v.journeys}" indexVar="index">
+                <aura:if isTrue="{!j.Id == v.journeyid}">
+                        <hr/>
+                        <aura:iteration var="detail" items="{!v.journeyDetails}" indexVar="index">
+                            <div class="section">
+                                <div class="icon">
+                                    <div class="padding">
+                                        <aura:if isTrue="{!detail.Status__c == 'Completed' }">
+                                            <img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/icons/components/icon-completed.png" alt="" class="iconimg" />
+                                            <aura:set attribute="else">
+                                                <img src="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/icons/components/icon-notcompleted.png" alt="" class="iconimg" />    
+                                            </aura:set>
+                                        </aura:if>
+                                        <aura:if isTrue="{! (index + 1) != v.journeyDetails.length}">
+                                            <div class="line"></div>
+                                        </aura:if>    
+                                    </div>
+                                </div>
+                                <div class="half">
+                                    <div class="padding">
+                                        <h3>{!detail.Name}</h3>
+                                        <i>{!detail.Timing_Information__c}</i>
+                                    </div>
+                                </div>
+                                <div class="half">
+                                    <div class="padding">
+                                        <aura:unescapedHtml value="{!detail.Description__c}" />
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </aura:iteration>
+                </aura:if>
+            </aura:iteration> 
+        </aura:set>
+    </aura:if>
+</aura:component>

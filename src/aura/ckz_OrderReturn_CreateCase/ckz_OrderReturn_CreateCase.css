@@ -1,0 +1,16 @@
+.THIS .uiMessage.confirm{
+    display:inline-block;
+}
+.THIS.save-bg{
+    padding-bottom: 130px;
+    /*background-image: url(/resource/1564497818000/ckz_PIM_Save_BG?);*/
+    background-image: url(https://image.s4.sfmc-content.com/lib/fe9615737265077870/m/1/020ed251-c9e0-4173-86f1-6b498f5ef9d7.png);
+    background-repeat: no-repeat;
+    background-size: 96%;
+    background-position: center bottom;
+    min-height: 220px;
+}
+
+.THIS .uiMessage{
+    display: inline-block;
+}

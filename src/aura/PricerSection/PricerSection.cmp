@@ -1,0 +1,234 @@
+<aura:component controller="LightningProductPricer" access="global">
+    
+    <aura:attribute name="section" type="Object" access="global" required='true'/>
+    <aura:attribute name="sectionIndex" type="Integer"/>
+    <aura:attribute name="pricebookId" type="String" default=""/>
+    <aura:attribute type="Map" name="marginLimits"/>
+    <aura:attribute name="emptyLine" type="Object" access="global"/>
+    <aura:attribute name="productId" type="string"/>
+    <aura:attribute type="Boolean" name="hideMargins" default="false"/>
+    <aura:attribute type="Boolean" name="hideSections" default="false" access="global"/>
+    <aura:attribute type="Boolean" name="hideDiscounts" default="false" access="global"/>
+    <aura:attribute name="recordId" type="string" required="true"/>
+    <aura:attribute name="sObjectName" type="String" />
+    <aura:attribute name="orgInfo" type="Map"/> 
+    <aura:attribute name="width" type="Integer"/>
+    <aura:attribute name="calculateWidth" type="Boolean" default="true"/>
+    <aura:attribute name="testLine" type="Object"/>
+    <aura:attribute name="upsellLines" type="List"/>
+    
+    <!-- REGISTER EVENTS -->
+    
+    <aura:registerEvent name="newSectionRequested" type="c:NewSectinRequested"/>
+    <aura:registerEvent name="newLineRequested" type="c:PricerLineRequest"/>
+    <aura:registerEvent name="pricerSectionUpdate" type="c:PricerSectionUpdated"/>
+    <aura:registerEvent name="moveLines" type="c:PricerMoveLinesEvent"/>
+    <aura:registerEvent name="askPricerToScroll" type="c:PricerScrollEvent"/>
+    
+    <!-- HANDLERS -->
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
+    <aura:handler name="productAddedToLine" event="c:PricerProductAddedSuccess" action="{!c.afterProductInsert}"/>
+    <aura:handler name="priceUpdate" event="c:PricerPriceUpdate" action="{!c.recalcSectionTotals}"/>
+    <aura:handler event="c:PricerTriggerSectionCalculation" action="{!c.recalcSectionTotals}"/> 
+    <aura:handler name="upsellProductAvailable" event="c:UpsellProductAvailable" action="{!c.displayCrossSell}"/>
+    <aura:handler name="focusOnLookupField" event="c:PricerFocusOnProductLookup" action="{!c.focusOnLookupField}"/>
+    
+    <!-- METHODS -->
+    
+    <aura:method name="getSectionHeight" action="{!c.getSectionHeight}"/>
+    <aura:method name="publicFind" action="{!c.publicFind}">
+   		 <aura:attribute name="cmp" type="String" default=""/>
+    </aura:method>
+    <aura:method name="focusOnLastLineQtyField" action="{!c.focusOnLastLineQtyFieldMethod}"/>	    
+   
+    
+   
+    <article aura:id="section" class="{!v.section.isDeleted?'slds-hide slds-card':'slds-card'}">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <lightning:icon iconName="action:record" size="small" alternativeText="Indicates approval"/>
+
+                </div>
+                <div class="slds-media__body slds-truncate displayEditOnHover">
+                    <h2 class="">
+                        <aura:if isTrue="{!v.section.isEditMode}">
+                            <div onkeyup="{!c.toggleSectionEditMode}" style="margin-right:20px">
+                            <ui:inputText aura:id="sectionField" class="slds-input" value="{!v.section.oSection.Name}" blur="{!c.sectionTitleFieldBlur}" />
+							</div>
+                            <aura:set attribute="else">
+                                <a data-toggle="collapse" data-parent="#accordion" id-generation='section' section='section' onclick="{! c.toggleSectionEditMode }">
+                                    {!v.section.oSection.Name}
+                                </a>
+                                <lightning:buttonIcon iconName="utility:edit"  variant="border-filled" class="transparentBorder" onclick="{! c.toggleSectionEditMode }" />
+                            </aura:set>
+                        </aura:if>
+
+
+
+                    </h2>
+                </div>
+            </header>
+            <div class="slds-no-flex">
+                <lightning:buttonGroup >
+                    <lightning:buttonMenu alternativeText="Show menu" class="{!and(v.hideSections,v.section.isFirstSection)?'slds-hide':'slds-button_last'}" menuAlignment="right" onselect="{!c.sectionMenuSelect}">
+                        <lightning:menuItem label="{!$Label.c.Pricer_NewSectionBtnLabel}" value="newSection" disabled="{!v.hideSections}"/>
+                        <lightning:menuItem label="{!$Label.c.Pricer_Delete_Section}" value="deleteSection" disabled="{!v.section.isFirstSection}" />
+                        <lightning:menuItem label="{!$Label.c.Pricer_move_lines}" value="moveLines"/>
+                    </lightning:buttonMenu>
+                </lightning:buttonGroup> 
+            </div>
+        </div>
+        <div class="slds-card__body">
+            <aura:if isTrue="{!$Browser.formFactor=='DESKTOP'}">   
+            <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                <thead>
+                    <tr  class="slds-text-title--caps">
+                        <th class="{!if(v.width>=950,'','removePadding')}" style="width:10px;"></th>
+
+                        <th class="slds-truncate" style="min-width: 140px;">{!$Label.c.Pricer_Product}</th>
+                        <th class="{!if(v.width>=950,'','max50px')+' slds-truncate'}" style="width:91px;" title="{!$Label.c.Pricer_Reference}">{!$Label.c.Pricer_Reference}</th>
+                        <th class="{!if(v.width>=950,'','max50px')+' slds-truncate'}" style="width:100px;" title="{!$Label.c.Pricer_BasePrice}" >{!$Label.c.Pricer_BasePrice}</th>  
+                        <th class="slds-truncate" style="width:113px;min-width: 82px;">{!$Label.c.Pricer_QTY}</th>
+                        <th class="slds-truncate" style="width:125px;">{!$Label.c.Pricer_SalesPrice}</th>
+
+                        <th class="{!v.hideDiscounts?'slds-hide':'slds-truncate'}" style="width:90px;">{!$Label.c.Pricer_Disc}</th>
+
+          
+                        <th class="{!if(v.width>=950,'','max50px')+' slds-truncate'}" style="width:91px;">{!$Label.c.Pricer_Total}</th>
+
+                        <th class="{!v.hideMargins?'slds-hide':'slds-truncate'}" style="width:90px;">
+                            {!$Label.c.Pricer_Margin}</th>
+                        <th class="{!v.hideMargins?'slds-hide':''}" style="width:38px;"></th>
+                  
+                        <th style=""></th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.section.lines}" var="line"  indexVar="index">
+
+                   <c:PricerLine sectionIndex="{!v.sectionIndex}"
+                                 line="{!line}"
+                                 sObjectName="{!v.sObjectName}"
+                                 recordId="{!v.recordId}"
+                                 hideMargins="{!v.hideMargins}"
+                                 hideDiscounts="{!v.hideDiscounts}"
+                                 marginLimits="{!v.marginLimits}"
+                                 orgInfo="{!v.orgInfo}"
+                                 width="{!v.width}"
+                                 aura:id="sectionLine"/> 
+
+                    </aura:iteration>
+
+                </tbody>
+            </table>
+            <aura:set attribute="else">
+                <aura:iteration items="{!v.section.lines}" var="line"  indexVar="index">
+                         <c:PricerLine sectionIndex="{!v.sectionIndex}"
+                                 line="{!line}"
+                                 sObjectName="{!v.sObjectName}"
+                                 recordId="{!v.recordId}"
+                                 hideMargins="{!v.hideMargins}"
+                                 hideDiscounts="{!v.hideDiscounts}"
+                                 marginLimits="{!v.marginLimits}"
+                                 orgInfo="{!v.orgInfo}"
+                                 width="{!v.width}"
+                                 aura:id="sectionLine"/>
+                 </aura:iteration>
+            </aura:set>   
+            </aura:if>     
+        </div>
+        <div class="{!v.hideSections?'slds-hide':'slds-card__footer'}" style="text-align: center;">
+            <strong>{!$Label.c.Pricer_Total_section}: <ui:outputCurrency aura:id="sectionTotal" value="{!v.section.total}"/></strong> 
+        </div>
+		<div>
+        <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide transform" aura:id="modaldialog" style="-webkit-backface-visibility: hidden;">
+            <div class="slds-modal__container" style="{!$Browser.formFactor=='DESKTOP'?'width: 70%; max-width: 70rem;':''}">
+                <div class="slds-modal__header">
+                    <button class="slds-button slds-modal__close slds-button--icon-inverse" onclick="{!c.hideCrossSell}">
+                        <lightning:icon iconName="utility:close" size="small" alternativeText="Indicates approval"/>
+                        <span class="slds-assistive-text">Fermer</span>
+                    </button>
+                    <h2 class="slds-text-heading--medium">{!$Label.c.Pricer_ThinkAbout} : </h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <aura:if isTrue="{!$Browser.formFactor=='DESKTOP'}"> 
+                        <div>
+                            <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                                <thead>
+                                    <tr  class="slds-text-title--caps">
+                                        <th class="slds-truncate" style="white-space: normal; width:35%">{!$Label.c.Pricer_Product}</th>
+                                        <th class="slds-truncate" style="white-space: normal; width:10%">{!$Label.c.Pricer_Code}</th>
+    
+                                        <th class="slds-truncate" style="white-space: normal; width:10%">{!$Label.c.Pricer_Quantity}</th>
+                                        <th class="slds-truncate" style="white-space: normal; width:45%">{!$Label.c.Pricer_WhyThisProposal}</th>
+                                    </tr>
+    
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.upsellLines}" var="line"  >
+                                        <tr>
+                                            <td style="white-space: normal;">
+                                                {!line.oProduct.Name}
+                                            </td>
+                                            <td style="white-space: normal;">
+                                                {!line.oProduct.ProductCode}
+                                            </td>
+                                            <td style="white-space: normal;">
+                                                {!line.quantity}
+                                            </td>
+                                            <td style="white-space: normal;">
+                                                {!line.upsellPitch}
+                                            </td>
+                                        </tr>
+    
+    
+    
+                                    </aura:iteration>
+    
+                                </tbody>
+                            </table>
+    
+                        </div>
+                     <aura:set attribute="else">
+                         <aura:iteration items="{!v.upsellLines}" var="line"  >
+                          <div>
+                          <div class="slds-text-title_caps" style="margin-bottom:5px">
+                   			{!line.oProduct.ProductCode}&nbsp;-&nbsp;{!line.oProduct.Name}</div>  
+                            <lightning:layout multipleRows="true">
+                                    <lightning:layoutItem  size="3">
+                      					<span class="slds-form-element__label" style="margin-bottom:10px">{!$Label.c.Pricer_Quantity}</span>
+                                        <div>{!line.quantity}</div>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem padding="" size="9">
+                                        <span class="slds-form-element__label" style="margin-bottom:10px">{!$Label.c.Pricer_WhyThisProposal}</span>
+                                        <div>{!line.upsellPitch}</div>
+                                    </lightning:layoutItem>       
+                                </lightning:layout>  
+                            </div> 
+                             
+                         </aura:iteration>
+                     </aura:set>    
+                   </aura:if>     
+                </div>
+                <div class="slds-modal__footer">
+                    <lightning:button aura:id="CrossSellCancelButton" variant="neutral" label="{!$Label.c.Pricer_Cancel}"  onclick="{!c.hideCrossSell}" />
+                    <lightning:button variant="brand" label="{!$Label.c.Pricer_Add}"  onclick="{!c.addUpsellProductsToLines}" />
+                </div>
+            </div>
+        </div>
+        </div>
+        <div>
+        <div class="slds-backdrop slds-backdrop--hide transform" style="-webkit-backface-visibility: hidden;" aura:id="backdrop">
+        </div>
+		</div>
+    </article>
+
+
+
+
+
+</aura:component>

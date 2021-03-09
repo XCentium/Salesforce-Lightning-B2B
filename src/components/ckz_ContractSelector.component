@@ -1,0 +1,164 @@
+<!--
+ - Created by brandon.rogers on 9/6/18.
+ -->
+
+<apex:component id="ckz_ContractSelector" controller="ckz_ctrl_ContractSelector">
+
+    <script id="CC_Contract_Selector_Both" type="text/template">
+
+        {{#ifDisplay 'h.contsel'}}
+            <a href="#" data-toggle="modal" data-target="#contractPriceGrps">
+                {{#if this.workingPriceGroup }}
+                <i class="far fa-file-signature"></i>
+                <span class="hidden-xs">
+                        {{this.workingPriceGroup }}
+                    </span>
+                {{else}}
+                <i class="far fa-file-signature"></i>
+                <span class="hidden-xs">
+                        {{pageLabelMap 'ContractSelector_SelectContract' }}
+                    </span>
+                {{/if}}
+            </a>
+
+
+            <div class="modal fade cc_modal cc_contract_price_modal" id="contractPriceGrps" tabindex="-1" role="dialog" aria-labelledby="contractPriceLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content cc_modal_content">
+                        <div class="modal-header cc_modal_header">
+                            <button type="button" class="close cc_close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title cc_modal_title" id="contractPriceLabel">{{pageLabelMap 'ContractSelector_ModalTitle'}}</h4>
+                        </div>
+                        <div class="modal-body cc_modal_body">
+                            <div class="table-responsive">
+                                <table class="table table-hover cc_table">
+                                    <!--<thead class="cc_thead">
+                                    <tr class="cc_tr">
+                                        <th class="cc_th_name">{{pageLabelMap 'Name'}}</th>
+                                    </tr>
+                                    </thead>-->
+                                    <tbody class="cc_tbody">
+                                    {{#each this.contractPriceGroups}}
+                                    <tr class="cc_tr_values">
+                                        <td>
+                                            <a href="#">
+                                                <span class="selectContractPriceGroup" data-id="{{priceGroupId}}">{{priceGroupName}}</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+
+                                    {{#if this.workingPriceGroup }}
+                                    <tr class="cc_tr_values">
+                                        <td>
+                                            <a href="#">
+                                                <span class="selectContractPriceGroup" data-id="">{{pageLabelMap 'ClearPriceGroup'}}</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {{/if}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/ifDisplay}}
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.pagevars.priceGroupId = '{!JSINHTMLENCODE(grid)}';
+
+            CCRZ.models.ContractSelectorModel = CCRZ.CloudCrazeModel.extend({});
+
+            CCRZ.collections.ContractSelectorModelList = CCRZ.CloudCrazeCollection.extend({
+                model: CCRZ.models.ContractSelectorModel,
+                className: 'ckz_ctrl_ContractSelector',
+                fetch: function (callback) {
+                    var coll = this;
+
+                    this.invokeCtx('fetchPriceGroupsForUserAccount', function (response, event) {
+
+                        // console.log("ckz_ContractSelector: " + JSON.stringify(response.data));
+
+                        coll.reset(response.data);
+
+                        callback(response.data);
+
+                    }, {nmsp: false, buffer: false});
+                }
+            });
+
+            CCRZ.views.ContractSelectorView = CCRZ.CloudCrazeView.extend({
+                viewName: 'ContractSelectorView',
+                className: 'ckz_ctrl_ContractSelector',
+                templateDesktop: CCRZ.util.template('CC_Contract_Selector_Both'),
+                templatePhone: CCRZ.util.template('CC_Contract_Selector_Both'),
+                templateSelector: '.contract_price_selector',
+                init: function (options) {
+                    var thisView = this;
+                    thisView.dataSet = {};
+                    thisView.priceGroupCollection = new CCRZ.collections.ContractSelectorModelList();
+
+                    thisView.priceGroupCollection.fetch(function (response) {
+                        if (response && _.isEmpty(response.contractPriceGroups) == false) {
+                            thisView.dataSet = response;
+
+                            if (CCRZ.pagevars.priceGroupId) {
+                                var selectedContract = _.find(response.contractPriceGroups, function (item) {
+                                    return item.priceGroupId === CCRZ.pagevars.priceGroupId;
+                                });
+
+                                if (selectedContract) {
+                                    thisView.dataSet.workingPriceGroup = selectedContract.priceGroupName;
+                                }
+                            }
+                            thisView.render();
+                        }
+                    });
+                },
+                events:
+                    {
+                        "click .selectContractPriceGroup": "selectContractPriceGroup"
+                    },
+                renderDesktop: function () {
+                    // console.log("ckz_ContractSelector:renderDesktop");
+
+                    this.setElement(this.templateSelector);
+
+                    this.$el.html(this.templateDesktop(this.dataSet));
+                },
+                renderPhone: function () {
+                    // console.log("ckz_ContractSelector:renderPhone");
+
+                    this.setElement(this.templateSelector);
+
+                    this.$el.html(this.templatePhone(this.dataSet));
+                },
+                selectContractPriceGroup: function (event) {
+                    // console.log("ckz_ContractSelector:selectContractPriceGroup");
+
+                    var selPriceGroupId = $(event.currentTarget).data("id");
+
+                    $('#contractPriceGrps').modal('hide');
+
+                    this.processSelection(selPriceGroupId);
+                },
+                processSelection: function (selectedPriceGroup) {
+                    // console.log("ckz_ContractSelector:processSelection");
+
+                    CCRZ.pagevars.priceGroupId = selectedPriceGroup;
+
+                    window.location.href = '/{!communityURL}'
+                        + "/ccrz__HomePage?cartID="
+                        + CCRZ.pagevars.currentCartID + getCSRQueryString();
+                }
+            });
+
+            CCRZ.ContractSelectorView = new CCRZ.views.ContractSelectorView({});
+        });
+    </script>
+</apex:component>

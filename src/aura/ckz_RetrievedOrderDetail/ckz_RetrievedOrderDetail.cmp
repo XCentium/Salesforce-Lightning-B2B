@@ -1,0 +1,188 @@
+<aura:component description="ckz_RetrievedOrderDetail">
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <!-- 2019-09-20  msobczak: added -->
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <aura:attribute name="childOrder" type="Map" required="false"/>
+
+    <aura:attribute name="currentOrderName" type="String" default="{!v.childOrder.orderName}"/>
+    <aura:attribute name="currentOrderId" type="String" default="{!v.childOrder.sfid}"/>
+
+    <aura:attribute name="isSelected" type="Boolean" default="{!v.childOrder.isSelected}"/>
+
+    <!-- 2019-09-05  msobczak: added -->
+    <aura:attribute name="isValid" type="Boolean" default="true"/>
+
+    <aura:registerEvent name="startingObjectSelected" type="c:ckz_StartingObjectSelectedEvent"/>
+
+    <aura:registerEvent name="gotoDataEntry" type="c:ckz_OrderForm_GotoDataEntryEvent"/>
+
+    <!-- TABLE VIEW -->
+    <aura:if isTrue="{! $Browser.formFactor == 'DESKTOP' &amp;&amp; (v.useCardLayout == false) }">
+
+        <tr>
+            <th scope="row">
+                <div class="slds-truncate" title="{!v.childOrder.orderName}">{!v.childOrder.orderName}</div>
+            </th>
+
+            <td>
+                <div class="slds-truncate" title="">{!v.childOrder.orderDateStr}</div>
+            </td>
+
+            <!-- Products -->
+            <td>
+                <div class="slds-truncate" title="">
+                    <ul>
+
+                        <aura:iteration items="{!v.childOrder.orderItemsList}" var="orderItem">
+                            <aura:if isTrue="{! orderItem.orderLineType == 'Major'}">
+                                <li class="{! orderItem.productType != 'Product' ? 'invalidProduct' : ''}">
+                                    <img src="{!orderItem.thumbnailImage.URI}" width="65" height="65" />
+                                    {!orderItem.productName}
+                                </li>
+                            </aura:if>
+                        </aura:iteration>
+                    </ul>
+                </div>
+            </td>
+
+            <td>
+                <div class="slds-truncate" title="">
+                    <lightning:formattedNumber value="{!v.childOrder.totalAmount}" style="currency"/>
+                </div>
+            </td>
+
+            <td>
+                <div class="slds-truncate" title="">{!v.childOrder.orderStatus}</div>
+            </td>
+
+            <td class="slds-cell-wrap">
+                <aura:if isTrue="{!v.isValid}">
+                    <lightning:button aura:id="selectOrder"
+                            label="{! v.isSelected ? 'Selected' : 'Select' }"
+                            variant="brand"
+                            onclick="{!c.selectOrder}"
+                            disabled="{!v.isSelected}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!v.isSelected}">
+                    <lightning:button aura:id="gotoNext"
+                            label="Next"
+                            variant="brand"
+                            onclick="{!c.handleGotoDataEntry}"/>
+                </aura:if>
+
+                <aura:if isTrue="{! not(v.isValid)}">
+                    Order contains non-standard products.
+                </aura:if>
+
+            </td>
+
+        </tr>
+
+    </aura:if>
+
+
+    <!-- CARD VIEW -->
+    <aura:if isTrue="{! $Browser.formFactor != 'DESKTOP' || (v.useCardLayout == true) }">
+
+        <article class="slds-card slds-card_boundary slds-m-bottom_small">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+
+                        <!-- put icon here -->
+                        <lightning:icon iconName="standard:orders" alternativeText="Order"/>
+
+                        <span class="slds-icon_container slds-icon-standard-orders" title="orders">
+                            <span class="slds-assistive-text">Order # {!v.childOrder.orderName}</span>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <span>{!v.childOrder.orderName}</span>
+                            <span class="slds-badge slds-float_right">{!v.childOrder.orderStatus}</span>
+                        </h2>
+                    </div>
+
+                </header>
+            </div>
+
+            <div class="slds-card__body">
+                <!-- Date -->
+                <div class="slds-p-vertical_xx-small slds-p-horizontal_large slds-clearfix">
+                    <div class="slds-float_left">Order Date:</div>
+                    <div class="slds-float_right">{!v.childOrder.orderDateStr}</div>
+                </div>
+
+                <!-- Amount -->
+                <div class="slds-p-vertical_xx-small slds-p-horizontal_large slds-clearfix">
+                    <div class="slds-float_left">Amount:</div>
+                    <div class="slds-float_right">
+                        <lightning:formattedNumber value="{!v.childOrder.totalAmount}" style="currency"/>
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <div class="slds-p-vertical_xx-small slds-p-horizontal_large">
+                    <div class="">Products:</div>
+
+                    <ul class="">
+                        <aura:iteration items="{!v.childOrder.orderItemsList}" var="orderItem">
+                            <aura:if isTrue="{! orderItem.orderLineType == 'Major'}">
+                                <li class="{! orderItem.productType != 'Product' ? 'slds-text-color_error' : ''}">
+
+                                    <span class="product">
+                                        <img src="{!orderItem.thumbnailImage.URI}" width="65" height="65" />
+                                        {!orderItem.productName}
+
+                                        <aura:if isTrue="{! orderItem.productType != 'Product'}">
+                                            <lightning:icon iconName="utility:warning" alternativeText="warning" class="slds-float_right" size="xx-small" variant="error"/>
+                                        </aura:if>
+                                    </span>
+
+                                </li>
+                            </aura:if>
+                        </aura:iteration>
+                    </ul>
+                </div>
+            </div>
+
+            <footer class="slds-card__footer">
+                <div class="">
+                    <aura:if isTrue="{!v.isValid}">
+                        <lightning:button aura:id="selectOrder"
+                                label="{! v.isSelected ? 'Selected' : 'Select' }"
+                                class=""
+                                variant="brand"
+                                onclick="{!c.selectOrder}"
+                                disabled="{!v.isSelected}"/>
+                    </aura:if>
+
+                    <aura:if isTrue="{!v.isSelected}">
+                        <lightning:button aura:id="gotoNext"
+                                label="Next"
+                                class=""
+                                variant="brand"
+                                onclick="{!c.handleGotoDataEntry}"
+                        />
+                    </aura:if>
+
+                    <aura:if isTrue="{! not(v.isValid)}">
+                        <div class="slds-inline_icon_text slds-grid slds-inline_icon_text--warning">
+                            <lightning:icon iconName="utility:warning" alternativeText="warning" variant="error"/>
+                            <div class="slds-col slds-align-middle slds-text-color_error">
+                                <p>Order contains non-standard products.</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                </div>
+            </footer>
+        </article>
+
+    </aura:if>
+
+
+</aura:component>

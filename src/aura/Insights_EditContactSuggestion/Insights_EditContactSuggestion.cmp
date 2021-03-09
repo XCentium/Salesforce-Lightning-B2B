@@ -1,0 +1,45 @@
+<aura:component controller="Insights_InsightGeneratorCtrl" implements="c:Insights_InsightInterface">
+    <aura:attribute name="contactSuggestion" type="Map" default="{
+                                                                    'FirstName': null,
+                                                                    'LastName': null,
+                                                                    'Email': null,
+                                                                    'Score': 1,
+                                                                    'Status': 'New'
+                                                                    }"></aura:attribute>
+    <aura:attribute name="recordId" type="string"></aura:attribute>
+    <aura:attribute name="disableSave" type="Boolean" default="true"></aura:attribute>
+    
+    <aura:handler name="change" value="{!v.contactSuggestion}" action="{!c.handleValueChange}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <div class="action-body">
+        <div class="row">
+            <div class="column">
+                <div class="slds-text-heading_medium">Automatic Contact</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <lightning:input type="String" label="First Name" value="{!v.contactSuggestion.FirstName}"></lightning:input>
+        </div>
+        
+        <div class="row">
+            <lightning:input type="String" label="Last Name"  value="{!v.contactSuggestion.LastName}"></lightning:input>
+        </div>
+        
+        <div class="row">
+            <lightning:input type="String" label="Email" value="{!v.contactSuggestion.Email}"></lightning:input>
+        </div>
+    </div>
+    
+    <div class="action-footer">
+        <div class="row">
+            <lightning:button label="Back" variant="neutral" onclick="{!c.handleGoBack}"></lightning:button>
+            <lightning:button class="column flex-right" 
+                              label="Save" 
+                              variant="brand"
+                              onclick="{!c.handleSave}"
+                              disabled="{!v.disableSave}"></lightning:button>
+        </div>
+    </div>
+</aura:component>

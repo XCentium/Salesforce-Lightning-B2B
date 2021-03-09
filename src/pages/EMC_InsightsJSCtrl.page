@@ -1,0 +1,480 @@
+<apex:page contentType="application/javascript">
+    function InsightsCtrl($scope, $rootScope, Mixpanel) {
+        
+    
+        $scope.insightTypeDisplayFormat = {      
+            IMPLISIT_ADC_NEW_OPPORTUNITY_CONTACT_ROLE : {
+                name: 'SupportingData.records.0.record.payload.FirstName_SupportingData.records.0.record.payload.LastName',
+                parent: 'Parent.Name'
+            },
+            IMPLISIT_ADC_NEW_CONTACT : { 
+                name: 'SupportingData.records.0.record.payload.FirstName_SupportingData.records.0.record.payload.LastName',
+                parent: 'Parent.Name'
+            }
+        }
+        
+        
+        /* Definitions for insight types available for generation (**STRATEGIES**) */
+        
+        /* Shard into directives in future - Current state has multiple controllers and objects hosted on main controller */
+        $scope.insightTypeDefinitions = {
+            IMPLISIT_ADC_NEW_OPPORTUNITY_CONTACT_ROLE: function(insightTypeId) {
+                var self = this;
+                
+                this.label = 'Automated Opportunity Contact Role'
+                this.insightTypeId = insightTypeId
+                this.parentIdField = 'OpportunityId'
+                this.parentId = ''
+                this.hasTitle = false
+                this.multirecord = false
+                this.trendType = 'Informational'
+                this.collectionName = 'records'
+                this.itemName = 'record'
+                this.customTitle = {
+                    formatter:"label",
+                    formatString:"Insight.NewOpportunityContactRoleFound",
+                    parameters:[]
+                }
+                this.rationale = {
+                    formatter:"label",
+                    formatString:"Insight.OpportunityContactRoleSuggestionRationale",
+                    parameters:[]
+                }
+                this.descriptor = {
+                    id:null,
+                    type:"OpportunityContactRole"
+                }
+                this.supportingData = [
+                    {
+                        name: 'OpportunityId',
+                        label: 'Opportunity',
+                        type: 'lookup',
+                        lookupDisplayField: 'Name',
+                        lookupObject: 'Opportunity',
+                        lookupField: 'Name',
+                        value: null,
+                        term: '',
+                        lookupValues: [],
+                        showSearch: false,
+                        term: '',
+                        getLookupValues: function(searchTerm, idx){
+                            
+                            if(searchTerm &amp;&amp; self.term != searchTerm &amp;&amp; searchTerm.length > 1){
+                                self.term = searchTerm;
+                                self.supportingData[idx].showSearch = true;
+                                insightRemote.getLookupData(self.supportingData[idx].lookupDisplayField, self.supportingData[idx].lookupObject, self.supportingData[idx].lookupField, searchTerm, function(res,evt){
+                                    if(evt.status){
+                                        self.supportingData[idx].lookupValues = res;
+                                        $scope.$apply();
+                                    } else {
+                                        console.log('ERROR:ADC:getLookupValues', res, evt);
+                                    }
+                                })
+                            }
+                        },
+                        setLookup: function(id, idx){
+                            self.parentId = id;
+                            self.supportingData[idx].value = id;
+                            self.supportingData[idx].showSearch = false;
+                        }
+                    },
+                    {
+                        name: 'ContactId',
+                        label: 'Contact',
+                        type: 'lookup',
+                        lookupDisplayField: 'Name',
+                        lookupObject: 'Contact',
+                        lookupField: 'Name',
+                        value: null,
+                        term: '',
+                        lookupValues: [],
+                        showSearch: false,
+                        term: '',
+                        getLookupValues: function(searchTerm, idx){
+                            
+                            if(searchTerm &amp;&amp; self.term != searchTerm &amp;&amp; searchTerm.length > 1){
+                                self.term = searchTerm;
+                                self.supportingData[idx].showSearch = true;
+                                insightRemote.getLookupData(self.supportingData[idx].lookupDisplayField, self.supportingData[idx].lookupObject, self.supportingData[idx].lookupField, searchTerm, function(res,evt){
+                                    if(evt.status){
+                                        self.supportingData[idx].lookupValues = res;
+                                        $scope.$apply();
+                                    } else {
+                                        console.log('ERROR:ADC:getLookupValues', res, evt);
+                                    }
+                                })
+                            }
+                        },
+                        setLookup: function(id, idx){
+                            self.supportingData[idx].value = id;
+                            self.supportingData[idx].showSearch = false;
+                        }
+                    },
+                    {
+                        name: 'Role',
+                        label: 'Role',
+                        type: 'string',
+                        value: null
+                    },
+                    {
+                        name: 'FirstName',
+                        label: 'First Name',
+                        type: 'string',
+                        value: null
+                    },
+                    {
+                        name: 'LastName',
+                        label: 'Last Name',
+                        type: 'string',
+                        value: null
+                    },
+                    {
+                        name: 'Email',
+                        label: 'Email',
+                        type: 'string',
+                        value: null
+                    },
+                    {
+                        name: 'IsPrimary',
+                        label: 'Primary Contact',
+                        type: 'boolean',
+                        value: null
+                    }
+                ]
+                this.getData = function() {
+                    var supportingData = {}
+                    
+                    angular.forEach(self.supportingData, function(field){
+                        supportingData[field.name] = field.value;
+                    })
+                    
+                    return new Insight(self.insightTypeId, self.parentId, JSON.stringify(self.rationale), JSON.stringify(self.customTitle), JSON.stringify(new RecordSupportingData(self.collectionName,self.itemName, supportingData, self.descriptor)))
+                }
+            },
+            IMPLISIT_ADC_NEW_CONTACT: function(insightTypeId) {
+                var self = this;
+                
+                this.label = 'Automated Contact'
+                this.insightTypeId = insightTypeId;
+                this.parentIdField = 'AccountId'
+                this.parentId = ''
+                this.multirecord = false
+                this.trendType = 'Informational'
+                this.collectionName = 'records'
+                this.itemName = 'record'
+                this.customTitle = {
+                    formatter:"label",
+                    formatString:"Insight.NewContactFound",
+                    parameters:[]
+                }
+                this.rationale = {
+                    formatter:"label",
+                    formatString:"Insight.ContactSuggestionRationale ",
+                    parameters:[]
+                }
+                this.descriptor = {
+                    id: null,
+                    type: "Contact"
+                }
+                this.supportingData = [
+                    {
+                        name: 'AccountId',
+                        label: 'Account',
+                        type: 'lookup',
+                        lookupDisplayField: 'Name',
+                        lookupObject: 'Account',
+                        lookupField: 'Name',
+                        value: null,
+                        lookupValues: [],
+                        showSearch: false,
+                        term: '',
+                        getLookupValues: function(searchTerm, idx){
+                            if(searchTerm &amp;&amp; self.term != searchTerm &amp;&amp; searchTerm.length > 1){
+                                self.term = searchTerm;
+                                self.supportingData[idx].showSearch = true;
+                                insightRemote.getLookupData(self.supportingData[idx].lookupDisplayField, self.supportingData[idx].lookupObject, self.supportingData[idx].lookupField, searchTerm, function(res,evt){
+                                    if(evt.status){
+                                        self.supportingData[idx].lookupValues = res;
+                                        $scope.$apply();
+                                    } else {
+                                        console.log('ERROR:ADC:getLookupValues', res, evt);
+                                    }
+                                })
+                            }
+                        },
+                        setLookup: function(id, idx){
+                            self.parentId = id;
+                            self.supportingData[idx].value = id;
+                            self.supportingData[idx].showSearch = false;
+                        }
+                    },
+                    {
+                        name: 'FirstName',
+                        label: 'First Name',
+                        type: 'string',
+                        value: null
+                    },
+                    {
+                        name: 'LastName',
+                        label: 'Last Name',
+                        type: 'string',
+                        value: null
+                    },
+                    {
+                        name: 'Email',
+                        label: 'Email',
+                        type: 'string',
+                        value: null
+                    }
+                ]
+                this.getData = function() {
+                    var supportingData = {}
+                    
+                    angular.forEach(self.supportingData, function(field){
+                        supportingData[field.name] = field.value;
+                    })
+                    
+                    return new Insight(self.insightTypeId, self.parentId, JSON.stringify(self.rationale), JSON.stringify(self.customTitle), JSON.stringify(new RecordSupportingData(self.collectionName,self.itemName, supportingData, self.descriptor)))
+                }
+                
+                return self;
+            }
+        }
+        
+    	$scope.init = function(){
+            $scope.showLoading(true, '');
+            $scope.insightTypesCtrl.getTypes()
+    		.then(function(){
+            	$scope.insightsUserCtrl.getUsers()
+    		})
+    		.finally(function(){
+            	$scope.showLoading(false, '')
+    		});
+    	}
+    
+        $scope.stepCtrl = {
+            steps: [
+                'Select Insight Type',
+                'Create Insight(s)',
+                'Assign Insight(s)'
+            ],
+            currentStep: 0,
+            setStep: function(stepNumber) {
+                $scope.stepCtrl.currentStep = stepNumber;
+            },
+            nextStep: function() {
+                if ($scope.stepCtrl.currentStep &lt; $scope.stepCtrl.steps.length)
+                    $scope.stepCtrl.currentStep++;
+            },
+            prevStep: function() {
+                if ($scope.stepCtrl.currentStep > 0)
+                    $scope.stepCtrl.currentStep--;
+            }
+        }
+        
+        $scope.getStepStatus = function(stepNumber) {
+            if (stepNumber == $scope.stepCtrl.currentStep) {
+                return 'slds-is-current';
+            }
+            else if (stepNumber &lt; $scope.stepCtrl.currentStep) {
+                return 'slds-is-complete';
+            } else {
+                return 'slds-is-incomplete';
+            }
+        }
+        
+        $scope.insightTypesCtrl = {
+            options: [],
+            selected: null,
+            getTypes: function() {
+    			return new Promise(function(resolve,reject){
+                    insightRemote.getInsightTypes(JSON.stringify(Object.keys($scope.insightTypeDefinitions)), function(res, evt) {
+                        if (evt.status) {
+                            console.log('SUCCESS:insightTypesCtrl.getTypes', res);
+                            $scope.insightTypesCtrl.options = res;
+                            $scope.insightTypesCtrl.selected = res[0];
+                            $scope.$apply();
+    						resolve();
+                        }
+                        else {
+                            console.log('ERROR:insightTypesCtrl.getTypes', evt);
+    						reject();
+                        }
+                    })
+    			})
+            }
+        }
+        
+        $scope.$watch('insightTypesCtrl.selected', function(newVal, oldVal) {
+            if (newVal != oldVal &amp;&amp; $scope.insightTypesCtrl.selected != null)
+                $scope.insightsUserCtrl.getInsights();
+        });
+        
+        
+        $scope.getDisplayInfo = function(insight, field){
+            var display = ''
+            var format = $scope.insightTypeDisplayFormat[insight.InsightType.DeveloperName][field];
+            var concatParts = format.split('_');
+            
+            angular.forEach(concatParts, function(concatPart){
+                var objectMap = concatPart.split('.');
+                data = objectMap.reduce(function(currentPath, nextPath){
+                    return currentPath[nextPath];
+                }, insight)
+                
+                display += data + ' ';
+            })
+            
+            display.trim();
+            
+            return display;
+        }
+        
+        
+        $scope.newInsightsCtrl = {
+            insights: [],
+            addInsight: function() {
+                $scope.newInsightsCtrl.insights.push(new $scope.insightTypeDefinitions[$scope.insightTypesCtrl.selected.DeveloperName]($scope.insightTypesCtrl.selected.Id));
+            },
+            insertData: function() {
+                var records = [];
+                
+                angular.forEach($scope.newInsightsCtrl.insights, function(insight){
+                    records.push(insight.getData())
+                })
+                
+                console.log('DATA:newInsightsCtrl:insertData',records);
+                
+                insightRemote.generateInsights(JSON.stringify(records),function(res,evt){
+                    if(evt.status){
+                        console.log('SUCCESS:newInsightsCtrl:insertData ', res);
+                        $scope.insightsUserCtrl.getInsights();
+                        $scope.createToast('<div>Successfully created ' + res.length + ' insight(s)!</div>', 'success');
+                        $scope.stepCtrl.nextStep();
+    					Mixpanel.sendEvent('Insights', {action: 'Create Insights', records: records.length})
+                        $scope.newInsightsCtrl.clearData();
+                    }
+                    else {
+                        $scope.createToast('<div>An error occurred inserting insights!</div>', 'error');
+                        console.log('ERROR:newInsightsCtrl:insertData', evt);
+                    }
+                })
+                
+            },
+            removeInsight: function(idx){
+                console.log('Removing index of:',idx);
+                $scope.newInsightsCtrl.insights.splice(idx,1);
+                $scope.$apply();
+            },
+            clearData: function(){
+                $scope.newInsightsCtrl.insights = [];
+                $scope.$apply();
+            }
+        };
+        
+        $scope.insightsUserCtrl = {
+            insights: [],
+            users: [],
+            getUsers: function(){
+    			return new Promise( function(resolve,reject){
+                    insightRemote.getUsers(function(res, evt) {
+                        if (evt.status) {
+                            if(verbose) console.log('SUCCESS:insightsUserCtrl:getUsers ', res);
+                            $scope.insightsUserCtrl.users = res;
+                            $scope.$apply();
+    						resolve();
+                        }
+                        else {
+                            console.log('ERROR:insightsUserCtrl:getUsers', evt);
+    						reject();
+                        }
+                    }, { escape: false });
+    			})
+            },
+            getInsights: function() {
+    			return new Promise( function(resolve,reject){
+                    insightRemote.getInsights($scope.insightTypesCtrl.selected.Id, function(res, evt) {
+                        if (evt.status) {
+                            console.log('SUCCESS:insightsUserCtrl:getInsights ', res);
+                            angular.forEach(res, function(item) {
+                                item['SupportingData'] = JSON.parse(item['SupportingData']);
+                            })
+                            $scope.insightsUserCtrl.insights = res;
+                            $scope.$apply();
+                            resolve();
+                        } else {
+                            console.log('ERROR:insightsUserCtrl:getInsights', evt);
+                            reject();
+                        }
+                    }, { escape: false });
+    			})
+            },
+            deleteInsight: function(insight, insightIndex){
+                if(confirm('Delete Insight?')){
+                    insightRemote.deleteInsightUserValues(insight.Id,function(res,evt){
+                        if(evt.status){
+                            insightRemote.deleteInsight(insight.Id, function(res,evt){
+                                if(evt.status){
+                                    $scope.insightsUserCtrl.insights.splice(insightIndex,1);
+                                    $scope.createToast('<div>Insight deleted</div>', 'success');
+    								Mixpanel.sendEvent('Insights', {action: 'Delete Insight'})
+                                    $scope.$apply();
+                                } else {
+                                    console.log('ERROR:insightsUserCtrl:deleteInsight', evt);
+                                }
+                            });
+                        } else {
+                            console.log('ERROR:insightsUserCtrl:deleteInsightUserValues', evt);
+                        }
+                    });
+                }
+            },
+            createAssignment : function(insight, user){
+                console.log('Assignment being created', insight, user);
+                insightRemote.assignInsight( JSON.stringify( new InsightUserValue(insight.Id, user.Id, {}) ), function(res,evt){
+                    if(evt.status){
+                        res['Owner'] = {};
+                        res['Owner']['Id'] = user.Id;
+                        res['Owner']['Name'] = user.Name;
+                        
+                        if(!insight['InsightUserValues']){
+                            insight['InsightUserValues'] = [];
+                            $scope.$apply();
+                            insight['InsightUserValues'].push(res);
+                        } else {
+                            insight['InsightUserValues'].push(res);   
+                        }
+                        $scope.createToast('<div>Insight assigned to ' + res.Owner.Name + '</div>', 'success');
+    					Mixpanel.sendEvent('Insights', {action: 'Create Insight assignment'})
+                        $scope.$apply();
+                    } else {
+                        console.log('ERROR:insightsUserCtrl:addUser', evt);
+                        $scope.createToast('<div>Could not create InsightUserValue. User may already have this Insight assigned</div>', 'error');
+                    }
+                })
+            },
+            deleteInsightUserValue: function(insight, assignmentIndex, insightUserValueId){
+                console.log('Assignment being deleted', insight);
+                if(confirm('Delete Assignment?')){
+                    insightRemote.deleteInsightUserValue(insightUserValueId, function(res,evt){
+                        if(evt.status){
+                            insight['InsightUserValues'].splice(assignmentIndex,1);
+    						Mixpanel.sendEvent('Insights', {action: 'Delete Insight assignment'})
+                            $scope.$apply();
+                        }  else {
+                            console.log('ERROR:insightsUserCtrl:deleteInsightUserValue', evt);
+                        }
+                    })
+                }
+    
+            }
+        };
+        
+        $scope.createToast = function(message, type){
+            console.log('Toast Event Sent',message,type)
+            $rootScope.$broadcast('create-toast', [message, type]);
+        }
+    
+    	$scope.init();
+    }
+</apex:page>

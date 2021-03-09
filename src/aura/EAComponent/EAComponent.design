@@ -1,0 +1,6 @@
+<design:component label="Wave Dashboard Component">
+    <design:attribute name="developerName" label="Dashboard Name" description="DeveloperName of the Wave Dashboard to send the selection to." default="Enter Developer Name Here"/>
+	<design:attribute name="filter" label="Filter to Set" description="Filter to set. See here for more info http://bit.ly/eafilters" default="{ 'datasetSystemName1': {'field1': ['!value1']},'datasetSystemName2':{'field1': ['!value1', '!value2'],'field2': ['!value3']} }"/>
+	<design:attribute name="height" label="Height" description="Height of Dashboard in Pixels" default="1400"/>
+    <design:attribute name="showTitle" label="Show Title" description="Show title on Dashboard?" default="true"/>
+</design:component>

@@ -1,0 +1,4 @@
+<design:component>
+	<design:attribute name="OrderId" label="Order Id" />
+    <design:attribute name="AllowRemove"  default="true" />
+</design:component>

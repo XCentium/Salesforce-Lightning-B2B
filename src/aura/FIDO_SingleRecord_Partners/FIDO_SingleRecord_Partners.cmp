@@ -1,0 +1,95 @@
+<aura:component controller="FIDO" extends="c:Mixpanel" implements="c:MixpanelInterface">
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="ScriptId" type="String" />
+    <aura:attribute name="ScreenChoice" type="String" />
+    <aura:attribute name="Settings" type="String[]" />
+    <aura:attribute name="Data" type="String[]" />
+    <aura:attribute name="RelatedRecords" type="String[]" />
+    <aura:attribute name="RelatedPersonas" type="String[]" />
+    <aura:attribute name="RelatedVideos" type="String[]" />
+    <aura:attribute name="featuredetailjunctionid" type="String"/>
+    <aura:attribute name="featureId" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="UserEmail" type="String"/>
+    <aura:attribute name="RecordName" type="String" />
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <button class="slds-button backButton " onclick="{!c.back}">
+        <lightning:icon iconName="utility:back" size="xx-small"/> 
+    </button> 
+    <div class="owner">
+        <aura:if isTrue="{!not(empty(v.Data))}">
+            <aura:iteration items="{!v.Data}" var="partner">
+                <h3 class="borderbottom">
+                    <div class="padding">
+                        <aura:if isTrue="{!partner.logo_url__c != null}">
+                            <div class="partnerlogoimg" >
+                                <div class="partnerlogoimginner" style="{!'background-image:url('+ partner.logo_url__c +' )'}"></div>
+                            </div>
+                            <span class="marginleft">{!partner.name}</span>
+                            <aura:set attribute="else">
+                                <span class="marginleft">{!partner.name}</span>
+                            </aura:set>
+                        </aura:if>
+                    </div>    
+                </h3>
+                <div class="padding">
+                    <div class="textleft">
+                        <ui:outputRichText value="{!partner.description__c}"/>
+                        <div class="clear"></div>
+                        <hr/>
+                        <aura:if isTrue="{!partner.app_exchange_url__c  != null}">
+                            <div class="marginbottom8">
+                                <strong>App Exchange: </strong>
+                                <a href="{!partner.app_exchange_url__c}" target="_blank" >{!partner.app_exchange_url__c}</a>
+                            </div>    
+                        </aura:if>
+                        <aura:if isTrue="{!partner.chatter_group_url__c != null}">
+                            <div class="marginbottom8">
+                                <strong>Chatter Group: </strong>
+                                <a href="{!partner.chatter_group_url__c}" target="_blank" >{!partner.chatter_group_url__c}</a>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!partner.landing_page_url__c != null}">
+                            <div class="marginbottom8">
+                                <strong>Demo Kit: </strong>
+                                <a href="{!partner.landing_page_url__c}" target="_blank" >{!partner.landing_page_url__c}</a>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!partner.website__c != null}">
+                            <div class="marginbottom8">
+                                <strong>Website: </strong>
+                                <a href="{!partner.website__c}" target="_blank" >{!partner.website__c}</a>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!partner.contact_email__c != null}">
+                            <div class="marginbottom8">
+                                <strong>Contact Email: </strong> <a href="{!partner.contact_email__c}">{!partner.contact_email__c}</a>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!partner.region__c != null}">
+                            <div class="marginbottom8">
+                                <strong>Region Supported: </strong> {!partner.region__c}
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!partner.segment__c != null}">
+                            <div class="marginbottom8">
+                                <strong>Segement: </strong> {!partner.segment__c }
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!partner.solution_gap__c != null}">
+                            <div class="marginbottom8">
+                                <strong>Salesforce Gap: </strong> {!partner.solution_gap__c  }
+                            </div>
+                        </aura:if>
+                    </div>
+                </div>  
+            </aura:iteration>
+        </aura:if>
+    </div>
+    <aura:iteration items="{!v.Data}" var="partner">
+    	<c:FIDO_Single_Partner_Scripts PartnerId="{!partner.sfid}" recid="{!v.recid}" ScreenChoice="{!v.ScreenChoice}" Industry="{!v.Industry}" />
+    </aura:iteration>
+</aura:component>

@@ -1,0 +1,258 @@
+<!--
+ - Created by brandon.rogers on 4/11/19.
+ -->
+
+<apex:component id="ckz_PDP_Reviews" controller="ckz_ctrl_PDP_Reviews">
+    <script id="CC-Reviews-Display" type="text/template">
+        {{#ifDisplay 'pr.enabled'}}
+            <div class="container reviewsContainer">
+                <div class="ckz_heading_embellished">
+                    <h3>{{pageLabelMap 'CustomerReviewsTitle'}}</h3>
+                </div>
+
+                {{#if this.reviews}}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {{#each this.reviews}}
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="reviewStars">
+                                            <div class="review-item">
+                                                <div class="reviewRating">
+                                                    {{#for 1 this.rating 1}}
+                                                    <i class="fas fa-star fa-lg"></i>
+                                                    {{/for}}
+                                                    {{#for 1 this.diffRating 1}}
+                                                    <i class="far fa-star fa-lg"></i>
+                                                    {{/for}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-8">
+                                        <div class="reviewStarsText m-b-2">
+                                            <div class="reviewSubject"><strong>{{this.subject}}</strong></div>
+                                            <div class="reviewText">{{{this.userReview}}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="text-right">
+                                        <button type="button" class="btn btn-default popReview">{{pageLabelMap 'NewReview'}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{else}}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h2 class="d-inline-block">{{pageLabelMap 'NoReviews'}}</h2>
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-default popReview">{{pageLabelMap 'NewReview'}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+        {{/ifDisplay}}
+
+        <div id="modalSecReview"></div>
+    </script>
+
+    <script id="CC-Reviews-Create" type="text/template">
+        <div class="modal fade" id="writeReviewMod" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">{{pageLabelMap 'NewReview'}}</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="starRating">
+                            <h5>{{pageLabelMap 'ReviewsOverallRating'}}</h5>
+
+                            <fieldset class="rating" id='reviewRating'>
+                                <input type="radio" id="star5" name="rating" value="5"/><label for="star5"></label>
+                                <input type="radio" id="star4" name="rating" value="4"/><label for="star4"></label>
+                                <input type="radio" id="star3" name="rating" value="3"/><label for="star3"></label>
+                                <input type="radio" id="star2" name="rating" value="2"/><label for="star2"></label>
+                                <input type="radio" id="star1" name="rating" value="1"/><label for="star1"></label>
+                            </fieldset>
+                        </div>
+
+                        <div class="inReviewSubject">
+                            <h5>{{pageLabelMap 'ReviewsHeadline'}}</h5>
+                            <input type="text" id="inReviewSubject" class="form-control" placeholder="{{pageLabelMap 'ReviewHeadlinePlaceholder'}}"/>
+                        </div>
+
+                        <div class="inReviewText">
+                            <h5>{{pageLabelMap 'ReviewsBody'}}</h5>
+                            <textarea id="inReviewText" class="form-control" rows=5 cols=50 placeholder="{{pageLabelMap 'ReviewBodyPlaceholder'}}"/>
+                        </div>
+
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default submit">{{pageLabelMap 'SubmitReview'}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </script>
+
+    {!emptyStr}
+    <script type="text/javascript">
+        jQuery(function ($) {
+            // CCRZ.uiProperties.productDetailView.desktop.tmpl = 'cc_PDPIncl';
+            var extendedModel = {!extendedProdJSON};
+            Handlebars.registerHelper("extendedData", function (currModel) {
+                _.extend(currModel, extendedModel.extProdData);
+            });
+
+            CCRZ.pubSub.on('view:productDetailView:refresh', function () {
+                var HeaderContent = '<div class="reviews"></div>';
+                var ReviewContent = '';
+                if ($('.reviews').length == 0) {
+                    $('.widgetSection').after(HeaderContent);
+                }
+
+                CCRZ.reviews = new CCRZ.subsc.ReviewsView();
+
+            });
+
+            CCRZ.subsc = CCRZ.subsc || {};
+            CCRZ.subsc.Reviews = _.extend(CCRZ.RemoteInvocation, {
+                className: 'ckz_ctrl_PDP_Reviews',
+                saveReview: function (theView, sku, subject, reviewText, rating, callback) {
+                    var me = theView;
+                    this.invokeContainerLoadingCtx(
+                        $('body'),
+                        'saveReview',
+                        sku,
+                        subject,
+                        reviewText,
+                        rating,
+                        function (resp) {
+                            if (resp && resp.success) {//response was successful
+                                $('#writeReviewMod').modal('hide');
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').remove();
+                            }
+                            else {// respons unsuccessful
+
+                            }
+                        },
+                        {
+                            buffer: false, //this call will be executed by itself
+                            nmsp: false //defines that this is a call to a subscriber class
+                        }
+                    );//end invokeCtx call
+                }
+            });
+
+            CCRZ.subsc.WriteReviewView = CCRZ.CloudCrazeView.extend({
+                className: 'ckz_ctrl_PDP_Reviews',
+                viewName: "WriteReviewView",
+                templateBoth: CCRZ.util.template('CC-Reviews-Create'),
+                events: {
+                    "click .closeModal": "closeModal",
+                    "click .submit": "submit"
+                },
+                closeModal: function () {
+                    $('#writeReviewMod').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                },
+                submit: function () {
+                    var subject = $('#inReviewSubject').val();
+                    var userReview = $('#inReviewText').val();
+                    var rating = $('#reviewRating input[type="radio"]:checked').val();
+                    var sku = '{!SKU}';
+                    // console.log('subject: ' + subject + ' userReview: ' + userReview + ' rating: ' + rating + ' sku: ' + sku);
+                    CCRZ.subsc.Reviews.saveReview(this.parentView, sku, subject, userReview, rating);
+                },
+                render: function (parentView, modelData, callback) {
+                    this.parentView = parentView;
+                    $('#modalSecReview').html('');
+                    this.dataSet = modelData;
+                    this.setElement($('#modalSecReview'));
+                    this.$el.html(this.templateBoth(this.dataSet));
+                    callback();
+                }
+            });
+
+            CCRZ.subsc.ReviewsView = CCRZ.CloudCrazeView.extend({
+                className: 'ckz_ctrl_PDP_Reviews',
+                viewName: "ReviewsView",
+                templateBoth: CCRZ.util.template('CC-Reviews-Display'),
+                events: {
+                    "click .popReview": "popReview"
+                },
+                newReviewModal: new CCRZ.subsc.WriteReviewView(),
+                init: function () {
+                    // console.log("ckz_Reviews:init");
+                    this.render();
+                },
+                fetchReviews: function (callback) {
+                    // console.log("ckz_Reviews:fetchReviews");
+                    var me = this;
+                    this.invokeContainerLoadingCtx(
+                        $('body'),
+                        'fetchReviews',
+                        '{!SKU}',
+                        function (resp) {
+                            if (resp && resp.success) {//response was successful
+                                // console.log("ckz_Reviews:fetchReviews:success");
+                                me.dataSet = resp.data;
+                                callback();
+                            }
+                        },
+                        {
+                            buffer: false, //this call will be executed by itself
+                            nmsp: false //defines that this is a call to a subscriber class
+                        }
+                    );//end invokeCtx call
+                },
+                popReview: function () {
+                    // console.log("ckz_Reviews:popReview");
+                    this.newReviewModal.render(this, new Object(), function () {
+                        $('#writeReviewMod').modal(
+                            {keyboard: false, backdrop: 'static', show: true}
+                        );
+
+                    });
+                },
+                renderDesktop: function () {
+                    // console.log("ckz_Reviews:renderDesktop");
+                    var me = this;
+                    this.fetchReviews(function () {
+                        $('.reviews').html('');
+                        me.setElement($('.reviews'));
+                        me.dataSet.avgRating = CCRZ.productDetailModel.attributes.product.avgRating;
+                        me.dataSet.numberOfReviews = CCRZ.productDetailModel.attributes.numberOfReviews;
+                        if (me.dataSet.avgRating === undefined) {
+                            me.dataSet.avgRating = 0;
+                        }
+                        if (me.dataSet.numberOfReviews === undefined) {
+                            me.dataSet.numberOfReviews = 0;
+                        }
+                        me.$el.html(me.templateBoth(me.dataSet));
+                    });
+                }
+            });
+        });
+    </script>
+</apex:component>

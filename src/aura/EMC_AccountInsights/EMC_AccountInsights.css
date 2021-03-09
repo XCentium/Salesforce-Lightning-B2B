@@ -1,0 +1,42 @@
+.THIS.wrapper {
+    position: relative;
+    height:568px;
+}
+
+.THIS .header {
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    align-content: center;
+}
+
+.THIS .header-title {
+    font-size: 1.65em;
+    font-weight: 300;
+}
+
+.THIS .insight {
+    border: 1px solid rgb(221, 219, 218);
+    border-radius: 3px;
+    margin-bottom: .5em;
+    padding: 1em;
+}
+
+.THIS .insight:last-child {
+    margin-bottom: 0;
+}
+
+.THIS .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    
+    background: white;
+    padding-top: 1em;
+}

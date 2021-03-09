@@ -1,0 +1,135 @@
+<aura:component access="global">
+    <aura:attribute name="fld" type="Object" required="true" access="global" />
+    <!-- types=string -->
+    <aura:if isTrue="{!v.fld.ftype == 'string'}">
+        <div class="slds-form-element slds-is-required slds-p-bottom_xx-small">
+            <label class="slds-form-element__label" for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+            <div class="slds-form-element__control">
+                <ui:inputText aura:id="{!v.fld.name + 'Search'}" class="slds-input" value="{!v.fld.value}" />
+            </div>
+        </div>
+    </aura:if>
+    <!-- picklist -->
+    <aura:if isTrue="{!v.fld.ftype == 'picklist'}">
+        <div class="slds-form-element slds-is-required slds-p-bottom_xx-small">
+            <label class="slds-form-element__label" for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+            <div class="slds-form-element__control">
+                <ui:inputSelect aura:id="{!v.fld.name + 'Search'}" class="slds-input" value="{!v.fld.value}">
+                    <ui:inputSelectOption text="" label="" />
+                    <aura:iteration items="{!v.fld.options}" var="opt">
+                        <ui:inputSelectOption text="{!opt.label}" label="{!opt.label}" />
+                    </aura:iteration>
+                </ui:inputSelect>
+            </div>
+        </div>
+    </aura:if>
+    <!-- multipicklist (standard Lightning multi-select) -->
+    <aura:if isTrue="{!v.fld.ftype == 'multipicklist2'}">
+        <div class="slds-form-element slds-is-required slds-p-bottom_xx-small" style="vertical-align: top;">
+            <label class="slds-form-element__label" style="vertical-align: top; margin-top: 6px;" for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+            <div class="slds-form-element__control">
+                <ui:inputSelect aura:id="{!v.fld.name + 'Search'}" class="slds-input multiple" value="{!v.fld.value}" multiple="true">
+                    <ui:inputSelectOption text="--None--" label="--None--" />
+                    <aura:iteration items="{!v.fld.options}" var="opt">
+                        <ui:inputSelectOption text="{!opt.label}" label="{!opt.label}" />
+                    </aura:iteration>
+                </ui:inputSelect>
+            </div>
+        </div>
+    </aura:if>
+    <!-- multipicklist (INCOMPLETE: use checkbox option) -->
+    <aura:if isTrue="{!v.fld.ftype == 'multipicklist2'}">
+        <div class="slds-form-element slds-is-required slds-p-bottom_xx-small" style="vertical-align: top;">
+            <label class="slds-form-element__label" style="vertical-align: top; margin-top: 6px;" for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+            <div class="slds-form-element__control">
+                <aura:iteration items="{!v.fld.options}" var="opt">
+                    <ui:inputCheckbox aura:id="Checkbox" label="{!opt.label}" />
+                </aura:iteration>
+            </div>
+        </div>
+    </aura:if>
+    <!-- multipicklist (use LightningStrike.io multi-select component) -->
+    <aura:if isTrue="{!v.fld.ftype == 'multipicklist'}">
+        <div class="slds-form-element slds-is-required slds-p-bottom_xx-small" style="vertical-align: top;">
+            <c:strike_multiSelectPicklist label="{!v.fld.label + ':'}"
+                                          errorMessage="Invalid input" value="{!v.fld.value}" placeholder="Select options...">
+                <aura:iteration items="{!v.fld.options}" var="opt">
+                    <c:strike_option label="{!opt.label}" value="{!opt.label}"/>
+                </aura:iteration>
+            </c:strike_multiSelectPicklist>
+        </div>
+    </aura:if>
+    <!-- multipicklist (use custom PSMultiSelect1 component) -->
+    <aura:if isTrue="{!v.fld.ftype == 'multipicklist2'}">
+        <div class="slds-form-element slds-is-required slds-p-bottom_xx-small" style="vertical-align: top;">
+            <label class="slds-form-element__label" style="vertical-align: top; margin-top: 6px;" for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+            <div class="slds-form-element__control">
+                <c:PSMultiSelect1 aura:id="my-multi-select" options="{!v.fld.options}" selectedItems="{!v.fld.value}" />
+            </div>
+        </div>
+    </aura:if>
+    <!-- number/double -->
+    <aura:if isTrue="{!v.fld.ftype == 'double'}">
+        <div class="slds-form-element slds-is-required slds-p-bottom_xx-small">
+            <div class="slds-form-element__control">
+                <label class="slds-form-element__label" for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+                <div class="slds-form-element__control">
+                    <ui:inputText aura:id="{!v.fld.name + 'Search'}" class="slds-input" value="{!v.fld.value}" />
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- email -->
+    <aura:if isTrue="{!v.fld.ftype == 'email'}">
+         <div class="slds-form-element slds-is-required slds-p-bottom_xx-small">
+            <div class="slds-form-element__control">
+                <div class="slds-form-element__control">
+                    <lightning:input aura:id="{!v.fld.name + 'Search'}" type="email" label="{!v.fld.label + ':'}" name="date" value="{!v.fld.value}"/>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- phone -->
+    <aura:if isTrue="{!v.fld.ftype == 'phone'}">
+         <div class="slds-form-element slds-is-required slds-p-bottom_xx-small">
+            <div class="slds-form-element__control">
+                <div class="slds-form-element__control">
+                    <lightning:input aura:id="{!v.fld.name + 'Search'}" type="tel" label="{!v.fld.label + ':'}" name="date" value="{!v.fld.value}"/>
+                </div>
+            </div>
+        </div>
+    </aura:if>    
+    <!-- boolean -->
+    <aura:if isTrue="{!v.fld.ftype == 'boolean'}">
+        <div class="slds-form-element slds-is-required slds-p-bottom_xx-small">
+            <label class="slds-form-element__label" for="{!v.fld.name + 'Search'}">{!v.fld.label + ':'}</label>
+            <div class="slds-form-element__control">
+                <ui:inputSelect aura:id="{!v.fld.name + 'Search'}" class="slds-input" value="{!v.fld.value}">
+                     <ui:inputSelectOption text="" label="" />
+                     <ui:inputSelectOption text="true" label="true" />
+                     <ui:inputSelectOption text="false" label="false" />
+                </ui:inputSelect>
+            </div>
+        </div>
+    </aura:if>
+    <!-- date -->
+    <aura:if isTrue="{!v.fld.ftype == 'date'}">
+         <div class="slds-form-element slds-is-required slds-p-bottom_xx-small">
+            <div class="slds-form-element__control">
+                <div class="slds-form-element__control">
+                    <lightning:input aura:id="{!v.fld.name + 'Search'}" type="date" label="{!v.fld.label + ':'}" name="date" value="{!v.fld.value}"/>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- datetime -->
+    <aura:if isTrue="{!v.fld.ftype == 'datetime'}">
+         <div class="slds-form-element slds-is-required slds-p-bottom_xx-small">
+            <div class="slds-form-element__control">
+                <div class="slds-form-element__control">
+                    <lightning:input aura:id="{!v.fld.name + 'Search'}" type="date" label="{!v.fld.label + ':'}" name="date" value="{!v.fld.value}"/>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

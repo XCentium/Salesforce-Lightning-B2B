@@ -1,0 +1,5 @@
+<apex:page sidebar="false" showHeader="true">
+
+  <wave:dashboard developerName="Work_Order_Overview" showTitle="true" height="1500px" openLinksInNewWindow="false"/>
+
+</apex:page>

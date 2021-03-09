@@ -1,0 +1,143 @@
+<aura:component controller="LightningCatalogController">
+
+    <!-- external attributes -->
+    <aura:attribute name="objectName" type="String" default="Product2"/>
+    <aura:attribute name="fields" type="String" default="Name,ProductCode,Description"/>
+    <aura:attribute name="imageField" type="String" default="Image__c"/>
+    <aura:attribute name="displayMode" type="String" default="tiles"/> <!-- table or tiles -->
+    <aura:attribute name="queryLimit" type="String" default="10" description="how many record per page"/>
+	<aura:attribute name="pricebookId" type="String" default=""/>
+    <aura:attribute name="activeProductsOnly" type="Boolean" default="false"/> 
+    
+    <!-- Once a product is selected in the catalog, an event will be fired to return the productId.
+         This event will also include the sendBackData -->  
+      <aura:attribute type="String" name="sendBackData"/> 
+    
+    
+    <!-- internal attributes -->
+    <aura:attribute name="isCommunity" type="Boolean" default="false"/>
+    <aura:attribute name="communityPrefix" type="String" default=""/>
+    <aura:attribute name="dataQueryResult" type="List" description="catalog records returned by apex query are stored in this list"/>
+    <aura:attribute name="pagination" type="Map" description="contains all data related to onscreen pagination"/>
+    <aura:attribute name="orderBy" type="Map" default="" description="stores all data related to ordering"/>
+    <aura:attribute name="queryOffset" type="Integer" default="0" description="Stores offset for the next query"/>
+    <aura:attribute name="itemsPerPageOptions" type="List" />
+    <aura:attribute name="colsQueryResult" type="List"/>
+    <aura:attribute name="filterTree" type="Map" description="consolidate all filters"/>
+    <aura:attribute name="filterTreeJSON" type="String"/>
+    <aura:attribute name="rootWhereClause" type="String"/>
+    <aura:attribute name="pbeWhereClause" type="String"/>
+    <aura:attribute name="defaultCurrency" type="String" default="USD"/>
+    <aura:attribute name="dataTableCols" type="List"/>
+    <aura:attribute name="dataTableData" type="List"/>
+    <aura:attribute name="tilesData" type="List"/>
+    <aura:attribute name="isPriceFilterEnabled" type="Boolean" default="false" description="only used if object is product2"/>
+    <aura:attribute name="tableSelected" type="Boolean" default="false"/>
+    <aura:attribute name="tilesSelected" type="Boolean" default="false"/>
+    <aura:attribute name="debugMode" type="Boolean" default="false"/>
+    
+    <!-- Registers -->
+    <aura:registerEvent name="appEvent" type="c:CatalogSelectProductEvent"/>
+    
+    <!-- handlers -->
+    <aura:handler event="c:CatalogSendFilterEvent" action="{!c.handleReceiveFilter}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    
+    <!-- Menu for setting item count per parge, sorting, changing page, and display mode -->
+    <lightning:layout>
+        
+        <lightning:layoutItem padding="around-small" size="2">
+    		<lightning:combobox name="itemsPerPage" label="{!$Label.c.Catalog_Per_Page}" options="{!v.itemsPerPageOptions}" value="{!v.queryLimit}" onchange="{! c.changeItemsPerPageLimit }"/>
+        </lightning:layoutItem>
+        
+        <lightning:layoutItem padding="around-small" size="3">
+            <div style="position:relative;">
+    			<lightning:combobox name="orderByCombo" label="{!$Label.c.Catalog_Order_by}" options="{! v.orderBy.options }" value="{! v.orderBy.selectedField }" onchange="{! c.changeOrderByField }"/>
+			    <lightning:buttonIcon iconName="{!v.orderBy.selectedDirection=='ASC'?'utility:arrowdown':'utility:arrowup'}" onclick="{! c.changeOrderByDirection }"                          
+                          title="Order in ascending or descending direction" class="dirButton" alternativeText="order direction"/>
+			</div>
+        </lightning:layoutItem>
+        
+        <lightning:layoutItem padding="around-small" size="3">
+          <label class="slds-form-element__label">{!$Label.c.Catalog_Items}</label>	    
+          <p  style="margin-top:5px">
+              {!v.pagination.startRecIndex} - {!v.pagination.endRecIndex}&nbsp;{!$Label.c.Catalog_on}&nbsp;{!v.pagination.totalRecordsCount}&nbsp;<span style="text-transform: lowercase;">{!$Label.c.Catalog_Items}</span>
+          </p>  
+        </lightning:layoutItem>
+        
+        <lightning:layoutItem padding="around-small" size="2">
+              <label class="slds-form-element__label">{!$Label.c.Catalog_Page}</label>	
+              <p style="margin-top:5px">
+                <lightning:buttonIcon iconName="utility:left" disabled="{!v.pagination.isPrev?false:true}" size="large" variant="bare" alternativeText="Previous page" onclick="{!c.clickPrevPage}" />  
+                
+                     {!v.pagination.pageNumber}&nbsp;{!$Label.c.Catalog_of}&nbsp;{!v.pagination.pagesCount} 
+                
+                <lightning:buttonIcon iconName="utility:right" disabled="{!v.pagination.isNext?false:true}"  size="large" variant="bare" alternativeText="Next page" onclick="{!c.clickNextPage}" />  
+              </p>
+        </lightning:layoutItem>
+        
+        
+        <lightning:layoutItem padding="around-small" size="2">
+            <label class="slds-form-element__label" style="display:block;">&nbsp;</label>
+            <lightning:buttonGroup>
+                <lightning:buttonIconStateful iconName="utility:table" selected="{! v.tableSelected }" onclick="{! c.handleTableSwitchClick }"  />
+                <lightning:buttonIconStateful iconName="utility:tile_card_list" selected="{! v.tilesSelected }" onclick="{! c.handleTilesSwitchClick }"  />     
+   			 </lightning:buttonGroup>
+        </lightning:layoutItem>
+        
+    </lightning:layout>    
+    
+    <br/>
+    
+ 	 <!-- DISPLAY AS TABLE -->
+    
+    <aura:if isTrue="{!v.displayMode=='table'}">
+        <div style="height: 600px" class="slds-m-vertical_small">
+            <lightning:datatable
+                    keyField="Id"
+                    data="{! v.dataTableData }"
+                    columns="{! v.dataTableCols }"
+                    onrowaction="{! c.handleRowAction }"             
+                    hideCheckboxColumn="true"
+                    onresize="{! c.storeColumnWidths }"
+                    />
+        </div>
+    </aura:if>
+    
+    <!-- DISPLAY AS TILES -->
+        
+    <aura:if isTrue="{!v.displayMode=='tiles'}">
+    
+       <lightning:layout multipleRows="true">
+           <aura:iteration items="{!v.tilesData}" var="item">
+            <lightning:layoutItem padding="around-small" size="4">
+                            <div class="">
+                                <c:LightningProductCatalogTile data="{!item}"
+                                                               sendBackData="{!v.sendBackData}"/> 
+                            </div>
+            </lightning:layoutItem>
+           </aura:iteration>    
+        </lightning:layout>     
+   
+    </aura:if>    
+        
+    <div class="{!v.debugMode ? ' ' : 'slds-hide'}">
+        <h2><b>Filter Tree</b></h2>
+        <pre>{!v.filterTreeJSON}
+        </pre>
+        <br/>
+        
+        <h2><b>Computed SOQL ROOT Where Clause</b></h2>
+        <p>
+          {!v.rootWhereClause}  
+        </p>
+        
+        <br/>
+        
+        <h2><b>Computed SOQL PBE Where Clause - only used when working on product2 Object - included in root clause</b></h2>
+        <p>
+          {!v.pbeWhereClause}  
+        </p>
+    </div>    
+        
+</aura:component>

@@ -1,0 +1,3 @@
+<design:component>
+	<design:attribute name="OrderId" default="" label="Order ID" description="" />
+</design:component>

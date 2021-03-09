@@ -1,0 +1,404 @@
+<!--
+ - Created by brandon.rogers on 1/23/19.
+ -->
+
+<apex:component id="ckz_Checkout_LLI_OrderPayment">
+    <script id="CKZ-LLI-Payment-Desktop" type="text/template">
+        <div class="lliPaymentContainer">
+            <div class="row cc_message_row">
+                <div class="col-xs-12">
+                    <div class="messagingSection-Error" style="display: none"></div>
+                    <div class="messagingSection-Info" style="display: none"></div>
+                    <div class="messagingSection-Warning" style="display: none"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 col-sm-push-8">
+                    <div class="row checkoutNav cc_checkout_nav hidden-xs">
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-default btn-block btn-sm processBack cc_process_back">
+                                {{pageLabelMap 'LLICheckOut_Back'}}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default m-t-2">
+                                <div class="panel-body text-center">
+                                    <h3 class="m-t-0">{{pageLabelMap 'LLICheckOut_OrderSummary'}}</h3>
+                                    <!--<p class="small">{{this.productList.length}} {{pageLabelMap 'LLICheckOut_TotalItems'}}</p>-->
+
+                                    {{#with this.cartData}}
+                                    <h6>{{pageLabelMap 'LLICheckOut_Subtotal'}} {{{price subtotalAmount}}}</h6>
+
+                                    {{#if rewardPointsApplied}}
+                                    <h6>{{pageLabelMap 'LLICheckOut_PointsApplied'}} {{rewardPointsApplied}}</h6>
+                                    {{/if}}
+
+                                    {{#if adjustmentAmount}}
+                                    <h6>{{pageLabelMap 'LLICheckOut_Discount'}} {{{price adjustmentAmount}}}</h6>
+                                    {{/if}}
+
+                                    {{#if taxAmount}}
+                                    <h6>{{pageLabelMap 'LLICheckOut_Tax'}} {{{price taxAmount}}}</h6>
+                                    {{/if}}
+
+                                    {{#if shipAmount}}
+                                    <h6>{{pageLabelMap 'LLICheckOut_Shipping'}} {{{price shipAmount}}}</h6>
+                                    {{/if}}
+
+                                    <h4>{{pageLabelMap 'LLICheckOut_Total'}} {{{price totalAmount}}}</h4>
+                                    {{/with}}
+
+                                    <a href="#" type="button" class="btn btn-secondary btn-block btn-sm" onclick="ckzBackToCart();">
+                                        {{pageLabelMap 'LLICheckOut_BackToCart'}}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-8 col-sm-pull-4">
+                    {{> cartBillingAddress}}
+
+                    <div class="checkoutContainer checkoutPaymentContainer cc_checkout_payment m-t-3">
+                        <div class="checkoutPaymentTarget"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modalBillTo"></div>
+    </script>
+
+    <!-- BILLING ADDRESS -->
+    <script id="CKZ-CartBillingAddress" type="text/template">
+        <h3 class="m-t-0">{{pageLabelMap 'LLICheckOut_BillAddrHeader'}}</h3>
+
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="groupAddress">
+                    <input type="hidden" name="billToId_{{sfid}}" value="{{shipTo.sfid}}"/>
+                    {{>addressDisplay this.cartData.billTo}}
+                </div>
+
+                {{#if this.cartData.billTo}}
+                <p class="small">
+                    <a href="" class="editBillAddr" data-id="{{sfid}}" data-toggle="modal">{{pageLabelMap 'LLICheckOut_EditAddr'}}</a>
+                </p>
+                {{else}}
+                <p class="small">
+                    <a href="" class="editBillAddr" data-id="{{sfid}}" data-toggle="modal">{{pageLabelMap 'LLICheckOut_EnterBillAddr'}}</a>
+                </p>
+                {{/if}}
+            </div>
+
+            <div class="col-sm-4">
+                <div id="paymentAddrEditCarousel" class="addrEditCarousel text-right"></div>
+            </div>
+        </div>
+    </script>
+
+    <!-- BILLING ADDRESS MODAL -->
+    <script id="CKZ-Billing-LII-Address-Edit-Modal" type="text/template">
+        <div id="editBillAddressMod" class="modal fade cc_modal cc_address_edit_modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content cc_modal_content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#215;</button>
+                        <h3 id="myModalLabel" class="modal-title">{{pageLabelMap 'LLICheckOut_EditAddr'}}</h3>
+                    </div>
+
+                    <div class="modal-body cc_modal-body">
+                        <div class="billModal-messagingSection-Error" style="display: none"></div>
+
+                        <form id="billAddrEdit" name="billAddrEdit" class="addressForm lliForm form">
+                            <div class="billAddrEditForm">
+                                <input type="hidden" value="{{sfid}}" name="billTo.sfid"/>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="billTo.firstName" class="control-label">{{pageLabelMap 'LLICheckOut_FirstName'}}</label>
+                                            <input type="text" name="billTo.firstName" class="form-control billingField" placeholder="{{pageLabelMap 'LLICheckOut_FirstName'}}" value="{{firstName}}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label for="billTo.lastName" class="control-label">{{pageLabelMap 'LLICheckOut_LastName'}}</label>
+                                        <input type="text" name="billTo.lastName" class="form-control billingField" placeholder="{{pageLabelMap 'LLICheckOut_LastName'}}" value="{{lastName}}"/>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="billTo.Email">{{pageLabelMap 'LLICheckOut_Email'}}</label>
+                                            <input class="form-control billingField" type="text" placeholder="Email" value="{{email}}" name="billTo.email"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="billTo.daytimePhone">{{pageLabelMap 'LLICheckOut_Phone'}}</label>
+                                            <input class="form-control billingField" type="text" placeholder="Phone" value="{{daytimePhone}}" name="billTo.daytimePhone"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="billTo.companyName">{{pageLabelMap 'LLICheckOut_CompanyName'}}</label>
+                                            <input type="text" placeholder="Company Name" value="{{companyName}}" class="billingField form-control" name="billTo.companyName"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="billTo.addressFirstline">{{pageLabelMap 'LLICheckOut_Address1'}}</label>
+                                            <input class="form-control billingField" type="text" placeholder="{{pageLabelMap 'LLICheckOut_Address1'}}" value="{{addressFirstline}}" name="billTo.addressFirstline"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="billTo.addressSecondline">{{pageLabelMap 'LLICheckOut_Address2'}}</label>
+                                            <input class="form-control billingField" type="text" placeholder="{{pageLabelMap 'LLICheckOut_Address2'}}" value="{{addressSecondline}}" name="billTo.addressSecondline"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="billTo.addressThirdline">{{pageLabelMap 'LLICheckOut_Address3'}}</label>
+                                            <input class="form-control billingField" type="text" placeholder="{{pageLabelMap 'LLICheckOut_Address3'}}" value="{{addressThirdline}}" name="billTo.addressThirdline"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="billTo.countryListing">{{pageLabelMap 'LLICheckOut_Country'}}</label>
+                                            {{{selectGeo 'countryISO' this.countryList shipTo.countryISOCode 'countryListing shippingField form-control' 'shipTo.'}}}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="billTo.stateSection">{{pageLabelMap 'LLICheckOut_State'}}</label>
+                                            <div class="stateSection"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="billTo.city">{{pageLabelMap 'LLICheckOut_City'}}</label>
+                                            <input class="form-control billingField" type="text" placeholder="City" value="{{city}}" name="billTo.city"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="postalCode">{{pageLabelMap 'LLICheckOut_Postal'}}</label>
+                                            <input class="form-control billingField" type="text" placeholder="Postal Code" value="{{postalCode}}" name="billTo.postalCode"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default btn-sm cancelAddr" data-id="{{sfid}}" value="{{pageLabelMap 'Cancel'}}"/>
+                        <input type="button" class="btn btn-default btn-sm saveBillAddr" data-id="{{sfid}}" value="{{pageLabelMap 'Save'}}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- PAYMENT PROCESSOR -->
+    <script id="CKZ-LLI-PaymentProcessor-Desktop" type="text/template">
+        <div class="cc_payment_processor_lli">
+
+            <div class="storedpayment-messagingSection-Error" role="alert" style="display: none"></div>
+            <div class="storedpayment-messagingSection-Warning" role="alert" style="display: none"></div>
+            <div class="storedpayment-messagingSection-Info" role="alert" style="display: none">
+                <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&#215;</span></button>
+            </div>
+
+            <!--<div class="paymentMidSection cc_payment_mid_section">{{pageLabelMap 'PaymentProcessor_MidSec'}}</div>-->
+
+            <div class="paymentTypesContainer cc_payment_types_container">
+                <ul class="nav nav-tabs cc_nav-tabs cc_nav-tabs-payment" role="tablist">
+                    {{#if true }}
+                        {{#ifDisplay 'WLT.Enabled'}}
+                            {{#if this.storedPayments}}
+                                <li role="presentation" class="active cc_nav-tabs_li active">
+                                    <a href="#tab-wallet" aria-controls="tab-wallet" role="tab" class="cc_nav-tabs_anchor" data-toggle="tab">{{pageLabelMap 'PaymentProcessor_MyWallet'}}</a>
+                                </li>
+
+                                {{#if this.paymentTypes}}
+                                    {{#each this.paymentTypes}}
+                                        <li role="presentation" class="cc_nav-tabs_li">
+                                            <a href="#{{@key}}" aria-controls="{{@key}}" role="tab" class="cc_nav-tabs_anchor" data-toggle="tab">{{pageLabelMapMultiString 'PaymentProcessorTab_' @key}}</a>
+                                        </li>
+                                    {{/each}}
+                                {{/if}}
+
+                            {{else}}
+                                {{#if this.paymentTypes}}
+                                    {{#each this.paymentTypes}}
+                                        <li role="presentation" class="cc_nav-tabs_li {{#ifEquals @index 0}}active{{/ifEquals}}">
+                                            <a href="#{{@key}}" aria-controls="{{@key}}" role="tab" class="cc_nav-tabs_anchor" data-toggle="tab">{{pageLabelMapMultiString 'PaymentProcessorTab_' @key}}</a>
+                                        </li>
+                                    {{/each}}
+                                {{/if}}
+                            {{/if}}
+                        {{else}}
+                            {{#if this.paymentTypes}}
+                                {{#each this.paymentTypes}}
+                                    <li role="presentation" class="cc_nav-tabs_li {{#ifEquals @index 0}}active{{/ifEquals}}">
+                                        <a href="#{{@key}}" aria-controls="{{@key}}" role="tab" class="cc_nav-tabs_anchor" data-toggle="tab">{{pageLabelMapMultiString 'PaymentProcessorTab_' @key}}</a>
+                                    </li>
+                                {{/each}}
+                            {{/if}}
+                        {{/ifDisplay}}
+                    {{/if}}
+
+                    <!--{{#if this.paymentTypes}}
+                        {{#each this.paymentTypes}}
+                            <li role="presentation" class="cc_nav-tabs_li {{#if this.storedPayments}} {{else}} {{#ifEquals @index 0}}active{{/ifEquals}} {{/if}}" data-index="{{@index}}">
+                                <a href="#{{@key}}" aria-controls="{{@key}}" role="tab" class="cc_nav-tabs_anchor" data-toggle="tab">{{pageLabelMapMultiString 'PaymentProcessorTab_' @key}}</a>
+                            </li>
+                        {{/each}}
+                    {{/if}}-->
+                </ul>
+
+                <div class="tab-content cc_tab-content">
+                    {{#if true }}
+                        {{#ifDisplay 'WLT.Enabled'}}
+                            {{#if this.storedPayments}}
+                                <div role="tabpanel" class="cc_tab-pane tab-pane active" id="tab-wallet">
+                                    <div class="paymentTypeContainer tab-wallet err cc_payment_type">
+                                        <div class="cc_payment_processor_mywallet p-y-2">
+                                            <div class="cc_stored_payments_container">
+                                                {{#each this.storedPayments}}
+                                                <div class="storedPaymentContainer {{this.accountType}} cc_stored_payment_container">
+                                                        <span class="storedPaymentSelector {{this.sfid}} cc_stored_payment_selector">
+                                                            <input type="radio" name="storedPaymentSelection" value="{{this.sfid}}" class="storedPaymentSelection {{this.sfid}}" data-id="{{this.sfid}}" {{#ifEquals @root.storedSelected this.sfid}}checked{{/ifEquals}}/>
+                                                        </span>
+
+                                                    <span class="storedPaymentDisplay cc_stored_payment_display">
+                                                            {{pageLabelMapMultiString 'PaymentDisplay_' this.accountType this.accountType this.accountNumber this.subAccountNumber (pageLabelMapMultiString 'PaymentType_' this.paymentType) (pageLabelMapMultiString 'PaymentExpMonth_' this.expirationMonth) (pageLabelMap this.expirationYear) this.displayName}}
+                                                        </span>
+                                                </div>
+                                                {{/each}}
+
+                                                <div class="actionContainer cc_payment_action_container text-right">
+                                                    <button type="button" class="btn btn-primary btn-sm useStoredPayment cc_use_stored_payment">{{pageLabelMap 'PaymentProcessor_UseStoredPayment'}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{#if this.paymentTypes}}
+                                    {{#each this.paymentTypes}}
+                                        <div role="tabpanel" class="cc_tab-pane tab-pane" id="{{@key}}">
+                                            <div class="paymentTypeContainer {{@key}} err cc_payment_type">
+                                                {{pageLabelMap 'Payment_LoadingPaymentType'}}
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                {{/if}}
+                            {{else}}
+                                {{#if this.paymentTypes}}
+                                    {{#each this.paymentTypes}}
+                                        <div role="tabpanel" class="cc_tab-pane tab-pane {{#ifEquals @index 0}}active{{/ifEquals}}" id="{{@key}}">
+                                            <div class="paymentTypeContainer {{@key}} err cc_payment_type">
+                                                {{pageLabelMap 'Payment_LoadingPaymentType'}}
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                {{/if}}
+                            {{/if}}
+                        {{else}}
+                            {{#if this.paymentTypes}}
+                                {{#each this.paymentTypes}}
+                                    <div role="tabpanel" class="cc_tab-pane tab-pane {{#ifEquals @index 0}}active{{/ifEquals}}" id="{{@key}}">
+                                        <div class="paymentTypeContainer {{@key}} err cc_payment_type">
+                                            {{pageLabelMap 'Payment_LoadingPaymentType'}}
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/if}}
+                        {{/ifDisplay}}
+                    {{/if}}
+
+                    <!--<div role="tabpanel" class="cc_tab-pane tab-pane active" id="tab-wallet">
+                        <div class="paymentTypeContainer tab-wallet err cc_payment_type">
+                            {{#if true }}
+                                {{#ifDisplay 'WLT.Enabled'}}
+                                    {{#if this.storedPayments}}
+                                        <div class="cc_payment_processor_mywallet p-y-2">
+                                            <div class="cc_stored_payments_container">
+                                                {{#each this.storedPayments}}
+                                                    <div class="storedPaymentContainer {{this.accountType}} cc_stored_payment_container">
+                                                        <span class="storedPaymentSelector {{this.sfid}} cc_stored_payment_selector">
+                                                            <input type="radio" name="storedPaymentSelection" value="{{this.sfid}}" class="storedPaymentSelection {{this.sfid}}" data-id="{{this.sfid}}" {{#ifEquals @root.storedSelected this.sfid}}checked{{/ifEquals}}/>
+                                                        </span>
+
+                                                        <span class="storedPaymentDisplay cc_stored_payment_display">
+                                                            {{pageLabelMapMultiString 'PaymentDisplay_' this.accountType this.accountType this.accountNumber this.subAccountNumber (pageLabelMapMultiString 'PaymentType_' this.paymentType) (pageLabelMapMultiString 'PaymentExpMonth_' this.expirationMonth) (pageLabelMap this.expirationYear) this.displayName}}
+                                                        </span>
+                                                    </div>
+                                                {{/each}}
+
+                                                <div class="actionContainer cc_payment_action_container text-right">
+                                                    <button type="button" class="btn btn-primary btn-sm useStoredPayment cc_use_stored_payment">{{pageLabelMap 'PaymentProcessor_UseStoredPayment'}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                {{/ifDisplay}}
+                            {{/if}}
+                        </div>
+                    </div>-->
+
+                    <!--{{#if this.paymentTypes}}
+                        {{#each this.paymentTypes}}
+                            <div role="tabpanel" class="cc_tab-pane tab-pane {{#if this.storedPayments}} {{else}} {{#ifEquals @index 0}}active{{/ifEquals}} {{/if}}" id="{{@key}}">
+                                <div class="paymentTypeContainer {{@key}} err cc_payment_type">
+                                    {{pageLabelMap 'Payment_LoadingPaymentType'}}
+                                </div>
+                            </div>
+                        {{/each}}
+                    {{/if}}-->
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.LLIPaymentView.desktop.tmpl = 'CKZ-LLI-Payment-Desktop';
+            CCRZ.uiProperties.LLIPaymentView.partial.cartBillingAddress = '#CKZ-CartBillingAddress';
+            CCRZ.uiProperties.LLIPaymentView.PaymentProcessor.desktop.tmpl = 'CKZ-LLI-PaymentProcessor-Desktop';
+            CCRZ.uiProperties.LLIPaymentView.addressEditModal.desktop.tmpl = 'CKZ-Billing-LII-Address-Edit-Modal';
+
+
+            CCRZ.pubSub.on('view:LLIPaymentView:refresh', function() {
+                $(".cc_select_geo .billingField").addClass("form-control");
+            });
+
+        });
+    </script>
+</apex:component>

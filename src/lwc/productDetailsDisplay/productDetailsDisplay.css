@@ -1,28 +1,20 @@
-/**
- * @FileName: productDetailsDisplay
- * @Description:
- * @Author: Graeme Ward
- * @ModificationLog:
- *-----------------------------------------------------------
- * Author            Date            Modification
- * Graeme Ward       7/10/2020         Created
- *-----------------------------------------------------------  
- */
 :host {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: repeat(3, min-content) 1fr min-content min-content;
-    column-gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 lightning-breadcrumbs {
-    grid-column: 1 / span 2;
+    display: block;
+}
+
+.product-information {
+    display: flex;
 }
 
 figure {
     align-items: center;
     display: flex;
-    grid-row: 2 / span 10;
     justify-content: center;
     width: 400px;
     height: 400px;
@@ -32,10 +24,39 @@ img {
     object-fit: contain;
 }
 
-/*.price {*/
-/*    align-self: end;*/
-/*}*/
+.heading {
+    flex-grow: 1;
+}
 
-.slds-form-element_horizontal:not(.slds-is-editing) {
-    padding: 0;
+.details-area {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: stretch;
+    min-height: 400px;
+}
+
+.price {
+    align-self: end;
+}
+
+/* CSS Styling for narrow screens (e.g. phones) */
+@media only screen and (max-width: 48em) {
+    /* SLDS token: mqSmall */
+    .product-information {
+        flex-direction: column;
+    }
+
+    .details-area {
+        padding-top: var(--lwc-spacingSmall);
+    }
+
+    .image {
+        align-self: center;
+    }
+
+    figure {
+        width: 200px;
+        height: 200px;
+    }
 }

@@ -1,0 +1,999 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" controller="HighlightPanelConfig">
+    <title>Highlight Panel Please!</title>
+    <c:HighlightPanelStyles ></c:HighlightPanelStyles>
+    <div class="container-fluid slds" style="padding: 0;">
+        <!-- Nav tabs -->
+        <div class="container" style="padding: 30px 0px;">
+            <ul class="stepwizard" id="myTabs" role="tablist">
+                <li role="presentation" class="active stepwizard-step">
+                    <a href="#object" aria-controls="object" role="tab" data-toggle="tab" 
+                       type="button" class="mybtn btn-circle"></a>
+                    <p>
+                        Select Object
+                    </p>
+                </li>
+                <li role="presentation" class="stepwizard-step">
+                    <a href="#colour" aria-controls="colour" role="tab" data-toggle="tab"
+                       type="button" class="mybtn btn-circle"></a>
+                    <p>
+                        Select Brand Colour
+                    </p>
+                </li>
+                <li role="presentation" class="stepwizard-step">
+                    <a href="#config" aria-controls="config" role="tab" data-toggle="tab"
+                       type="button" class="mybtn btn-circle"></a>
+                    <p>
+                        Configure Panel
+                    </p>
+                </li>
+                <li role="presentation" class="stepwizard-step">
+                    <a href="#complete" aria-controls="complete" role="tab" data-toggle="tab"
+                       type="button" class="mybtn btn-circle"></a>
+                    <p>
+                        Complete
+                    </p>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Tab panes -->
+        <div class="tab-content" style="padding-bottom: 70px;">
+            <div role="tabpanel" class="tab-pane active" id="object">
+                
+                <div class="dark-container">
+                    <apex:form >
+                        <div class="form-group">
+                            <label>Select an object for the highlight panel</label>
+                            <apex:selectList id="select-object" value="{!selectedObject}" multiselect="false" size="1" styleClass="form-control"
+                                             style="height: 34px;">
+                                <apex:actionSupport event="onchange" action="{!updateFieldList}"
+                                                    rerender="config,config-panel"
+                                                    oncomplete="populateTemplates();clearAllSelection();"/>
+                                <apex:selectOptions value="{!objects}"></apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                    </apex:form>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="colour">
+                <div class="dark-container" >
+                    <div class="form-group">
+                        <label>Select brand colour</label>
+                        <input type="color" class="color" id="brand-colour"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Panel Height (pixels)</label>
+                        <input type="number" class="form-control" id="panel-height" value="180"/>
+                    </div>
+                    <!--
+                    <div class="checkbox"  data-toggle="tooltip" data-placement="right" title="Check this if you wish to have title on top of each card.">
+                        <label>
+                            <input type="checkbox" id="show-title" checked="true"/> Display titles on cards
+                        </label>
+                    </div>-->
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="config">
+                <div class="dark-container"  style="padding: 30px 5%;">
+                    <center>
+                        <h4 style="color: white;">
+                            Please click on a panel above to apply configuration
+                        </h4>
+                    </center>
+                    <div class="row" id="selected" >
+                        <div class="col-md-4">
+                            <div class="plus" data-toggle="modal" data-target="#myModal">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="light-container">
+                
+                <apex:outputPanel id="config-panel">
+                    <div id="config-panel">
+                        <center style="padding: 10px;">
+                        <button type="button" class="mybtn slds-button slds-button--brand" onclick="applyNewConfig();">
+                            Apply
+                        </button>
+                        <button type="button" class="mybtn slds-button" onclick="removeSelectedTemplate();">
+                            Remove
+                        </button>
+                        </center>
+                        
+                        <div class="config-box">
+                            <h4>
+                                Available Merge Fields - for dynamic content
+                            </h4>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Select Field</label>
+                                        <select onchange="showMergeField()" id="select-field" class="form-control panel-field">
+                                            <apex:repeat value="{!Fields}" var="field" >
+                                                <option value="{!field.name}">{!field.label}</option>
+                                            </apex:repeat>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Copy Merge Field Value</label>
+                                        <input class="form-control" type="text" id="merge-field"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="config-box">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h4>
+                                    Card Title
+                                </h4>
+                                <label class="onoffswitch ">
+                                    <input type="checkbox" id="show-title" checked="true" class="onoffswitch-checkbox" />
+    								<label class="onoffswitch-label" for="show-title"></label>
+                                </label>
+                            </div>
+                            <div class="form-group" id="title-text">
+                                <label>Title Text</label>
+                                <input type="text" class="form-control panel-field" id="title-field"/>
+                            </div>
+                        </div>
+                        <div id="icon-config-fields">
+                            <div class="config-box">
+                            <div class="form-group">
+                                <label>Icon Field 1</label>
+                                <input type="text" class="form-control panel-field" id="image-label-field-1"
+                                       placeholder="Label"/>
+                            </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="icon-1" id="icon-text-1" value="text"/>Show text</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="icon-1" id="icon-image-1" value="image"/>Use image URL</label>
+                                </div>
+                                <!--
+                            <div class="checkbox" style="display:none;">
+                                <label>
+                                    <input type="checkbox" id="image-checkbox-1"/> Use image icon
+                                </label>
+                            </div>-->
+                            <div class="form-group">
+                                <input type="text" class="form-control image-field panel-field" id="image-field-1"/>
+                            </div>
+                            <div class="form-group" id="image-btn-1" style="display:none;">
+                                Want to use a default image we have?
+                                <button type="botton" class="mybtn slds-button slds-button--neutral" for="image-field-1"
+                                        data-toggle="modal" data-target="#default-images">
+                                    Choose from default images
+                                </button>
+                            </div>
+                            </div>
+                            <div class="config-box">
+                            <div class="form-group">
+                                <label>Icon Field 2</label>
+                                <input type="text" class="form-control panel-field" id="image-label-field-2"
+                                       placeholder="Label" />
+                            </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="icon-2" id="icon-text-2" value="text"/>Show text</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="icon-2" id="icon-image-2" value="image"/>Use image URL</label>
+                                </div>
+                                <!--
+                            <div class="checkbox" style="display:none;">
+                                <label>
+                                    <input type="checkbox" id="image-checkbox-2"/> Use image icon
+                                </label>
+                            </div>-->
+                            <div class="form-group">
+                                <input type="text" class="form-control image-field panel-field" id="image-field-2" />
+                            </div>
+                            <div class="form-group" id="image-btn-2" style="display:none;">
+                                Want to use a default image we have?
+                                <button type="botton" class="mybtn slds-button slds-button--neutral" for="image-field-2"
+                                        data-toggle="modal" data-target="#default-images" >
+                                    Choose from default images
+                                </button>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="list-config-fields">
+                            
+                            <div class="config-box">
+                            <div class="form-group">
+                                <label>List Fields</label>
+                                <select id="list-field-1" class="form-control panel-field">
+                                    <apex:repeat value="{!Fields}" var="field" >
+                                        <option value="{!field.name}">{!field.label}</option>
+                                    </apex:repeat>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select id="list-field-2" class="form-control panel-field">
+                                    <apex:repeat value="{!Fields}" var="field">
+                                        <option value="{!field.name}">{!field.label}</option>
+                                    </apex:repeat>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select id="list-field-3" class="form-control panel-field">
+                                    <apex:repeat value="{!Fields}" var="field">
+                                        <option value="{!field.name}">{!field.label}</option>
+                                    </apex:repeat>
+                                </select>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="chart-config-field-left">
+                        <div class="config-box">
+                            <label>Chart on Left</label>
+                            <div class="form-group">
+                                <select id="chart-type-1" class="form-control panel-field">
+                                    <option value="gauge">Gauge</option>
+                                    <option value="circular">Cicular Progress Bar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="chart-label-field-1" class="form-control panel-field" 
+                                       placeholder="Label"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="chart-value-field-1" class="form-control panel-field" 
+                                       placeholder="Value"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="chart-max-field-1" class="form-control panel-field" 
+                                       placeholder="Maximum Value"/>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="chart-config-field-right">
+                        <div class="config-box">
+                            <label>Chart on Right</label>
+                            <div class="form-group">
+                                <select id="chart-type-2" class="form-control panel-field">
+                                    <option value="gauge">Gauge</option>
+                                    <option value="circular">Cicular Progress Bar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="chart-label-field-2" class="form-control panel-field" 
+                                       placeholder="Label"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="chart-value-field-2" class="form-control panel-field" 
+                                       placeholder="Value"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="chart-max-field-2" class="form-control panel-field" 
+                                       placeholder="Maximum Value"/>
+                            </div>
+                            </div>
+                        </div>
+                        <center>
+                        <button type="button" class="mybtn slds-button slds-button--brand" onclick="applyNewConfig();">
+                            Apply
+                        </button>
+                        <button type="button" class="mybtn slds-button" onclick="removeSelectedTemplate();">
+                            Remove
+                        </button>
+                        </center>
+                    </div>
+                </apex:outputPanel>
+                </div>
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 90%;">
+                        <div class="modal-content" style="padding: 20px 40px;
+                                                          box-shadow: none;
+                                                          border-radius: 0;
+                                                          border: none;
+                                                          width: 100%;">
+                            <center><h2>
+                                Select a template
+                                </h2></center>
+                            <div class="row" id="templates">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal fade" id="default-images" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 90%;">
+                        <div class="modal-content" style="padding: 20px 40px;
+                                                          box-shadow: none;
+                                                          border-radius: 0;
+                                                          border: none;
+                                                          width: 100%;">
+                            <center><h2>
+                                Select an image
+                                </h2></center>
+                            <div class="row" id="image-list">
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'membership-1.svg')}" class="template-img"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'membership-2.svg')}" class="template-img"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'membership-3.svg')}" class="template-img"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'nps-1.svg')}" class="template-img"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'nps-2.svg')}" class="template-img"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'nps-3.svg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'plan.svg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'profile-img.jpg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'service-1.svg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'service-2.svg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'service-3.svg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'stage-1.svg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'stage-2.svg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'stage-3.svg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="image-cropper">
+                                        <img src="{!URLFOR($Resource.panelIcons, 'tokens.svg')}" class="template-img"/>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="complete">
+                
+                <div class="dark-container">
+                <div class="form-group">
+                    <textarea class="form-control" rows="20" id="form-markup"></textarea>
+                </div>
+                <button type="button" class="mybtn slds-button slds-button--neutral " data-toggle="modal" data-target="#SaveAs">
+                    Save as Visualforce Page
+                </button>
+                <button type="button" class="mybtn slds-button slds-button--neutral " id="copy" data-clipboard-target="#form-markup">
+                    Copy to Clipboard
+                </button>
+                </div>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="SaveAs" tabindex="-1" role="dialog" aria-labelledby="SaveAsLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Save as a Visualforce Page</h4>
+                            </div>
+                            <div class="modal-body">
+                                
+                                <div class="form-group">
+                                    <label for="search" >Page Name</label>
+                                    <input type="text" class="form-control" id="page-name" onkeyup="validatePageName();"/>
+                                    <label for="search" class="help-block ">Note: Page name is an API name and it must start with a letter and no space</label>
+                                </div>
+                                <div >
+                                    <h3>
+                                        What to do next...
+                                    </h3>
+                                    <p>
+                                        Once your visualforce page for highlight panel is created, you can add it to page layout.</p>
+                                    <p>
+                                        Make sure you <b>DO NOT CHECK</b> the box for "Highlights Panel Show in the Console" in <b>Layout Properties</b>.
+                                    </p>
+                                    <p>Edit the page layout of your selected object, click <b>Custom Console Components</b>
+                                        and then add this visualforce page on <b>Top Sidebar</b>.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="mybtn slds-button slds-button--neutral" data-dismiss="modal">Close</button>
+                                <button type="button" class="mybtn slds-button slds-button--brand" onclick="createVFPage()" id="save-btn"
+                                        disabled="true">Save and Open</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-docked-form-footer" style="display:flex; justify-content: space-between; padding: 15px 20px;">
+            <button type="button" class="mybtn slds-button slds-button--neutral" onclick="showPreviousTab()"
+                     id="previous-btn" disabled="disabled">Previous</button>
+            <button type="button" class="mybtn slds-button slds-button--brand" onclick="showNextTab()" id="next-btn">Next</button>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="{!$Resource.highlightPanelTemplate}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.5/clipboard.min.js"></script>
+    <script src="{!$Resource.jquery_sortable}"></script>
+     <script type="text/javascript">
+    var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <script src="/soap/ajax/35.0/connection.js" type="text/javascript"></script>
+    
+    <apex:outputPanel id="config">
+        <script>
+        var selectedObj = "{!selectedObject}";
+        var filteredTemplates = [];
+        for (var i = 0; i < templates.length; ++i) {
+            if (templates[i].objects.includes(selectedObj)) {
+                filteredTemplates.push(templates[i]);
+            }
+        }
+        </script>
+    </apex:outputPanel>
+    <script>
+    var selected = [];
+    var selectedTemplate = 0;
+	var activeImageField;
+	var tabs = ['#object','#colour','#config','#complete'];
+	var tabIndex = 0;
+	var currentObject;
+	function showNextTab() {
+        if (tabIndex < 3) {
+        	++tabIndex;
+        } 
+        $('a[href="' + tabs[tabIndex] + '"]').tab('show');
+        updateButtons();
+    }
+	function showPreviousTab() {
+        if (tabIndex > 0) {
+        	--tabIndex;
+        } 
+        $('a[href="' + tabs[tabIndex] + '"]').tab('show');
+        updateButtons();
+    }
+	function updateButtons() {
+        $("#previous-btn").prop("disabled", false);
+        $("#next-btn").prop("disabled", false);
+        if (tabIndex == 3) {
+            $("#next-btn").prop("disabled", true);
+        }
+        if (tabIndex == 0) {
+            $("#previous-btn").prop("disabled", true);
+        }
+    }
+    $(function() {
+        currentObject = $('select[id*="select-object"]').val();
+        $('select[id*="select-object"]').click(function() {
+            if (selected.length > 0) {
+                if (!confirm("Changing the object will reset existing panels. Are you sure?")) {
+                    $('select[id*="select-object"]').val(currentObject);
+                    return;
+                } else {
+        			currentObject = $('select[id*="select-object"]').val();
+                }
+            }
+        });
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            tabIndex = tabs.indexOf($(e.target).attr('href'));
+        	updateButtons();
+        });
+        var clipboard = new Clipboard('#copy');
+        clipboard.on('success', function(e) {
+            alert('Successfully copied to your clipboard');
+            e.clearSelection();
+        });
+        populateTemplates();
+        $('#config-panel').hide();
+        $('#brand-colour, #panel-height, #show-title').change(function() {
+            populateTemplates();
+            updateSelectedSection();
+			$('.plus').css('height',$('#panel-height').val() + 'px');
+            if ($('#show-title').is(':checked')) {
+                $('#title-text').show();
+            } else {
+                $('#title-text').hide();
+            }
+        });
+        $(".template-img").click(function() {
+            $('#' + activeImageField).val($(this).attr('src'));
+            $('#default-images').modal('hide');
+        });
+    });
+    function applyNewConfig() {
+        // TODO: THIS IS HARDCODED AT THE MOMENT. MAKE THIS DYNAMIC BASED ON TEMPLATE PLEASE
+        selected[selectedTemplate].heading = $('#title-field').val();
+        
+        if (selected[selectedTemplate].leftPanel.type === 'icons') { 
+            var leftFields = selected[selectedTemplate].leftPanel.fields;
+            
+            for (var i = 0; i < leftFields.length; ++i) {
+                selected[selectedTemplate].leftPanel.fields[i].isImage = $('#icon-image-' + (i+1)).prop('checked');
+                leftFields[i].label = $('#image-label-field-' + (i+1)).val();
+                leftFields[i].value = $('#image-field-' + (i+1)).val();
+            }
+        } else if (selected[selectedTemplate].leftPanel.type === 'chart') {
+            selected[selectedTemplate].leftPanel.chart = $('#chart-type-1').val();
+            selected[selectedTemplate].leftPanel.value = $('#chart-value-field-1').val();
+            selected[selectedTemplate].leftPanel.label = $('#chart-label-field-1').val();
+            selected[selectedTemplate].leftPanel.max = $('#chart-max-field-1').val();
+        }
+        if (selected[selectedTemplate].rightPanel.type === 'list') {
+            var rightFields = selected[selectedTemplate].rightPanel.fields;
+            
+            for (var i = 0; i < rightFields.length; ++i) {
+                rightFields[i].label = $("#list-field-" + (i+1) + " option:selected").text();
+                rightFields[i].value = "{" + "!" + selectedObj + "." + $('#list-field-' + (i+1)).val() + "}";   
+            }
+        } else if (selected[selectedTemplate].rightPanel.type === 'chart') {
+            selected[selectedTemplate].rightPanel.chart = $('#chart-type-2').val();
+            selected[selectedTemplate].rightPanel.value = $('#chart-value-field-2').val();
+            selected[selectedTemplate].rightPanel.label = $('#chart-label-field-2').val();
+            selected[selectedTemplate].rightPanel.max = $('#chart-max-field-2').val();
+        }
+        updateSelectedSection();
+    }
+        
+    function selectThis(index, elem) {
+        selectedTemplate = index;
+        $( "#selected" ).find( ".card" ).addClass('dim');
+        $( "#selected" ).find( ".card" ).removeClass('glow');
+        $(elem).children().addClass('glow');
+        $(elem).children().removeClass('dim');
+        loadCurrentConfig();
+    }
+
+    function loadCurrentConfig() {
+        $('#config-panel').show();
+        $('#title-field').val(selected[selectedTemplate].heading);
+        
+        if (selected[selectedTemplate].leftPanel.type === 'icons') {
+            $('#icon-config-fields').show();
+            $('#chart-config-field-left').hide();
+            
+            $('#icon-image-1').prop('checked', selected[selectedTemplate].leftPanel.fields[0].isImage);
+            $('#icon-image-2').prop('checked', selected[selectedTemplate].leftPanel.fields[1].isImage);
+            $('#icon-text-1').prop('checked', !selected[selectedTemplate].leftPanel.fields[0].isImage);
+            $('#icon-text-2').prop('checked', !selected[selectedTemplate].leftPanel.fields[1].isImage);
+            
+            $('#image-label-field-1').val(selected[selectedTemplate].leftPanel.fields[0].label);
+            $('#image-field-1').val(selected[selectedTemplate].leftPanel.fields[0].value);
+            $('#image-label-field-2').val(selected[selectedTemplate].leftPanel.fields[1].label);
+            $('#image-field-2').val(selected[selectedTemplate].leftPanel.fields[1].value);
+            selected[selectedTemplate].leftPanel.fields[0].isImage ? $('#image-btn-1').show() : $('#image-btn-1').hide();
+            selected[selectedTemplate].leftPanel.fields[1].isImage ? $('#image-btn-2').show() : $('#image-btn-2').hide();
+            $('input[type=radio][name=icon-1]').change(function() {
+                if (this.value == 'image') {
+                    $('#image-btn-1').show();
+                    $('#image-field-1').val('');
+                }
+                else if (this.value == 'text') {
+                    $('#image-btn-1').hide();
+                    $('#image-field-1').val('');
+                }
+            });
+            
+            $('input[type=radio][name=icon-2]').change(function() {
+                if (this.value == 'image') {
+                    $('#image-btn-2').show();
+                    $('#image-field-2').val('');
+                }
+                else if (this.value == 'text') {
+                    $('#image-btn-2').hide();
+                    $('#image-field-2').val('');
+                }
+            });
+            
+        } else if (selected[selectedTemplate].leftPanel.type === 'chart') {
+            $('#icon-config-fields').hide();
+            $('#chart-config-field-left').show();
+            
+            $('#chart-type-1').val(selected[selectedTemplate].leftPanel.chart);
+            $('#chart-label-field-1').val(selected[selectedTemplate].leftPanel.label);
+            $('#chart-value-field-1').val(selected[selectedTemplate].leftPanel.value);
+            $('#chart-max-field-1').val(selected[selectedTemplate].leftPanel.max);
+        }
+        
+        if (selected[selectedTemplate].rightPanel.type === 'list') {
+            $('#list-config-fields').show();
+            $('#chart-config-field-right').hide();
+            var fields = selected[selectedTemplate].rightPanel.fields;
+            for (var index = 0; index < fields.length; ++index) {
+                if (fields[index].value !== null 
+                    && fields[index].value.indexOf('.') > -1 
+                    && fields[index].value.indexOf('{') > -1
+                    && fields[index].value.indexOf('!') > -1) {
+                    var fieldName = fields[index].value.split('.')[1].slice(0, -1);
+                    $('#list-field-' + (index+1)).val(fieldName);
+                }
+            }
+        } else if (selected[selectedTemplate].rightPanel.type === 'chart') {
+            $('#list-config-fields').hide();
+            $('#chart-config-field-right').show();
+            
+            $('#chart-type-2').val(selected[selectedTemplate].rightPanel.chart);
+            $('#chart-label-field-2').val(selected[selectedTemplate].rightPanel.label);
+            $('#chart-value-field-2').val(selected[selectedTemplate].rightPanel.value);
+            $('#chart-max-field-2').val(selected[selectedTemplate].rightPanel.max);
+        }
+    }
+    function populateTemplates() {
+        $("#templates").html('');
+        filteredTemplates.forEach(appendTemplate);
+        function appendTemplate(element, index, array) {
+            var templateHtml = getTemplateHtml(element, index, false);
+            $("#templates").append(templateHtml);
+        }
+        replaceImageWithSVG();
+    }
+	function clearAllSelection() {
+        selected = [];
+        updateSelectedSection();
+    }
+
+    function addToSelected(index) {
+        selected.push($.extend(true, {}, filteredTemplates[index]));
+        updateSelectedSection();
+        $('#myModal').modal('hide');
+    }
+    
+    function updateSelectedSection() {
+        var html = '';
+        for (i = 0; i < selected.length; i++) { 
+            html += getTemplateHtml(selected[i], i, true);
+        }
+        updateTextarea(html);
+        html += '<div class="col-md-4"> <div class="plus" data-toggle="modal" style="height:' + $('#panel-height').val() + 'px"data-target="#myModal"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> </div> </div>';
+        $('#selected').html(html);
+        replaceImageWithSVG();
+        
+    }
+    
+    function getTemplateHtml(template, index, selected) {
+        var templateHtml = '';
+        if (index !== null && index >= 0) {
+            if (selected) {
+                templateHtml += '\t<div class="col-md-4" onclick="selectThis(' + index + ', this)">\n';
+            } else {
+                templateHtml += '\t<div class="col-md-4" onclick="addToSelected(' + index + ')">\n';
+            }
+        } else {
+            templateHtml += '\t<div class="col-md-4">\n';
+        }
+        templateHtml += '\t\t<div class="card" style="height:' + $('#panel-height').val() +'px;">\n';
+        if ($('#show-title').is(':checked')) {
+            templateHtml += '\t\t\t<h3 style="margin-top:0;color:' + $('#brand-colour').val() + ';">' + template.heading + '</h3>\n';
+        }
+        templateHtml += '\t\t\t<div class="card-content">\n';
+        if (template.leftPanel.type === "icons") {
+            templateHtml += getIconsHtml(template.leftPanel.fields);
+        } else if (template.leftPanel.type === "chart") {
+            templateHtml += getChartFieldHtml(template.leftPanel);
+        }
+        if (template.rightPanel.type === "list") {
+            templateHtml += getTextFieldsHtml(template.rightPanel.fields);
+        } else if (template.rightPanel.type === "chart") {
+            templateHtml += getChartFieldHtml(template.rightPanel);
+        }
+        templateHtml += '\t\t\t</div>\n\t\t</div>\n\t</div>\n';
+        return templateHtml;
+    }
+
+    function getChartFieldHtml(panel, id) {
+        var chartId = guidGenerator();
+        var html = '\t\t\t<div class="component">\n';
+        html += '\t\t\t\t<div id="' + chartId + '" class="chart"></div>\n';
+        html += '\t\t\t\t<' + 'script>';
+        console.log(panel.chart);
+        if (panel.chart === "circular") {
+            html += getCicularChartHtml(chartId, panel.max, panel.value, panel.label);
+        } else if (panel.chart === "gauge") {
+            html += getGaugeChartHtml(chartId, panel.max, panel.value, panel.label);
+        }
+        html += '</' + 'script>\n';
+        html += '\t\t\t</div>\n';
+        return html;
+    }
+
+    function getCicularChartHtml(divId, max, value, label) {
+        var html =  'AmCharts.makeChart("'+ divId + '", {'
+        + '  "type": "gauge",'
+        + '  "axes": [{'
+        + '    "axisAlpha": 0,'
+        + '    "tickAlpha": 0,'
+        + '    "labelsEnabled": false,'
+        + '    "startValue": 0,'
+        + '    "endValue": ' + max + ','
+        + '    "startAngle": 0,'
+        + '    "endAngle": 360,'
+        + '    "bands": [{'
+        + '      "color": "#eee",'
+        + '      "startValue": 0,'
+        + '      "endValue": ' + max + ','
+        + '      "radius": "100%",'
+        + '      "innerRadius": "75%"'
+        + '    }, {'
+        + '      "color": "' + $('#brand-colour').val() + '",'
+        + '      "startValue": 0,'
+        + '      "endValue": ' + value + ','
+        + '      "radius": "100%",'
+        + '      "innerRadius": "75%",'
+        + '    }]'
+        + '  }],'
+        + '  "allLabels": [{'
+        + '    "text": "' + label + '",'
+        + '    "x": "50%",'
+        + '    "y": "43%",'
+        + '    "size": 15,'
+        + '    "color": "' + $('#brand-colour').val() + '",'
+        + '    "align": "middle"'
+        + '  }],'
+        + '  "export": {'
+        + '    "enabled": true'
+        + '  }'
+        + '});';
+        return html;
+    }
+	function getGaugeChartHtml(divId, max, value, label) {
+        var html = 'var gaugeChart = AmCharts.makeChart( "' + divId + '", {'
+        + '  "type": "gauge",'
+        + '  "axes": [ {'
+        + '    "axisThickness": 1,'
+        + '    "axisAlpha": 0.2,'
+        + '    "tickAlpha": 0,'
+        + '    "labelsEnabled": false,'
+        + '  	"startAngle": -90,'
+        + '  	"endAngle": 90,'
+        + '    "bands": [ {'
+        + '      "color": "#cc4748",'
+        + '      "innerRadius": "90%",'
+        + '      "endValue":  ' + (max / 3) + ','
+        + '      "startValue": 0'
+        + '    }, {'
+        + '      "color": "#fdd400",'
+        + '      "innerRadius": "90%",'
+        + '      "endValue":  ' + (max / 3 * 2) + ','
+        + '      "startValue": ' + (max / 3)
+        + '    }, {'
+        + '      "color": "#84b761",'
+        + '      "endValue": ' + max + ','
+        + '      "innerRadius": "90%",'
+        + '      "startValue": ' + (max / 3 * 2)
+        + '    }, {'
+        + '      "color": "#eee",'
+        + '      "radius": "85%",'
+        + '      "innerRadius": "70%",'
+        + '      "endValue": ' + max + ','
+        + '      "startValue": 0'
+        + '    }],'
+        + '    "bottomText": "' + label + '",'
+        + '    "bottomTextYOffset": 0,'
+        + '    "endValue": ' + max
+        + '  } ],'
+        + '  "arrows": [ { "value":' + value + ' } ],'
+        + '  "export": {'
+        + '    "enabled": true'
+        + '  }'
+        + '});';
+        return html;
+    }
+
+    function getIconsHtml(fields) {
+        return getIconHtml(fields[0]) + getIconHtml(fields[1]);
+    }
+    
+    function getIconHtml(field) {
+        var html = '\t\t\t<div class="component">\n';
+        html += '\t\t\t\t<center>\n\t\t\t\t\t';
+        if (field.isImage) {
+            html += '<div class="image-cropper">\n\t\t\t\t\t\t<img class="' + field.class + '" src="' + field.value + '"/>\n\t\t\t\t\t</div>\n';
+        } else {
+            html += '<div class="icon" style="background: ' + $('#brand-colour').val() + '">\n\t\t\t\t\t\t<h3>' + field.value + '</h3>\n\t\t\t\t\t</div>';
+        }
+        html += '\t\t\t\t\t<label>' + field.label + '</label>\n';
+        html += '\t\t\t\t</center>\n\t\t\t</div>\n';
+        return html;
+    }
+    
+    function getTextFieldsHtml(fields) {
+        var html = '\t\t\t<div class="component">\n';
+        
+        for (var i = 0; i < fields.length; ++i) {
+            html += getTextFieldHtml(fields[i]);
+        }
+        html += '\t\t\t</div>\n';
+        return html;
+    }
+    
+    function getTextFieldHtml(field) {
+        var fieldText = getFieldText(field.value); 
+        return '\t\t\t\t<p><b>' + field.label + '</b>' + ':&nbsp;' + fieldText + '</p>\n';
+    }
+    
+	function getFieldText(fieldValue) {
+        if (fieldValue.startsWith('{') && fieldValue.endsWith('}') ) {
+            return '<apex' + ':outputField value="' + fieldValue + '"/>';
+        } else {
+        	return fieldValue;
+        }
+    }
+
+    function generateMarkup(html) {
+        var markup = '<' + 'apex:page standardStylesheets="false" showHeader="false" sidebar="false" standardController="' + selectedObj + '"' + '>\n';
+        markup += '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />\n';
+        markup += '<' + 'c:highlightpanelstyles></' + 'c:highlightpanelstyles>'
+        markup += '<div class="container-fluid">\n<div class="row">\n';
+        
+        markup += html;
+        
+        markup += '</div>\n</div>\n';
+        markup += '</' + 'apex:page>';
+        return markup;
+    }
+    
+    function updateTextarea(html) {
+        var markup = generateMarkup(html);
+        $('#form-markup').val(markup);
+    }
+    
+	function removeSelectedTemplate() {
+        if (confirm("Are you sure to remove this panel?")) {
+            selected.splice(selectedTemplate, 1);
+        	updateSelectedSection();
+        }
+    }
+
+	function validatePageName() {
+        
+        var name = $("#page-name").val();
+        if (name.indexOf(" ") >= 0 || !name.match(/^[A-Z]/i)) {
+        	$("#save-btn").prop("disabled", true);
+            // page name not valid
+            $("#page-name").parent().removeClass("has-success");
+            $("#page-name").parent().addClass("has-error");
+        } else {
+            $("#page-name").parent().removeClass("has-error");
+            $("#page-name").parent().addClass("has-success");
+            
+       		 $("#save-btn").prop("disabled", false);
+        }
+    }
+
+    function createVFPage(){
+        $("#save-btn").prop("disabled", true);
+        var user = sforce.connection.getUserInfo();
+        
+        var pageId = checkVFPageExist();
+        if (pageId != null) {
+            if (!confirm('This page ' + $("#page-name").val() + ' already exist. Are you sure to overwrite?')) {
+                $("#save-btn").prop("disabled", false);
+                return;
+            }
+        }
+        
+        var vfPage = new sforce.SObject("ApexPage");
+        vfPage.Name=$("#page-name").val();
+        vfPage.MasterLabel=$("#page-name").val();
+        vfPage.Markup= $('#form-markup').val();
+        var result;
+        if (pageId == null) {
+            result = sforce.connection.create([vfPage]);
+        } else {
+            vfPage.Id = pageId;
+            result = sforce.connection.upsert("Id", [vfPage]);
+        }
+        if (result[0].getBoolean("success")) {
+            console.log("new visualforce created with id " + result[0].id);
+            OpenInNewTab("apex/" + $("#page-name").val());
+            $('#myModal').modal('hide');
+        } else {
+            alert("failed to create visualforce! " + result[0]);
+        }
+        $("#save-btn").prop("disabled", false);
+    }
+    function OpenInNewTab(url) {
+        var win = window.open(url, '_blank');
+        win.focus();
+    }
+    function checkVFPageExist() {
+        var pageName = $("#page-name").val();
+        var user = sforce.connection.getUserInfo();
+        var result = sforce.connection.queryAll("Select Id, Name from ApexPage Where Name='" + pageName + "'");
+        var records = result.getArray("records");
+        if (records.length > 0) {
+            return records[0].Id;
+        }
+        return null;
+    }
+
+    function guidGenerator() {
+        var S4 = function() {
+            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    }
+    function replaceImageWithSVG() {
+        // Comment this out for now
+        /*
+        $('img.svg').each(function(){
+            var $img = $(this);
+            var imgID = $img.attr('id');
+            var imgClass = $img.attr('class');
+            var imgURL = $img.attr('src');
+            
+            $.get(imgURL, function(data) {
+                // Get the SVG tag, ignore the rest
+                var $svg = $(data).find('svg');
+                
+                // Add replaced image's ID to the new SVG
+                if(typeof imgID !== 'undefined') {
+                    $svg = $svg.attr('id', imgID);
+                }
+                // Add replaced image's classes to the new SVG
+                if(typeof imgClass !== 'undefined') {
+                    $svg = $svg.attr('class', imgClass+' replaced-svg');
+                    $svg = $svg.attr('width', '80px');
+                    $svg = $svg.attr('height', '80px');
+                }
+                
+                // Remove any invalid XML tags as per http://validator.w3.org
+                $svg = $svg.removeAttr('xmlns:a');
+                
+                // Replace image with new SVG
+                $img.replaceWith($svg);
+                
+            }, 'xml');
+            
+        });*/
+    }
+
+    $('#default-images').on('show.bs.modal', function(e) {
+        activeImageField = $(e.relatedTarget).attr('for');
+    });
+
+	function showMergeField() {
+        var text = "{" + "!" + selectedObj + "." + $('#select-field').val() + "}"; 
+        $('#merge-field').val(text);
+    }
+    </script>
+</apex:page>

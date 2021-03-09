@@ -1,0 +1,168 @@
+<template>
+  <footer
+    class="b2b_footer slds-var-p-top_xx-large slds-var-p-horizontal_large"
+    style={footerStyles}
+  >
+    <div class="slds-grid slds-gutters slds-wrap slds-var-p-bottom_x-large">
+      <div class="slds-col slds-size_1-of-3">
+        <template if:true={showImage}>
+          <div class="slds-var-m-bottom_x-large">
+            <img src={imgUrl} style={imageStyles} />
+          </div>
+        </template>
+
+        <ul
+          class="footer-link-list slds-list_horizontal slds-has-inline-block-links_space"
+        >
+          <template if:true={socialFacebook}>
+            <li>
+              <a href={facebookLink} class="social">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x"></i>
+                </span>
+              </a>
+            </li>
+          </template>
+
+          <template if:true={socialTwitter}>
+            <li>
+              <a href={twitterLink} class="social">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                  <i class="fab fa-twitter fa-stack-1x"></i>
+                </span>
+              </a>
+            </li>
+          </template>
+
+          <template if:true={socialLinkedin}>
+            <li>
+              <a href={linkedinLink} class="social">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                  <i class="fab fa-linkedin fa-stack-1x"></i>
+                </span>
+              </a>
+            </li>
+          </template>
+
+          <template if:true={socialInstagram}>
+            <li>
+              <a href={instagramLink} class="social">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                  <i class="fab fa-instagram fa-stack-1x"></i>
+                </span>
+              </a>
+            </li>
+          </template>
+
+          <template if:true={socialYoutube}>
+            <li>
+              <a href={youtubeLink} class="social">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                  <i class="fab fa-youtube fa-stack-1x"></i>
+                </span>
+              </a>
+            </li>
+          </template>
+        </ul>
+
+        <div class="slds-text-heading_large slds-var-m-top_large">
+          {ctaText}
+        </div>
+      </div>
+
+      <div class="slds-col slds-size_2-of-3">
+        <div class="slds-grid slds-gutters slds-wrap">
+          <!-- SECTION 1 -->
+          <div class="slds-col slds-size_1-of-3">
+            <div class="slds-text-heading_medium slds-var-m-bottom_small">
+              {colOneHeading}
+            </div>
+
+            <ul class="slds-has-block-links_space">
+              <li>
+                <a href={colOneLinkOneURL}>{colOneLinkOneText}</a>
+              </li>
+              <li>
+                <a href={colOneLinkTwoURL}>{colOneLinkTwoText}</a>
+              </li>
+              <li>
+                <a href={colOneLinkThreeURL}>{colOneLinkThreeText}</a>
+              </li>
+              <li>
+                <a href={colOneLinkFourURL}>{colOneLinkFourText}</a>
+              </li>
+              <li>
+                <a href={colOneLinkFiveURL}>{colOneLinkFiveText}</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- SECTION 2 -->
+          <div class="slds-col slds-size_1-of-3">
+            <div class="slds-text-heading_medium slds-var-m-bottom_small">
+              {colTwoHeading}
+            </div>
+
+            <ul class="slds-has-block-links_space">
+              <li>
+                <a href={colTwoLinkOneURL}>{colTwoLinkOneText}</a>
+              </li>
+              <li>
+                <a href={colTwoLinkTwoURL}>{colTwoLinkTwoText}</a>
+              </li>
+              <li>
+                <a href={colTwoLinkThreeURL}>{colTwoLinkThreeText}</a>
+              </li>
+              <li>
+                <a href={colTwoLinkFourURL}>{colTwoLinkFourText}</a>
+              </li>
+              <li>
+                <a href={colTwoLinkFiveURL}>{colTwoLinkFiveText}</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- SECTION 3 -->
+          <div class="slds-col slds-size_1-of-3">
+            <div class="slds-text-heading_medium slds-var-m-bottom_small">
+              {colThreeHeading}
+            </div>
+
+            <ul class="slds-has-block-links_space">
+              <li>
+                <a href={colThreeLinkOneURL}>{colThreeLinkOneText}</a>
+              </li>
+              <li>
+                <a href={colThreeLinkTwoURL}>{colThreeLinkTwoText}</a>
+              </li>
+              <li>
+                <a href={colThreeLinkThreeURL}>{colThreeLinkThreeText}</a>
+              </li>
+              <li>
+                <a href={colThreeLinkFourURL}>{colThreeLinkFourText}</a>
+              </li>
+              <li>
+                <a href={colThreeLinkFiveURL}>{colThreeLinkFiveText}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <template if:true={showExpCloudLogo}>
+      <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_12-of-12">
+          <div class="slds-align_absolute-center">
+            <span class="footer-logo-commerceCloud"></span>
+          </div>
+        </div>
+      </div>
+    </template>
+  </footer>
+</template>

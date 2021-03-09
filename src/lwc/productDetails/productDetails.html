@@ -1,42 +1,25 @@
-<!--
-- @FileName: productDetails
-- @Description:
-- @Author: Graeme Ward
-- @ModificationLog:
-*************************************************************
-- Author            Date            Modification
-- Graeme Ward       7/10/2020         Created
-*************************************************************  
--->
-
-<!-- Product Details -->
 <template>
     <lightning-spinner
-            if:false={hasProduct}
-            class="slds-is-relative slds-align_absolute-center slds-m-around_large"
-            alternative-text="Loading product information..."
-            size="medium"
-            variant="brand">
+        if:false={hasProduct}
+        class="slds-is-relative slds-align_absolute-center slds-m-around_large"
+        alternative-text="Loading product information..."
+        size="medium"
+        variant="brand"
+    >
     </lightning-spinner>
-
-    <lightning-spinner if:true={showSpinner}
-                       class="slds-is-relative slds-align_absolute-center slds-m-around_large"
-                       alternative-text="Loading..."
-                       size="medium"
-                       variant="brand">
-    </lightning-spinner>
-
-    <template if:false={showSpinner}>
-        <c-product-details-display
-                if:true={hasProduct}
-                product-id={recordId}
-                effective-account-id={effectiveAccountId}
-                displayable-product={displayableProduct}
-                show-product-attributes={showProductAttributes}
-                show-aggregate-grid={showAggregateGrid}
-                show-quick-order={showQuickOrder}
-                show-product-tabs={showProductTabs}
-                onaddtocart={addItemToCart}>
-        </c-product-details-display>
-    </template>
+    <c-product-details-display
+        if:true={hasProduct}
+        cart-locked={_isCartLocked}
+        category-path={displayableProduct.categoryPath}
+        custom-fields={displayableProduct.customFields}
+        description={displayableProduct.description}
+        image={displayableProduct.image}
+        in-stock={displayableProduct.inStock}
+        name={displayableProduct.name}
+        price={displayableProduct.price}
+        sku={displayableProduct.sku}
+        onaddtocart={addToCart}
+        oncreateandaddtolist={createAndAddToList}
+    >
+    </c-product-details-display>
 </template>

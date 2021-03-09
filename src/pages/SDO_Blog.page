@@ -1,0 +1,133 @@
+<apex:page controller="SDO_Tools" docType="html-5.0"  standardStylesheets="false" showHeader="false" sidebar="false">
+    <html>
+        <head>
+            <apex:includeScript value="{!URLFOR($Resource.jquery1112)}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/css/bootstrap.min.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.BfFontAwesome, 'font-awesome-4.3.0/css/font-awesome.min.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/simple-line-icons.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/bootstrap-switch.min.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/jquery.gritter.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/uniform.default.min.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/layout.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/components.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/plugins.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/boothforce.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.MetronicResources, '/stylesheets/custom.css')}"/>
+            <link rel="stylesheet" href="/resource/animate"/>
+            <link rel="shortcut icon" href="/resource/qfavicon"/>
+
+            <!-- Blog Page Assets -->
+            <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'/>
+
+            <apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/components.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/style.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/style-responsive.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/red.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.BlogResources, '/styles/custom.css')}"/>
+            <style>
+                html,body{
+                    background:#F0F1F2;
+                }
+                .main {
+                    margin-top:20px;
+                }
+                .content-page {
+                    background:transparent;
+                }
+                .blog-posts{
+                }
+                hr {
+                      border: 0 !important;
+                      border-top: 1px solid #ccc !important;
+                      border-bottom: 0 !important;
+                }
+                .blog-posts hr.blog-post-sep {
+                  margin: 40px 0 !important;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="main">
+                <div class="container">
+                     <!-- BEGIN SIDEBAR & CONTENT -->
+                    <div class="row margin-bottom-40">
+                      <!-- BEGIN CONTENT -->
+                      <div class="col-md-12 col-sm-12">
+                        <h1>What's New</h1>
+                        <div class="content-page">
+
+                        <div class="row">
+                          <div class="col-md-12 col-sm-12 blog-posts">
+                            <!-- BEGIN LEFT SIDEBAR -->    
+                            <apex:repeat value="{!news}" var="n">        
+                                
+                                  <div class="row">
+                                    <div class="col-md-4 col-sm-4">
+                                        <span class="newsImage">
+                                            <apex:outputText value="{!n.News_Item_Image__c}" escape="false"/>
+                                          </span>
+                                    </div>
+                                    <div class="col-md-8 col-sm-8">
+                                      <h2><a href="#">{!n.name}</a></h2>
+                                      <ul class="blog-info">
+                                        <li>
+                                            <i class="fa fa-calendar"></i> 
+                                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                                <apex:param value="{!n.Published_Date__c}" /> 
+                                            </apex:outputText>
+                                        </li>
+                                        <!--
+                                        <li><i class="fa fa-comments"></i> 17</li>
+                                        <li><i class="fa fa-tags"></i> Metronic, Keenthemes, UI Design</li>
+                                        -->
+                                      </ul>
+                                      <p>
+                                      <apex:outputText value="{!n.News_Content__c}" escape="false"/>
+                                      </p>
+                                      <apex:outputPanel rendered="{!n.Showcase_Link__c != null}" layout="block">
+                                      <a href="{!n.Showcase_Link__c}">
+                                        Learn more on<apex:Image styleclass="showcaseIcon" style="height:50px;" value="{!$Resource.showcaseIcon}"/>
+                                      </a>
+                                    </apex:outputPanel>
+                                    </div>
+                                </div>
+                                <hr class="blog-post-sep"/>
+                            </apex:repeat>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <apex:includeScript value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/js/bootstrap.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/metronic.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/excanvas.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/bootstrap-switch.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.blockui.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.cokie.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.slimscroll.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.uniform.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/layout.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/quick-sidebar.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/respond.min.js')}"/>
+
+            <apex:includeScript value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/js/bootstrap.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/metronic.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/excanvas.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/bootstrap-switch.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.blockui.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.cokie.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.slimscroll.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/jquery.uniform.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/layout.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/quick-sidebar.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.MetronicResources, 'javascripts/respond.min.js')}"/>
+            <script>
+                $(document).ready(function(){
+                    $('.newsImage').children().addClass('img-responsive');
+                });
+            </script>
+        </body>
+    </html>
+</apex:page>

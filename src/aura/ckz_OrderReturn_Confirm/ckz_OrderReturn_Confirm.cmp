@@ -1,0 +1,92 @@
+<aura:component description="ckz_OrderReturn_NewCase"
+                implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,lightning:availableForFlowScreens,force:lightningQuickActionWithoutHeader,force:hasRecordId"
+                access="global">
+
+    <ltng:require styles="{!$Resource.ckz_OrderReturn_Theme}" />
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+
+    <aura:attribute name="newCaseSubject" type="String" default="" />
+
+    <aura:attribute name="newCaseDesc" type="String" default="" />
+
+    <aura:attribute name="selectedItemsString" type="String" default="" />
+
+    <aura:attribute name="selectedItemsList" type="List" default="[]" />
+
+    <!-- Determine which actions are available -->
+    <aura:attribute name="canPause" type="Boolean" />
+    <aura:attribute name="canBack" type="Boolean"/>
+    <aura:attribute name="canNext" type="Boolean"/>
+    <aura:attribute name="canFinish" type="Boolean" />
+
+    <p>Please click [Save] to create a return for all items displayed below:</p>
+
+    <div aura:id="main" class="zaction-body slds-p-around_medium">
+
+        <div class="slds-grid">
+            <div class="slds-size_1-of-2 slds-p-vertical_x-small slds-p-right_x-small" style="float: left;">
+                <p>Subject:</p>
+                {!v.newCaseSubject}
+            </div>
+
+            <div class="slds-size_1-of-2 slds-p-vertical_x-small" style="float: left;">
+                <p>Description:</p>
+                {!v.newCaseDesc}
+            </div>
+        </div>
+
+    </div>
+
+
+    <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout">
+        <thead>
+        <tr class="slds-text-heading_label">
+            <th scope="col" class="productCol"><div title="Name">Order Item</div></th>
+            <th scope="col" class="qtyCol"><div title="Order Quanitity">Order Quantity</div></th>
+            <th scope="col" class="qtyCol"><div title="Return Quantity">Return Quantity</div></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <!-- Use the Apex model and controller to fetch server side data -->
+        <aura:iteration items="{!v.selectedItemsList}" var="item">
+            <c:ckz_OrderReturn_OrderItem orderItem="{!item}" editable="false" />
+        </aura:iteration>
+        </tbody>
+
+    </table>
+
+
+    <div class="action-footer slds-p-vertical_x-small">
+        <div class="slds-grid  slds-p-around_medium">
+
+            <div class="slds-col slds-size_1-of-10">
+                <aura:if isTrue="{!v.canBack}">
+                    <lightning:button
+                            aura:id="BACK"
+                            label="Previous"
+                            variant="neutral"
+                            onclick="{!c.handleNavigatePrev}"
+                    />
+                </aura:if>
+            </div>
+
+            <div class="slds-col" />
+
+            <div class="slds-col slds-size_1-of-10">
+                <aura:if isTrue="{!v.canNext}">
+                    <lightning:button
+                            aura:id="SAVE"
+                            label="Save"
+                            variant="brand"
+                            onclick="{!c.handleNavigateNext}"
+                    />
+                </aura:if>
+            </div>
+
+        </div>
+
+    </div>
+
+</aura:component>

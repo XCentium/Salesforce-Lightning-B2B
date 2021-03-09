@@ -1,0 +1,35 @@
+<aura:component controller="FIDO" extends="c:Mixpanel" implements="c:MixpanelInterface">
+    <aura:attribute name="PartnerId" type="String"/>
+    <aura:attribute name="Industry" type="String"/>
+    <aura:attribute name="setScriptId" type="String" default='' />
+    <aura:attribute name="DemoScripts" type="String[]"/>
+    <aura:attribute name="ScreenChoice" type="String"/>
+    <aura:attribute name="ShareableURL" type="String" />
+    <aura:attribute name="activeSections" type="List" default="[]" />
+    <aura:attribute name="recid" type="String" />
+    <aura:attribute name="OrgName" type="String" />
+    <aura:attribute name="IndustryName" type="String" />
+    <aura:attribute name="UserEmail" type="String"/>
+    <aura:attribute name="RecordName" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:if isTrue="{!not(empty(v.DemoScripts))}"> 
+        <div class="owner">
+            <lightning:tabset>
+                <lightning:tab label="Demo Scripts" id="1" class="padding0">
+                    <aura:iteration items="{!v.DemoScripts}" var="script">
+                        <aura:if isTrue="{!script.demo_industry__c == v.Industry}">
+                            <div>
+                                <button class="slds-button ScriptCard relative FullScriptCard" aura:id="{!script.id}" id="{!script.id}" onclick="{!c.OpenDialog}">
+                                    <div class="padding textleft">
+                                        <h3>{!script.name}</h3>
+                                        <p><ui:outputRichText value="{!script.excerpt__c}"/> </p>
+                                    </div>
+                                </button>
+                            </div>
+                        </aura:if>
+                    </aura:iteration>
+                </lightning:tab>
+            </lightning:tabset>
+        </div>
+    </aura:if>
+</aura:component>

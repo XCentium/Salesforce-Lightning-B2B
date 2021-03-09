@@ -1,0 +1,35 @@
+<aura:component >
+    <aura:attribute name="UserInfo" type="Object"></aura:attribute>
+    <aura:attribute name="collapsed" type="Boolean" default="true"></aura:attribute>
+    <aura:attribute name="LoginButtons" type="Aura.Component[]"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"></aura:handler>
+    <aura:attribute name="DemoContentURL" type="String" default="{!v.UserInfo.loginUser.Demo_Content__c }"></aura:attribute>
+    
+    <div aura:id="collapsible" class="slds-section filter-section slds-col slds-size--1-of-1">
+        <h3 onclick="{!c.toggleCollapsible}" class="slds-section__title">
+            <button class="slds-button slds-section__title-action relative">
+                <lightning:icon class="slds-section__title-action-icon slds-button__icon slds-button__icon--left" iconName="utility:switch" size="xx-small"></lightning:icon>
+                <span class="persona_title">
+                    <img src="{!v.UserInfo.loginUser.SmallPhotoUrl}" class="personaimg" />
+                    {!v.UserInfo.loginUser.FirstName + ' ' + v.UserInfo.loginUser.LastName}</span><span class="selection-count"></span> 
+                <div class="rightalign">
+                    <lightning:badge label="{!v.UserInfo.loginUser.Title}" class="slds-button__icon--right slds-badge_inverse" />
+                    <aura:if isTrue="{!v.UserInfo.loginUser.UserType == 'Standard'}">
+                        <lightning:badge label="Internal" class="slds-button__icon--right slds-badge_lightest hidesmallscreen" />
+                        <aura:set attribute="else">
+                            <lightning:badge label="External" class="slds-button__icon--right slds-badge hidesmallscreen" />
+                        </aura:set>
+                    </aura:if> 
+                </div>
+            </button>
+        </h3>
+        <div class="slds-section__content">
+            <div class="persona_description">
+                <img src="{!v.UserInfo.loginUser.SmallPhotoUrl}" class="imgalighnleft" />
+                <p>{!v.UserInfo.loginUser.Persona_Description__c}</p>
+                <div class="paddingtop">{!v.LoginButtons}</div>
+            </div>
+        </div>
+    </div>
+    
+</aura:component>

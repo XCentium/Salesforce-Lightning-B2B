@@ -1,0 +1,84 @@
+<apex:component id="ckz_UserRolesCartInclude" controller="ckz_ctrl_UserRolesCartInclude">
+
+<script type="text/javascript">
+
+jQuery(function($) {
+	var userBudgetEnabled = false;
+
+	if (CCRZ.pagevars.pageConfig["ma.budlim"]) {
+		if (CCRZ.pagevars.pageConfig["ma.budlim"] === "TRUE") {
+			userBudgetEnabled = true;
+		}
+	}
+
+	if (userBudgetEnabled === false) {
+		return false;
+	}
+
+	CCRZ.subsc = _.extend(CCRZ.subsc || {});
+
+	CCRZ.subsc.cartRemoteActions = _.extend({
+		className: 'ckz_ctrl_UserRolesCartInclude',
+		createBudgetCaseAction: function(callback) {
+
+            this.className = 'ckz_ctrl_UserRolesCartInclude',
+			this.invokeCtx('createCaseBudgetOverride',
+				function(resp) {
+					callback(resp);
+				}, {
+					buffer: false, // this call will be executed by itself
+					nmsp: false // defines that this is a call to a subscriber class
+				}); // end invokeCtx call
+		}
+	}, (CCRZ.subsc.cartRemoteActions || CCRZ.RemoteInvocation));
+
+	CCRZ.pubSub.on('view:CartDetailView:refresh', function(cartDetailView) {
+
+		// dynamically add/change button here
+
+		var cartAttrs = CCRZ.cartDetailView.model.attributes;
+		var request = CCRZ.processPageLabelMap('Cart_UserBudgetOverrideBtn').string;
+		var requested = CCRZ.processPageLabelMap('BudgetOverrideRequested').string;
+		var allowCheckout = cartAttrs.allowCheckout;
+		console.log('allowCheckout: ' + allowCheckout);
+		var budgetApprovalRequested = cartAttrs.budgetApprovalRequested ? cartAttrs.budgetApprovalRequested : false;
+		console.log('budgetApprovalRequested: ' + budgetApprovalRequested);
+
+		var cartActionTotalsDiv = $('.cc_action_totals');
+
+		var btn = '';
+		if (allowCheckout === false && budgetApprovalRequested) {
+			btn = '<button class="btn btn-default btn-sm btn-block createBudgetCase" type="button" disabled>' + request + '</button>';
+		}
+
+		if (allowCheckout === false && budgetApprovalRequested === false) {
+			btn = '<button class="btn btn-default btn-sm btn-block createBudgetCase" type="button">' + request + '</button>';
+		}
+
+		cartActionTotalsDiv.append(btn);
+
+		cartDetailView.createBudgetCaseAction = function(event) {
+			CCRZ.subsc.cartRemoteActions.createBudgetCaseAction(function(resp) {
+				if (resp && resp.success) {
+					$('.createBudgetCase').prop('disabled', true);
+
+					CCRZ.pubSub.trigger('pageMessage', {
+						messages: [{
+							type: 'CUSTOM',
+							severity: 'INFO',
+							classToAppend: 'messagingSection-Info',
+							labelId: 'BudgetOverrideRequested'
+						}]
+					});
+				}
+			});
+		};
+
+		cartDetailView.events['click .createBudgetCase'] = 'createBudgetCaseAction';
+		cartDetailView.delegateEvents();
+	});
+});
+    
+</script>
+
+</apex:component>

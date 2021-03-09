@@ -1,0 +1,78 @@
+<apex:page showHeader="false" controller="PKBLiveAgentChatController">
+    <title>LiveAgent PreChat</title>
+    <!-- This script takes the endpoint URL parameter passed from the deployment page and makes
+    it the action for the form -->
+    <script type="text/javascript">
+    (function() {
+        function handlePageLoad() {
+        var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+        document.getElementById('prechatForm').setAttribute('action',
+        decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+        } if (window.addEventListener) {
+        window.addEventListener('load', handlePageLoad, false);
+        } else { window.attachEvent('onload', handlePageLoad, false);
+    }})();
+    </script>
+    <style>
+        #container{
+            margin-left: 20px;
+            width: 400px;
+            float:left;
+        }
+        #c1{
+            float:left;
+            width: 150px;
+        }
+        #c2{
+            float:left;
+            width: 250px;
+        }
+        input{
+            width: 200px;
+        }
+        h1{
+            font-size:20px;
+            color:#333333;
+        }
+        h2{         
+            font-size:18px;
+            color: #1a3666;
+        }
+    </style>
+    <apex:image value="{!$Resource.cirrus_live_chat_window}"/>
+    <br /><br />    
+    <div id="container">
+        <h1>Enter your details below:</h1><br /><br />
+        <form method='post' id='prechatForm'>
+            <div id="c1">
+                <h2>Name:</h2><br />
+                <h2>Email Address:</h2><br />
+                <h2>Department:</h2><br />
+            </div>
+            <div id="c2">
+                <input type='text' name='liveagent.prechat.name' id='prechat_field' /><br />
+                <input type='text' name='liveagent.prechat:Email' /><br />
+                <select name="liveagent.prechat.buttons">
+                    <!-- Values are LiveChatButton IDs. -->
+                    <option value="{!LEFT(liveChatBtnId, 15)}">Customer Service</option>
+                    <option value="{!LEFT(liveChatBtnId, 15)}">Technical Support</option>
+                </select><br />
+            </div>
+            <!-- Creates an auto-query for a matching Contact record’s Email field based on the
+            value of the liveagent.prechat:Email field -->
+            <input type="hidden" name="liveagent.prechat.query:Email" value="Contact,Contact.Email" />
+            <input type="hidden" name="liveagent.prechat.save:Email" value="Email__c" />
+            <input type='submit' value='Request Chat' id='prechat_submit' style="width:100px;margin-top: 25px;"/>
+        </form>
+    </div>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46606102-1', 'salesforce.com');
+  ga('send', 'pageview');
+
+</script>
+</apex:page>

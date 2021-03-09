@@ -1,0 +1,11 @@
+.slds-radio{
+    float:left !important;
+}
+.fleft{
+    float:left;
+}
+.block{
+    overflow: auto;
+    text-align: center;
+    width: 50%;
+}

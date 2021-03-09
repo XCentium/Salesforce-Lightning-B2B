@@ -1,0 +1,211 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes" access="global">
+	<aura:attribute name="showSecondTrail" type="Boolean" default="true" />
+    <aura:attribute name="showThirdTrail" type="Boolean" default="true" />
+    <aura:attribute name="hideCompletionStatus" type="Boolean" default="false" />
+    <aura:attribute name="Heading" type="String" default="Assigned To Me" />
+    
+    <aura:attribute name="FirstTrailTitle" type="String" default="Key Account Management" />
+    <aura:attribute name="FirstTrailDescripton" type="String" default="Learn to plan like Stan the Man." />
+    <aura:attribute name="FirstTrailCompletion" type="Integer" default="25" />
+    <aura:attribute name="FirstTrailBorderColor" type="String" default="#7FC5DD" />
+    <aura:attribute name="FirstTrailIcon" type="String" default="standard:iot_orchestrations" />
+    <aura:attribute name="FirstTrailImage" type="String" default="" />
+    <aura:attribute name="FirstTrailPoints" type="String" default="1600" />
+    <aura:attribute name="FirstTrailLink" type="String" default="" />
+    
+    <aura:attribute name="SecondTrailTitle" type="String" default="Secure Identity and Access Management" />
+    <aura:attribute name="SecondTrailDescripton" type="String" default="Learn to plan like Stan the Man." />
+    <aura:attribute name="SecondTrailCompletion" type="Integer" default="25" />
+    <aura:attribute name="SecondTrailBorderColor" type="String" default="#7FC5DD" />
+    <aura:attribute name="SecondTrailIcon" type="String" default="standard:iot_orchestrations" />
+    <aura:attribute name="SecondTrailImage" type="String" default="" />
+    <aura:attribute name="SecondTrailPoints" type="String" default="2000" />
+    <aura:attribute name="SecondTrailLink" type="String" default="" />
+    
+    <aura:attribute name="ThirdTrailTitle" type="String" default="Learn Privacy and Data Protection Law" />
+    <aura:attribute name="ThirdTrailDescripton" type="String" default="Learn to plan like Stan the Man." />
+    <aura:attribute name="ThirdTrailCompletion" type="Integer" default="25" />
+    <aura:attribute name="ThirdTrailBorderColor" type="String" default="#7FC5DD" />
+    <aura:attribute name="ThirdTrailIcon" type="String" default="standard:iot_orchestrations" />
+    <aura:attribute name="ThirdTrailImage" type="String" default="" />
+    <aura:attribute name="ThirdTrailPoints" type="String" default="2500" />
+    <aura:attribute name="ThirdTrailLink" type="String" default="" />
+    
+    <h1 class="heading">{!v.Heading}</h1>
+    <div class="trailwrapper">
+        <div class="slds-card addHover" style="{!'border-top:8px solid ' + v.FirstTrailBorderColor }" onclick="{!c.FirstLink}"> 
+            <div class="trailheadheader" >
+                <div class="padding">
+                    <aura:if isTrue="{!v.FirstTrailImage == ''}">
+                    	<lightning:icon iconName="{!v.FirstTrailIcon}" size="large" alternativeText=""/> 
+                        <aura:set attribute="else">
+                            <img src="{!v.FirstTrailImage}" class="logo" />
+                        </aura:set>
+                    </aura:if>
+                    <div class="completion">
+                        <span class="slds-badge">{!v.FirstTrailPoints + ' Points'}</span>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="body">
+                <div class="padding">
+                    <span class="trail greytext">Trail</span>
+                    <h3><a href="javascript:void(0)">{!v.FirstTrailTitle}</a></h3>
+                    <p class="greytext" >{!v.FirstTrailDescripton}</p>
+                </div>
+            </div>
+            <aura:if isTrue="{!v.hideCompletionStatus == false}">
+            	<div class="footer">
+                <div class="padding">
+                    <div class="half">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.add}">
+                            <lightning:icon iconName="utility:favorite" size="xx-small" alternativeText=""/> 
+                        </button>
+                        <button class="slds-button slds-button_neutral" onclick="{!c.favorite}">
+                            <lightning:icon iconName="utility:add" size="xx-small" alternativeText=""/> 
+                        </button>
+                    </div>
+                    <div class="half textright">
+                        <aura:if isTrue="{!v.FirstTrailCompletion == 0}">
+                            	2 Hrs
+                            <aura:set attribute="else">
+                                <div class="slds-p-bottom_x-small alignleft textright" id="progress-bar-label-id-5">
+                                    <span aria-hidden="true">
+                                      <strong>{!v.FirstTrailCompletion + '%'}</strong>
+                                    </span>
+                                </div>
+                                  <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{!v.FirstTrailCompletion}" aria-labelledby="progress-bar-label-id-5" role="progressbar">
+                                    <span class="slds-progress-bar__value" style="{!'width: ' + v.FirstTrailCompletion + '%'}">
+                                      <span class="slds-assistive-text">Progress: {!v.FirstTrailCompletion + '%'}</span>
+                                    </span>
+                                  </div>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            </aura:if>
+        </div>
+        
+        
+        <aura:if isTrue="{!v.showSecondTrail == true}">
+            <div class="slds-card addHover" style="{!'border-top:8px solid ' + v.SecondTrailBorderColor }" onclick="{!c.SecondLink}"> 
+                <div class="trailheadheader" >
+                    <div class="padding">
+                        <aura:if isTrue="{!v.SecondTrailImage == ''}">
+                            <lightning:icon iconName="{!v.SecondTrailIcon}" size="large" alternativeText=""/> 
+                            <aura:set attribute="else">
+                                <img src="{!v.SecondTrailImage}" class="logo" />
+                            </aura:set>
+                        </aura:if>
+                        <div class="completion">
+                            <span class="slds-badge">{!v.SecondTrailPoints + ' Points'}</span>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="body">
+                    <div class="padding">
+                        <span class="trail greytext">Trail</span>
+                        <h3><a href="javascript:void(0)">{!v.SecondTrailTitle}</a></h3>
+                        <p class="greytext" >{!v.SecondTrailDescripton}</p>
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.hideCompletionStatus == false}">
+                	<div class="footer">
+                    <div class="padding">
+                        <div class="half">
+                            <button class="slds-button slds-button_neutral" onclick="{!c.add}">
+                                <lightning:icon iconName="utility:favorite" size="xx-small" alternativeText=""/> 
+                            </button>
+                            <button class="slds-button slds-button_neutral" onclick="{!c.favorite}">
+                                <lightning:icon iconName="utility:add" size="xx-small" alternativeText=""/> 
+                            </button>
+                        </div>
+                        <div class="half textright">
+                            <aura:if isTrue="{!v.SecondTrailCompletion == 0}">
+                                    2 Hrs
+                                <aura:set attribute="else">
+                                    <div class="slds-p-bottom_x-small alignleft textright" id="progress-bar-label-id-5">
+                                        <span aria-hidden="true">
+                                          <strong>{!v.SecondTrailCompletion + '%'}</strong>
+                                        </span>
+                                    </div>
+                                      <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{!v.SecondTrailCompletion}" aria-labelledby="progress-bar-label-id-5" role="progressbar">
+                                        <span class="slds-progress-bar__value" style="{!'width: ' + v.SecondTrailCompletion + '%'}">
+                                          <span class="slds-assistive-text">Progress: {!v.SecondTrailCompletion + '%'}</span>
+                                        </span>
+                                      </div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                </aura:if>
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!v.showThirdTrail == true}">
+            <div class="slds-card addHover" style="{!'border-top:8px solid ' + v.ThirdTrailBorderColor }" onclick="{!c.ThirdLink}"> 
+                <div class="trailheadheader" >
+                    <div class="padding">
+                        <aura:if isTrue="{!v.ThirdTrailImage == ''}">
+                            <lightning:icon iconName="{!v.ThirdTrailIcon}" size="large" alternativeText=""/> 
+                            <aura:set attribute="else">
+                                <img src="{!v.ThirdTrailImage}" class="logo" />
+                            </aura:set>
+                        </aura:if>
+                        <div class="completion">
+                            <span class="slds-badge">{!v.ThirdTrailPoints + ' Points'}</span>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="body">
+                    <div class="padding">
+                        <span class="trail greytext">Trail</span>
+                        <h3><a href="javascript:void(0)">{!v.ThirdTrailTitle}</a></h3>
+                        <p class="greytext" >{!v.ThirdTrailDescripton}</p>
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.hideCompletionStatus == false}">
+                	<div class="footer">
+                    <div class="padding">
+                        <div class="half">
+                            <button class="slds-button slds-button_neutral" onclick="{!c.add}">
+                                <lightning:icon iconName="utility:favorite" size="xx-small" alternativeText=""/> 
+                            </button>
+                            <button class="slds-button slds-button_neutral" onclick="{!c.favorite}">
+                                <lightning:icon iconName="utility:add" size="xx-small" alternativeText=""/> 
+                            </button>
+                        </div>
+                        <div class="half textright">
+                            <aura:if isTrue="{!v.FirstTrailCompletion == 0}">
+                            	2 Hrs
+                                <aura:set attribute="else">
+                                    <div class="slds-p-bottom_x-small alignleft textright" id="progress-bar-label-id-5">
+                                        <span aria-hidden="true">
+                                          <strong>{!v.ThirdTrailCompletion + '%'}</strong>
+                                        </span>
+                                    </div>
+                                      <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{!v.ThirdTrailCompletion}" aria-labelledby="progress-bar-label-id-5" role="progressbar">
+                                        <span class="slds-progress-bar__value" style="{!'width: ' + v.ThirdTrailCompletion + '%'}">
+                                          <span class="slds-assistive-text">Progress: {!v.ThirdTrailCompletion + '%'}</span>
+                                        </span>
+                                      </div>
+                                </aura:set>
+                            </aura:if>
+                            
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                </aura:if>
+            </div>
+       </aura:if> 
+        
+
+    </div>
+</aura:component>

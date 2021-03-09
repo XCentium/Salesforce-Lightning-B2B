@@ -1,0 +1,99 @@
+<!--
+ - Created by brandon.rogers on 1/28/19.
+ -->
+
+<apex:component id="ckz_MyAccount_MyWallet">
+
+    <script id="CKZ-MyAccount-MyWallet" type="text/template">
+        <div class="panel panel-default cc_panel cc_myaccount_mywallet m-t-1">
+
+            <div class="panel-body MyAccount_MyWallet_Header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="cc_title m-y-0">{{pageLabelMap 'MyAccount_MyWallet'}}</h2>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        {{#ifDisplay 'nav.pymt'}}
+                        <form id="searchSubscriptionForm" class="form-inline searchOrderForm cc_search_order_form cc_form-inline">
+                            <div class="form-group form-group-sm">
+                                <select name="paymentMethod" class="paymentMethod form-control cc_payment_method">
+                                    <option value="">{{pageLabelMap 'MyWallet_AddPymtMtd'}}</option>
+                                    {{#each this.paymentTypeOpts}}
+                                    <option value="{{this}}">{{pageLabelMapMultiString 'MyWallet_AcctType_' this}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </form>
+                        {{/ifDisplay}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body MyAccount_MyWallet">
+                <div class="messagingSection-mywalletlist-Error" role="alert" style="display: none"></div>
+                <div class="messagingSection-mywalletlist-Info" role="alert" style="display: none">
+                    <button type="button" class="close cc_close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&#215;</span></button>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="myWalletTable" class="table table-hover myWallet cc_table cc_mywallet_table">
+                        <thead>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_name">{{pageLabelMap 'MyWallet_Name'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_acct_type">{{pageLabelMap 'MyWallet_AccountType'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_acct">{{pageLabelMap 'MyWallet_Account'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_enabled">{{pageLabelMap 'MyWallet_Enabled'}}</span>
+                        </th>
+                        <th class="cc_table_header">
+                            <span class="cc_table_header_actions">{{pageLabelMap 'MyWallet_Actions'}}</span>
+                        </th>
+                        </thead>
+                        <tbody>
+                        {{#each this.storedPayments}}
+                        <tr class="cc_table_row">
+                            <td class="cc_table_col">
+                                <span class="cc_col_name">{{this.displayName}}</span>
+                            </td>
+                            <td class="cc_table_col">
+                                <span class="cc_col_acct_type">{{pageLabelMapMultiString 'MyWallet_AcctType_' this.accountType}}</span>
+                            </td>
+                            <td class="cc_table_col">
+                                <span class="cc_col_acct">{{pageLabelMapMultiString 'MyWallet_AcctNum_' this.accountType this.accountType this.accountNumber this.subaccountNumber (pageLabelMapMultiString 'PaymentType_' this.paymentType) (pageLabelMapMultiString 'PaymentExpMonth_' this.expirationMonth) (pageLabelMap this.expirationYear)}}</span>
+                            </td>
+                            <td class="cc_table_col">
+                                {{#ifEquals this.isEnabled true}}
+                                <i class="fa fa-check myWalletEnbTrue" aria-hidden="true"></i>
+                                {{/ifEquals}}
+                            </td>
+                            <td class="cc_table_col_actions" nowrap="true">
+                                <div class="button-group cc_button_group">
+                                    {{#ifEquals readOnly false}}
+                                    <input type="button" class="btn btn-default btn-sm myWalletButton paymentEdit cc_payment_edit" data-pid="{{this.sfid}}" data-type="{{this.accountType}}" value="{{pageLabelMap 'Action_Edit'}}"/>&#160;
+                                    <input type="button" class="btn btn-default btn-sm myWalletButton paymentDelete cc_payment_delete" data-pid="{{this.sfid}}" value="{{pageLabelMap 'Action_Delete'}}"/>&#160;
+                                    {{/ifEquals}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="modalSec"></div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.myWalletView.desktop.tmpl = 'CKZ-MyAccount-MyWallet';
+        });
+    </script>
+</apex:component>

@@ -1,0 +1,6 @@
+<design:component label="Recommended Products">
+    <design:attribute name="ProductID" default="Cheetos Cheese Puffs" label="Name of first Product" description="Which Product Would you like to show (Name)?" />
+    <design:attribute name="ProductID2" default="Doritos Spicy Sweet Chili" label="Name of second Product" description="Which Product Would you like to show (Name)?" />
+    <design:attribute name="height" default="" label="Component Height" description="What would you like the height of the component to be?" />
+    <design:attribute name="showAddtoChat" default="" label="Show Add to Chat Button" description="Changing to True shows the add to chat button. Please only use on a chat layout" />
+</design:component>

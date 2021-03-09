@@ -1,0 +1,84 @@
+<aura:component controller="assetDetailsCtrl" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="objectType" type="String" default="WorkOrder"/>
+    <aura:attribute name="thisAsset" type="Asset"/>
+    
+    
+    <div class="demo-only slds-card slds-p-around--small">
+        <article class="slds-tile slds-hint-parent">
+            <div class="slds-grid slds-grid_align-spread test">
+                <div class="slds-text-heading--small slds-m-bottom--medium">
+                    <lightning:Icon iconName="standard:product" size="small" alternativeText="Product" class="slds-m-right--xx-small"/>
+                    Asset Details
+                </div>
+                <div>
+                    <lightning:buttonIcon iconName="utility:down" size="xx-small" alternativeText="View More"/>
+                </div>
+            </div>
+            <table class="slds-table">
+                
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col">
+                            <div class="slds-truncate" title="Name">Product Name</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Serial Number">Serial Number</div>
+                        </th>  
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="Asset Name">
+                            <div class="slds-truncate slds-text-body--small" title="Cloudhub"><a href="{!'/one/one.app?#/sObject/'+ v.thisAsset.Id + '/view'}">{!v.thisAsset.Name}</a></div>
+                        </td>
+                        <td data-label="Asset Serial Number">
+                            <div class="slds-truncate slds-text-body--small" title="Cloudhub">{!v.thisAsset.SerialNumber}</div>
+                        </td>
+                    </tr>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col">
+                            <div class="slds-truncate slds-m-top--small" title="Contact">Contact</div>
+                        </th>                
+                        <th scope="col">
+                            <div class="slds-truncate slds-m-top--small" title="Status">Status</div>
+                        </th>
+                    </tr>  
+                    <tr>
+                        <td data-label="Asset Contact">
+                            <div class="slds-truncate slds-text-body--small" title="Cloudhub">{!v.thisAsset.Contact.Name}</div>
+                        </td>                
+                        <td data-label="Asset Status">
+                            <div class="slds-truncate slds-text-body--small" title="Cloudhub">{!v.thisAsset.Status}</div>
+                        </td>
+                    </tr>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col">
+                            <div class="slds-truncate slds-m-top--small" title="Image">Image</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate slds-m-top--small warranty-label" title="Warranty Status">Warranty Status</div>
+                        </th>
+                    </tr>  
+                    <tr>
+                        <td data-label="Asset Image">
+                            <ui:outputRichText value="{!v.thisAsset.Image__c}"/>
+                        </td>
+                        <td data-label="warranty icon">
+                            <aura:if isTrue="{!v.thisAsset.Entitlement_Status__c == 'Expired'}">
+                                <lightning:Icon iconName="action:close" size="small" alternativeText="Expired" class="warranty"/>
+                            </aura:if> 
+                            <aura:if isTrue="{!v.thisAsset.Entitlement_Status__c == 'Active'}">
+                                <lightning:Icon iconName="action:approval" size="small" alternativeText="Active" class="warranty"/>
+                            </aura:if> 
+                            <aura:if isTrue="{!v.thisAsset.Entitlement_Status__c == '30 Day Warning'}">
+                                <lightning:Icon iconName="action:priority" size="small" alternativeText="30 Day Warning" class="warranty"/>
+                            </aura:if> 
+                        </td>
+                    </tr>  
+                </tbody>
+            </table>
+            
+        </article>
+    </div>
+</aura:component>

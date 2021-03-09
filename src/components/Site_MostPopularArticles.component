@@ -1,0 +1,35 @@
+<apex:component controller="SDOSiteController">
+<div class="kbMostPopularArticles">  
+    
+    <div class="sidebarModule">   
+       
+       <apex:variable var="productUrlVar" value="{!productUrl}" />
+       <apex:variable var="categoryParameterNameVar" value="{!categoryParameterName}" />
+       <apex:variable var="cpt" value="{!0}" />
+       <apex:variable var="categoryDescriptionsVar" value="{!categoryDescriptions}" />
+       <apex:variable var="categoryGroupNameVar" value="{!categoryGroupName}" />
+
+                
+              <div class="sidebarModuleHeader">  
+
+                   Most Popular Articles
+
+              </div>
+             
+              <div class="sidebarModuleBody">
+                 <apex:outputPanel styleClass="pkbResultInner" layout="block">
+                    <ul>
+                        <knowledge:articleList articleVar="article"
+                            categories="{!categoryGroupNameVar}:{!rootCategoryName}"
+                            sortBy="mostViewed"
+                            pageSize="10"
+                        >
+                            <li class="pkbArticle"><a href="{!URLFOR($Action.KnowledgeArticle.View, article.id)}">{!article.title}</a></li>
+                        </knowledge:articleList>
+                    </ul>
+                </apex:outputPanel>
+              </div>    
+
+     </div>
+</div>
+</apex:component>

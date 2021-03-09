@@ -1,0 +1,94 @@
+<aura:component controller="CG_Cloud_Automation" implements="force:lightningQuickAction,force:hasRecordId" >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="StoreId" type="String" default="" />
+    <aura:attribute name="todaysDate" type="Object" />
+    <aura:attribute name="Visits" type="String[]"/>
+    <aura:attribute name="ActionPlans" type="String[]"/>
+    <aura:attribute name="AssignedAP" type="String" default=''/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="AssignedId" type="String" default=""/>
+    <aura:attribute name="VisitTime" type="DateTime" default=""/>
+    <aura:attribute name="instructions" type="String" default=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <aura:if isTrue="{!v.StoreId != ''}">
+        <aura:if isTrue="{!empty(v.Visits)}">
+            <div class="center">
+                <div class="userSelect">
+                    <h3>Who is performing this visit?</h3>
+                    <div class="textleft">
+                        <c:ContactSearch ContactId="{!v.AssignedId}" objectAPIName="User" />
+                    </div>
+                </div>     
+                <div class="userSelect">
+                    <h3>When will they perform this visit?</h3>
+                    <div class="textleft">
+                        <div class="row">
+                            <lightning:input min="{!v.todaysDate}" type="datetime" value="{!v.VisitTime}" name="input1" label="" />
+                        </div>
+                    </div>
+                </div>   
+                <div class="userSelect">
+                    <h3>Visit Objectives and Instructions</h3>
+                    <div class="textleft">
+                        <div class="row">
+                            <lightning:textarea name="input1" value="{!v.instructions}" label="" />
+                        </div>
+                    </div>
+                </div>   
+                
+                <div class="userSelect noborder">
+                    <h3>Select an Action Plan</h3>
+                    <lightning:select aura:id="PicklistId" label="" name="percent" value="{!v.AssignedAP}" >
+                        <option value="" text="- SELECT ONE -" />
+                        <aura:iteration items="{!v.ActionPlans}" var="ap">
+                            <option value="{!ap.ActionPlanTemplateVersionId}" text="{!ap.Name}" /> 
+                        </aura:iteration>
+                    </lightning:select>
+                </div> 
+                <aura:if isTrue="{!and(v.VisitTime != '',v.AssignedAP != '') }">
+                    <aura:if isTrue="{!v.AssignedId != '' }">
+                        <div class="userSelect noborder alignRight">
+                            <lightning:button label="Create Visit" variant="brand" title="Create Visit" onclick="{! c.createVisit }"/>
+                        </div>
+                    </aura:if>
+                </aura:if>
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{!not(empty(v.Visits))}">
+            <div class="center">
+                <h3>Visit Details</h3>
+            </div>   
+            <aura:iteration items="{!v.Visits}" var="visit">
+                <div class="whole">
+                    <div class="padding10">
+                        <div class="visit">
+                            <div class="padding">
+                                <h3>
+                                    <lightning:icon iconName="action:record" size="x-small" alternativeText=""/> 
+                                    <span class="slds-text-heading--small slds-truncate marginleft">
+                                        <a href="{! '/lightning/r/Visit/' + visit.Id + '/view'}" target="_blank">{!visit.Name}</a>
+                                    </span>
+                                </h3>
+                                
+                                <strong>Status: </strong>{!visit.Status}<br/>
+                                <strong>Planned Start Time: </strong>
+                                <lightning:formattedDateTime value="{!visit.PlannedVisitStartTime}" year="2-digit" month="short" day="2-digit" weekday="narrow"/><br/>
+                                <strong>Planned End Time: </strong>
+                                <lightning:formattedDateTime value="{!visit.PlannedVisitEndTime}" year="2-digit" month="short" day="2-digit" weekday="narrow"/><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aura:iteration>
+            <div class="userSelect noborder alignRight">
+                <lightning:button variant="brand" label="Close" onclick="{!c.closeQuickAction }"/>
+            </div>
+        </aura:if>
+        <aura:set attribute="else">
+            No Retail Store Record Associated to this account. Please create a retail store record and ensure the Retail Store name is the same as the Account Name.
+        </aura:set>
+    </aura:if>
+</aura:component>

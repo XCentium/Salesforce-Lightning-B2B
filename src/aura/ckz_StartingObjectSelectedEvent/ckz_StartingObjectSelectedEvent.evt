@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT" description="ckz_StartingObjectSelectedEvent">
+    <aura:attribute name="objectType" type="String" />
+    <aura:attribute name="objectName" type="String" />
+    <aura:attribute name="objectId" type="String" />
+    <aura:attribute name="cartEncryptedId" type="String" />
+</aura:event>

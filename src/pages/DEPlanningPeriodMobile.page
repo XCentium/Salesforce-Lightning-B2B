@@ -1,0 +1,255 @@
+<apex:page standardController="IDO_JBP_Planning_Period__c" docType="html-5.0" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false">
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title> VF Template </title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <style type="text/css">
+
+        @font-face {
+            font-family: 'ProximaNovaRegular';
+            src: url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-reg-webfont.eot');
+            src: url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-reg-webfont.eot?#iefix') format('embedded-opentype'),
+                 url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-reg-webfont.woff') format('woff'),
+                 url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-reg-webfont.ttf') format('truetype'),
+                 url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-reg-webfont.svg#ProximaNovaRegular') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'ProximaNovaLight';
+            src: url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-light-webfont.eot');
+            src: url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-light-webfont.eot?#iefix') format('embedded-opentype'),
+                 url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-light-webfont.woff') format('woff'),
+                 url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-light-webfont.ttf') format('truetype'),
+                 url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-light-webfont.svg#ProximaNovaLight') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'ProximaNovaSemiBold';
+            src: url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-sbold-webfont.eot');
+            src: url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-sbold-webfont.eot?#iefix') format('embedded-opentype'),
+                 url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-sbold-webfont.woff') format('woff'),
+                 url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-sbold-webfont.ttf') format('truetype'),
+                 url('https://www.sfdcstatic.com/cdn/fonts/ProximaNova/proximanova-sbold-webfont.svg#ProximaNovaSemiBold') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        }
+        * { -webkit-font-smoothing: antialiased; }
+        
+        body  { font-family: ProximaNovaRegular, Arial, sans-serif; }
+
+        .col-md-8 {
+            width:100%;
+        }
+
+        .container {
+            width:100%;
+            padding:0px;
+        }
+
+        .blue {
+            background:#52B7D8 !important;
+        }
+        .green {
+            background:#54A77B !important;
+        }
+        .red {
+            background:#EB6E83 !important;
+        }
+        .orange {
+            background:#F39654 !important;
+        }
+        .yellow {
+            background:#F5D73E !important;
+        }
+
+        .fa {
+            font-size: 40px;
+            text-align: right;
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+        }
+        .blueIcon {
+            color:#3B849C !important;
+        }
+        .greenIcon {
+            color:#46785D !important;
+        }
+        .redIcon {
+            color:#AA4F5F !important;
+        }
+        .yellowIcon {
+            color:#B29C2D !important;
+        }
+        .orangeIcon {
+            color:#B06C3D !important;
+        }
+
+        .box {
+            height:120px;
+            border-right:15px solid #FFF;
+            padding-left:0px;
+            padding-right:0px;
+            position: relative;
+        }
+        .header {
+            background: rgba(0, 0, 0, 0.27);
+            color: #FFF;
+            font-size: 17px;
+            font-weight: bolder;
+            padding-left:15px;
+            height:35px;
+            line-height:35px;
+        }
+        .iconWrapper {
+
+        }
+        .body {
+            padding:15px;
+            color:#FFF;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .row {
+            color:#FFF;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <!-- <div class="row"> -->
+                <div class="col-md-1 col-sm-2 col-xs-6 box blue">
+                    <div class="header">
+                        Week
+                    </div>
+
+                    <div class="body height2" style="font-size: 35px;padding-left: 18px;">
+                        <apex:outputField value="{!IDO_JBP_Planning_Period__c.Planning_Week_No__c}" />
+                    </div>
+
+                    <div class="iconWrapper blueIcon">
+                        <i class="fa fa-calendar-o"></i>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-1 col-xs-6 box green">
+                    <div class="header">
+                        Status
+                    </div>
+
+                    <div class="body height2">
+                        <apex:outputField value="{!IDO_JBP_Planning_Period__c.Status__c}" />
+                    </div>
+
+                    <div class="iconWrapper greenIcon">
+                        <i class="fa fa-spinner"></i>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-12 box yellow">
+                    <div class="header">
+                        Progress
+                    </div>
+                    <div class="body">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <apex:outputField value="{!IDO_JBP_Planning_Period__c.Progress__c}" />&nbsp;&nbsp;<apex:outputField value="{!IDO_JBP_Planning_Period__c.Period_Completion__c}" />&nbsp;%
+                        </div>
+                    </div>
+
+                    <div class="iconWrapper yellowIcon">
+                        <i class="fa fa-compress"></i>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-12 box red">
+                    <div class="header">
+                        Account Manager Progress&nbsp;&nbsp;<apex:outputField value="{!IDO_JBP_Planning_Period__c.KAM_Progress__c}" />
+                    </div>
+                    <div class="body">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                Assigned Activities
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <apex:outputField value="{!IDO_JBP_Planning_Period__c.Task_Count_KAM__c}" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                Overdue
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <apex:outputField value="{!IDO_JBP_Planning_Period__c.Task_Count_KAM_Overdue__c}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="iconWrapper redIcon">
+                        <i class="fa fa-tasks"></i>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-12 box orange">
+                    <div class="header">
+                        Programme Manager Progress&nbsp;&nbsp;<apex:outputField value="{!IDO_JBP_Planning_Period__c.BOL_Progress__c}" />
+                    </div>
+                    <div class="body">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                Assigned Activities
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <apex:outputField value="{!IDO_JBP_Planning_Period__c.Task_Count_BOL__c}" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                Overdue
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <apex:outputField value="{!IDO_JBP_Planning_Period__c.Task_Count_BOL_Overdue__c}" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="iconWrapper orangeIcon">
+                        <i class="fa fa-tasks"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end .container -->
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
+    
+</apex:page>

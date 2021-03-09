@@ -1,0 +1,8 @@
+<design:component label="B2B Commerce Order Form">
+    <design:attribute name="recordId" label="Record ID" />
+    <design:attribute name="defaultStorefront" label="Default Storefront" default="" description="Enter the name of the default storefront here.  If your org only has one storefront, leave this field blank."/>
+    <design:attribute name="useCardLayout" label="Use Card Layout" description="Set to true when this component is displayed in smaller regions (i.e. service console)" />
+    <design:attribute name="newCartFirstScreenChoice" label="New cart/wishlist initial screen to display" datasource="Empty cart,Product filter" 
+        default="Empty cart"
+        description="Use this setting to control what the user first sees when they create a new cart or wish list: either an empty cart, or the product filter screen. The default is 'Empty cart'." />
+</design:component>

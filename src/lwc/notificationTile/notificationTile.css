@@ -1,0 +1,27 @@
+.green{
+    background-color: #02844b;
+    color: #fff;
+    
+}
+.orange{
+    background-color: #ffb75c;
+    color: #fff;
+}
+.red{
+    background-color: #c23934;
+    color: #fff;
+    
+}
+
+.tile{
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-left: 0.75rem;
+    min-width: 62px;
+    text-align: center;
+}
+
+h2,a{
+    font-weight:600;
+}

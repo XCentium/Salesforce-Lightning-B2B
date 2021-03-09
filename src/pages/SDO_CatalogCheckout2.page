@@ -1,0 +1,961 @@
+<apex:page showHeader="false" sidebar="false" standardController="order" extensions="SDO_CatalogCheckout2" standardStylesheets="false">
+<script type="text/javascript">
+    var __sfdcSessionId = '{!GETSESSIONID()}';
+</script>
+<style>
+    .panel{
+        margin:15px;
+    }
+
+    #orderInfo, #contractInfo, #contactInfo {
+    }
+    #accountNumber{
+        display:none;
+    }
+    .toggle {
+        -moz-transform: rotate(-90deg);
+         -o-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+
+    }
+    .glyphicon-chevron-down{
+          position: relative;
+          float:right;
+          top: 8px;
+          -moz-transition: -moz-transform .3s;
+          -webkit-transition: -webkit-transform .3s;
+          -o-transition: -o-transform .3s;
+          transition: transform .3s;
+    }
+    #newAccountContainer{
+        display:none;
+    }
+    #newContactContainer{
+        display:none;
+    }
+    .total-table tr{
+        border-top:none;
+    }
+    .total-table td{
+        border-top:none;
+    }
+    .glyphicon-ok {
+      margin-right: 15px;
+      padding: 5px;
+      border-radius: 20px;
+      border: 3px solid;
+      color: #aaa;
+    }
+
+    .glyphicon-shopping-cart{
+        margin-right: 15px;
+      padding: 5px;
+      color:#87ae2e;
+      font-size:30px;
+    }
+    .mailingSaveBtn{
+        margin-left: 15px;
+        margin-top: 10px;
+    }
+    .btn-success{
+        background:#87ae2e !important;
+        border-color: #aaa !important;
+    }
+    .top-table td {
+        border-top:none !important;
+    }
+    #stickyHeader{
+        background-color: white;
+          position: fixed;
+          width: CALC(100% - 30px);
+          top: -10px;
+          z-index: 1000000;
+    }
+    #accordion{
+          margin-top: 135px;
+    }
+    .reviewOrderWrapper{
+        margin-top: -15px;
+    }
+    #ThankYou{
+        display:none;
+    }
+    .order-title{
+        font-size:24px;
+    }
+
+</style>
+<head>
+        <apex:stylesheet value="{!URLFOR($Resource.BfBootstrap, 'bootstrap-3.3.2-dist/css/bootstrap.min.css')}"/>
+</head>
+<body>
+    <div id="ThankYou" class="panel panel-default">
+      <div class="panel-body">
+        <p>
+            <span class="glyphicon glyphicon-shopping-cart"></span> <span class="order-title">Order Successfully Placed</span>
+        </p>
+        <div>
+            <strong>Order Number is: {!order.ordernumber}</strong><br/>
+            Customer will recieve an email shortly at: {!Order.Account.PersonEmail} 
+            <apex:outputPanel rendered="{!NOT(Order.Account.IsPersonAccount)}">
+                {!Order.CustomerAuthorizedBy.Email}
+            </apex:outputPanel>
+        </div>
+
+      </div>
+    </div>
+    
+    <apex:form styleClass="myForm">
+        <apex:outputPanel id="noContract" rendered="{!NOT(canEditOrder)}">
+            <div class="alert alert-danger" role="alert">This Order has an activated contract and cannot be modified.</div>
+        </apex:outputPanel> 
+        <apex:outputPanel id="contentWrapper" rendered="{!canEditOrder}">
+            <div id="stickyHeader" class="panel panel-default">
+                <div class="panel-body">
+              
+                <table class="table top-table">
+                <tr>
+                    <!-- Order Information -->
+                    <td>
+                        <apex:outputPanel id="orderInfo">
+                            <h3 class="panel-title">Account Name</h3>
+                            <apex:outputText value="{!orderAccountName}"/><br/>
+                            <a href="#" onclick="showAccordionStep('Account');">Change Account</a>
+                        </apex:outputPanel>
+                    </td>
+                    <td>
+                        <apex:outputPanel id="contactInfo">
+                            <h3 class="panel-title">Contact Name</h3>
+                            <span id="contactNameInfo">{!o.customerAuthorizedBy.name}</span><br/>
+                            <a href="#" onclick="showAccordionStep('Contact');">Change Contact</a>
+                        </apex:outputPanel>
+                    </td>
+                    <td>
+                        <apex:outputPanel id="cardInfo">
+                            <h3 class="panel-title">Card Info</h3>
+                            <apex:outputField value="{!o.Credit_Card_Number__c}"/><br/>
+                            <a href="#" onclick="showAccordionStep('Shipping');">Change Card</a>
+                        </apex:outputPanel>
+                    </td>
+                    <td>
+                        <apex:outputPanel id="shippingInfo">
+                            <h3 class="panel-title">Shipping Info</h3>
+                            {!o.ShippingStreet} {!o.ShippingCity} {!o.ShippingState} {!o.ShippingPostalCode} <br/>
+                            <a href="#" onclick="showAccordionStep('Shipping');">Change Shipping</a>
+                        </apex:outputPanel>
+                    </td>
+                    
+                    
+                </tr>
+                </table>
+
+                </div>
+            </div>
+
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+                <!-- update Account info -->
+                <div id="updateOrderAccount" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 style="cursor:pointer" class="panel-title" role="button" data-toggle="collapse" href="#accountContainer" aria-expanded="true" aria-controls="accountContainer" onclick="toggleArrow('accountArrow');"><span class="glyphicon glyphicon-ok Account-ok"></span>Account Information<span id="accountArrow" class="glyphicon glyphicon-chevron-down"></span></h3>
+                    </div>
+                    <div class="collapse in panel-body" id="accountContainer">
+                        <div id="newAccountContainer">
+                            <div class="btn btn-default" onclick="showAccountSearch();" style='margin-bottom:10px;'>Back</div>
+                            <div class="form-group">
+                                <label>Account Name</label>
+                                <input type="text" class="form-control" placeholder="Account Name" id="newAccountName"/>
+                            </div>
+                            <div style="" class="newAccountEmail form-group">
+                                <label>Account Email</label>
+                                <input type="text" class="form-control" placeholder="Account Email" id="newAccountEmail"/>
+                            </div>
+                            <div class="btn btn-primary" onclick="createNewAccount();showAccountSearch();">Create New Account</div>
+                        </div>
+                         <div id="searchAccountsContainer"> <!-- -->
+                            <div class="form">
+                                <div class="form-group">
+                                    <div class="form-inline">
+                                        <div onclick="switchPill('Person');" id="personPill" class="btn btn-primary">Person</div>
+                                        <div onclick="switchPill('Business');" id="businessPill" class="btn btn-default">Business</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-inline">
+                                        <input onkeyup="setNewAccount('newAccountName', this);" type="text" class="form-control" id="accountName" placeholder="Account Name"/>
+                                        <input onkeyup="setNewAccount('newAccountEmail', this);" type="text" class ="form-control" id="accountEmail" placeholder="Account Email"/>
+                                        <input type="text" class ="form-control" id="accountNumber" placeholder="Account Number"/>
+                                        <div class="btn btn-success" onclick="jsSearch();">Search</div>
+                                        <div class="btn btn-default" onclick="showNewAccount();">Create New</div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- end div class form -->
+                            <apex:outputPanel id="accountListWrapper">
+                                <table class="table">
+                                    <th></th>
+                                    <th>Account Name</th>
+                                    <th>Account Number</th>
+                                    <th>Person Email</th>
+                                    <th>Address</th>
+                                    <tbody>
+                                        <apex:repeat id="accountList" value="{!accountList}" var="a">
+                                        <tr>
+                                            <td>
+                                                <a href="#" onclick="setAccount('{!a.id}');">use</a>
+                                            </td>
+                                            <td>{!a.name}</td>
+                                            <td>{!a.accountnumber}</td>
+                                            <td>
+                                                <apex:outputPanel rendered="{!a.ispersonaccount = true}">{!a.personemail}</apex:outputPanel>
+                                                <apex:outputPanel rendered="{!a.ispersonaccount = false}">N/A</apex:outputPanel>
+                                            </td>
+                                            <td>{!a.billingstreet} {!a.billingcity} {!a.billingstate} {!a.billingpostalcode}</td>
+                                        </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                                <apex:outputText style="color:#d9534f;margin-left:10px;" id="resultsMessage" value="{!resultsMessage}"/>
+                            </apex:outputPanel>
+                         </div> <!-- end search accounts container -->
+                    </div>
+                </div>
+
+                <!-- Update Contact Info -->
+                <div id="updateOrderContact" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 style="cursor:pointer;" role="button" data-toggle="collapse" href="#contactContainer" aria-expanded="true" aria-controls="contactContainer" onclick="toggleArrow('contactArrow');" class="panel-title"><span class="glyphicon glyphicon-ok Contact-ok"></span>Contact Information<span id="contactArrow" class="glyphicon glyphicon-chevron-down"></span></h3>
+                    </div>
+                    <div class="collapse panel-body" id="contactContainer">
+                        <div id="newContactContainer">
+                            <div class="btn btn-default" onclick="showContactSearch();" style='margin-bottom:10px;'>Back</div>
+                            <div class="form-group">
+                                <label>Contact Name</label>
+                                <input type="text" class="form-control" placeholder="Contact Name" id="newContactName"/>
+                            </div>
+                            <div style="" class="form-group">
+                                <label>Contact Email</label>
+                                <input type="text" class="form-control" placeholder="Contact Email" id="newContactEmail"/>
+                            </div>
+                            <div class="btn btn-primary" onclick="createNewContact();showContactSearch();">Create New Contact</div>
+                        </div>
+                        <div id="contactSearchContainer">
+                            <div class="form">
+                                <div class="form-group">
+                                    <div class="form-inline">
+                                        <input onkeyup="setNewContact('newContactName',this);" type="text" class="form-control" id="contactName" placeholder="Contact Name"/>
+                                        <input onkeyup="setNewContact('newContactEmail',this);" type="text" class ="form-control" id="contactEmail" placeholder="Contact Email"/>
+                                        <div class="btn btn-success" onclick="jsSearchContacts();">Search</div>
+                                        <div class="btn btn-default" onclick="showNewContact();">Create New</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end div class form -->
+                            <apex:outputPanel id="contactListWrapper">
+                                <table class="table">
+                                    <th></th>
+                                    <th>Contact Name</th>
+                                    <th>Account Name</th>
+                                    <th>Contact Email</th>
+                                    <th>Address</th>
+                                    <tbody>
+                                        <apex:repeat id="contactList" value="{!contactList}" var="contact">
+                                        <tr>
+                                            <td>
+                                                <a href="#" onclick="setContact('{!contact.id}');">Use</a>
+                                            </td>
+                                            <td>{!contact.name}</td>
+                                            <td>{!contact.account.name}</td>
+                                            <td>
+                                                {!contact.email}
+                                            </td>
+                                            <td>{!contact.mailingstreet} {!contact.mailingcity} {!contact.mailingstate} {!contact.mailingpostalcode}</td>
+                                        </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                                <apex:outputText style="color:#d9534f;margin-left:10px;" id="resultsMessage2" value="{!resultsMessage}"/>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Update Payment Info -->
+                <div id="orderPaymentInfo" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 style="cursor:pointer;" role="button" data-toggle="collapse" href="#paymentInfo" aria-expanded="true" aria-controls="paymentInfo" onclick="toggleArrow('paymentArrow');" class="panel-title"><span class="glyphicon glyphicon-ok Payment-ok"></span>Payment &amp; Shipping Information<span id="paymentArrow" class="glyphicon glyphicon-chevron-down"></span></h3>
+                    </div>
+                    <div class="collapse panel-body" id="paymentInfo">
+                        <div class="panel panel-default">
+                          <div class="panel-heading">
+                            <h3 class="panel-title">Payment Information</h3>
+                          </div>
+                          <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label> Name on Card</label>
+                                        <input id="cardName" type="text" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Credit Card Number</label>
+                                        <input id="cardNumber" type="text" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Card Expiration Date</label>
+                                        <div class="form-inline">
+                                            <select placeholder="month" id="cardExpirationMonth" class="form-control">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                            <select placeholder="year" id="cardExpirationYear" class="form-control">
+                                                <option value="15">15</option>
+                                                <option value="16">16</option>
+                                                <option value="17">17</option>
+                                                <option value="18">18</option>
+                                                <option value="19">19</option>
+                                                <option value="20">20</option>
+                                                <option value="21">21</option>
+                                                <option value="22">22</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CCV</label>
+                                        <input style="max-width: 70px;" id="ccv" type="text" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Billing Street</label>
+                                        <input id="billingStreet" type="text" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Billing City</label>
+                                        <input id="billingCity" type="text" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Billing State</label>
+                                        <input id="billingState" type="text" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Billing Postal Code</label>
+                                        <input id="billingPostalCode" type="text" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="panel panel-default">
+                          <div class="panel-heading">
+                            <h3 class="panel-title">Shipping Information</h3>
+                          </div>
+                          <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-inline">
+                                        <label>Same As Billing Address</label>
+                                        <input onchange="toggleMailingAddress();" id="sameAsBilling" type="checkbox" class="form-control" checked="true"/>
+                                    </div>
+                                </div>
+                                <div class=" mailingInfo col-xs-6">
+                                    <div class="form-group">
+                                        <label>Mailing Street</label>
+                                        <input id="mailingStreet" type="text" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mailing City</label>
+                                        <input id="mailingCity" type="text" class="form-control"/>
+                                    </div> 
+                                </div>
+                                <div class=" mailingInfo col-xs-6">
+                                    <div class="form-group">
+                                        <label>Mailing State</label>
+                                        <input id="mailingState" type="text" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mailing Postal Code</label>
+                                        <input id="mailingPostalCode" type="text" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                          </div>
+                        </div>
+                        <div class="mailingSaveBtn btn btn-success" onclick="saveShippingInfo();stepCompleted('Payment');">Save</div>
+                    </div>
+                </div> 
+                <!-- End Update Payment Info -->
+            </div>
+
+
+
+
+            <div class="panel panel-default reviewOrderWrapper">
+              <div class="panel-heading">
+                <h3 class="panel-title"><span class="glyphicon glyphicon-ok"></span>Review Order</h3>
+              </div>
+              <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>Shipping Option:</label>
+                            <select id="shipping" class="form-control">
+                                <option value="UPS - Ground">USPS - First Class</option>
+                                <option value="UPS - Ground">UPS - Ground</option>
+                                <option value="UPS - Ground">UPS - 2nd Day Air</option>
+                            </select>
+                        </div>
+                        <table class="total-table table">
+                            <tr>
+                                <td>Shipping Total:</td>
+                                <td>$12.95</td>
+                            </tr>
+                            <tr>
+                                <td>Order Total: </td>
+                                <td>$<span id="total"></span></td>
+                            </tr>
+                            <tr >
+                                <td style="border-top:2px solid;"><span style="font-weight:bold">Grand Total:</span></td>
+                                <td style="border-top:2px solid;"><span style="font-weight:bold">$<span id="grandTotal"></span></span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div style="margin-left: 15px;" class="btn btn-success" onclick="submitOrder();">Submit Order</div>
+              </div>
+            </div>
+            
+        </apex:outputPanel>
+        <apex:actionFunction name="search" action="{!search}" reRender="accountListWrapper,resultsMessage">
+            <apex:param assignTo="{!accountName}" name="accountName" value=""/>
+            <apex:param assignTo="{!accountEmail}" name="accountEmail" value=""/>
+            <apex:param assignTo="{!accountNumber}" name="accountNumber" value=""/>
+            <apex:param assignTo="{!isPersonAccount}" name="isPersonAccount" value=""/>
+        </apex:actionFunction>
+        <apex:actionFunction name="updateAccount" action="{!updateAccount}" reRender="orderInfo,contactInfo">
+            <apex:param assignTo="{!updateAccountId}" name="updateAccountId" value=""/>
+        </apex:actionFunction>
+        <apex:actionFunction name="updatePaymentInfo" action="{!updatePaymentInfo}" reRender="cardInfo,shippingInfo"/>
+        <!-- contact search functions -->
+        
+        <apex:actionFunction name="searchContacts" action="{!searchContacts}" reRender="contactListWrapper,resultsMessage2">
+            <apex:param assignTo="{!contactName}" name="contactName" value=""/>
+            <apex:param assignTo="{!contactEmail}" name="contactEmail" value=""/>
+        </apex:actionFunction>
+        <apex:actionFunction name="updateContact" action="{!updateContact}" reRender="contactInfo">
+            <apex:param assignTo="{!updateContactId}" name="updateContactId" value=""/>
+        </apex:actionFunction>
+    </apex:form>
+    <script src="/soap/ajax/33.0/connection.js" type="text/javascript"></script>
+    <apex:includeScript value="/support/console/33.0/integration.js"/>
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CatalogResources, '/js/bootstrap.min.js')}"/> 
+    <script>
+        
+        function showAccordionStep(id){
+            if(id =='Account') {
+                $('#contactContainer').collapse('hide');
+                $('#paymentInfo').collapse('hide');
+                $('#accountContainer').collapse('show');
+                toggleArrow('accountArrow');
+            }else if (id == 'Contact') {
+                $('#accountContainer').collapse('hide');
+                $('#paymentInfo').collapse('hide');
+                $('#contactContainer').collapse('show');
+                toggleArrow('contactArrow');
+            }else if (id == 'Shipping') {
+                $('#accountContainer').collapse('hide');
+                $('#contactContainer').collapse('hide');
+                $('#paymentInfo').collapse('show');
+                toggleArrow('paymentArrow');
+            }
+        }
+
+        function showNextStep(id){
+            if(id =='Account') {
+                $('#contactContainer').collapse('show');
+                $('#paymentInfo').collapse('hide');
+                $('#accountContainer').collapse('hide');
+                toggleArrow('accountArrow');
+            }else if (id == 'Contact') {
+                $('#accountContainer').collapse('hide');
+                $('#paymentInfo').collapse('show');
+                $('#contactContainer').collapse('hide');
+                //toggleArrow('contactArrow');
+            }else if (id == 'Payment') {
+                $('#accountContainer').collapse('hide');
+                $('#contactContainer').collapse('hide');
+                $('#paymentInfo').collapse('hide');
+                toggleArrow('paymentArrow');
+            }
+        }
+
+        function stepCompleted(stepId){
+            //account, payment, contact
+            console.log('collapsing: ' + stepId);
+            $('.'+stepId+'-ok').css('color','#87ae2e');
+            showNextStep(stepId);
+            stepId = stepId.toLowerCase();
+            $('#'+stepId+'Container').removeClass('in');
+            $('#'+stepId+'Container').attr('aria-expanded','false');
+        }
+
+
+
+        var totalListener = function (result) {
+             var total = result.message;
+             setTotal(total);
+        }
+        sforce.console.addEventListener('OrderTotalUpdated', totalListener);
+
+        $(document).keypress(function(e) {
+          if(e.which == 13) {
+            // enter pressed
+            var focused = document.activeElement;
+            console.log('enter key hit');
+            console.log('focused element: ');
+            console.log(focused);
+            
+            if(focused.id == 'accountName' || focused.id == 'accountNumber'){
+                jsSearch();
+            }else if (focused.id == 'contactName' || focused.id == 'contactEmail'){
+                jsSearchContacts();
+            }
+          }
+        });
+
+
+
+        function toggleMailingAddress(){
+            if($('#sameAsBilling').is(':checked')) {
+                //hide mailing info
+                $('.mailingInfo').hide();
+            } else {
+                //show mailing info
+                $('.mailingInfo').show();
+            }
+        }
+
+        $(document).ready(function(){
+            queryForPersonAccount = true;
+            displayTotal();
+            if('{!o.accountId}' != null && '{!o.accountId}' != ''){
+                getAccountBillingInformation('{!o.accountId}');
+            }
+            toggleMailingAddress();
+            toggleArrow('contactArrow');
+            toggleArrow('paymentArrow');
+            toggleArrow('paymentArrow');
+
+            var hideAccount = false;
+            var hideContact = false;
+            //initialize the steps
+            if('{!order.Account.name}' != 'Order Template') {
+                hideAccount = true;
+                if({!order.Account.IsPersonAccount}){
+                    hideContact = true;
+                    console.log('this is a person account, hiding contact info.')
+                }
+            }
+            if('{!order.CustomerAuthorizedById}') {
+                hideContact = true;
+                console.log('customer authorized by id is not empty, hiding contact info.')
+            }else {
+            	if({!order.Account.IsPersonAccount}) {
+					var result = sforce.connection.query('select id,firstname,lastname from Contact where firstname = \'{!Order.Account.firstname}\' AND LastName = \'{!Order.Account.LastName}\' LIMIT 1');
+					var records = result.getArray("records");
+            		if(records.length > 0) {
+            			console.log('contact exists for the person account: ' + records);
+            			updateContact(records[0].Id);
+            		}else {
+            			// createNewContact();
+            		}
+            	}
+            }
+            if(hideAccount && hideContact){
+                stepCompleted('Account');
+                window.setTimeout(function(){stepCompleted('Contact');},500);
+            }else if(hideAccount){
+                stepCompleted('Account');
+            }
+
+            if('{!order.status}' == 'Activated'){
+                $('.myForm').hide();
+                $('#ThankYou').fadeIn();
+            }
+        });
+
+        function displayTotal() {
+             var result2 = sforce.connection.query('select id,unitprice,quantity,PricebookEntryId,PricebookEntry.Product2.name,PricebookEntry.Product2.id,PricebookEntry.product2.Image__c from orderitem where orderid = \'{!order.id}\''); 
+             orderProductList = result2.getArray("records");
+             var total = 0;
+             for(var i =0;i<orderProductList.length;i++){
+                var price = parseInt(orderProductList[i].UnitPrice);
+                var qty = parseInt(orderProductList[i].Quantity);
+                total += qty*price;
+             }
+             setTotal(total);
+        }
+
+        function setTotal(total){
+            $('#total').html(total);
+             $('#total').append('.00');
+
+             var grandTotal = total + 12.95;
+             $('#grandTotal').html(grandTotal);
+        }
+
+        var isPersonAccount = {!o.account.ispersonaccount};
+        var queryForPersonAccount;
+
+        function setAccount(id) {
+            updateAccount(id);
+            getAccountBillingInformation(id);
+            stepCompleted('Account');
+            if(queryForPersonAccount) {
+                console.log('is person account, hiding contact search');
+                window.setTimeout(function(){stepCompleted('Contact');},500);
+            }
+            clearAccountSearchAndResults();
+        }
+
+        function clearAccountSearchAndResults() {
+            $('#accountName').val('');
+            $('#accountNumber').val('');
+            ('#accountEmail').val('');
+
+            $('#newAccountName').val('');
+            $('#newAccountEmail').val('');
+        }
+
+
+
+
+        function setContact(id){
+            updateContact(id);
+            stepCompleted('Contact');
+        }
+
+
+        function jsSearchContacts(){
+            searchContacts($('#contactName').val(),$('#contactEmail').val());
+        }
+
+        function jsSearch() {
+            search($('#accountName').val(),$('#accountEmail').val(),$('#accountNumber').val(),queryForPersonAccount);
+        }
+        function switchPill(btnId) {
+            if(btnId == 'Person') {
+                $('#businessPill').removeClass('btn-primary');
+                $('#businessPill').addClass('btn-default');
+                $('#personPill').removeClass('btn-primary');
+                $('#personPill').addClass('btn-primary');
+                
+                $('#accountEmail').show();
+                $('#accountNumber').hide();
+                queryForPersonAccount = true;
+            } else if (btnId == 'Business'){
+                $('#businessPill').removeClass('btn-default');
+                $('#businessPill').addClass('btn-primary');
+
+                $('#personPill').removeClass('btn-primary');
+                $('#personPill').addClass('btn-default');
+                $('#accountNumber').show();
+                $('#accountEmail').hide();
+                queryForPersonAccount = false;
+            }
+        }
+
+        function toggleArrow(id) {
+            //$('#'+id).slideToggle(400);
+            $('#'+id).toggleClass("toggle");
+        }
+
+        function showNewAccount(){
+            if(queryForPersonAccount){
+                $('.newAccountEmail').show();
+            }
+            $('#searchAccountsContainer').hide();
+            $('#newAccountContainer').fadeIn();
+        }
+        function showNewContact(){
+            $('#contactSearchContainer').hide();
+            $('#newContactContainer').fadeIn();
+        }
+        function showContactSearch(){
+            $('#newContactContainer').hide();
+            $('#contactSearchContainer').fadeIn();
+        }
+                
+
+        function setNewAccount(id,obj){
+            $('#'+id).val(obj.value);
+        }
+        function setNewContact(id,obj){
+            $('#'+id).val(obj.value);
+        }
+
+        function showAccountSearch(){
+            $('.newAccountEmail').hide();
+            $('#newAccountContainer').hide();
+            $('#searchAccountsContainer').fadeIn();
+            
+        }
+
+
+        function getPersonAccountRecordTypeId(){
+            var result =  sforce.connection.query('SELECT BusinessProcessId,CreatedById,CreatedDate,Description,DeveloperName,Id,IsActive,IsPersonType,LastModifiedById,LastModifiedDate,Name,NamespacePrefix,SobjectType,SystemModstamp FROM RecordType WHERE Name = \'Person Accounts\' and SObjectType = \'Account\' limit 1');
+            var records = result.getArray("records")[0];
+            return records.Id;
+        }
+
+        function createNewAccount(){
+            var createdContact = false;
+            var account = new sforce.SObject("Account");
+            var name = '';
+            if(queryForPersonAccount) {
+                name = $('#newAccountName').val().split(' ');
+                if(name.length > 1) {
+                    account.FirstName = name[0];
+                    account.LastName = name[1];
+                }else {
+                    account.LastName = name[0];
+                }
+                account.RecordTypeId = getPersonAccountRecordTypeId();
+                account.PersonEmail = $('#newAccountEmail').val();
+                //Create Contact as well
+                createdContact = true;
+            }else {
+                account.Name = $('#newAccountName').val();
+            }
+            var result = sforce.connection.create([account]);
+
+
+            if (result[0].getBoolean("success")) {
+              console.log("new account created with id " + result[0].id);
+              if(queryForPersonAccount){
+                createPersonAccountContact(result[0].id,name);
+              } 
+              updateAccount(result[0].id);
+              getAccountBillingInformation(result[0].id);
+              stepCompleted('Account');
+              if(createdContact) {
+                window.setTimeout(function(){stepCompleted('Contact');},500);
+              } 
+            } else {
+              alert("failed to create account " + result[0]);
+            }
+        }
+
+        function createPersonAccountContact(id,name){
+            var contact = new sforce.SObject("Contact");
+                if(name.length > 1) {
+                    contact.FirstName = name[0];
+                    contact.LastName = name[1];
+                }else {
+                    contact.LastName = name[0];
+                }
+                contact.Email = $('#newAccountEmail').val();
+                //contact.AccountId = id;
+                var result2 = sforce.connection.create([contact]);
+                if (result2[0].getBoolean("success")) {
+                  createdContact = true;
+                  console.log("new contact created with id " + result2[0].id);
+                  updateContact(result2[0].id);
+                } else {
+                  alert("failed to create contact " + result2[0]);
+                }
+        }
+
+        function removeContact() {
+            var results = sforce.connection.query('select id,customerAuthorizedById from Order where id=\'{!o.id}\' limit 1');
+            var order = results.getArray("records")[0];
+            order.customerAuthorizedById = null;
+            var result2 = sforce.connection.update([order]);
+            if(result2[0].getBoolean("success")){
+                console.log('successfully removed the contact');
+                $('#contactNameInfo').html('');
+            }else {
+                alert('error removing the contact: ' + result2[0]);
+            }
+        }
+
+        function createNewContact(){
+            var result2 =  sforce.connection.query('select id,AccountId from order where id=\'{!o.id}\' limit 1');
+            var order = result2.getArray("records")[0];
+            var accountId = order.AccountId;
+
+            var contact = new sforce.SObject("Contact");
+            
+            var name = $('#newContactName').val().split(' ');
+            
+            if(name.length > 1) {
+                contact.FirstName = name[0];
+                contact.LastName = name[1];
+            }else {
+                contact.LastName = name[0];
+            }
+            contact.AccountId = accountId;
+            contact.Email = $('#newContactEmail').val();
+            var result = sforce.connection.create([contact]);
+
+            if (result[0].getBoolean("success")) {
+              console.log("new contact created with id " + result[0].id);
+              updateContact(result[0].id);
+              stepCompleted('Contact');
+            } else {
+              alert("failed to create contact " + result[0]);
+            }
+        }
+
+        function getAccountBillingInformation(id) {
+            var result =  sforce.connection.query('SELECT BillingAddress,BillingCity,BillingPostalCode,BillingState,BillingStreet,PersonMailingAddress,PersonMailingCity,PersonMailingCountry,PersonMailingPostalCode,PersonMailingState,PersonMailingStreet,isPersonAccount FROM Account where id = \''+id+'\' limit 1');
+            var account = result.getArray("records")[0];
+            if(account.isPersonAccount){
+                $('#billingStreet').val(account.PersonMailingStreet);
+                $('#billingState').val(account.PersonMailingState);
+                $('#billingCity').val(account.PersonMailingCity);
+                $('#billingPostalCode').val(account.PersonMailingPostalCode);
+            }else {
+                $('#billingStreet').val(account.BillingStreet);
+                $('#billingState').val(account.BillingState);
+                $('#billingCity').val(account.BillingCity);
+                $('#billingPostalCode').val(account.BillingPostalCode);
+            }
+            if($('#billingStreet').val() == '' && $('#billingState').val() == '' && $('#billingCity').val() == '' && $('#billingPostalCode').val() == '') {
+                //try the order for shipping address 
+                var result2 =  sforce.connection.query('select id,Status,BillingStreet,BillingCity,BillingState,BillingPostalCode from Order where id=\'{!o.id}\' limit 1');
+                var order = result2.getArray("records")[0];
+                $('#billingStreet').val(order.BillingStreet);
+                $('#billingState').val(order.BillingState);
+                $('#billingCity').val(order.BillingCity);
+                $('#billingPostalCode').val(order.BillingPostalCode);
+            }
+        }
+
+        function saveShippingInfo() {
+            var results = sforce.connection.query('select id,Status from Order where id=\'{!o.id}\' limit 1');
+            var order = results.getArray("records")[0];
+            //get payment information
+            order.Credit_Card_Number__c = $('#cardNumber').val();
+            order.Credit_Card_Expiration_Date__c = $('#cardExpirationMonth').val() + '/' + $('#cardExpirationYear').val();
+            order.Credit_Card_Name__c = $('#cardName').val();
+            
+            
+
+            order.BillingStreet = $('#billingStreet').val();
+            order.BillingCity = $('#billingCity').val();
+            order.BillingState = $('#billingState').val();
+            order.BillingPostalCode = $('#billingPostalCode').val();
+            if($('#sameAsBilling').is(':checked')) {
+                order.ShippingStreet = $('#billingStreet').val();
+                order.ShippingCity = $('#billingCity').val();
+                order.ShippingState = $('#billingState').val();
+                order.ShippingPostalCode = $('#billingPostalCode').val();
+            } else {
+                order.ShippingStreet = $('#mailingStreet').val();
+                order.ShippingCity = $('#mailingCity').val();
+                order.ShippingState = $('#mailingState').val();
+                order.ShippingPostalCode = $('#mailingPostalCode').val();
+            }
+            //order.Status = 'Activated';
+            var result2 = sforce.connection.update([order]);
+            if(result2[0].getBoolean("success")){
+                console.log('successfully updated the order shipping info!');
+                // need to rerender the top tab with credit card info & shipping address
+
+                //testOpenPrimaryTab();
+                //testGetFocusedSubtabId();
+                updatePaymentInfo();
+            }else {
+                alert('error updating the shipping information the order: ' + result2[0]);
+            }
+        }
+
+        function testGetFocusedSubtabId() {
+            sforce.console.getFocusedSubtabId(refreshSub);
+        }
+        var refreshSub = function refreshSub(result) {
+                // Display the tab ID
+            //alert ('Tab ID: ' + result.id);
+            sforce.console.refreshSubtabById(result.id, true);
+        };
+
+        function submitOrder() {
+            //activate order and redirect to the detail page
+            var results = sforce.connection.query('select id,Status from Order where id=\'{!o.id}\' limit 1');
+            var order = results.getArray("records")[0];
+
+            order.Status = 'Activated';
+            var result2 = sforce.connection.update([order]);
+            if(result2[0].getBoolean("success")){
+                console.log('successfully updated the order!');
+                //testOpenPrimaryTab();
+                $('.myForm').hide();
+                $('#ThankYou').fadeIn();
+                sforce.console.getFocusedSubtabId(setCurrentSubTabId);
+                sforce.console.getEnclosingPrimaryTabId(refreshSubTabs);
+            }else {
+                alert('error submiting the order: ' + result2[0]);
+            }
+            //testOpenSubTab();
+            
+        }
+        var currentSubTabId = '';
+        var setCurrentSubTabId = function setCurrentSubTabId(result){
+            currentSubTabId = result.id;
+        }
+        function refreshSubTabs(result) {
+            //Get the subtabs of the primary tab 'scc-pt-0'
+           //This value is for example purposes only
+             var primaryTabId = result.id;
+              sforce.console.getSubtabIds(primaryTabId , refreshTabs);
+        }
+        
+        var refreshTabs = function refreshTabs(result) {
+            //Display the subtab IDs
+            var i = 0;
+            for(i=0;i<result.ids.length;i++){
+                if(result.ids[i] == currentSubTabId) continue;
+                sforce.console.refreshSubtabById(result.ids[i], false);
+            }
+        };
+
+        function testOpenPrimaryTab() {
+            //Open a new primary tab with the salesforce.com home page in it
+            sforce.console.openPrimaryTab(null, '/{!o.id}', true, 
+                'Order {!o.OrderNumber}' , openSuccess, 'salesforceTab');
+        }
+        
+        var openSuccess = function openSuccess(result) {
+            //Report whether opening the new tab was successful
+            if (result.success == true) {
+                console.log('Primary tab successfully opened');
+            } else {
+                console.log('Primary tab cannot be opened');
+            }
+        };
+
+        
+    </script>
+
+
+</body>
+
+
+
+    
+</apex:page>

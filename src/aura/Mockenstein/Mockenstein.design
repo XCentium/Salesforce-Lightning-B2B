@@ -1,0 +1,32 @@
+<design:component>
+    <design:attribute name="componentTitle" label="Component Title" placeholder="Einstein Discovery" description="Value for component header" />	
+    <design:attribute name="scoreValue" label="Overall score value" placeholder="Enter Score" description="Value for cumulative score" />	    
+    <design:attribute name="scoreLabel" label="Overall score label" placeholder="OUTCOME SCORE" description="Label for cumulative score" />	
+    <design:attribute name="outcomeColor" label="Color range definition for red, yellow and green" placeholder="0-25,25-75,75-100" description="0-25,25-75,75-100"/>
+
+    <design:attribute name="section1Head" label="Label for first section" placeholder="LEADING CAUSES"/>	
+    <design:attribute name="section2Head" label="Label for second section" placeholder="HOW TO IMPROVE THIS"/>	
+
+    <design:attribute name="section11Score" label="First section first Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section11Text" label="First section first text" description="Value for first indicator" />	
+    <design:attribute name="section12Score" label="First section second Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section12Text" label="First section second text" description="Value for second indicator" />	
+    <design:attribute name="section13Score" label="First section third Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section13Text" label="First section third text" description="Value for third indicator" />	
+    <design:attribute name="section14Score" label="First section fourth Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section14Text" label="First section fourth text" description="Value for fourth indicator" />	
+    <design:attribute name="section15Score" label="First section fifth Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section15Text" label="First section fifth text" description="Value for fifth indicator" />	
+    
+    <design:attribute name="section21Score" label="Second section first Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section21Text" label="Second section first text" description="Value for first suggestion" />	
+    <design:attribute name="section22Score" label="Second section second Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section22Text" label="Second section second text" description="Value for second suggestion" />	
+    <design:attribute name="section23Score" label="Second section third Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section23Text" label="Second section third text" description="Value for third suggestion" />	
+    <design:attribute name="section24Score" label="Second section fourth Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section24Text" label="Second section fourth text" description="Value for fourth suggestion" />	
+    <design:attribute name="section25Score" label="Second section fifth Score" description="Include '+' for green, '-' for red" />	
+    <design:attribute name="section25Text" label="Second section fifth text" description="Value for fifth suggestion" />
+    
+</design:component>

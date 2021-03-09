@@ -1,0 +1,33 @@
+<aura:component controller="CaseSentimentCtrl" extends="c:CaseSentiment_Card" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    <aura:attribute name="analysis" type="Object" default="{'Prediction_Result_1__c': 'positive', 'Prediction_Result_2__c': 'neutral', 'Prediction_Result_3__c': 'negative'}"></aura:attribute>
+    
+    <div class="slds-scope">
+        <div class="slds-text-title_caps predictive-header">Sentiment Analysis Probabilities</div>
+        <hr/>
+        <aura:if isTrue="{!v.analysis.Id != undefined}">
+            <div class="analysis slds-m-bottom_small">
+                <span class="slds-m-right_small">
+                    <lightning:dynamicIcon type="trend" option="{!v.analysis.Prediction_Result_1__c == 'positive' ? 'up' : v.analysis.Prediction_Result_1__c == 'negative' ? 'down' : 'neutral'}" />
+                    <lightning:formattedNumber class="slds-m-horizontal_x-small" value="{!v.analysis.Prediction_Conf_1__c }" style="percent"/> 
+                    <lightning:formattedText class="bold capitalize" value="{!v.analysis.Prediction_Result_1__c}"></lightning:formattedText>
+                    
+                </span>
+            </div>
+            <div class="analysis slds-m-bottom_small">
+                <span class="slds-m-right_small">
+                    <lightning:dynamicIcon type="trend" option="{!v.analysis.Prediction_Result_2__c == 'positive' ? 'up' : v.analysis.Prediction_Result_2__c == 'negative' ? 'down' : 'neutral'}" />
+                    <lightning:formattedNumber class="slds-m-horizontal_x-small" value="{!v.analysis.Prediction_Conf_2__c }" style="percent"/> 
+                    <lightning:formattedText class="capitalize" value="{!v.analysis.Prediction_Result_2__c}"></lightning:formattedText>
+                </span>
+            </div>
+            <div class="analysis slds-m-bottom_small">
+                <span class="slds-m-right_small">
+                    <lightning:dynamicIcon type="trend" option="{!v.analysis.Prediction_Result_3__c == 'positive' ? 'up' : v.analysis.Prediction_Result_3__c == 'negative' ? 'down' : 'neutral'}" />
+                    <lightning:formattedNumber class="slds-m-horizontal_x-small" value="{!v.analysis.Prediction_Conf_3__c }" style="percent"/> 
+                    <lightning:formattedText class="capitalize" value="{!v.analysis.Prediction_Result_3__c}"></lightning:formattedText>
+                </span>
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

@@ -1,0 +1,6 @@
+<aura:component >
+	<aura:attribute name="numDays" type="integer" />
+    <aura:attribute name="dateString" type="string" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    {!v.dateString}
+</aura:component>

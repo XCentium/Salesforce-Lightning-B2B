@@ -1,0 +1,36 @@
+.THIS .padding{
+    padding:20px;
+}
+.THIS .box{
+    border:1px solid #ddd;
+    margin-bottom:10px;
+}
+.THIS .myLogo{
+    width:50%;
+    height:auto;
+}
+.THIS .logowrapper{
+    width:100%;
+    padding:20px;
+    text-align:center;
+}
+.THIS h3{
+    font-weight:bold;
+    font-size:18px;
+    margin-bottom:10px;
+    border-bottom:1px solid #ddd;
+}
+.THIS .half{
+    width:50%;
+    float:left;
+}
+.THIS .clear{
+    clear:both;
+    float:none;
+}
+.THIS .paddingsmall{
+    padding:10px;
+}
+.THIS .center{
+    text-align:center;
+}

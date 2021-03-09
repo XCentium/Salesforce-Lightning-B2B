@@ -1,0 +1,35 @@
+<aura:component>
+    <aura:attribute name="newsArticle" type="Map" default="{}"></aura:attribute>
+    <aura:attribute name="newsArticleIndex" type="Integer"></aura:attribute>
+    <aura:registerEvent name="deleteIndex" type="c:deleteIndex"/>
+    
+    <div class="article">
+        
+        <div class="article-header flex-between">
+            <div class="slds-text-heading_small">Article</div>
+            <lightning:buttonIcon iconName="utility:close" 
+                                  variant="bare" 
+                                  onclick="{! c.delete }" 
+                                  alternativeText="delete"></lightning:buttonIcon> 
+        </div>
+        
+        <div class="row">
+            <lightning:input class="column_1-of-2" 
+                             label="Title" 
+                             value="{!v.newsArticle.Title}"></lightning:input>
+            <lightning:input class="column_1-of-2" 
+                             label="Source"
+                             title="Displayed URL Name (e.g. Times.com)"
+                             value="{!v.newsArticle.SourceName}"></lightning:input>
+        </div>
+        <div class="row">
+            <lightning:input class="column_1-of-2" 
+                             label="URL" 
+                             value="{!v.newsArticle.Url}"></lightning:input>
+            <lightning:input class="column_1-of-2" 
+                             label="Image URL" 
+                             value="{!v.newsArticle.ImageUrl}"></lightning:input>
+        </div>
+    </div>
+    
+</aura:component>

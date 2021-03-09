@@ -1,0 +1,39 @@
+<aura:component description="ckz_OrderFormStartFooter"
+                access="global" implements="lightning:availableForFlowScreens">
+
+    <aura:attribute name="canPause" type="Boolean" default="false"/>
+    <aura:attribute name="canBack" type="Boolean" default="false"/>
+    <aura:attribute name="canNext" type="Boolean" default="true"/>
+    <aura:attribute name="canFinish" type="Boolean" default="false"/>
+
+    <aura:attribute name="availableActions" type="String[]" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+    <div aura:id="actionButtonBar" class="slds-clearfix slds-p-top_medium">
+        <!-- If Previous is available, display to the left -->
+        <div class="slds-float_left">
+            <aura:if isTrue="{!v.canPause}">
+                <lightning:button aura:id="PAUSE" label="Pause"
+                                  variant="neutral" onclick="{!c.onButtonPressed}" />
+            </aura:if>
+        </div>
+
+        <div class="slds-float_right">
+            <!-- If Pause, Next, or Finish are available, display to the right -->
+            <aura:if isTrue="{!v.canNext}">
+                <lightning:button aura:id="NEXT" label="Next &gt;"
+                                  variant="brand" onclick="{!c.onButtonPressed}" />
+            </aura:if>
+            <aura:if isTrue="{!v.canBack}">
+                <lightning:button aura:id="BACK" label="&lt; Previous"
+                                  variant="neutral" onclick="{!c.onButtonPressed}" />
+            </aura:if>
+            <aura:if isTrue="{!v.canFinish}">
+                <lightning:button aura:id="FINISH" label="Finish"
+                                  variant="brand" onclick="{!c.onButtonPressed}" />
+            </aura:if>
+        </div>
+    </div>
+
+</aura:component>

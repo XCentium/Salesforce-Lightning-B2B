@@ -1,0 +1,37 @@
+.THIS .footercontainer{
+    margin:0 auto;
+    max-width:90%;
+    width:960px;
+    text-align:center;
+}
+.THIS .footercontainer ul, .THIS .footercontainer ul li{
+    text-align:center;
+}
+.THIS .padding{
+    padding:0 10px;
+}
+.THIS.community-footer{
+    background-color:#000000;
+    color:#ffffff;
+    padding:50px 0;
+}
+.THIS.community-footer a{
+    color:#333;
+}
+.THIS .third{
+    width:calc(100% / 3);
+    float:left;
+}
+.THIS .clearfix{
+    clear:both;
+    float:none;
+}
+.THIS h3{
+    margin-bottom:10px;
+    font-size:15px;
+    font-weight: bolder;
+}
+.THIS .footerLogo{
+    height:auto;
+    margin-bottom:30px;
+}

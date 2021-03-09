@@ -1,0 +1,68 @@
+<!--
+ - Created by brandon.rogers on 2019-05-30.
+ -->
+
+<apex:page id="ckz_tmpl_OneCol_SDO" applyHtmlTag="false" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false">
+
+    <!-- Sidebar -->
+    <div class="wrapper">
+        <div id="sidebar">
+            <div id="dismiss">
+                <i class="fal fa-times fa-2x"></i>
+            </div>
+
+            <div class="sidebarMiniCart hide">
+                <apex:insert name="MiniCartBox"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="ckz_tmpl_OneCol_SDO">
+        <div class="container cc_main_container">
+
+            <div id="CKZ-PDP-TopContainer hidden-xs" class="">
+                <div class="row ckz_breadcrumb_main">
+                    <div class="col-sm-12">
+                        <div id="ckz-breadCrumbs" class="catBreadcrumbs"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row cc_main_row">
+                <div class="col-sm-12">
+                    <div class="effwig m-t-1"></div>
+
+                    <apex:insert name="body"/> <!-- REQUIRED FOR ANYTHING TO RENDER -->
+
+                    <!-- BEGIN HP ONLY -->
+                    <!--<apex:insert name="ReOrderBox" />--> <!-- OOTB Version -->
+                    <div id="ckz_RecentOrders"></div>
+                    <div class="ckz-wish-template"></div>
+
+                    <div class="hp-featured-prod spotlight"></div>
+                    <div id="top-categories"></div>
+                    <div class="hp-featured-prod featured"></div>
+                    <!-- END HP ONLY -->
+
+                    <div class="promotion-box-Banner"></div>
+
+                    <apex:insert name="WidgetBoxL"/>
+                    <apex:insert name="WidgetBoxC"/>
+                    <apex:insert name="WidgetBoxR"/>
+
+                    <apex:insert name="GuideProducts"/>
+                    <apex:insert name="UpsellProducts"/>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            CCRZ.uiProperties.quickWishlistView.desktop.selector = '.ckz-wish-template';
+            CCRZ.uiProperties.breadcrumbView.desktop.selector = '#ckz-breadCrumbs';
+        });
+    </script>
+
+</apex:page>

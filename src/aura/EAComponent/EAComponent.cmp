@@ -1,0 +1,13 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="developerName" type="String" access="global" />
+    <aura:attribute name="filter" type="String" access="global" />
+    <aura:attribute name="height" type="Integer" access="global" />
+    <aura:attribute name="showTitle" type="Boolean" access="global" />
+    
+    <wave:waveDashboard developerName="{!v.developerName}"
+                    height="{!v.height}"
+                    showTitle="{!v.showTitle}"
+                    filter="{!v.filter}"
+                    />
+                    
+</aura:component>

@@ -1,0 +1,51 @@
+.THIS .board-item{
+    min-height:360px;
+}
+.THIS .description{
+    min-height: 95px;
+    max-height: 96px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.THIS .image{
+    max-height:150px;
+    min-height:149px;
+}
+.THIS .quantity {
+    max-width:75px;
+}
+.THIS .addCartButton {
+    float:right;
+}
+.THIS .hidden {
+    display:none;
+}
+.THIS .checkMedia {
+    max-height: 100px;
+}
+.THIS .align-right {
+    text-align: right;
+}
+.THIS .totals {
+    width: 385px;
+    float: right;
+}
+.THIS .slds-box {
+    background-color: #026F2E;
+    color: #fff;
+}
+.THIS .cardDetails {
+    color: #757575;
+}
+.THIS .three-fourth {
+    width:75%;
+}
+.THIS .one-fourth {
+    width:25%;
+}
+.THIS .clearBoth {
+    clear: both;
+}
+.THIS .slds-col.slds-size--1-of-1.slds-medium-size--1-of-4.slds-p-around--x-small {
+    max-width: 25%;
+}

@@ -1,0 +1,42 @@
+<apex:page showHeader="true" sidebar="false" standardStylesheets="false" controller="SCCQuickCreateToolbar_Controller">
+    <title>SCC Quick Create Toolbar</title>
+    <head>
+        <apex:stylesheet value="{!$Resource.SCCQuickCreateToolBarStyleSheet}"/>
+        <apex:includeScript value="/support/console/23.0/integration.js"/>
+    </head>
+
+    <apex:form id="theForm" >
+        <div class="moduleHeader">
+            <span class="btmlabel">
+                Create Case:
+            </span>
+            <span class="btmfield">
+                <apex:selectList multiselect="false" size="1" id="createCase" onchange="QuickCase()">
+                    <apex:selectOptions value="{!caseRecordTypes}"/>
+                </apex:selectList>
+            </span>
+        </div>
+    </apex:form>
+
+    <script type="text/javascript">
+        var caseRecordTypeSelectField;
+        var caseRecordTypeId;
+
+        function QuickCase() {
+            // Grab the case record type selection field
+            caseRecordTypeSelectField = document.getElementById('{!$Component.theForm.createCase}');
+            // Get the record type id
+            caseRecordTypeId = caseRecordTypeSelectField.options[caseRecordTypeSelectField.selectedIndex].value;
+            // Open the New Case Page
+            sforce.console.getEnclosingPrimaryTabId(openCase);
+            // Reset the picklist
+            caseRecordTypeSelectField.selectedIndex=0;
+        }    
+
+        // Called from QuickCase() to open a new subtab
+        var openCase = function openCase (result) {
+            // open new case with record type in a new subtab
+            sforce.console.openSubtab(result.id ,'{!caseCreateURLPrefix}&RecordType='+caseRecordTypeId, true, '', null);
+        }
+    </script>    
+</apex:page>

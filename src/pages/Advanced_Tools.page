@@ -1,0 +1,13 @@
+<apex:page standardController="Account">>
+                    <title>Advanced Tools</title>
+
+    <apex:form >
+        <apex:pageBlock title="Advanced Tools">
+            <apex:pageBlockSection title="My Content Section" columns="1" collapsible="true">
+
+1
+ 
+       </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:form>
+</apex:page>

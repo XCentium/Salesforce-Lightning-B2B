@@ -1,0 +1,29 @@
+.THIS {
+}
+.THIS .padding{
+    padding:10px;
+}
+.THIS .center{
+    text-align:center;
+}
+.THIS .header{
+    background:#B0CCDA;
+    position:relative;
+    margin-bottom:30px;
+    height:60px;
+    width:100%;
+}
+.THIS h3{
+    font-size:18px;
+    border-bottom:1px solid #ddd;
+    margin-bottom:5px;
+    padding-bottom:1px solid #ddd;
+}
+.THIS .profilepic{
+    width:80px;
+    height:80px;
+    position:absolute;
+    top:10px;
+    left:50%;
+    margin-left:-40px;
+}

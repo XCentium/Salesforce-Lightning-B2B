@@ -1,0 +1,37 @@
+<apex:component controller="Community_Chatter_Groups_Controller">
+    <apex:attribute name="sPrefix" description="sPreFix" type="String" required="true" assignTo="{!sPrefixStr}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SDO_jqueryui192, '/js/jquery-1.8.3.js')}"/>
+    
+   
+    <style type="text/css" media="all">
+        @import url("{!$Site.prefix}/apex/Community_Widget_CSS_Override");
+    </style>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log("Chatter Groups Widget Ready!");
+        });
+    </script>
+    
+    <div class="widget_outer">
+        <div class="widget_inner">
+            <div class="widget_header">
+                <div>My Groups</div>
+            </div>
+            <div class="widget_body">
+                <table class="table table-condensed">
+                    <tbody>
+                        <apex:repeat value="{!cGroups}" var="c">
+                            <tr>
+                                <td><apex:image value="{!URLFOR(c.FullPhotoURL)}" width="32" styleClass="img-circle"/></td>
+                                <td><apex:outputLink value="/{!c.Id}">{!c.Name}</apex:outputLink></td>
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </div>
+            <div class="widget_footer">
+            </div>
+        </div>
+    </div>
+</apex:component>

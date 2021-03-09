@@ -1,0 +1,226 @@
+<!--
+ - Created by brandon.rogers on 2020-08-07
+ -->
+
+ <apex:component id="ckz_ProductItemListDataTable">
+    <script id="CKZ-Product-Item-Row" type="text/template">
+        <div class="messagingSection-Warning-{{this.sfid}}" style="display: none"></div>
+        <div class="messagingSection-Info-{{this.sfid}}" style="display: none"></div>
+        <div class="messagingSection-Error-{{this.sfid}}" style="display: none"></div>
+
+        <tr class="cc_product_item cc_row_item">
+            <td class="cc_row_product_name">
+                {{#if this.alternateName}}
+                    {{productLink this 'cc_product_name text-primary' text=this.alternateName}}
+                {{else}}
+                    {{productLink this 'cc_product_name text-primary' text=this.sfdcName}}
+                {{/if}}
+            </td>
+
+            <td class="cc_row_product_sku" nowrap>
+                {{#ifDisplay 'PL.DsplSku'}}
+                    {{this.SKU}}
+                {{/ifDisplay}}
+            </td>
+
+            <td class="cc_row_product_shortDesc">
+                {{#ifDisplay 'PL.DsplShortDesc'}}
+                    {{{this.shortDesc}}}
+                {{/ifDisplay}}
+            </td>
+
+            <td class="cc_row_product_price text-right" nowrap>
+                {{>priceDisplay}}
+            </td>
+
+            <td class="cc_row_product_qtyToDate"></td>
+
+            <td class="cc_row_product_qty">
+                {{> productQuantityControls}}
+            </td>
+
+            <td class="cc_row_product_add">
+                {{#ifDisplay 'PL.DsplAddCart'}}
+                    {{#unless this.showNewSubscriptionSelection}}
+                        {{#if this.canAddtoCart}}
+                        <div class="action cc_action wishFinder">
+                            <div class="cc_add_to form-group">
+                                <button class="btn btn-primary btn-block btn-sm cc_add_to_btn cc_add_to_btn_{{this.sfid}}" role="button">{{pageLabelMap 'ProductList_AddToCart'}}</button>
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/unless}}
+                {{/ifDisplay}}
+            </td>
+        </tr>
+
+        <!-- QUICK VIEW MODAL -->
+        <div class="modal modalQuickView fade" id="modalQuickViewList{{this.sfid}}" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="cc_grid_image_container">
+                                    {{#if EProductMediasS.[0]}}
+                                    {{productLink this 'cc_product_name_img' image=(displayImage this 'img-responsive center-block' src=(displayEProductMedia this.EProductMediasS.[0]) alt=this.sfdcName dataId=this.SKU)}}
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <h1 class="">
+                                    {{#if this.alternateName}}
+                                    {{pageLabelMap this.alternateName}}
+                                    {{else}}
+                                    {{pageLabelMap this.sfdcName}}
+                                    {{/if}}
+                                </h1>
+
+                                {{#ifDisplay 'PL.DsplSku'}}
+                                <p class="cc_product_sku">
+                                    <span class="cc_label">{{pageLabelMap 'ProductList_SKU'}}</span>
+                                    <span class="cc_value">{{this.SKU}}</span>
+                                </p>
+                                {{/ifDisplay}}
+
+                                <div class="cc_price_container cc_grid_price_info caption">
+                                    {{>priceDisplay}}
+                                </div>
+
+                                <p class="m-y-2">
+                                    <a href="ccrz__ProductDetails?viewState=DetailView&sku={{this.SKU}}" >{{pageLabelMap 'ProductLinkText'}}</a>
+                                </p>
+
+                                <div class="cc_product_grid_actions">
+                                    <div class="messagingSection-Warning-{{this.sfid}}" style="display: none"></div>
+                                    <div class="messagingSection-Info-{{this.sfid}}" style="display: none"></div>
+                                    <div class="messagingSection-Error-{{this.sfid}}" style="display: none"></div>
+
+                                    {{#ifDisplay 'PL.DsplAddCart'}}
+                                    {{#unless this.showNewSubscriptionSelection}}
+                                    {{#if this.canAddtoCart}}
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            {{> productQuantityControls}}
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="action cc_action wishFinder">
+                                                <div class="cc_add_to form-group">
+                                                    <a href="javascript:void(0);" class="btn btn-primary cc_add_to_btn cc_add_to_btn_{{this.sfid}}" role="button">{{pageLabelMap 'ProductList_AddToCart'}}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/if}}
+                                    {{/unless}}
+                                    {{/ifDisplay}}
+                                </div>
+
+                                {{#ifDisplay 'PL.DsplShortDesc'}}
+                                <p class="description cc_desc">{{unescape shortDesc}}</p>
+                                {{/ifDisplay}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- PRICE DISPLAY -->
+    <script id="priceDisplay" type="text/template">
+        {{#ifDisplay 'PL.DsplListPrc'}}
+         {{#if this.basePrice}}
+          <div class="cc_price cc_baseprice">
+           <!-- <span class="cc_base_price_label">{{pageLabelMap 'ProductList_BasePrice'}}</span> -->
+           <span class="cc_base_price_value small"><s>{{price this.basePrice}}</s></span>
+          </div>
+         {{/if}}
+        {{/ifDisplay}}
+        {{#ifDisplay 'PL.DsplPrc'}}
+         {{#if this.showNewSubscriptionSelection}}
+          <span class="price priceSubscription cc_subscr_price"><b>{{pageLabelMap 'Prod_SubsListPrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}</b></span>
+         {{else}}
+          {{#if this.maxPrice}}
+           {{#if this.displayPrice}}
+            <div class="cc_price cc_baseprice">
+             <span class="price cc_price">{{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}</span>
+            </div>
+           {{else}}
+            <span class="price cc_price_label">{{displayRangePrice 'ProductDetails_PriceRangeFormat' this.minPrice this.maxPrice}}</span>
+           {{/if}}
+          {{else}}
+           {{#if this.primaryAttr}}
+            <span class="cc_attr_message">{{pageLabelMap 'ProductAttributes_PriceMessage'}}</span>
+           {{else}}
+            {{#if this.displayPrice}}
+             <div class="cc_price cc_baseprice">
+              <span class="price cc_price">{{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}</span>
+             </div>
+            {{else}}
+             {{#if this.productPricingData.productPrice.price}}
+              <div class="cc_price price">
+               <!-- <span class="cc_label">{{pageLabelMap 'ProductList_Price'}}</span> -->
+               <span class="price cc_price"><b>{{price this.productPricingData.productPrice.price}}</b></span>
+              </div>
+              {{#if this.sellerName}}
+               <span class="cc_sold_by">{{pageLabelMap 'Prod_SoldBy'}}: </span>
+               <span class="cc_seller_name">{{this.sellerName}}</span>
+              {{/if}}
+             {{/if}}
+             {{#ifEquals this.productPricingData.productPrice.itemType 'tiered'}}
+              <span class="cc_label">{{pageLabelMap 'ProductPricingTiers_VolumePricing'}}</span>
+             {{/ifEquals}}
+             {{#ifEquals this.productType 'Dynamic Kit'}}
+              <span class="cc_label dispPriceDynKit">{{pageLabelMap 'DisplayPrice_DynamicKit'}}</span>
+             {{/ifEquals}}
+            {{/if}}
+           {{/if}}
+          {{/if}}
+         {{/if}}
+        {{/ifDisplay}}
+        {{#unless this.showNewSubscriptionSelection}}
+         {{#ifDisplay 'PL.DsplSvPrc'}}
+          {{#if this.savings}}
+           <!-- <div class="cc_price cc_yousave_price">
+            <span class="cc_yousave_label">{{pageLabelMap 'ProductList_Savings'}}</span>
+            <span class="cc_yousave">{{price this.savings}}</span>
+           </div> -->
+          {{/if}}
+         {{/ifDisplay}}
+        {{/unless}}
+        {{#ifDisplay 'PL.DsplAvlb' }}
+         {{#if this.productInventoryItemsS}}
+          {{#ifEquals  this.productInventoryItemsS.[0].qtyAvailable 0}}
+           <p class="cc_avail_disp">{{pageLabelMap 'ProductList_NotAvailable'}}</p>
+          {{/ifEquals}}
+         {{/if}}
+        {{/ifDisplay}}
+       </script>
+
+    <!-- PRODUCT QUANTITY CONTROLS -->
+    <script id="productQuantityControls" type="text/template">
+        <div class="cc_qty_control_row">
+            <div class="cc_input_group form-group">
+                <input type="text" id="{{sfid}}_qtyEntry" value="1" class="input-text qty entry plus_minus form-control cc_entry" maxlength="7"/>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            CCRZ.uiProperties.productListPageView.productItem.list.tmpl = 'CKZ-Product-Item-Row';
+            CCRZ.uiProperties.productListPageView.productItems.selector = ".ckzProductListTableContent";
+
+            CCRZ.pubSub.on("view:productItemsView:refresh", function (viewName) {
+                CCRZ.views.ProductItemView.prototype.tagName = 'tr';
+            });
+        });
+    </script>
+</apex:component>

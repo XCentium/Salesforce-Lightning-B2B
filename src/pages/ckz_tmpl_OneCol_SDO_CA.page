@@ -1,0 +1,44 @@
+<!--
+ - Created by brandon.rogers on 2019-06-05.
+ -->
+
+<apex:page id="ckz_tmpl_OneCol_SDO_CA" applyHtmlTag="false" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false">
+    <!-- Sidebar -->
+    <!--<div class="wrapper">
+        <div id="sidebar">
+            <div id="dismiss">
+                <i class="fal fa-times fa-2x"></i>
+            </div>
+
+            <div class="sidebarMiniCart hide">
+                <apex:insert name="MiniCartBox"/>
+            </div>
+        </div>
+    </div>-->
+
+    <div class="ckz_tmpl_OneCol_SDO_CA">
+        <div class="container cc_main_container">
+            <div class="row cc_main_row">
+                <div class="col-sm-12">
+                    <div class="effwig m-t-1"></div>
+                    
+                    <apex:insert name="body"/> <!-- REQUIRED FOR ANYTHING TO RENDER -->
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+
+            <div class="ckz-wish-template"></div>
+            <div class="promotion-box-Banner"></div>
+
+            <apex:insert name="WidgetBoxL"/>
+            <apex:insert name="WidgetBoxC"/>
+            <apex:insert name="WidgetBoxR"/>
+
+            <apex:insert name="GuideProducts"/>
+            <apex:insert name="UpsellProducts"/>
+
+        </div>
+    </div>
+</apex:page>

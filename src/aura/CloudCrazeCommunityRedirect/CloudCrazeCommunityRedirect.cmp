@@ -1,0 +1,4 @@
+<aura:component controller="CloudCrazeRedirectCntr" implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="Community" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+</aura:component>

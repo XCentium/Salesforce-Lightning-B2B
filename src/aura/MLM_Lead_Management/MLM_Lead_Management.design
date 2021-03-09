@@ -1,0 +1,3 @@
+<design:component>
+    <design:attribute name="TaskDescription" label="Task Description" default="Your customer predicted engagement score has fallen below 60. Schedule time to check in." />
+</design:component>

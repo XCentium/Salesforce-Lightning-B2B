@@ -1,0 +1,66 @@
+<template>
+
+	<fieldset class="slds-form-element">
+		<legend class="slds-text-title_caps slds-var-p-around_x-small spcHeader">
+			<abbr class="slds-required" title="required">*</abbr> Delivery
+			Method (Estimates are in business days)
+		</legend>
+		<div class="slds-box slds-var-m-bottom_medium">
+			<template for:each={carrierOptions} for:item="carrierOption">
+				<div
+					class="tile-column slds-col slds-var-m-bottom_small"
+					key={carrierOption.Name}
+				>
+					<div class="carrierName">{carrierOption.Name}</div>
+					<div class="slds-form-element__control">
+						<template
+							for:each={carrierOption.DeliveryMethods}
+							for:item="deliveryMethod"
+						>
+							<span class="slds-radio" key={deliveryMethod.Id}>
+								<template if:true={deliveryMethod.isDefault}>
+									<input
+										type="radio"
+										id={deliveryMethod.Id}
+										value={deliveryMethod.Id}
+										name={deliveryMethod.CartDeliveryGroupId}
+										onchange={handleCarrierSelectionChange}
+										checked
+									/>
+								</template>
+
+								<template if:false={deliveryMethod.isDefault}>
+									<input
+										type="radio"
+										id={deliveryMethod.Id}
+										value={deliveryMethod.Id}
+										name={deliveryMethod.CartDeliveryGroupId}
+										onchange={handleCarrierSelectionChange}
+									/>
+								</template>
+
+								<label
+									class="slds-radio__label"
+									for={deliveryMethod.Id}
+								>
+									<span class="slds-radio_faux"></span>
+									<span class="slds-form-element__label"
+										>{deliveryMethod.Name}
+
+										<lightning-formatted-number
+											value={deliveryMethod.ShippingFee}
+											format-style="currency"
+											currency-code={currency}
+											class="slds-float_right"
+										></lightning-formatted-number>
+									</span>
+								</label>
+							</span>
+						</template>
+					</div>
+				</div>
+			</template>
+		</div>
+	</fieldset>
+
+</template>

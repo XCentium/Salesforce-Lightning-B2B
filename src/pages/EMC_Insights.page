@@ -1,0 +1,192 @@
+<apex:page title="Insight Generator" controller="EMC_InsightController" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    <style>
+        .slds-notify_container {left: 50% !important; transform:translateX(-50%)}
+        .add-insight {border: 1px dashed #999; border-radius: 3px;}
+        .add-insight:hover {background-color: #fff;cursor:pointer;}
+    </style>
+    
+    <div class="slds-p-around_small" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <div class="slds-m-bottom_small">
+            <div class="slds-text-heading_large">Einstein Insights</div>
+        </div>
+        
+        <div class="slds-m-vertical_small">
+            <div class="slds-path-coach">
+                <div class="slds-grid">
+                    <div class="slds-tabs_path">
+                        <ul class="slds-tabs_path__nav">
+                            <li ng-repeat="step in stepCtrl.steps" class="slds-tabs_path__item" ng-class="getStepStatus($index)" ng-click="stepCtrl.setStep($index)">
+                                <a class="slds-tabs_path__link" href="javascript:void(0);" id="path-2" role="option" tabindex="-1">
+                                    <span class="slds-tabs_path__stage">
+                                        <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#check')}"></use>
+                                        </svg>
+                                    </span>
+                                    <span class="slds-tabs_path__title">{{stepCtrl.steps[$index]}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="">
+            <div class="slds-m-vertical_small">
+                <!--Insight Types-->
+                <div ng-show="stepCtrl.currentStep == 0" class="step">
+                    <div class="slds-text-heading_small">
+                        Select which type of Insight you would like to generate
+                    </div>
+                    <div class="slds-m-vertical_small">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Available Insight Types</label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <select class="slds-select" ng-model="insightTypesCtrl.selected" ng-options="insight.MasterLabel for insight in insightTypesCtrl.options"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <!--Insights-->
+                <div ng-show="stepCtrl.currentStep == 1" class="step">
+                    <div class="slds-m-bottom_small">
+                        <div class="slds-text-heading_small slds-m-bottom_small">Create Insights</div>
+                        <p>
+                            Press the add button below to create an insight
+                        </p>
+                    </div>
+                    
+                    <div ng-repeat="insight in newInsightsCtrl.insights" class="slds-panel slds-m-vertical_small slds-p-around_small">
+                        
+                        <div class="slds-m-bottom_small slds-clearfix">
+                            <div class="slds-text-heading_small slds-float_left">{{insight.label}}</div>
+                            <button ng-click="newInsightsCtrl.removeInsight($index)" class="slds-button slds-button_icon slds-float_right">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                        
+                        
+                        <div ng-repeat="input in insight.supportingData" class="slds-form-element">
+                            <!--Supporting Data Inputs-->
+                            <label ng-if="input.type != 'boolean'" class="slds-form-element__label">{{input.label}}</label>
+                            <input ng-if="input.type == 'string'" class="slds-input" ng-model="input.value"/>
+                            
+                            <div ng-if="input.type == 'lookup'" class="slds-form-element__control">
+                                <div class="slds-combobox_container slds-has-inline-listbox">
+                                    <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" ng-class="{'slds-is-open': input.showSearch}">
+                                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right">
+                                            <input ng-model="input.term" ng-keyup="input.getLookupValues(input.term, $index)" class="slds-input slds-combobox__input"/>
+                                            <input ng-model="input.value" class="slds-hide"/>
+                                            <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right" title="Description of icon when needed">
+                                                <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#search')}"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Description of icon</span>
+                                            </span>
+                                        </div>
+                                        <ul ng-show="input.showSearch && input.lookupValues.length > 0" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid">
+                                            <li ng-repeat="lookupValue in input.lookupValues" ng-click="input.setLookup(lookupValue.Id, $parent.$index); input.term = lookupValue.Name" class="slds-listbox__item">
+                                                <span  class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta">
+                                                    <span class="slds-media__body">
+                                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{{lookupValue.Name}}</span>
+                                                    </span>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div ng-if="input.type == 'boolean'" class="slds-form-element__control">
+                                <span class="slds-checkbox">
+                                    <input type="checkbox" ng-model="input.value" id="{{input.name + $index}}"/>
+                                    <label class="slds-checkbox__label" for="{{input.name + $index}}">
+                                        <span class="slds-checkbox_faux"></span>
+                                        <span class="slds-form-element__label">{{input.label}}</span>
+                                    </label>
+                                </span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="slds-text-align_center slds-p-around_x-large add-insight" ng-click="newInsightsCtrl.addInsight();">
+                        Click to add insight
+                    </div>
+                    
+                    <div class="slds-text-align_center slds-m-top_small">
+                        <button class="slds-button slds-button_brand" ng-click="newInsightsCtrl.insertData()" ng-disabled="newInsightsCtrl.insights.length == 0">Insert Insight{{newInsightsCtrl.insights.length > 1 ? 's': ''}}</button>
+                    </div>
+                </div>
+                
+                
+                <!--Insight Assignments-->
+                <div ng-show="stepCtrl.currentStep == 2" class="step">
+                    <div class="slds-text-heading_small slds-m-bottom_small">Assign insights to select user</div>
+                    
+                    <div ng-repeat="insight in insightsUserCtrl.insights" class="slds-panel slds-m-vertical_small slds-p-around_small">
+                        <div class="slds-clearfix">
+                            
+                            <div class="slds-text-heading_small slds-float_left">
+                                {{insight.InsightType.MasterLabel}} • {{getDisplayInfo(insight,'name')}} • {{getDisplayInfo(insight,'parent')}}
+                            </div>
+                            <button ng-click="insightsUserCtrl.deleteInsight(insight, $index)" class="slds-button slds-button_icon slds-float_right">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                        
+                        <div class="slds-m-vertical_small">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">Select user to add an assignment</label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select_container">
+                                        <select class="slds-select" ng-model="userSelection" ng-options="user.Name for user in insightsUserCtrl.users" ng-change="insightsUserCtrl.createAssignment(insight, userSelection)">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            Current Assignments
+                            <div ng-show="!insight.InsightUserValues || insight.InsightUserValues.length == 0" class="slds-text-align_center slds-text-color_weak">
+                                No Assigments
+                            </div>
+                            <div class="slds-p-vertical_small">
+                                <span ng-repeat="assignment in insight.InsightUserValues" class="slds-pill slds-pill_link">
+                                    <a href="javascript:void(0);" class="slds-pill__action" title="Full pill label verbiage mirrored here">
+                                        <span class="slds-pill__label">{{assignment.Owner.Name}}</span>
+                                    </a>
+                                    <button ng-click="insightsUserCtrl.deleteInsightUserValue(insight, $index, assignment.Id)"  class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Remove</span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="slds-text-align_center slds-m-vertical_small">
+                <button class="slds-button slds-button_neutral" ng-click="stepCtrl.prevStep()" ng-disabled="stepCtrl.currentStep == 0">Prev</button>
+                <button class="slds-button slds-button_brand" ng-click="stepCtrl.nextStep()" ng-disabled="stepCtrl.currentStep == stepCtrl.steps.length-1">Next</button>
+            </div>
+        </div>
+    </div>
+
+</apex:page>

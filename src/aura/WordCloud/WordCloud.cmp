@@ -1,0 +1,16 @@
+<aura:component controller="WordCloudController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:availableForFlowScreens"   access="global" >    
+    <aura:attribute name="objectName" type="String" />
+     <aura:attribute name="fieldName"  type="String" />
+     <aura:attribute name="rendered"  type="Boolean" default="false"/>
+    
+    <!--<ltng:require styles="{! $Resource.jqcloud + '/jQCloud-master/dist/jqcloud.min.css' }"
+                  scripts="{!join(',',  $Resource.jQuery321,
+                           $Resource.jqcloud + '/jQCloud-master/dist/jqcloud.min.js'  )}"               
+                   afterScriptsLoaded="{!c.onInit}"  />-->
+	<aura:handler name="change" value="{!v.objectName}" action="{!c.onInit}"/>
+	<aura:handler name="change" value="{!v.fieldName}" action="{!c.onInit}"/>
+
+    <div>
+    <div id='demo' class="demo" > </div>
+    </div>
+</aura:component>

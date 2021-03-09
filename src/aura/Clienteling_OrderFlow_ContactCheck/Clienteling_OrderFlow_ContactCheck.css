@@ -1,0 +1,14 @@
+.THIS .padding{
+    padding:20px;
+}
+.THIS.form,.THIS .form{
+    border:1px solid #ddd;
+    margin:10px 0;
+}
+.THIS h3{
+    font-size:20px;
+    font-weight:bold;
+    border-bottom:1px solid #ddd;
+    padding:10px;
+    margin-bottom:10px;
+}

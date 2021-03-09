@@ -1,0 +1,17 @@
+<design:component label="Live Agent Button">
+    <design:attribute name="scriptUrl" label="Live Agent Javascript URL" default="https://c.la10.salesforceliveagent.com/content/g/js/39.0/deployment.js"></design:attribute>
+    <design:attribute name="apiEndpoint" label="Live Agent API Endpoint" default="https://d.la10.salesforceliveagent.com/chat"
+                      description="Example: https://d.la10.salesforceliveagent.com/chat"></design:attribute>
+    <design:attribute name="deploymentId" label="Deployment ID" description="The live chat button's deployment ID. By default it takes the recently created deployment Id"></design:attribute>
+    <design:attribute name="buttonId" label="Button ID" description="The live chat button's ID. By default it takes Prechat Button Id"></design:attribute>
+    <design:attribute name="onlineText" label="Online Text" description="Text to show when there are agents online"
+                      default="Agent Online"></design:attribute>
+    <design:attribute name="offlineText" label="Offline Text" description="Text to show when no agent is online"
+                      default="Agent Offline"></design:attribute>
+    <design:attribute name="OnlineColor" label="Online Button Color" description="Live Agent Button Color when agent is online" />
+    <design:attribute name="OfflineColor" label="Offline Button Color" description="Live Agent Button Color when agent is offline" />
+    <design:attribute name="OnlineTextColor" label="Online Button Text Color" /> 
+    <design:attribute name="OfflineTextColor" label="Offline Button Text Color" />
+    <design:attribute name="Width" label="Button Width" description="Button Width(Percentage)" />
+    
+</design:component>

@@ -1,0 +1,283 @@
+<!--
+ - Created by msobczak on 10/30/2018.
+ Include "lightning:availableForFlowScreens" so that the component can be selected as a field in Flow designer.
+
+ The Design section contains the markup that exposes the global attributes within Flow designer.
+
+ force:hasRecordId,force:hasSObjectName,
+ -->
+
+<aura:component description="ckz_OrderFormStart"
+        implements="force:hasRecordId"
+        access="global"
+        controller="ckz_OrderFormStartController"
+>
+    <ltng:require scripts="{!$Resource.ckz_OrderForm_Utilities}" afterScriptsLoaded="{!c.scriptsLoaded}" />
+
+    <aura:registerEvent name="renderPanel" type="c:ckz_OrderFormRenderPanelEvent"/>
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <aura:handler name="startingObjectSelected" event="c:ckz_StartingObjectSelectedEvent"
+            action="{!c.handleStartingObjectSelected}"/>
+
+    <aura:handler name="gotoDataEntry" event="c:ckz_OrderForm_GotoDataEntryEvent"
+            action="{!c.handleNavigateNext}"/>
+
+    <!-- 2019-09-05  msobczak: added -->
+    <aura:attribute name="defaultStorefront" type="String"/>
+
+    <!-- 2019-09-20  msobczak: added -->
+    <aura:attribute name="useCardLayout" type="Boolean" default="false"/>
+
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="contactId" type="String" default="" access="global"/>
+    <aura:attribute name="userId" type="String" access="global"/>
+    <aura:attribute name="accountId" type="String" access="global"/>
+    <aura:attribute name="locale" type="String" default="en_US" access="global"/>
+    <aura:attribute name="currencyCode" type="String" access="global" default="USD"/>
+    <aura:attribute name="selectedStorefront" type="String" access="global"/>
+    <aura:attribute name="selectedOrder" type="String" access="global" default=""/>
+    <aura:attribute name="selectedOrderId" type="String" access="global" default=""/>
+    <aura:attribute name="cartId" type="String" access="global" default=""/>
+    <aura:attribute name="cartEncryptedId" type="String" access="global" default=""/>
+    <aura:attribute name="orderType" type="String" default="new" access="global"/>
+    <aura:attribute name="selectedObjectName" type="String" access="global" default=""/>
+    <aura:attribute name="wishListName" type="String" default="" />
+    <aura:attribute name="orderItems" type="List" default="[]"/>
+
+    <aura:attribute name="accountGroup" type="ccrz__E_AccountGroup__c" access="global"/>
+    <aura:attribute name="accountName" type="String"/>
+    <aura:attribute name="accountGroupName" type="String"/>
+    <aura:attribute name="userName" type="String"/>
+
+    <aura:attribute name="hasOrders" type="Boolean" default="false"/>
+    <aura:attribute name="hasCarts" type="Boolean" default="false"/>
+    <aura:attribute name="hasWishLists" type="Boolean" default="false"/>
+
+    <aura:attribute name="newWishListLabel" type="String" />
+
+    <aura:attribute name="options" type="List" default="[]"/>
+
+    <aura:attribute name="storefrontOptions" type="String[]"/>
+
+    <aura:attribute name="newCartFirstScreenChoice" type="String" default="Empty cart" />
+
+    <aura:attribute name="orders" type="List"/>
+    <aura:attribute name="carts" type="List"/>
+    <aura:attribute name="wishLists" type="List"/>
+
+    <!-- for the typeahead -->
+    <aura:attribute Name="selItem" type="object" access="public"/>
+    <aura:handler name="change" value="{!v.selItem}" action="{!c.contactSelectionChange}"/>
+
+    <aura:attribute name="pageMessages" type="List" default="[]"/>
+
+    <aura:handler event="aura:waiting" action="{!c.waiting}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}"/>
+    <aura:attribute name="HideSpinner" type="Boolean" default="true"/>
+
+    <aura:renderIf isTrue="{!v.HideSpinner}">
+        <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+            <span class="slds-assistive-text">Loading, Please Wait...</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </aura:renderIf>
+
+    <!-- 2019-09-20 brogers: added grid -->
+    <div class="slds-grid slds-gutters slds-wrap">
+        <div class="slds-col slds-size_12-of-12">
+            <div class="pageMessages">
+
+                <aura:if isTrue="{!(v.pageMessages.length > 0)}">
+                    <ul>
+                        <aura:iteration items="{!v.pageMessages}" var="msg">
+                            <li>
+                                <c:ckzMessageDisplay severity="{!msg.severity}" message="{!msg.message}"/>
+                            </li>
+                        </aura:iteration>
+                    </ul>
+                </aura:if>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="slds-grid slds-gutters slds-wrap">
+        <div class="slds-col slds-size_12-of-12">
+            <aura:if isTrue="{! v.contactId == '' || v.contactId == null }">
+
+                <article class="slds-card slds-m-around_small">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__body">
+                                <h2 class="slds-card__header-title">Search for a Contact</h2>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <c:ckz_OrderForm_ContactLookup selItem="{!v.selItem}"/>
+                    </div>
+                </article>
+
+            </aura:if>
+        </div>
+    </div>
+
+
+    <aura:if isTrue="{! v.contactId != null &amp;&amp; v.contactId != '' }">
+
+        <div class="slds-grid slds-gutters slds-wrap">
+            <div class="slds-col slds-size_12-of-12">
+                <article class="slds-card slds-m-around_small">
+
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__figure">
+
+                                <!-- put icon here -->
+                                <lightning:icon iconName="standard:contact" alternativeText="Contact"/>
+
+                                <span class="slds-icon_container" title="contact">
+                                <span class="slds-assistive-text">Contact</span>
+                            </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <h2 class="slds-card__header-title">
+                                    <span>{!v.userName}</span>
+                                </h2>
+                            </div>
+
+                        </header>
+                    </div>
+
+                    <div class="slds-card__body slds-card__body_inner">
+                        <p class="slds-p-horizontal--small">Account Group: {!v.accountGroupName}</p>
+                        <p class="slds-p-horizontal--small">Account: {!v.accountName}</p>
+                    </div>
+
+                    <footer class="slds-card__footer">
+                        <div class="">
+
+                            <lightning:button aura:id="clearContact"
+                                    label="Clear Contact"
+                                    class=""
+                                    variant="neutral"
+                                    onclick="{!c.clearContact}"/>
+
+                        </div>
+                    </footer>
+
+                </article>
+            </div>
+
+            <div class="slds-col slds-small-size_12-of-12 slds-medium-size_6-of-12">
+                <article class="slds-card slds-m-around_small">
+                    <div class="slds-card__body slds-card__body_inner">
+
+                        <lightning:select aura:id="selectStorefront"
+                                name="selectStorefront"
+                                label="Select a Storefront"
+                                onchange="{! c.handleStorefrontChange}"
+                                required="true"
+                        >
+                            <option value="">-- Select One--</option>
+                            <aura:iteration items="{!v.storefrontOptions}" var="storefront">
+                                <option text="{!storefront}" selected="{! v.defaultStorefront == storefront ? 'selected' : ''}"></option>
+                            </aura:iteration>
+                        </lightning:select>
+
+                    </div>
+                </article>
+            </div>
+
+            <div class="slds-col slds-small-size_12-of-12 slds-medium-size_6-of-12">
+                <article class="slds-card slds-m-around_small">
+                    <div class="slds-card__body slds-card__body_inner">
+
+                        <table>
+                            <tr>
+                                <td>
+                                    <lightning:radioGroup aura:id="orderFormOptionsGroup"
+                                            name="orderFormOptions"
+                                            label="Select an option"
+                                            options="{! v.options }"
+                                            value="{! v.orderType }"
+                                            onchange="{! c.orderFormOptionChange}"
+                                            required="true"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <aura:if isTrue="{!(v.selectedOrder != null) &amp;&amp; (v.selectedOrder != '')}">
+                                        <p>Selected Order: {!v.selectedObjectName}</p>
+                                    </aura:if>
+
+                                    <aura:if isTrue="{!(v.cartId != null) &amp;&amp; (v.cartId != '')}">
+                                        <p>Selected Cart: {!v.selectedObjectName}</p>
+                                    </aura:if>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </article>
+            </div>
+
+            <aura:if isTrue="{!v.orderType == 'newwish'}">
+                <div class="slds-col slds-small-size_12-of-12 slds-medium-size_4-of-12">
+                    <article class="slds-card slds-m-around_small">
+                        <div class="slds-card__body slds-card__body_inner">
+                    <lightning:input value="{!v.wishListName}" label="{!v.newWishListLabel}" required='true'
+                                     maxlength="255" />
+                        </div>
+                    </article>
+                </div>
+            </aura:if>
+
+        </div>
+
+
+        <div class="slds-grid slds-gutters slds-wrap">
+            <div class="slds-col slds-size_12-of-12">
+                <aura:if isTrue="{!v.orderType == 'order'}">
+                    <aura:if isTrue="{!v.hasOrders}">
+                        <c:ckz_RetrievedOrders childOrders="{!v.orders}" useCardLayout="{!v.useCardLayout}"/>
+                    </aura:if>
+                </aura:if>
+
+                <aura:if isTrue="{!v.orderType == 'cart'}">
+                    <aura:if isTrue="{!v.hasCarts}">
+                        <c:ckz_RetrievedCarts childCarts="{!v.carts}" useCardLayout="{!v.useCardLayout}" />
+                    </aura:if>
+                </aura:if>
+
+                <aura:if isTrue="{!v.orderType == 'wish'}">
+                    <aura:if isTrue="{!v.hasWishLists}">
+                        <c:ckz_RetrievedWishLists childCarts="{!v.wishLists}" useCardLayout="{!v.useCardLayout}" />
+                    </aura:if>
+                </aura:if>
+
+            </div>
+        </div>
+
+    </aura:if>
+
+    <div class="slds-grid slds-gutters slds-wrap">
+        <div class="slds-col slds-size_12-of-12">
+            <div class="action-footer slds-clearfix">
+
+                <lightning:button aura:id="doNext"
+                        label="Next"
+                        class="slds-m-around_small slds-float_right"
+                        variant="neutral"
+                        onclick="{!c.handleNavigateNext}"
+                        disabled="{! v.contactId == '' || v.contactId == null }"/>
+
+
+            </div>
+        </div>
+    </div>
+
+</aura:component>

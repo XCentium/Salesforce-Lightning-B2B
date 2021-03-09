@@ -1,0 +1,78 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" docType="html-5.0">
+    <style>
+    	.cards {
+        	display:flex;
+        	width: 100%;
+        	flex-flow: row wrap;
+        	justify-content: space-between;
+        }
+        .card {
+            display:flex;
+            flex-flow: column nowrap;
+            justify-content: space-between;
+            align-items: center;
+            width: calc(25% - 1em);
+            padding: 1em;
+            border: 1px solid #ccc;
+            margin: 0.75em 0;
+        }
+        .card-content {
+        	margin: 1em 0;
+        }
+    </style>
+    
+    <div class="slds-p-around_small" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <div class="slds-m-bottom_small">
+            <div class="slds-text-heading_large">Einstein Lead/Opportunity Scorer</div>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <div class="card-content">
+                    Reset all lead scores. Lead score insight data will have to be refreshed on a record by record basis. 
+                    Please edit individual scores/insights on the record with the "Einstein Configuration - Score" action
+                </div>
+                <button class="slds-button slds-button_neutral" ng-click="scoreLeads()">
+                    Score Leads
+                </button>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    Reset all opportunity scores. Opportunity score data will all be deleted as well as the insights. 
+                    Please edit individual scores/insights  on the record with the "Einstein Configuration - Score" action
+                </div>
+                <button class="slds-button slds-button_neutral" ng-click="scoreOpportunities()">
+                    Score Opportunities
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-content">
+                    Reset all lead behavior scores. Lead score insight data will have to be refreshed on a record by record basis. 
+                    Please edit individual scores/insights on the record with the "Einstein Configuration - Behavior Score" action
+                </div>
+                <button class="slds-button slds-button_neutral" ng-click="scoreLeadBehavior()">
+                    Score Lead Behavior
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-content">
+                    Reset all contact behavior scores. Please edit individual scores/insights on the record with the "Einstein Configuration - Behavior Score" action
+                </div>
+                <button class="slds-button slds-button_neutral" ng-click="scoreContactBehavior()">
+                    Score Contact Behavior
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-content">
+                    Run all the scoring tools
+                </div>
+                <button class="slds-button slds-button_neutral" ng-click="scoreAll()">
+                    Score All
+                </button>
+            </div>
+
+        </div>
+    </div>
+</apex:page>

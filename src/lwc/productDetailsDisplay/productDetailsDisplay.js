@@ -1,16 +1,5 @@
-/**
- * @FileName: productDetailsDisplay
- * @Description:
- * @Author: Graeme Ward
- * @ModificationLog:
- *-----------------------------------------------------------
- * Author            Date            Modification
- * Graeme Ward       7/10/2020         Created
- *-----------------------------------------------------------  
- */
-
-import { LightningElement, api } from "lwc";
-import { NavigationMixin } from "lightning/navigation";
+import { LightningElement, api } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
 
 // A fixed entry for the home page.
 const homePage = {
@@ -21,21 +10,157 @@ const homePage = {
     }
 };
 
-export default class ProductDetailsDisplay extends NavigationMixin(LightningElement) {
-    @api productId;
-    @api effectiveAccountId;
-    @api description;
-    @api displayableProduct;
-    @api showProductAttributes;
-    @api showAggregateGrid;
-    @api showQuickOrder;
-    @api showProductTabs;
+/**
+ * An organized display of product information.
+ *
+ * @fires ProductDetailsDisplay#addtocart
+ * @fires ProductDetailsDisplay#createandaddtolist
+ */
+export default class ProductDetailsDisplay extends NavigationMixin(
+    LightningElement
+) {
+    /**
+     * An event fired when the user indicates the product should be added to their cart.
+     *
+     * Properties:
+     *   - Bubbles: false
+     *   - Composed: false
+     *   - Cancelable: false
+     *
+     * @event ProductDetailsDisplay#addtocart
+     * @type {CustomEvent}
+     *
+     * @property {string} detail.quantity
+     *  The number of items to add to cart.
+     *
+     * @export
+     */
 
-    hasVideo;
-    showStandardActions = false;
-    showDescription = false;
-    quantity;
+    /**
+     * An event fired when the user indicates the product should be added to a new wishlist
+     *
+     * Properties:
+     *   - Bubbles: false
+     *   - Composed: false
+     *   - Cancelable: false
+     *
+     * @event ProductDetailsDisplay#createandaddtolist
+     * @type {CustomEvent}
+     *
+     * @export
+     */
 
+    /**
+     * A product image.
+     * @typedef {object} Image
+     *
+     * @property {string} url
+     *  The URL of an image.
+     *
+     * @property {string} alternativeText
+     *  The alternative display text of the image.
+     */
+
+    /**
+     * A product category.
+     * @typedef {object} Category
+     *
+     * @property {string} id
+     *  The unique identifier of a category.
+     *
+     * @property {string} name
+     *  The localized display name of a category.
+     */
+
+    /**
+     * A product price.
+     * @typedef {object} Price
+     *
+     * @property {string} negotiated
+     *  The negotiated price of a product.
+     *
+     * @property {string} currency
+     *  The ISO 4217 currency code of the price.
+     */
+
+    /**
+     * A product field.
+     * @typedef {object} CustomField
+     *
+     * @property {string} name
+     *  The name of the custom field.
+     *
+     * @property {string} value
+     *  The value of the custom field.
+     */
+
+    /**
+     * An iterable Field for display.
+     * @typedef {CustomField} IterableField
+     *
+     * @property {number} id
+     *  A unique identifier for the field.
+     */
+
+    /**
+     * Gets or sets which custom fields should be displayed (if supplied).
+     *
+     * @type {CustomField[]}
+     */
+    @api
+    customFields;
+
+    /**
+     * Gets or sets whether the cart is locked
+     *
+     * @type {boolean}
+     */
+    @api
+    cartLocked;
+
+    /**
+     * Gets or sets the name of the product.
+     *
+     * @type {string}
+     */
+    @api
+    description;
+
+    /**
+     * Gets or sets the product image.
+     *
+     * @type {Image}
+     */
+    @api
+    image;
+
+    /**
+     * Gets or sets the name of the product.
+     *
+     * @type {string}
+     */
+    @api
+    name;
+
+    /**
+     * Gets or sets the price - if known - of the product.
+     * If this property is specified as undefined, the price is shown as being unavailable.
+     *
+     * @type {Price}
+     */
+    @api
+    price;
+
+    /**
+     * Gets or sets teh stock keeping unit (or SKU) of the product.
+     *
+     * @type {string}
+     */
+    @api
+    sku;
+
+    _invalidQuantity = false;
+    _quantityFieldValue = 1;
     _categoryPath;
     _resolvedCategoryPath = [];
 
@@ -47,23 +172,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
     });
 
     connectedCallback() {
-        this.hasVideo = this.videoUrl != undefined;
         this._resolveConnected();
-
-        if (!this.displayableProduct.productTabs || this.displayableProduct.productTabs.length === 0 || !this.showProductTabs) {
-            this.showDescription = true;
-        }
-
-        if (!this.displayableProduct.childProducts || this.displayableProduct.childProducts.length === 0) {
-            this.showProductAttributes = false;
-            this.showAggregateGrid = false;
-            this.showQuickOrder = false;
-            this.showStandardActions = true;
-        }
-
-        if (!this.showAggregateGrid && !this.showProductAttributes && !this.showQuickOrder) {
-            this.showStandardActions = true;
-        }
     }
 
     disconnectedCallback() {
@@ -88,11 +197,26 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
     }
 
     get hasPrice() {
-        return ((this.displayableProduct.price || {}).negotiated || "").length > 0;
+        return ((this.price || {}).negotiated || '').length > 0;
     }
 
-    changeHandler(event) {
-        this[event.target.name] = event.target.value;
+    /**
+     * Gets whether add to cart button should be displabled
+     *
+     * Add to cart button should be disabled if quantity is invalid,
+     * if the cart is locked
+     */
+    get _isAddToCartDisabled() {
+        return this._invalidQuantity || this.cartLocked;
+    }
+
+    handleQuantityChange(event) {
+        if (event.target.validity.valid && event.target.value) {
+            this._invalidQuantity = false;
+            this._quantityFieldValue = event.target.value;
+        } else {
+            this._invalidQuantity = true;
+        }
     }
 
     /**
@@ -102,7 +226,24 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
      * @private
      */
     notifyAddToCart() {
-        this.dispatchEvent(new CustomEvent("addtocart", { detail : this.quantity }));
+        let quantity = this._quantityFieldValue;
+        this.dispatchEvent(
+            new CustomEvent('addtocart', {
+                detail: {
+                    quantity
+                }
+            })
+        );
+    }
+
+    /**
+     * Emits a notification that the user wants to add the item to a new wishlist.
+     *
+     * @fires ProductDetailsDisplay#createandaddtolist
+     * @private
+     */
+    notifyCreateAndAddToList() {
+        this.dispatchEvent(new CustomEvent('createandaddtolist'));
     }
 
     /**
@@ -112,30 +253,49 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
      *  The new category "path" for the product.
      */
     resolveCategoryPath(newPath) {
-        const path = [homePage].concat(newPath.map((level) => ({
-            name: level.name,
-            type: 'standard__recordPage',
-            attributes: {
-                actionName: 'view',
-                recordId: level.id
-            }
-        })));
+        const path = [homePage].concat(
+            newPath.map((level) => ({
+                name: level.name,
+                type: 'standard__recordPage',
+                attributes: {
+                    actionName: 'view',
+                    recordId: level.id
+                }
+            }))
+        );
 
-        this._connected.then(() => {
-            const levelsResolved = path.map(level =>
-                this[NavigationMixin.GenerateUrl]({
-                    type: level.type,
-                    attributes: level.attributes
-                }).then(url => ({
-                    name: level.name,
-                    url: url
-                }))
-            );
+        this._connected
+            .then(() => {
+                const levelsResolved = path.map((level) =>
+                    this[NavigationMixin.GenerateUrl]({
+                        type: level.type,
+                        attributes: level.attributes
+                    }).then((url) => ({
+                        name: level.name,
+                        url: url
+                    }))
+                );
 
-            return Promise.all(levelsResolved);
-        }).then((levels) => {
-            this._resolvedCategoryPath = levels;
-            console.log(this._resolvedCategoryPath);
-        });
+                return Promise.all(levelsResolved);
+            })
+            .then((levels) => {
+                this._resolvedCategoryPath = levels;
+            });
+    }
+
+    /**
+     * Gets the iterable fields.
+     *
+     * @returns {IterableField[]}
+     *  The ordered sequence of fields for display.
+     *
+     * @private
+     */
+    get _displayableFields() {
+        // Enhance the fields with a synthetic ID for iteration.
+        return (this.customFields || []).map((field, index) => ({
+            ...field,
+            id: index
+        }));
     }
 }

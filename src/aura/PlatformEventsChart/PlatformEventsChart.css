@@ -1,0 +1,54 @@
+.THIS.slds-scope{
+    background: white;
+    padding-bottom: 25px;
+    border-radius: .25rem;
+}
+
+.THIS .hidden.row.options-container{
+    display: none;
+}
+
+.THIS .hidden{
+    display: none;
+
+}
+
+.THIS .row {
+    display: flex;
+    flex-direction: row;
+}
+
+.THIS .row.options-container, .THIS  .row.options-outer{
+    justify-content: flex-end;
+    margin-left: auto;
+    flex: 1 1 auto;
+    margin-right: 20px;
+}
+
+.THIS  .row.options-outer{
+    padding-top: 15px;
+    margin-left: 15px;
+}
+.THIS .button {
+    margin-left: auto;
+}
+
+
+.THIS .title {
+    margin: auto 15px;
+}
+.THIS .logo-container > img{
+	max-height: 40px;
+    width: auto;
+}
+
+.THIS .options-outer {
+    padding-top: 5px;
+}
+
+.THIS .divider {
+    height: 2px;
+    background-color: #dddbda;
+    width: 95%;
+    margin: 15px auto;
+}

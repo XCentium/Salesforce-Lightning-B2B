@@ -1,0 +1,316 @@
+<!--
+ - Created by brandon.rogers on 2019-05-30.
+ -->
+
+<apex:component id="ckz_ProductItemGrid">
+    <script id="CKZ-Product-Item-Grid" type="text/template">
+        <div class="cc_product_item cc_grid_item">
+
+            <div class="product-item">
+                <div class="cc_grid_image_container">
+                    {{#if EProductMediasS.[0]}}
+                    {{productLink this 'cc_product_name_img' image=(displayImage this 'img-responsive center-block' src=(displayEProductMedia this.EProductMediasS.[0]) alt=this.sfdcName dataId=this.SKU)}}
+                    {{/if}}
+                </div>
+
+                <div class="cc_grid_product_info">
+                    <h5 class="cc_product_link">
+                        {{#if this.alternateName}}
+                        {{productLink this 'cc_product_name' text=this.alternateName}}
+                        {{else}}
+                        {{productLink this 'cc_product_name' text=this.sfdcName}}
+                        {{/if}}
+                    </h5>
+
+                    {{#ifDisplay 'PL.DsplSku'}}
+                    <h6 class="cc_product_sku">
+                        <span class="cc_label">{{pageLabelMap 'ProductList_SKU'}}</span>
+                        <span class="cc_product_sku">{{this.SKU}}</span>
+                    </h6>
+                    {{/ifDisplay}}
+
+                    <!--<div class="pro-rating">
+                        <a href="#"><i class="zmdi zmdi-star"></i></a>
+                        <a href="#"><i class="zmdi zmdi-star"></i></a>
+                        <a href="#"><i class="zmdi zmdi-star"></i></a>
+                        <a href="#"><i class="zmdi zmdi-star-half"></i></a>
+                        <a href="#"><i class="zmdi zmdi-star-outline"></i></a>
+                    </div>-->
+
+                    <div class="cc_price_container cc_grid_price_info">
+                        <!--{{#ifDisplay 'PL.DsplListPrc'}}
+                            {{#if this.basePrice}}
+                                <span class="cc_price cc_baseprice">
+                                    <span class="cc_base_price_value"><s>{{price this.basePrice}}</s></span>
+                                </span>
+                            {{/if}}
+                        {{/ifDisplay}}-->
+
+                        {{#ifDisplay 'PL.DsplPrc'}}
+                        {{#if this.showNewSubscriptionSelection}}
+                        <span class="price priceSubscription cc_subscr_price">{{pageLabelMap 'Prod_SubsListPrice' (price this.price) (price this.minSubPrice) (price this.maxSubPrice)}}</span>
+                        {{else}}
+                        {{#if this.maxPrice}}
+                        {{#if this.displayPrice}}
+                        <span class="cc_price cc_baseprice">
+                                            <span class="price cc_base_price_value">{{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}</span>
+                                        </span>
+                        {{else}}
+                        <span class="price cc_price_label">{{displayRangePrice 'ProductDetails_PriceRangeFormat' this.minPrice this.maxPrice}}</span>
+                        {{/if}}
+                        {{else}}
+                        {{#if this.primaryAttr}}
+                        <!--<span class="cc_attr_message">{{pageLabelMap 'ProductAttributes_PriceMessage'}}</span>-->
+                        <span class="cc_label dispPriceConfigure">{{pageLabelMap 'ConfigureForPrice'}}</span>
+                        {{else}}
+                        {{#if this.displayPrice}}
+                        <span class="cc_price cc_baseprice">
+                                                <span class="price cc_base_price_value">{{pageLabelPrefixMap 'DisplayPrice_' this.displayPrice}}</span>
+                                            </span>
+                        {{else}}
+                        {{#if this.productPricingData.productPrice.price}}
+                        <span class="cc_price price">
+                                                    <span class="price cc_price_value">{{price this.productPricingData.productPrice.price}}</span>
+                                                </span>
+
+                        {{#if this.basePrice}}
+                        <span class="cc_price cc_baseprice">
+                                                        <span class="cc_base_price_value"><s>{{price this.basePrice}}</s></span>
+                                                    </span>
+                        {{/if}}
+
+                        {{#if this.sellerName}}
+                        <span class="cc_sold_by">{{pageLabelMap 'Prod_SoldBy'}}: </span>
+                        <span class="cc_seller_name">{{this.sellerName}}</span>
+                        {{/if}}
+                        {{/if}}
+
+                        {{#ifEquals this.productPricingData.productPrice.itemType 'tiered'}}
+                        <i class="far fa-info-circle" data-toggle="tooltip" data-placement="top" title="{{pageLabelMap 'ProductPricingTiers_VolumePricing'}}"></i>
+                        {{/ifEquals}}
+
+                        {{#listFind this.productType 'Dynamic Kit|Aggregated|Assembly' true }}
+                        <span class="cc_label dispPriceConfigure">{{pageLabelMap 'ConfigureForPrice'}}</span>
+                        {{/listFind}}
+                        {{/if}}
+                        {{/if}}
+                        {{/if}}
+                        {{/if}}
+                        {{/ifDisplay}}
+                    </div>
+
+                    <div class="cc_product_grid_actions">
+                        <div class="messagingSection-Warning-{{this.sfid}}" style="display: none"></div>
+                        <div class="messagingSection-Info-{{this.sfid}}" style="display: none"></div>
+                        <div class="messagingSection-Error-{{this.sfid}}" style="display: none"></div>
+
+                        <ul class="list-inline">
+                            <!-- WISHLIST -->
+                            {{#if this.canAddtoCart}}
+                            <li class="wishFinder" data-sku="{{this.SKU}}" data-toggle="tooltip" data-placement="top" title="{{pageLabelMap 'PLP_Tooltip_WishFinder'}}">
+                                <span class="wishButtons"></span>
+                            </li>
+                            {{/if}}
+
+                            <!-- QUICK VIEW -->
+                            <li class="hidden-xs" data-toggle="tooltip" data-placement="top" title="{{pageLabelMap 'PLP_Tooltip_Quickview'}}">
+                                <a href="#" class="fa-lg" data-toggle="modal" data-target="#modalQuickViewGrid{{this.sfid}}">
+                                    <span class="fa-layers fa-fw">
+                                        <i class="fal fa-search-plus" data-fa-transform="shrink-6"></i>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <!-- COMPARE -->
+                            {{#ifDisplay 'PCP.Enabled'}}
+                            {{#ifEquals this.productType 'Product'}}
+                            <li class="hidden-xs cc_compare" data-toggle="tooltip" data-placement="top" title="{{pageLabelMap 'PLP_Tooltip_Compare'}}">
+                                <a href="javascript:void(0);" class="fa-lg add_to_compare_desktop_button cc_addto_compare {{#if inCompareTray}}active{{else}}{{#if compareTrayFull}}disabled{{/if}}{{/if}}">
+                                    <span class="fa-layers fa-fw">
+                                        {{#if inCompareTray}}
+                                            <i class="fal fa-sync" data-fa-transform="shrink-6"></i>
+                                        {{else}}
+                                            <i class="fal fa-sync" data-fa-transform="shrink-6"></i>
+                                        {{/if}}
+                                    </span>
+                                </a>
+                            </li>
+                            {{/ifEquals}}
+                            {{/ifDisplay}}
+
+                            <!-- ADD TO CART -->
+                            {{#ifDisplay 'PL.DsplAddCart'}}
+                            {{#unless this.showNewSubscriptionSelection}}
+                            {{#if this.canAddtoCart}}
+                            <li data-toggle="tooltip" data-placement="top" title="{{pageLabelMap 'PLP_Tooltip_Add'}}">
+                                <a href="javascript:void(0);" class="fa-lg cc_add_to_btn cc_add_to_btn_{{this.sfid}}" role="button">
+                                    <span class="fa-layers fa-fw">
+                                        <i class="fal fa-cart-plus" data-fa-transform="shrink-6"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            {{/if}}
+                            {{/unless}}
+                            {{/ifDisplay}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUICK VIEW MODAL -->
+            <div class="modal modalQuickView fade" id="modalQuickViewGrid{{this.sfid}}" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="cc_grid_image_container">
+                                        {{#if EProductMediasS.[0]}}
+                                        {{productLink this 'cc_product_name_img' image=(displayImage this 'img-responsive center-block' src=(displayEProductMedia this.EProductMediasS.[0]) alt=this.sfdcName dataId=this.SKU)}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <h1 class="">
+                                        {{#if this.alternateName}}
+                                        {{pageLabelMap this.alternateName}}
+                                        {{else}}
+                                        {{pageLabelMap this.sfdcName}}
+                                        {{/if}}
+                                    </h1>
+
+                                    {{#ifDisplay 'PL.DsplSku'}}
+                                    <p class="cc_product_sku">
+                                        <span class="cc_label">{{pageLabelMap 'ProductList_SKU'}}</span>
+                                        <span class="cc_value">{{this.SKU}}</span>
+                                    </p>
+                                    {{/ifDisplay}}
+
+                                    <div class="cc_price_container cc_grid_price_info caption">
+                                        {{>priceDisplay}}
+                                    </div>
+
+                                    <p class="m-y-2">
+                                        <a href="ccrz__ProductDetails?viewState=DetailView&sku={{this.SKU}}" >{{pageLabelMap 'ProductLinkText'}}</a>
+                                    </p>
+
+                                    <div class="cc_product_grid_actions">
+                                        <div class="messagingSection-Warning-{{this.sfid}}" style="display: none"></div>
+                                        <div class="messagingSection-Info-{{this.sfid}}" style="display: none"></div>
+                                        <div class="messagingSection-Error-{{this.sfid}}" style="display: none"></div>
+
+                                        {{#ifDisplay 'PL.DsplAddCart'}}
+                                        {{#unless this.showNewSubscriptionSelection}}
+                                        {{#if this.canAddtoCart}}
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                {{> productQuantityControls}}
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="action cc_action wishFinder">
+                                                    <div class="cc_add_to form-group">
+                                                        <a href="javascript:void(0);" class="btn btn-primary cc_add_to_btn cc_add_to_btn_{{this.sfid}}" role="button">{{pageLabelMap 'ProductList_AddToCart'}}</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+                                        {{/unless}}
+                                        {{/ifDisplay}}
+                                    </div>
+
+                                    {{#ifDisplay 'PL.DsplShortDesc'}}
+                                    <p class="description cc_desc">{{unescape shortDesc}}</p>
+                                    {{/ifDisplay}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- PRODUCT QUANTITY CONTROLS -->
+    <script id="productQuantityControls" type="text/template">
+        {{#if this.qtySkipIncrement}}
+        <div class="cc_qty_control_row row">
+            <div class="col-xs-12">
+                <div class="input-group input-group-sm cc_input_group form-group">
+                        <span class="input-group-btn cc_input_group_btn">
+                            <button type="button" class="btn btn-default minusFF cc_minusff">{{pageLabelMap 'Prod_QtyDecrFF'}}</button>
+                            <button type="button" class="btn btn-default minus cc_minus">{{pageLabelMap 'Prod_QtyDecrSingle'}}</button>
+                        </span>
+                    <input type="text" id="{{sfid}}_qtyEntry" readonly="true" class="qty entry form-control cc_entry" value="0" maxlength="7"/>
+                    <span class="input-group-btn cc_input_group_btn">
+                            <button type="button" class="btn btn-default plus cc_plus">{{pageLabelMap 'Prod_QtyIncrSingle'}}</button>
+                            <button type="button" class="btn btn-default plusFF cc_plusff">{{pageLabelMap 'Prod_QtyIncrFF'}}</button>
+                        </span>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        {{#ifEquals qtyIncrement 1}}
+        <div class="cc_qty_control_row row">
+            <div class="col-xs-12">
+                        <span class="input-group-btn cc_input_group_btn form-group">
+                            <button type="button" class="btn btn-default minus cc_minus">{{pageLabelMap 'Prod_QtyDecrSingle'}}</button>
+                        </span>
+                <input type="text" id="{{sfid}}_qtyEntry" readonly="true" class="qty entry form-control cc_entry" value="0" maxlength="7"/>
+                <span class="input-group-btn cc_input_group_btn">
+                            <button type="button" class="btn btn-default plus cc_plus">{{pageLabelMap 'Prod_QtyIncrSingle'}}</button>
+                        </span>
+            </div>
+        </div>
+        {{else}}
+        <div class="cc_qty_control_row row">
+            <div class="cc_input_group col-xs-12 form-group">
+                <input type="text" id="{{sfid}}_qtyEntry" value="1" class="input-text qty entry plus_minus form-control cc_entry" maxlength="7"/>
+            </div>
+        </div>
+        {{/ifEquals}}
+        {{/if}}
+    </script>
+
+    <!-- WISHLIST -->
+    <script id="CKZ-AddtoWishlist-Desktop" type="text/template">
+        <div class="btn-group dropdown form-group m-a-0" style="vertical-align: baseline;">
+            <a href="javascript:void(0);" id="dropWish" class="dropdown-toggle fa-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa-layers fa-fw">
+                    <i class="fal fa-plus" data-fa-transform="shrink-6"></i>
+                </span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropWish">
+                {{#each this}}
+                <li><a href="javascript:void(0);" class="pickWish" data-id="{{sfid}}">{{{name}}}</a></li>
+                {{/each}}
+                <li role="separator" class="divider"></li>
+                <li>
+                    <div class="row center-block">
+                        <div class="col-xs-12">
+                            <label for="newWishList" class="sr-only">{{pageLabelMap 'Wishlist_EnterName'}}</label>
+                            <input id="newWishList" type="text" class="newListName form-control" placeholder="{{pageLabelMap 'MyAccount_Name'}}"/>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="javascript:void(0);" class="pickWish" data-id="-1">{{pageLabelMap 'Action_CreateWishlist'}}</a></li>
+            </ul>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+
+            CCRZ.uiProperties.productListPageView.productItem.grid.tmpl = 'CKZ-Product-Item-Grid';
+            CCRZ.uiProperties.wishlistPickerModal.desktop.tmpl = 'CKZ-AddtoWishlist-Desktop';
+
+        });
+    </script>
+</apex:component>

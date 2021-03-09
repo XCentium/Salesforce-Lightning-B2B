@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="ThreeColumnFoldableLightningEvent to allow sidebar to be shown/hidden from another component" >
+	<aura:attribute name="HideRightSideBar" type="Boolean"/>
+    <aura:attribute name="HideLeftSideBar" type="Boolean"/>
+</aura:event>

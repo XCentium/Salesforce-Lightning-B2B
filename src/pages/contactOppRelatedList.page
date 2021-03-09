@@ -1,0 +1,27 @@
+<apex:page standardController="Contact" extensions="contactOppsRelatedListCtrl">
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!opps}" var="opp">
+            <apex:column >
+                <apex:outputLink value="/{!opp.Id}" target="_top">{!opp.Name}</apex:outputLink>
+                <apex:facet name="header">Opportunity Name</apex:facet>
+            </apex:column>
+            <apex:column >
+                <apex:outputLink value="/{!opp.AccountId}" target="_top">{!opp.Account.Name}</apex:outputLink>
+                <apex:facet name="header">Account Name</apex:facet>
+            </apex:column>
+            <!--<apex:column >
+                <apex:outputLink value="/{!opp.OwnerId}" target="_top">{!opp.Owner.Name}</apex:outputLink>
+                <apex:facet name="header">Owner Name</apex:facet>
+            </apex:column>--> 
+                <apex:column ><apex:outputField value="{!opp.Amount}" />
+                <apex:facet name="header">Amount</apex:facet>
+            </apex:column> 
+            <apex:column >
+                <apex:outputField value="{!opp.CloseDate}" />
+                <apex:facet name="header">Close Date</apex:facet>
+            </apex:column>
+        </apex:pageBlockTable>
+        
+    </apex:pageBlock>
+</apex:page>

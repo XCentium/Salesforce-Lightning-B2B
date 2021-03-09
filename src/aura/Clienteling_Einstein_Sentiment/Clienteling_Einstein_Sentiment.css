@@ -1,0 +1,45 @@
+.THIS .slds-text-title--caps{
+    font-size: .75rem !important;
+    line-height: 1.25;
+    color: rgb(84, 105, 141);
+    text-transform: uppercase;
+    letter-spacing: .0625rem;
+}
+.THIS .center{
+    text-align:center;
+    display:block;
+}
+.THIS .padding{
+    padding:20px;
+}
+.THIS .title{
+    color:#5A5A59;
+    font-size:15px;
+    display:block;
+}
+.THIS .subtitle{
+    color:#757370;
+    font-size:12px;
+    display:block;
+}
+.THIS .slds-card{
+    background:white !important;
+    border:none !important;
+}
+.THIS .slds-card__header .slds-card__footer .slds-card__body--inner{
+    padding:0px !important;        
+}
+
+.THIS div#container {
+    background:white !important;
+}
+
+.THIS .slds-text-color--error {
+    color: rgb(85, 194, 125) !important;
+}
+.THIS .ac-sdd-text-color--green {
+    color: #c23934 !important;
+}
+.THIS .ac-sdd-background-color--grey {
+    background-color: #ffffff;
+}

@@ -1,0 +1,6 @@
+<aura:documentation>
+	<aura:description>SCC Shopping Cart Component Documentation</aura:description>
+	<aura:example name="SCCShoppingCartComponent" ref="sccShoppingCartComponent" label="Label">
+		SCC Shopping Cart Component: To place order on behalf on in salesforce commerce cloud
+	</aura:example>
+</aura:documentation>

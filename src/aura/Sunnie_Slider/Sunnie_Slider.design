@@ -1,0 +1,7 @@
+<design:component label="Sunnie Slider">
+    <design:attribute name="title" description="Text to be displayed below the slider" default="Banana Ripeness" />
+    <design:attribute name="img" description="Img URL to be displayed next to text" />
+    <design:attribute name="max" description="Default Max Slider Value" default="5" />
+    <design:attribute name="Product" description="Enter a product name that matches a product name in this org" default="Bananas"/>
+    <design:attribute name="TendernessOrRipeness" description="Do you want to display Tenderness or Ripeness?" default="Ripeness" datasource="Tenderness, Ripeness" />
+</design:component>

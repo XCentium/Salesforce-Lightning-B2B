@@ -1,0 +1,14 @@
+.THIS .mstones-overdue{
+    background-color: #d4504c;
+    color: #fafafb;
+}
+
+.THIS .mstones-inProgress{
+    background-color: #d9ffdf;
+    color: #04844b;
+}
+
+.THIS .mstones-completed{
+    background-color: #4bca81;
+    color: #d9ffdf;
+}

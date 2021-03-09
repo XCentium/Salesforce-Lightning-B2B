@@ -1,0 +1,160 @@
+<apex:page controller="SDO_Tools" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" showHeader="false">
+   <style>
+        .page-content-wrapper .page-content {
+            margin-left:0px !important;
+        }
+        .page-header.navbar.navbar-fixed-top {
+            display:none;
+        }
+        .page-sidebar-wrapper {
+            display:none;
+        }
+   </style>
+   <apex:composition template="SDO_ToolsLayout">
+        <apex:define name="_content">
+
+    
+            <div class="page-content" style="min-height:100% !important;" data-tab="home">
+                <div class="main welcomeWrapper">
+                <div class=""> <!-- container -->
+                     <!-- BEGIN SIDEBAR & CONTENT -->
+                    <div class="row margin-bottom-40">
+                      <!-- BEGIN CONTENT -->
+                      <div class="col-md-12 col-sm-12">
+                        
+                        <div class="content-page">
+
+                        <div class="row">
+                          <div class="col-md-12 col-sm-12 blog-posts">
+                                  <div class="row fixedwidthwrapper">
+                                    <div class="col-md-4 col-sm-4 welcomeImgWrapper">
+                                        <apex:image styleClass="img-responsive welcomeImg" value="{!$Resource.SDOlogo}"/>
+                                    </div>
+                                    <div class="col-md-8 col-sm-8">
+                                      <div class="bigText">
+                                          Welcome to the SDO 
+                                      </div>
+                                      <div class="welcomeText">
+                                        <div>
+                                        The Simple Demo Org (SDO) is the engine of our SE organization.  It's a fully-functional, production-class Salesforce instance designed for rapidly creating demos that give you every advantage in your deals.  The SDO has:
+                                        </div>
+                                        <div>
+                                         <ul>
+                                             <li>
+                                                All current features enabled like Wave Analytics, Communities, Service Cloud, Knowledge, Data.com and Work.com
+                                             </li>
+                                             <li>
+                                                A working data set, including Accounts, Contacts, Leads, Opportunities, Cases, Campaigns and Activities.
+                                             </li>
+                                             <li>
+                                                Innovative tools to automate common tasks and quickly customize your demos     
+                                             </li>
+                                             <li>
+                                                Pre-built templates, configurations and workflows to demonstrate common usage scenarios  
+                                             </li>
+                                         </ul>
+                                        </div>
+                                        <div>   
+                                        </div>
+                                      </div>
+                                      <a href="/apex/sdo_tools_q" target="_blank"><div class="welcomeBtn btn btn-primary blue">Get Started</div></a>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+                <i id="lastTool" class="fa fa-arrow-circle-left" onclick="showTool();"></i>
+                <div id="startHere" class="myWalkthrough">
+                    <ul class="nav nav-wizard">
+                            <apex:repeat value="{!toolsWizard.wizard_steps__r}" var="ws">
+                                <li class="cloudLi">
+                                    <a href="#{!ws.id}-tab" data-toggle="tab" >{!ws.Step_Order__c} - {!ws.name}</a>
+                                </li>
+                            </apex:repeat>
+                            <!--
+                            <li class="cloudLi">
+                                 <a href="#demoStories-tab" data-toggle="tab" >Demo Stories</a>
+                            </li>
+                            -->
+                    </ul>
+                    <div class="tab-content">
+                        <apex:repeat value="{!toolsWizard.wizard_steps__r}" var="ws">
+                            <div class="tab-pane fade" id="{!ws.id}-tab">
+                                <div class="note note-bordered note-info">
+                                    <p>
+                                        <apex:outputText value="{!ws.Description__c}" escape="false"/>
+                                    </p>
+                                </div>
+                                
+                                <!-- Accordion Information --> 
+                                <div class="panel-group accordion" id="accordion{!ws.Step_Order__c}">
+                                    <apex:repeat value="{!wizardStepId_ToolsList_Map[ws.id]}" var="tool">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                <a aria-expanded="false" class="accordion-toggle {!tool.tool_order__c}accordionHeader" data-toggle="collapse" data-parent="#accordion{!ws.Step_Order__c}" href="#collapse_{!ws.Step_Order__c}_{!tool.tool_order__c}" >
+                                                {!tool.tool_order__c}. {!tool.name} </a>
+                                                </h4>
+                                            </div>
+                                            <div aria-expanded="false" id="collapse_{!ws.Step_Order__c}_{!tool.tool_order__c}" class="panel-collapse collapse {!tool.tool_order__c}accordionBody">
+                                                <div class="panel-body">
+                                                    <apex:outputPanel rendered="{!tool.sdo_tool__c != null}">
+                                                        <p>
+                                                            {!tool.sdo_tool__r.description__c} 
+                                                        </p>
+                                                        <p> 
+                                                            <apex:outputText Value="{!tool.sdo_tool__r.instructions__c}" escape="false"/>
+                                                        </p>
+                                                        <p>
+                                                            <div class="btn blue wizardButton" data-name="{!tool.sdo_tool__r.name}"  onclick="showToolById('{!tool.sdo_tool__c}');">
+                                                                {!tool.sdo_tool__r.name}
+                                                            </div> 
+                                                        </p>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!tool.sdo_tool__c == null}">
+                                                        <p>
+                                                            <apex:outputText value="{!tool.instructions__c}" escape="false"/>
+                                                        </p>
+                                                        <p> 
+                                                            <apex:outputText Value="{!tool.sdo_tool__r.instructions__c}" escape="false"/>
+                                                        </p>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!tool.Advanced_Information__c != null && tool.sdo_tool__r.Advanced_Information__c == null}">
+                                                        <p>
+                                                            <a href="#" data-toggle="modal" data-target="#learnMoreModal" class="learnMore" onclick="showModal('{!tool.name} Information','{!JSENCODE(tool.Advanced_information__c)}')">Advanced Information</a>
+                                                        </p>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!tool.sdo_tool__r.Advanced_Information__c != null}">
+                                                        <p>
+                                                            <a href="#" data-toggle="modal" data-target="#learnMoreModal" class="learnMore" onclick="showModal('{!tool.name} Information','{!JSENCODE(tool.sdo_tool__r.Advanced_information__c)}')">Advanced Information</a>
+                                                        </p>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </apex:repeat>
+                                </div>
+                            </div>
+                            <apex:outputPanel rendered="{!ws.Step_Order__c} == 1}">
+                                <iframe class="news-iframe" width="100%" height="100%" src="https://showcase.secure.force.com/apex/SDO_ToolsHomepageNews"/>
+                            </apex:outputPanel>
+                        </apex:repeat>
+
+                    </div><!-- end tab Content -->
+                </div>
+            </div><!--/.page-content-->
+
+
+            <script type="text/javascript">
+            // Page scripts go here
+
+            
+
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,19 @@
+<!--
+ - Created by brandon.rogers on 9/24/18.
+ -->
+
+<apex:page id="ckz_Footer_incl" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false" applyHtmlTag="false">
+    <script id="ckz_tmpl_Footer" type="text/template"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $(".cc_content_body").after("<footer class='ckz_footer'></div>");
+            $(".container-fluid.navbar-inverse.cc_navbar-inverse").hide();
+
+            CCRZ.util.createView({
+                desktop: {target: 'ckz_footer', template: 'ckz_tmpl_Footer'},
+                phone: {target: 'ckz_footer', template: 'ckz_tmpl_Footer'}
+            });
+        });
+    </script>
+</apex:page>

@@ -1,0 +1,10 @@
+.THIS {
+    padding: .5em;
+}
+.THIS+.THIS {
+    border-top: 1px solid #ccc;
+}
+.THIS:hover {
+    cursor: pointer;
+    background: rgb(243, 242, 242);
+}

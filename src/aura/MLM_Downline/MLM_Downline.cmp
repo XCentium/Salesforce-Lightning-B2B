@@ -1,0 +1,30 @@
+<aura:component controller="MLMDownline" implements ="flexipage:availableForRecordHome,force:hasRecordId" >
+    <lightning:workspaceAPI aura:id="workspace"/>
+    <aura:attribute name="backgroundImageUrl" type="String" access="global"/>
+    <aura:attribute name="backgroundHexColor" type="String" access="global" default="#0065CC" />
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="contactFields" type="String[]" access="global" default="Name,Profile_Image_URL__c"/>
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="fields" type="Object"/>
+    <force:recordData aura:id="recordHandler"
+                      recordId="{!v.recordId}"
+                      fields="{!v.contactFields}"                      
+                      targetRecord="{!v.record}"
+                      targetError="{!v.recordError}"
+                      targetFields="{!v.fields}"
+                      mode="EDIT"
+      				  />
+    <div class="parent">
+        <div class="parentline"></div>
+        <aura:if isTrue="{!empty(v.fields.Profile_Image_URL__c)}">
+            	<img src="/_slds/images/themes/lightning_lite/lightning_lite_profile_avatar_160.png" class="parent-avatar"/>
+            <aura:set attribute="else">
+            	<img src="{!v.fields.Profile_Image_URL__c}" class="parent-avatar"/>
+        	</aura:set>   
+        </aura:if>
+    </div>
+    <div class="children">
+        <c:MLM_Downline_Card recordId="{!v.recordId}" />
+        <div class="clear"></div>
+    </div>
+</aura:component>

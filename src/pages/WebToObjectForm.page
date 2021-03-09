@@ -1,0 +1,176 @@
+<apex:page showHeader="false" sidebar="false" standardController="WebToObject__c" standardStylesheets="false">
+    <meta HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <style>
+        body{ background-image: url("{!WebToObject__c.BckUrl__c}");  background-position: center center;
+            background-repeat: no-repeat; background-attachment: fixed; background-size: cover;
+            background-color: {!WebToObject__c.BckColor__c}; }
+        label, input, select, textarea{ margin-bottom:10px; }
+        .btn-primary{ margin:15px; display:block; background: {!WebToObject__c.BtnColor__c}; border-color: {!WebToObject__c.BtnColor__c}; }
+        .btn-primary:hover{ background: {!WebToObject__c.HoverBtnColor__c}; border-color: {!WebToObject__c.HoverBtnColor__c};}
+        .thanksText{ display:block; text-align:center; padding:10px; color: {!WebToObject__c.LabelColor__c};}
+        #theForm, #logoDiv{ max-width:900px; margin:0px auto; padding:10px; background:transparent; }
+        #theForm{ background: {!WebToObject__c.FormBckColor__c}; margin-top:20px; border-radius:5px; }
+        #headerDiv{ display:block; padding-top:10px; padding-bottom:10px; border-bottom: 1px solid {!WebToObject__c.BtnColor__c};
+             background:{!WebToObject__c.HeadColor__c}; }
+        .form-group{ overflow-y:auto; }
+        #allInputs{ padding-top:20px; }
+        .dateOnlyInput{ display: none; }
+        #logoDiv img{ max-height:80px; }
+        label{ color: {!WebToObject__c.LabelColor__c}; }
+    </style>
+    <script>
+        var fields = new Array();
+        var obj;
+        function handleDateInput(){
+            $('.theDateInput').change(function(){
+                var date = new Date($(this).val());
+                var theId = $(this).attr('Id').replace('Date','');
+                handleDate(date, theId);
+            });
+        }
+
+        function handleDate(thedate, theId){
+            var finalDate;
+            var day = thedate.getDate();
+            var month = ('0'+(thedate.getMonth() + 1)).slice(-2);
+            var year = thedate.getFullYear();
+            finalDate = month+'/'+day+'/'+year;
+            console.log(finalDate);
+            $('#'+theId).val(finalDate);
+        }
+
+        function buildInput(theField){
+            var newDiv = '<div class="form-group">';
+            switch(theField[2]){
+                case 'Picklist':
+                    console.log(theField[1]+' type -> Picklist');
+                    var allValues = theField[3].split(',');
+                    newDiv += '<label class="col-sm-2 control-label">'+theField[1]+'</label>'
+                        +'<div class="col-sm-10">'
+                            +'<select class="form-control" id="'+theField[0]+'" name="'+theField[0]+'" >';
+                    for(var i=0; i< allValues.length; i++) {
+                        newDiv += '<option value="'+allValues[i]+'">'+allValues[i]+'</option>';
+                    }
+                    newDiv += '</select></div>';
+                    $('#allInputs').append($(newDiv));
+                    break;
+                case 'Boolean':
+                    console.log(theField[1]+' type -> Boolean');
+                    newDiv += '<div class="col-sm-offset-2 col-sm-10"><div class="checkbox"><label>'
+                            +'<input type="checkbox" id="'+theField[0]+'" name="'+theField[0]+'" value="1"> '+theField[1]
+                        +'</label></div></div>';
+                    $('#allInputs').append($(newDiv));
+                    break;
+                case 'Textarea':
+                    console.log(theField[1]+' type -> Textarea');
+                    newDiv += '<label class="col-sm-2 control-label">'+theField[1]+'</label>'
+                        +'<div class="col-sm-10">'
+                            +'<textarea class="form-control" id="'+theField[0]+'" name="'+theField[0]+'" />'
+                        +'</div>';
+                    $('#allInputs').append($(newDiv));
+                    break;
+                case 'Date':
+                    console.log(theField[1]+' type -> Date');
+                    newDiv += '<label class="col-sm-2 control-label">'+theField[1]+'</label>'
+                        +'<div class="col-sm-10">'
+                            +'<input type="date" class="form-control theDateInput" id="'+theField[0]+'Date" name="'+theField[0]+'Date" />'
+                            +'<span class="dateInput dateOnlyInput"><input type="text" class="form-control" id="'+theField[0]+'" name="'+theField[0]+'" hidden="true"/></span>'
+                        +'</div>';
+                    $('#allInputs').append($(newDiv));
+                    break;
+                default:
+                    console.log(theField[1]+' type -> Default');
+                    newDiv += '<label class="col-sm-2 control-label">'+theField[1]+'</label>'
+                        +'<div class="col-sm-10">'
+                            +'<input type="text" class="form-control" id="'+theField[0]+'" name="'+theField[0]+'" />'
+                        +'</div>';
+                    $('#allInputs').append($(newDiv));
+                    break;
+            }
+        }
+
+        $(document).ready(function(){
+
+            if('{!WebToObject__c.Object__c}' == 'lead'){ $('#orgid').remove(); }
+            else{ $('#oid').remove(); }
+
+            <apex:repeat value="{!WebToObject__c.ObjectField__r}" var="f">
+                console.log('f: ' + '{!f}' );
+                var field = new Array();
+                if("{!f.Id__c}" == 'annual_revenue'){ field.push("revenue"); }
+                else if("{!f.Id__c}" == 'email_address'){ field.push("email"); }
+                else if("{!f.Id__c}" == 'zip/postal_code'){ field.push('zip'); }
+                else{ field.push("{!f.Id__c}"); }
+                field.push("{!f.Name}");
+                field.push("{!f.Type__c}");
+                field.push("{!f.Picklist_Values__c}");
+                field.push("{!f.Order__c}");
+                fields.push(field);
+                console.log('field array: ' + fields);
+                // buildInput(field)
+            </apex:repeat>
+
+            fields.sort(function(a,b) {
+              a = parseInt(a[4])
+              b = parseInt(b[4])
+              if ( a < b )
+                return -1;
+              else if ( a > b )
+                return 1;
+              else
+                return 0;
+            });
+
+            for ( i in fields ) {
+                buildInput(fields[i])
+            }
+
+            handleDateInput();
+
+            $('#myBtn').click(function (e) {
+                e.preventDefault();
+                $('.theDateInput').remove();
+                var formdata = $('#theForm').serialize();
+                console.log('FORM DATA: ' , formdata);
+                var obj;
+                if('{!WebToObject__c.Object__c}' == 'lead'){ obj = 'Lead'; }
+                else{ obj = 'Case'; }
+                console.log('obj: ' + obj);
+                $.ajax({
+                    type: "POST",
+                    url: "https://www.salesforce.com/servlet/servlet.WebTo"+obj+"?encoding=UTF-8",
+                    data: formdata
+                });
+
+                $('#theForm').html('<h1 class="thanksText">Thank you for your submission!</h1>');
+                return false;
+            });
+
+            if('{!WebToObject__c.LogoUrl__c}' == ''){
+
+            }
+        });
+    </script>
+    <div id="container">
+        <div id="headerDiv">
+            <div id="logoDiv">
+                <img id="logoImg" src="{!WebToObject__c.LogoUrl__c}" />
+            </div>
+        </div>
+        <form id="theForm">
+            <input type="hidden" id="oid" name="oid" value="{!$Organization.Id}" />
+            <input type="hidden" id="orgid" name="orgid" value="{!$Organization.Id}" />
+            <input type="hidden" name="recordType" id="recordType" value="{!WebToObject__c.RecordTypeId__c}" />
+            <input type="hidden" name="lead_source" id="lead_source" value="Website" />
+            <input type="hidden" name="Campaign_ID" id="Campaign_ID" value="{!WebToObject__c.CampaignId__c}" />
+            <input type="hidden" name="retURL" value="http://" />
+            <div id="allInputs">
+
+            </div>
+            <button id="myBtn" class="btn btn-primary">Submit</button>
+        </form>
+
+    </div>
+</apex:page>

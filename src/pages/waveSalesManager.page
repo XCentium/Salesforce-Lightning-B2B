@@ -1,0 +1,4 @@
+<apex:page controller="Wave_EmbeddedController">
+     <apex:outputLabel value="{!SalesWaveManagerDashboard}"></apex:outputLabel>
+     <wave:dashboard dashboardId="{!SalesWaveManagerDashboard}"  showTitle="false" openLinksInNewWindow="false" height="2000px"></wave:dashboard>
+</apex:page>

@@ -1,0 +1,101 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+	<aura:attribute name="record" type="Object"
+                    description="The record object to be displayed"/>
+    <aura:attribute name="ContactRecord" type="Object"
+                    description="A simplified view record object to be displayed"/>
+    <aura:attribute name="recordError" type="String"
+                    description="An error message bound to force:recordData"/>
+    <force:recordData aura:id="record"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetRecord="{!v.record}"
+                      targetFields="{!v.ContactRecord }"
+                      mode="VIEW"/>	
+    <aura:attribute name="Languages" type="String" />
+    <aura:attribute name="Goal1Label" type="String" default="Goal"/>
+    <aura:attribute name="Goal2Label" type="String" default="Goal"/>
+    <aura:attribute name="Goal3Label" type="String" default="Goal"/>
+    <aura:attribute name="Goal1" type="String" default="Improve Health"/>
+    <aura:attribute name="Goal2" type="String" default="Extra Income" />
+    <aura:attribute name="Goal3" type="String" default="Purchase Products" />
+    <aura:attribute name="LivesLabel" type="String" default="Lives" />
+    <aura:attribute name="SpeaksLabel" type="String" default="Speaks" />
+    <aura:attribute name="QualVolumn" type="String" default="Qualifying Volume" />
+    <aura:attribute name="DirectRecruits" type="String" default="Direct Recruits" />
+    <aura:attribute name="ItemsSold" type="String" default="Items Sold" />
+    
+    <aura:attribute name="Icon1" type="String" default="standard:individual" />
+    <aura:attribute name="Icon2" type="String" default="standard:lead" />
+    <aura:attribute name="Icon3" type="String" default="standard:opportunity" />
+    
+    <aura:attribute name="TierLabel" type="String" default="Tier" />
+    <aura:attribute name="DashboardLabel" type="String" default="Qualifying Volume" />
+    <aura:attribute name="DashboardImage" type="String" default="https://s3.amazonaws.com/sfdc-ckz-b2b/RCG/CG/Direct+Selling/mlm-dashboard.png" />
+    <div class="slds-card">
+        <div class="padding">
+            <div class="fifth contact">
+            	<div class="padding">
+                    <aura:if isTrue="{!v.ContactRecord.Profile_Image_URL__c != null}">
+                        <div class="profilepic">
+                    		<img src="{!v.ContactRecord.Profile_Image_URL__c }" alt="Profile Picture" />
+                        </div>
+                        <div class="contactdetails contactdetailsright">
+                            <h3>{!v.ContactRecord.Name}</h3>
+                            <p>{!v.ContactRecord.Phone}</p>
+                            <p><a href="{!'mailto:' + v.ContactRecord.Email}">{!v.ContactRecord.Email}</a></p>
+                        </div>
+                        <div class="clear"></div>
+                        <aura:set attribute="else">
+                            <div class="floatleft"><lightning:icon iconName="standard:customers" size="medium" alternativeText=""/></div>
+                            <span class="floatleft marginleft contactdetails">
+                                <h3>{!v.ContactRecord.Name}</h3>
+                                <p>{!v.ContactRecord.Phone}</p>
+                                <p><a href="{!'mailto:' + v.ContactRecord.Email}">{!v.ContactRecord.Email}</a></p>
+                            </span>
+                            <div class="clear"></div>
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </div>
+            <div class="fifth">
+            	<div class="padding">
+                    <div class="floatleft"><lightning:icon iconName="{!v.Icon1}" size="medium" alternativeText=""/></div>
+                    <span class="floatleft marginleft">
+                        <p><strong>{!v.LivesLabel}: </strong> {!v.ContactRecord.MailingCity}, {!v.ContactRecord.MailingState}</p>
+                        <p><strong>{!v.SpeaksLabel}: </strong> {!v.Languages}</p>
+                        <p><strong>{!v.TierLabel}: </strong> {!v.ContactRecord.Tier__c}</p>
+                    </span>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="fifth">
+            	<div class="padding">
+                    <div class="floatleft"><lightning:icon iconName="{!v.Icon2}" size="medium" alternativeText=""/></div>
+                    <span class="floatleft marginleft">
+                        <p><strong>{!v.QualVolumn}: </strong> <ui:outputCurrency aura:id="curr" value="{!v.ContactRecord.PSQV_This_Month__c}" format="¤#,##0.00;(¤#,##0.00)"/></p>
+                        <p><strong>{!v.DirectRecruits}: </strong> {!v.ContactRecord.Direct_Recruits__c}</p>
+                        <p><strong>{!v.ItemsSold}: </strong> {!v.ContactRecord.Total_Items_Sold__c}</p>
+                    </span>
+                </div>
+            </div>
+            <div class="fifth">
+            	<div class="padding">
+                    <div class="floatleft"><lightning:icon iconName="{!v.Icon3}" size="medium" alternativeText=""/></div>
+                    <span class="floatleft marginleft">
+                        <p><strong>{!v.Goal1Label}: </strong> {!v.Goal1}</p>
+                        <p><strong>{!v.Goal2Label}: </strong> {!v.Goal2}</p>
+                        <p><strong>{!v.Goal3Label}: </strong> {!v.Goal3}</p>
+                    </span>
+                </div>
+            </div>
+            <div class="fifth">
+            	<div class="padding">
+                    <strong>{!v.DashboardLabel}</strong>
+                    <img src="{!v.DashboardImage}" class="dash"/>
+                </div>
+            </div>
+			<div class="clear"></div>
+        </div>
+    </div>
+</aura:component>

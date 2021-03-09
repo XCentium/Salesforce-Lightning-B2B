@@ -1,0 +1,109 @@
+.THIS {
+    position: relative;
+    height: 560px;
+    padding: 0 0.25rem;
+}
+
+.THIS .hidden {
+    display:none;
+}
+
+.THIS .action-body {
+    display:flex;
+	flex-flow: row wrap;
+    align-content: flex-start;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: calc(100% - 50px);
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.THIS .action-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+}
+
+.THIS [class*="border"] {
+    border-radius: 3px;
+}
+
+.THIS .border-around {
+    border: 1px solid #ececec;
+}
+
+.THIS .rationale{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+.THIS .border-top {
+    border-top: 1px solid #ececec;
+}
+.THIS .border-bottom {
+    border-bottom: 1px solid #ececec;
+}
+.THIS .border-left {
+    border-left: 1px solid #ececec;
+}
+.THIS .border-right {
+    border-right: 1px solid #ececec;
+}
+
+.THIS .row {
+    display:flex;
+    flex: 0 0 100%;
+    flex-flow: row wrap;
+    margin: 0.5rem 0;
+}
+
+.THIS > .row {
+    padding: 0.5rem;
+}
+
+.THIS .row .slds-form-element, .THIS .row > lightning-input, .THIS .row > lightning-input .slds-form-element{
+    width: 100%;
+}
+
+.THIS .row > .column_1-of-2 {
+    width: calc(50% - 0.5rem);
+}
+
+.THIS .row > .column_1-of-2 + .column_1-of-2{
+    margin-left: 1rem;
+}
+
+.THIS .row[class*="border"] .column {
+    margin: 0.5rem;
+}
+
+.THIS .row .column {
+}
+
+.THIS .column .row {
+    margin: -0.5rem 0;
+}
+
+.THIS .flex-between {
+    justify-content: space-between;
+}
+.THIS .flex-around {
+    justify-content: space-around;
+}
+.THIS .flex-start {
+    justify-content: flex-start;
+}
+.THIS .flex-end {
+    justify-content: flex-end;
+}
+
+.THIS .row .column.flex-right {
+    margin-left: auto;
+}

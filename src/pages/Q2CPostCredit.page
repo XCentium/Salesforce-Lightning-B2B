@@ -1,0 +1,2 @@
+<apex:page StandardController="blng__CreditNote__c" extensions="Q2CPost" action="{!PostCredit}">
+</apex:page>

@@ -1,0 +1,245 @@
+<aura:component controller="IoTInsightsCustom" implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+	<lightning:empApi aura:id="empApi" /> 
+	<lightning:notificationsLibrary aura:id="notifLib"/>
+    <aura:attribute name="eventDetails" type="String[]" />
+    <aura:attribute name="notifications" type="String[]" />
+    <aura:attribute name="Asset" type="String[]" />
+    <aura:attribute name="Message" type="String" />
+    <aura:attribute name="Status" type="String" />
+    <aura:attribute name="showInventorySliders" type="Boolean" default="true" />
+    <aura:attribute name="InventoryProduct1Label" type="String" default="Pre - ED1L6-TCCON-622 Units"/>
+    <aura:attribute name="InventoryProduct2Label" type="String" default="During - HD1L4-TCPST-625 Units" />
+    <aura:attribute name="InventoryProduct3Label" type="String" default="Post - P4-012 Units" />
+    <aura:attribute name="showvibrationtile" type="Boolean" default="true" />
+    <aura:attribute name="showvoltagetile" type="Boolean" default="true" />
+    <aura:attribute name="showinternaltemptile" type="Boolean" default="true" />
+    <aura:attribute name="showexternaltemptile" type="Boolean" default="true" />
+    <aura:attribute name="doorOpenSetting" type="Boolean" default="true" />
+    
+    <!-- Asset Settings -->
+    <aura:attribute name="VoltageWarningSetting" type="String" />
+    <aura:attribute name="VoltageCriticalSetting" type="String" />
+    <aura:attribute name="VibrationWarningSetting" type="String" />
+    <aura:attribute name="VibrationCriticalSetting" type="String" />
+    <aura:attribute name="TempWarningSetting" type="String" />
+    <aura:attribute name="TempCriticalSetting" type="String" />
+    
+    
+    <aura:attribute name="EventRecieved" type="Boolean" default="false" />
+    <aura:attribute name="record" type="Object"
+                    description="The record object to be displayed"/>
+    <aura:attribute name="OpptyRecord" type="Object"
+                    description="A simplified view record object to be displayed"/>
+    <aura:attribute name="recordError" type="String"
+                    description="An error message bound to force:recordData"/>
+    <force:recordData aura:id="record"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetRecord="{!v.record}"
+                      targetFields="{!v.OpptyRecord }"
+                      mode="VIEW"/>	
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+    <div class="slds-card"> 
+        <div class="padding">
+            <div class="header">
+            	<lightning:icon iconName="standard:iot_orchestrations" size="medium" alternativeText=""/> 
+        		<span class="marginleft">Insights</span>
+            </div>
+            <div class="sectionOuter">
+                <div class="sectionwrapper">
+                    <div class="section">
+                        <h3>Current State</h3>
+                        <div class="data">
+                            <aura:if isTrue="{!v.EventRecieved == false}">
+                                <aura:if isTrue="{!v.OpptyRecord.IoT_Status__c == 'Working'}">
+                                    <div class="highlightbold">Working</div>
+                                    <div class="circle green"></div>
+                                </aura:if>
+                                <aura:if isTrue="{!v.OpptyRecord.IoT_Status__c == 'Low Inventory'}">
+                                    <div class="highlightbold">Low Inventory</div>
+                                    <div class="circle green"></div>
+                                </aura:if>
+                                <aura:if isTrue="{!v.OpptyRecord.IoT_Status__c == 'High Internal Temp'}">
+                                    <div class="highlightbold">High Internal Temp</div>
+                                    <div class="circle green"></div>
+                                </aura:if>
+                                <aura:if isTrue="{!v.OpptyRecord.IoT_Status__c == 'Low Voltage'}">
+                                    <div class="highlightbold">Low Voltage</div>
+                                    <div class="circle green"></div>
+                                </aura:if>
+                                <aura:if isTrue="{!v.OpptyRecord.IoT_Status__c == 'High Vibration'}">
+                                    <div class="highlightbold">High Vibration</div>
+                                    <div class="circle green"></div>
+                                </aura:if>
+                                <aura:set attribute="else">
+                                  <aura:iteration items="{!v.eventDetails}" var="event" >
+                                    <div class="highlightbold">{!v.Message}</div>
+                                    <div class="{!'circle ' + v.Status}"></div>
+                                </aura:iteration>
+                                </aura:set>
+                            </aura:if>
+                            <aura:iteration items="{!v.eventDetails}" var="event" >
+                                <lightning:formattedDateTime value="{!event.CreatedDate}" year="2-digit" month="short" day="2-digit" weekday="long"/>
+                            </aura:iteration>
+                        </div>
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.showvibrationtile == true}">
+                    <div class="sectionwrapper">
+                        <div class="section">
+                            <h3>Vibration</h3>
+                            <div class="data">
+                                <aura:if isTrue="{!v.EventRecieved == false}">
+                                    <div class="highlight">20 hertz</div>
+                                    <aura:set attribute="else">
+                                        <aura:iteration items="{!v.eventDetails}" var="event" >
+                                            <div class="highlight">{!event.Vibration__c} hertz</div>
+                                        </aura:iteration>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.showvoltagetile == true}">
+                    <div class="sectionwrapper">
+                        <div class="section">
+                            <h3>Voltage</h3>
+                            <div class="data">
+                                <aura:if isTrue="{!v.EventRecieved == false}">
+                                    <div class="highlight">50 Watts</div>
+                                    <aura:set attribute="else">
+                                        <aura:iteration items="{!v.eventDetails}" var="event" >
+                                            <div class="highlight">{!event.Voltage_Level__c} hertz</div>
+                                        </aura:iteration>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.showinternaltemptile == true}">
+                    <div class="sectionwrapper">
+                        <div class="section">
+                            <h3>Internal Temperature</h3>
+                            <div class="data">
+                                <aura:if isTrue="{!v.EventRecieved == false}">
+                                    <div class="highlight">35 Degrees</div>
+                                    <aura:set attribute="else">
+                                        <aura:iteration items="{!v.eventDetails}" var="event" >
+                                            <div class="highlight">{!event.Internal_Temperature__c} degrees</div>
+                                        </aura:iteration>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.showexternaltemptile == true}">
+                    <div class="sectionwrapper">
+                        <div class="section">
+                            <h3>External Temperature</h3>
+                            <div class="data">
+                                <aura:if isTrue="{!v.EventRecieved == false}">
+                                    <div class="highlight">70 degrees</div>
+                                    <aura:set attribute="else">
+                                        <aura:iteration items="{!v.eventDetails}" var="event" >
+                                            <div class="highlight">{!event.External_Temperature__c} degrees</div>
+                                        </aura:iteration>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.doorOpenSetting == true}">
+                    <div class="sectionwrapper">
+                        <div class="section">
+                            <h3>Is The Door Open</h3>
+                            <div class="data">
+                                <aura:if isTrue="{!v.EventRecieved == false}">
+                                    <div class="highlight">false</div>
+                                    <aura:set attribute="else">
+                                        <aura:iteration items="{!v.eventDetails}" var="event" >
+                                            <div class="highlight">{!event.Door_Open__c}</div>
+                                        </aura:iteration>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>   
+            </div>
+            <div class="clear"></div>
+            <aura:if isTrue="{!v.showInventorySliders == true}">
+                <aura:if isTrue="{!v.EventRecieved == true}">
+                    <aura:iteration items="{!v.eventDetails}" var="event" >   
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                          <thead>
+                            <tr class="slds-line-height_reset">
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Opportunity Name">Name</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Account Name">Value</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Close Date">Units</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Stage">Last Modified</div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="slds-hint-parent">
+                                  <th data-label="Opportunity Name" scope="row">
+                                    <div class="slds-truncate" title="Name">{!v.InventoryProduct1Label}</div>
+                                  </th>
+                                  <td data-label="Account Name">
+                                    <div class="slds-truncate" title="Inventory">{!event.AlpinePreInventory__c}</div>
+                                  </td>
+                                  <td data-label="Close Date">
+                                    <div class="slds-truncate" title="Units">Units</div>
+                                  </td>
+                                  <td data-label="Prospecting">
+                                    <div class="slds-truncate" title="Last updated"><lightning:formattedDateTime value="{!event.CreatedDate}" year="2-digit" month="short" day="2-digit" weekday="long"/></div>
+                                  </td>
+                            </tr>
+                              <tr class="slds-hint-parent">
+                                  <th data-label="Opportunity Name" scope="row">
+                                    <div class="slds-truncate" title="Name">{!v.InventoryProduct2Label}</div>
+                                  </th>
+                                  <td data-label="Account Name">
+                                    <div class="slds-truncate" title="Inventory">{!event.AlpineDuringInventory__c}</div>
+                                  </td>
+                                  <td data-label="Close Date">
+                                    <div class="slds-truncate" title="Units">Units</div>
+                                  </td>
+                                  <td data-label="Prospecting">
+                                    <div class="slds-truncate" title="Last updated"><lightning:formattedDateTime value="{!event.CreatedDate}" year="2-digit" month="short" day="2-digit" weekday="long"/></div>
+                                  </td>
+                            </tr>
+                              <tr class="slds-hint-parent">
+                                  <th data-label="Opportunity Name" scope="row">
+                                    <div class="slds-truncate" title="Name">{!v.InventoryProduct3Label}</div>
+                                  </th>
+                                  <td data-label="Account Name">
+                                    <div class="slds-truncate" title="Inventory">{!event.AlpinePostInventory__c}</div>
+                                  </td>
+                                  <td data-label="Close Date">
+                                    <div class="slds-truncate" title="Units">Units</div>
+                                  </td>
+                                  <td data-label="Prospecting">
+                                    <div class="slds-truncate" title="Last updated"><lightning:formattedDateTime value="{!event.CreatedDate}" year="2-digit" month="short" day="2-digit" weekday="long"/></div>
+                                  </td>
+                            </tr>
+                        </tbody>
+                    </table>  
+                    </aura:iteration>
+                </aura:if>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

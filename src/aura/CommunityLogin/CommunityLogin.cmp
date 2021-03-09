@@ -1,0 +1,20 @@
+<aura:component extends="c:Mixpanel" implements="force:lightningQuickAction,force:hasRecordId,c:MixpanelInterface" controller="CommunityLoginCtrl" access="global">
+    <aura:attribute name="networks" type="Object[]"/>
+    <aura:attribute name="loginUser" type="Object"/>
+    <aura:attribute name="orgId" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    
+    <aura:iteration items="{!v.networks}" var="nw">
+        <lightning:button label="{!nw.Network.Name}" name="{!nw.Network.Id}" onclick="{!c.openCommunity}"></lightning:button> 
+    </aura:iteration>
+    
+    <aura:if isTrue="{!v.orgId == '' || v.orgId == null}">
+    	<div class="slds-grid slds-p-around_x-large">
+        	<div class="slds-text-align_center slds-text-heading_medium">
+            	This contact does not appear to be a member of a community.
+            </div>
+        </div>
+    </aura:if>
+    
+</aura:component>

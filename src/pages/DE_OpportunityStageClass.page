@@ -1,0 +1,32 @@
+<apex:page standardController="Opportunity" extensions="DE_OpportunityStageClass">
+    <apex:outputPanel rendered="{!loadonce}">
+        <apex:form id="frm">
+            <apex:actionFunction name="reloadWithStages" action="{!reload}"/>
+            <div id="test1" style="width: 100%; height: 150px;"></div> 
+            <apex:outputPanel layout="block" id="vals" style="display:none">
+                <apex:inputField value="{!Opportunity.StageName}" required="false" id="stages"/>
+                <apex:inputText value="{!valsText}" required="false" id="back"/>
+            </apex:outputPanel>
+        </apex:form>
+        <script>
+            function reload(){
+                var ele=document.getElementById('{!$Component.frm.stages}');
+                var idx=0;
+                var valText='';
+                for (idx=0; idx<ele.length; idx++){
+                    valText+=ele.options[idx].text + ':';
+                }
+
+                var backele=document.getElementById('{!$Component.frm.back}');
+                backele.value=valText;
+
+                reloadWithStages();
+            }
+
+            window.onload=reload(); 
+        </script>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!NOT(loadonce)}" >
+        <c:DE_Process labels="{!oppStageList}" shortlabels="{!oppStageNum}" selected="{!Opportunity.StageName}" />
+    </apex:outputPanel>
+</apex:page>

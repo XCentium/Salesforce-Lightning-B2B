@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>17.0</apiVersion>
+    <description>This is a component for the SDO site.  It tells the user if there is an error with the SDO Site Setup record</description>
+    <label>Site_KnowledgeError</label>
+</ApexComponent>

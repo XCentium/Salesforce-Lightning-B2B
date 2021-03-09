@@ -1,0 +1,195 @@
+<!--
+ - Created by brandon.rogers on 3/29/19.
+ -->
+
+<apex:page id="ckz_pmt_CC_Edit" controller="ckz_ctrl_pmt_CC_Edit" applyHtmlTag="false" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="false">
+    <script id="MyAccount-MyWalletMCC-Both" type="text/template">
+        <div class="panel panel-default cc_panel myWalletCCOuterContainer m-t-1">
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2 class="title">{{pageLabelMap 'MyWallet_EditPymtMtd_CC'}}</h2>
+                        <p class="small">Enter your payment data below</p>
+
+                        <div class="alert alert-error error_messages_section" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <form id="newCCForm" action="" class="newCCForm m-b-3" forceSSL="true">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="displayName">{{pageLabelMap 'Component_MyWallet_CC_displayName'}}</label>
+                                        <input type="text" name="displayName" id="displayName" class="form-control" placeholder="{{pageLabelMap 'Component_MyWallet_CC_displayName'}}" value="{{this.displayName}}" maxlength="50"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label for="paymentMethod">{{pageLabelMap 'Component_MyWallet_CC_paymentMethod'}}</label>
+                                        <input type="text" id="paymentMethod" class="form-control" value="{{this.paymentType}} ending in {{this.accountNumber}}" disabled="disabled"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="expirationDate">{{pageLabelMap 'Component_MyWallet_CC_expirationDate'}}</label>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <select name="expirationMonth" id="expirationMonth" class="form-control">
+                                                    {{#select this.expMonth}}
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                    {{/select}}
+                                                </select>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <select name="expirationYear" id="expirationYear" class="form-control">
+                                                    {{#select this.expYear}}
+                                                    <option value="2019">2019</option>
+                                                    <option value="2020">2020</option>
+                                                    <option value="2021">2021</option>
+                                                    <option value="2022">2022</option>
+                                                    <option value="2023">2023</option>
+                                                    <option value="2024">2024</option>
+                                                    <option value="2025">2025</option>
+                                                    {{/select}}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="isEnabled" id="isEnabled" {{#if this.isEnabled}}checked{{/if}}/>
+                                            {{pageLabelMap 'Component_MyWallet_CC_isEnabled'}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="text-right">
+                                        <input type="button" class='btn btn-default btn-sm cancelCC' id="cancelCC" value="{{pageLabelMap 'MyWallet_Cancel'}}"/>
+                                        <input type="button" class='btn btn-primary btn-sm saveCC' id="saveCC" value="{{pageLabelMap 'MyWallet_SaveToWall'}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </script>
+
+    <script type="text/javascript">
+        var pmt = {
+            storedPaymentId: "{!JSENCODE(storedPaymentId)}",
+            displayName: "{!JSENCODE(displayName)}",
+            accountNumber: "{!JSENCODE(accountNumber)}",
+            isEnabled: {!isEnabled},
+            paymentType: "{!JSENCODE(paymentType)}",
+            expMonth: {!expMonth},
+            expYear: {!expYear}
+        };
+
+        jQuery(function ($) {
+            Handlebars.registerHelper("select", function (value, options) {
+                return options.fn(this)
+                    .split('\n')
+                    .map(function (v) {
+                        var t = 'value="' + value + '"'
+                        return !RegExp(t).test(v) ? v : v.replace(t, t + ' selected="selected"')
+                    })
+                    .join('\n');
+            });
+
+            CCRZ.models.StoredPaymentsCCModel = CCRZ.CloudCrazeModel.extend({
+                className: "ckz_ctrl_pmt_CC_Edit",
+                saveCC: function (poData, callback) {
+                    this.invokeContainerLoadingCtx($('body'), "updateCCNumber", JSON.stringify(poData),
+                        function (response) {
+                            if (response && response.success) {
+                                callback();
+                            }
+                        },
+                        {nmsp: false}
+                    );
+                },
+            });
+
+            CCRZ.views.StoredPaymentsCCView = CCRZ.CloudCrazeView.extend({
+                viewName: "StoredPaymentsCCView",
+                templateDesktop: CCRZ.util.template("MyAccount-MyWalletMCC-Both"),
+                templatePhone: CCRZ.util.template("MyAccount-MyWalletMCC-Both"),
+                init: function () {
+                    this.render();
+                },
+                events: {
+                    "click #saveCC": "saveNewCCNumber",
+                    "click #cancelCC": "cancelNewCCNumber"
+                },
+                preRender: function () {
+                    this.data = {
+                        'storedPaymentId': pmt.storedPaymentId,
+                        'displayName': pmt.displayName,
+                        'accountNumber': pmt.accountNumber,
+                        'isEnabled': pmt.isEnabled,
+                        'paymentType': pmt.paymentType,
+                        'expMonth': pmt.expMonth,
+                        'expYear': pmt.expYear
+                    };
+                },
+                renderDesktop: function () {
+                    $(CCRZ.uiProperties.StoredPaymentsPOView.phone.selector).empty();
+                    this.setElement($(CCRZ.uiProperties.StoredPaymentsPOView.desktop.selector));
+                    this.$el.html(this.templateDesktop(this.data));
+                },
+                renderPhone: function () {
+                    $(CCRZ.uiProperties.StoredPaymentsPOView.desktop.selector).empty();
+                    this.setElement($(CCRZ.uiProperties.StoredPaymentsPOView.phone.selector));
+                    this.$el.html(this.templatePhone(this.data));
+                },
+                cancelNewCCNumber: function () {
+                    myWallet();
+                },
+                saveNewCCNumber: function () {
+                    var formData = form2js("newCCForm", '.', false, function (node) {
+                    }, false);
+                    formData.storedPaymentId = this.data.storedPaymentId;
+                    formData.isEnabled = formData.isEnabled != null ? true : false;
+                    this.model.saveCC(formData, function () {
+                        myWallet();
+                    });
+                }
+            });
+
+            CCRZ.paymentViews = CCRZ.paymentViews || {};
+            CCRZ.paymentViews.cc = new CCRZ.views.StoredPaymentsCCView({
+                model: new CCRZ.models.StoredPaymentsCCModel
+            });
+        });
+    </script>
+</apex:page>

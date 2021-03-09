@@ -1,0 +1,23 @@
+<aura:component  access="global" implements="lightning:availableForFlowScreens" controller="GilmoreLabs_FlowProgressSimulator_Ctr">
+    <aura:attribute name="strTitle" type="String" default="Loading..." />
+    <aura:attribute name="numSpeed" type="Integer" default="5" />
+    <aura:attribute name="strProgress" type="Integer" default="0" />
+
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+
+    <div style="margin:50px;text-align:center;">
+        <h1 class="slds-text-heading_large">{!v.strTitle}</h1>
+        <div class="demo-only" style="height:6rem">
+            <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand" style="position:relative;">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+        <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{!v.strProgress}" role="progressbar">
+            <span class="slds-progress-bar__value" style="{!'width:' + v.strProgress + '%'}">
+                <span class="slds-assistive-text">{!'Progress: ' + v.strProgress + '%'}</span>
+            </span>
+        </div>
+    </div>
+</aura:component>

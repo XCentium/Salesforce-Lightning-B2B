@@ -1,0 +1,684 @@
+<apex:page showHeader="false">
+  <head>
+    <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="description" content="CIRRUS WEBSITE" />
+      <link rel="shortcut icon" href="{!URLFOR($Resource.assets, 'assets/ico/favicon.png')}" />
+      
+    <title> CIRRUS</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{!URLFOR($Resource.assets, 'assets/css/bootstrap.css')}" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="{!URLFOR($Resource.assets, 'assets/css/main.css')}" rel="stylesheet" />
+    <link rel="stylesheet" href="{!URLFOR($Resource.assets, 'assets/css/icomoon.css')}" />
+    <link href="{!URLFOR($Resource.assets, 'assets/css/animate-custom.css')}" rel="stylesheet" />
+
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css' />
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css' />
+    
+    <script src="{!URLFOR($Resource.assets, 'assets/js/jquery.min.js')}"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.assets, 'assets/js/modernizr.custom.js')}"></script>
+
+    <link href="//vjs.zencdn.net/4.6/video-js.css" rel="stylesheet" />
+    <script src="//vjs.zencdn.net/4.6/video.js"></script>
+    
+    <style>
+        #login {
+            display:none;
+        }
+        .facebookLoginBtn {
+            height: 29px;
+            background: transparent !important;
+            position: relative;
+            top: -2px;
+        }
+        @media (max-width: 992px) {
+          .facebookLoginBtn {
+            display: none;
+          }
+          #login {
+              display:block;
+          }
+        }
+        .section-divider {
+            margin-top:0px;
+        }
+    </style>
+  </head>
+
+  <body data-spy="scroll" data-offset="0" data-target="#navbar-main">
+      
+      <!-- LIVE AGENT -->
+      <!-- Deployment code -->
+      <script type='text/javascript' src='https://c.la3-c1-was.salesforceliveagent.com/content/g/js/31.0/deployment.js'></script>
+        <script type='text/javascript'>
+        liveagent.init('https://d.la3-c1-was.salesforceliveagent.com/chat', '5725Y000000Lcag', '00D5Y000001bSfg');
+        </script>
+      
+    <div id="navbar-main">
+      <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <img src="{!URLFOR($Resource.assets, 'assets/img/portfolio/cirrusicononly.png')}" alt="" />
+          </button>
+          <a style="position: relative;top: 6px;" class="navbar-brand hidden-xs hidden-sm" href="#home">
+        <img src="{!URLFOR($Resource.assets, 'assets/img/portfolio/cirrusicononly.png')}" style="background:black;" alt="" />
+          </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li> <a href="#portfolio" class="smoothScroll">Products</a></li>
+            <li> <a href="#team" class="smoothScroll">Services</a></li>
+            <li> <a target="_blank" href="/consumers/s/" class="smoothScroll">Support</a></li>
+            <li> <a href="#about" class="smoothScroll">About</a></li>
+        </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    </div>
+
+  
+  
+        <!-- ==== HEADERWRAP ==== -->
+        <div id="headerwrap"  name="home">
+            <header class="clearfix">
+                    <h1>
+                    <img src="{!URLFOR($Resource.assets, 'assets/img/portfolio/cirrusicononlylarge.png')}" alt="" />
+                    </h1>
+                    <p>A True Audio Experience.</p>
+                    <p>Experience CIRRUS Today</p>
+            </header>       
+        </div><!-- /headerwrap -->
+
+        <!-- ==== GREYWRAP ==== -->
+        <div id="greywrap">
+            <div class="row">
+                <div class="col-lg-3 callout">
+                    <span class="icon icon-stack"></span>
+                    <a href="#portfolio" class="smoothScroll"><h2>PRODUCTS</h2></a>
+                    <p> 
+                    Cirrus is a world-class provider of products for both consumers and businesses.  Take a closer look and discover why Cirrus is synonymous with innovation and quality.
+                    <!--                    
+                        Cirrus is the number one seller of Portable Conference Room Audio Equipment in the world. 
+                        Take a closer look, and discover why Cirrus is synonymous with portable audio systems.
+                    '
+                    -->
+                    </p>
+                </div><!-- col-lg-4 -->
+                    
+                <div class="col-lg-3 callout">
+                    <span class="icon icon-rocket"></span>
+                    <a href="#team" class="smoothScroll"><h2>SERVICES</h2></a>
+                    <p>We strive to provide the world's best technical services through our award winning customer service representitives and thorough product warrenties. Find out about our industry leading services.</p>
+                </div><!-- col-lg-4 '--> 
+                
+                <div class="col-lg-3 callout">
+                    <span class="icon icon-heart"></span>
+                    <a href="/consumers/s/"><h2>SUPPORT</h2></a>
+                    <p>Search our Knowledge Articles, FAQs, and Warranty Information <br/> Contact Support</p>
+                </div><!-- col-lg-4 --> 
+                <div class="col-lg-3 callout">
+                    <span style="line-height: 0.4;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-size: 58px;position: relative;" class="glyphicon glyphicon-info-sign"></span>
+                   <a href="#about" class="smoothScroll"><h2>About</h2></a>
+                    <p>Our mission is to provide the highest quality sound and life style equipment to our customer and to the enterprise.  
+                        We are passionate about delivering the most sophisticated technology, elegant design, and superior functionality.</p>
+                </div><!-- col-lg-4 --> 
+            </div><!-- row -->
+        </div><!-- greywrap -->
+        
+                <!-- ==== SECTION DIVIDER1 -->
+        <section class="section-divider textdivider divider1">
+            <div class="container">
+                <h1 style="text-shadow:2px 2px BLACK;font-weight:bold;">SOUND OF CIRRUS</h1>
+                <hr />
+                
+                <p style="text-shadow: 1px 1px 1px black">Block out the noise. Get in the zone</p>
+            
+            </div><!-- container -->
+        </section><!-- section -->
+        
+        
+         <!-- ==== PORTFOLIO ==== -->
+        <div class="container" id="portfolio" name="portfolio">
+        <br />
+            <div style="text-align: center;" class="row">
+                <br />
+                <h1 class="centered">OUR PRODUCTS</h1>
+                <hr />
+                <br />
+                <br />
+            </div><!-- /row -->
+            <div class="container">
+            <div class="row">   
+            
+                <!-- PORTFOLIO IMAGE 1 -->
+                <div class="col-md-4 ">
+                    <div class="grid mask">
+                        <figure>
+                            <img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio01.png')}" alt="" />
+                            <figcaption>
+                                <h5>HEADPHONES</h5>
+                                <a data-toggle="modal" href="#myModal1" class="btn btn-primary btn-lg">Take a Look</a>
+                            </figcaption><!-- /figcaption -->
+                        </figure><!-- /figure -->
+                    </div><!-- /grid-mask -->
+                </div><!-- /col -->
+                
+                
+                         <!-- MODAL SHOW THE PORTFOLIO IMAGE. In this demo, all links point to this modal. You should create
+                              a modal for each of your projects. -->
+                              
+                          <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                  <h4 class="modal-title">HEADPHONES</h4>
+                                </div> 
+                                <div class="modal-body">
+                                  <h4><b>MSRP $300.00</b></h4>
+                                  <p><img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio01.png')}" alt="" /></p>
+                                  <p>The All In Headphone for the office or on the road.  Tired of not being able to get work done at your desk because 
+                                  the people around you are too loud?  Have no fear, The Headphones are here! Work undisturbed with our noise cancelling 
+                                  headphones that block out the unwanted sound.  Make Conference calls and let our beamforming technology reduce the 
+                                  background noise.</p>
+                                  <p><b><a href="#">Visit Site</a></b></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                              </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
+                
+                
+                <!-- PORTFOLIO IMAGE 2 -->
+                <div class="col-md-4">
+                    <div class="grid mask">
+                        <figure>
+                            <img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio02.png')}" alt="" />
+                            <figcaption>
+                                <h5>BOARDROOM</h5>
+                                <a data-toggle="modal" href="#myModal2" class="btn btn-primary btn-lg">Take a Look</a>
+                            </figcaption><!-- /figcaption -->
+                        </figure><!-- /figure -->
+                    </div><!-- /grid-mask -->
+                </div><!-- /col -->
+                        
+                        <!-- MODAL SHOW THE PORTFOLIO IMAGE. In this demo, all links point to this modal. You should create
+                              a modal for each of your projects. -->
+                              
+                          <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                  <h4 class="modal-title">BOARDROOM</h4>
+                                </div> 
+                                <div class="modal-body">
+                                  <h4><b>MSRP $1000.00</b></h4>
+                                  <p><img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio02.png')}" alt="" /></p>
+                                  <p>The Boardroom is the largest and most popular Conference Room In a Box and the strongest of our portable wireless 
+                                  all in one speaker/wifi/mifi/projector combo. Make conference calls, listen to music, project your screen and connect 
+                                  to the internet all wirelessly.</p>
+                                  <p><b><a href="#">Visit Site</a></b></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                              </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
+                        
+                <!-- PORTFOLIO IMAGE 3 -->
+                <div class="col-md-4">
+                    <div class="grid mask">
+                        <figure>
+                            <img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio03.png')}" alt="" />
+                            <figcaption>
+                                <h5>EARBUDS</h5>
+                                <a data-toggle="modal" href="#myModal3" class="btn btn-primary btn-lg">Take a Look</a>
+                            </figcaption><!-- /figcaption -->
+                        </figure><!-- /figure -->
+                    </div><!-- /grid-mask -->
+                </div><!-- /col -->
+            </div><!-- /row -->
+            
+                        <!-- MODAL SHOW THE PORTFOLIO IMAGE. In this demo, all links point to this modal. You should create
+                              a modal for each of your projects. -->
+                              
+                          <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                  <h4 class="modal-title">EARBUDS</h4>
+                                </div> 
+                                <div class="modal-body">
+                                  <h4><b>MSRP $150.00</b></h4>
+                                  <p><img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio03.png')}" alt="" /></p>
+                                  <p>Great sound meets a secure fit with supreme comfort! The ultimate HD earbuds gives you what you want in an earphone 
+                                  for any situation from casual listening to exercising to jamming on stage with great accessories. </p>
+                                  <p><b><a href="#">Visit Site</a></b></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                              </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
+
+                <!-- PORTFOLIO IMAGE 4 -->
+            <div class="row">   
+                <div class="col-md-4 ">
+                    <div class="grid mask">
+                        <figure>
+                            <img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio04.png')}" alt="" />
+                            <figcaption>
+                                <h5>HUDDLE</h5>
+                                <a data-toggle="modal" href="#myModal4" class="btn btn-primary btn-lg">Take a Look</a>
+                            </figcaption><!-- /figcaption -->
+                        </figure><!-- /figure -->
+                    </div><!-- /grid-mask -->
+                </div><!-- /col -->
+                
+                    <!-- MODAL SHOW THE PORTFOLIO IMAGE. In this demo, all links point to this modal. You should create
+                              a modal for each of your projects. -->
+                              
+                          <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                  <h4 class="modal-title">HUDDLE</h4>
+                                </div> 
+                                <div class="modal-body">
+                                  <h4><b>MSRP $700.00</b></h4>
+                                  <p><img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio04.png')}" alt="" /></p>
+                                  <p>The Huddle is the mid-range portable wireless all in one speaker/wifi/mifi/projector combo, designed off of our 
+                                  conference room in a box design and used for smaller meetings.  Make conference calls, listen to music, project your 
+                                  screen and connect to the internet all wirelessly. </p>
+                                  <p><b><a href="#">Visit Site</a></b></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                              </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
+                
+                
+                
+                <!-- PORTFOLIO IMAGE 5 -->
+                <div class="col-md-4">
+                    <div class="grid mask">
+                        <figure>
+                            <img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio05.png')}" alt="" />
+                            <figcaption>
+                                <h5>LTE HOTSPOT</h5>
+                                <a data-toggle="modal" href="#myModal5" class="btn btn-primary btn-lg">Take a Look</a>
+                            </figcaption><!-- /figcaption -->
+                        </figure><!-- /figure -->
+                    </div><!-- /grid-mask -->
+                </div><!-- /col -->
+                
+                     <!-- MODAL SHOW THE PORTFOLIO IMAGE. In this demo, all links point to this modal. You should create
+                              a modal for each of your projects. -->
+                              
+                          <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                  <h4 class="modal-title">LTE HOTSPOT SERVICE</h4>
+                                </div> 
+                                <div class="modal-body">
+                                  <h4><b>MSRP $25.00 per month</b></h4>
+                                  <p><img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio05.png')}" alt="" /></p>
+                                  <p>Be Connected Everywhere.  LTE Hotspot Service is a 12 month data plan package on the nation's fastest 4G service.  
+                                  There's no long-term contract or hidden fees and we are so confident that you will love the service that you can cancel 
+                                  at any time.  Plans come with an allotment of time and data.  Plans expire when you have used all the data in your plan 
+                                  or your time expires.</p>
+                                  <p><b><a href="#">Visit Site</a></b></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                              </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
+                
+                <!-- PORTFOLIO IMAGE 6 -->
+                <div class="col-md-4">
+                    <div class="grid mask">
+                        <figure>
+                            <img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio06.png')}" alt="" />
+                            <figcaption>
+                                <h5>OFFSITE</h5>
+                                <a data-toggle="modal" href="#myModal6" class="btn btn-primary btn-lg">Take a Look</a>
+                            </figcaption><!-- /figcaption -->
+                        </figure><!-- /figure -->
+                    </div><!-- /grid-mask -->
+                </div><!-- /col -->
+                
+                    <!-- MODAL SHOW THE PORTFOLIO IMAGE. In this demo, all links point to this modal. You should create
+                              a modal for each of your projects. -->
+                              
+                          <div class="modal fade" id="myModal6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                  <h4 class="modal-title">OFFSITE</h4>
+                                </div> 
+                                <div class="modal-body">
+                                  <h4><b>MSRP $500.00</b></h4>
+                                  <p><img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/portfolio/folio06.png')}" alt="" /></p>
+                                  <p>The Offsite is the smallest of our portable wireless all in one speaker/wifi/mifi/projector combo using our design 
+                                  from our conference room in a box, we design a portable take with you device. Make conference calls, listen to music, 
+                                  project your screen and connect to the internet all wirelessly.</p>
+                                  <p><b><a href="#">Visit Site</a></b></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                              </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
+                
+                
+            </div><!-- /row -->
+            <br /> 
+            <br />
+        </div><!-- /row -->
+    </div><!-- /container -->
+    
+            <!-- ==== SECTION DIVIDER3 -->
+        <section class="section-divider textdivider divider3">
+            <div class="container">
+                <h1 style="text-shadow:2px 2px BLACK;font-weight:bold;" >AUDIO EXPERTISE</h1>
+                <hr />
+                <p style="text-shadow: 1px 1px 1px black"> Technology | Design | Quality </p>
+            </div><!-- container -->
+        </section><!-- section -->
+    
+    <!-- ==== TEAM MEMBERS ==== -->
+        <div class="container" id="team" name="team">
+        <br />
+            <div class="row white centered">
+                <h1 class="centered">EXPERTS</h1>
+                <hr />
+                <br />
+                <br />
+                <div class="col-lg-3 centered">
+                    <img class="img img-circle" src="{!URLFOR($Resource.assets, 'assets/img/team/team01.jpg')}" height="120px" width="120px" alt="" />
+                    <br />
+                    <h4><b>Elliot Executive</b></h4>
+                    <a href="#" class="icon icon-twitter"></a>
+                    <a href="#" class="icon icon-facebook"></a>
+                    <a href="#" class="icon icon-flickr"></a>
+                    <br/>
+                    <h5>CEO</h5>
+                    <p>Audio equipment and technology is my passion.  It is our mission to deliver the best products and be the leaders in our industry.</p>
+                </div><!-- col-lg-3 -->
+                
+                <div class="col-lg-3 centered">
+                    <img class="img img-circle" src="{!URLFOR($Resource.assets, 'assets/img/team/team02.jpg')}" height="120px" width="120px" alt="" />
+                    <br />
+                    <h4><b>James Wu</b></h4>
+                    <a href="#" class="icon icon-twitter"></a>
+                    <a href="#" class="icon icon-facebook"></a>
+                    <a href="#" class="icon icon-flickr"></a>
+                    <br/>
+                    <h5>Customer</h5>
+                    <p>We have been long time customers and are thrilled to have such a reliable product and support team at Cirrus.  We love that it simply works! </p>
+                </div><!-- col-lg-3 -->
+                
+                <div class="col-lg-3 centered">
+                    <img class="img img-circle" src="{!URLFOR($Resource.assets, 'assets/img/team/team03.jpg')}" height="120px" width="120px" alt="" />
+                    <br />
+                    <h4><b>Wendy West</b></h4>
+                    <a href="#" class="icon icon-twitter"></a>
+                    <a href="#" class="icon icon-facebook"></a>
+                    <a href="#" class="icon icon-flickr"></a>
+                    <br/>
+                    <h5>Account Executive</h5>
+                    <p>My goal is to work with our clients to understand their needs and create solutions that will address their needs.  </p>
+                </div><!-- col-lg-3 -->
+                
+                <div class="col-lg-3 centered">
+                    <img class="img img-circle" src="{!URLFOR($Resource.assets, 'assets/img/team/team04.jpg')}" height="120px" width="120px" alt="" />
+                    <br />
+                    <h4><b>Neil Patel</b></h4>
+                    <a href="#" class="icon icon-twitter"></a>
+                    <a href="#" class="icon icon-facebook"></a>
+                    <a href="#" class="icon icon-flickr"></a>
+                    <br/>
+                    <h5>Social Media Manager</h5>
+                    <p>We are always listening to our customers! We love hearing new ideas and will do anything to support our customers wherever they are!</p>
+                </div><!-- col-lg-3 -->
+                
+            </div><!-- row -->
+        </div><!-- container -->
+        
+        
+        
+        
+        
+        <!-- ==== ABOUT ==== -->
+        <div class="container" id="about" name="about">
+            <div class="row white centered">
+            <br />
+                <h1 class="centered">A LITTLE ABOUT CIRRUS</h1>
+                <hr />
+                
+                <div class="col-lg-12">
+                    <p> Our mission is to provide the highest quality sound and life style equipment to our customer and to the enterprise.  
+                        We are passionate about delivering the most sophisticated technology, elegant design, and superior functionality. 
+                    </p>   
+                    <div class="container" id="blog">
+                        <img style="margin: 0px auto;" src="{!$Resource.CirrusTeam2}" class="img-responsive"/>
+                    </div>
+                    <p> Giving back to our community is a key tenant of our business.
+                    </p> 
+                </div><!-- col-lg-6 -->
+                
+                <!-- col-lg-6 -->
+
+             </div> <!--row -->
+
+        </div> <!--container -->
+
+        
+
+        
+        
+        <!-- ==== SERVICES ==== -->
+        <!--
+        <div class="container" id="services" name="services">
+            <br />
+            <br />
+            <div class="row">
+                <h2 class="centered">ONE BRAND, ONE VOICE.</h2>
+                <hr />
+                <br />
+                <div class="col-lg-offset-2 col-lg-8">
+                    <p>Employees and consumers. Two halves of a brand’s entirety, the whole of a brand’s audience. Sometimes these two halves have very different viewpoints, creating a weak spot in the brand story. Weakness tarnishes credibility. Brands that aren’t credible aren’t viable.
+                    </p>
+                    <p>We squash weakness by designing the whole brand story. It’s crafted around the truism held by employees and consumers to create an experience that connects from the inside out.</p>
+                    <p>By being true to the brand we represent, we elevate the audiences’ relationship to it. Like becomes love becomes a passion. Passion becomes advocacy. And we see the brand blossom from within, creating a whole story the audience embraces. That’s when the brand can truly flex its muscles.</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <h2 class="centered">MOBILE FIRST THINKING, ALWAYS.</h2>
+                <hr />
+                <br />
+                <div class="col-lg-offset-2 col-lg-8">
+                    <img class="img-responsive" src="{!URLFOR($Resource.assets, 'assets/img/iphone.png')}" alt="" />
+                </div>
+            </div>
+        </div>
+        
+
+        <section class="section-divider textdivider divider2">
+            <div class="container">
+                <h1>DESIGN IS AN INTERACTION</h1>
+                <hr />
+                <p>To develop a deeper and more meaningful connection with consumers, we believe design must invite them to take part in the conversation.</p>
+            </div>
+        </section>
+-->
+        
+        
+
+            
+
+        
+       
+
+    
+        <!-- ==== BLOG ==== -->
+        <div class="container" id="blog" name="blog">
+        <br />
+            <div class="row" style="text-align:center">
+                <br />
+                <h1 class="centered">OUR TESTIMONIALS</h1>
+                <hr />
+                <br />
+                <br />
+            </div><!-- /row -->
+            
+            <div class="row">
+                <div class="col-lg-6 blog-bg">
+                    <div class="col-lg-4 centered">
+                    <br />
+                        <p><img class="img img-circle" src="{!URLFOR($Resource.assets, 'assets/img/team/LaurenBoyle.jpeg')}" width="60px" height="60px" /></p>
+                        <h4>Lauren Boyle</h4><br/>
+                        <h5>Customer Success</h5>
+                    </div>
+                    <div class="col-lg-8 blog-content">
+                        <h2>A Beautiful Story</h2>
+                        <p>The account support team at Cirrus is wonderful.  I was traveling for a big meeting and realized that I left my Boardroom in a cab.  
+                        My account rep was able to overnight me a new one and the meeting the next day was a huge success.</p>
+                        <p>The Cirrus team is great to work with ...</p>
+                        <p><a href="#" class="icon icon-link"> Read More</a></p>
+                        <br />
+                    </div>
+                </div><!-- /col -->
+                
+                
+                <div class="col-lg-6 blog-bg">
+                    <div class="col-lg-4 centered">
+                    <br />
+                        <p><img class="img img-circle" src="{!URLFOR($Resource.assets, 'assets/img/team/TomReseller.png')}" width="60px" height="60px" /></p>
+                        <h4>Tom Reseller</h4><br/>
+                        <h5>Partner</h5>
+                    </div>
+                    <div class="col-lg-8 blog-content">
+                        <h2>Partner Success</h2>
+                        <p>Having worked with Cirrus for over 8 years, the Cirrus team provides great deal support and product information that make my job easy.
+                        The products are world class and I would not want to work with any other company.</p>
+                        <p>The Cirrus team is great to work with ...</p>
+                        <p><a href="#" class="icon icon-link"> Read More</a></p>
+                        <br />
+                    </div>
+                </div><!-- /col -->
+                
+                
+            </div><!-- /row -->
+            <br />
+            <br />
+        </div><!-- /container -->
+
+        
+        <!-- ==== SECTION DIVIDER6 ==== -->
+        <section class="section-divider textdivider divider6">
+            <div class="container">
+                <h1 style="text-shadow:2px 2px BLACK;font-weight:bold;" >CRAFTED IN SAN FRANCISCO, USA.</h1>
+                <hr />
+                <p style="text-shadow: 1px 1px 1px black">123 California Ave</p>
+                <p style="text-shadow: 1px 1px 1px black">415.555.1234</p>
+                <p><a class="icon icon-twitter" href="#"></a> | <a class="icon icon-facebook" href="#"></a></p>
+            </div><!-- container -->
+        </section><!-- section -->
+        
+        <div class="container" id="contact" name="contact">
+            <div class="row">
+            <br />
+                <h1 class="centered">THANKS FOR VISITING US</h1>
+                <hr />
+                <br />
+                <br />
+                <div class="col-lg-4">
+                    <h3>Contact Us</h3>
+                    <p><span class="icon icon-home"></span> 50 Fremont St, San Francisco<br/>
+                        <span class="icon icon-phone"></span> 415 - 888 - 5555 <br/>
+                        <span class="icon icon-envelop"></span> <a href="#"> cirrus.info@gmail.com</a> <br/>
+                        <span class="icon icon-twitter"></span> <a href="#"> @cirrus </a> <br/>
+                        <span class="icon icon-facebook"></span> <a href="#"> Cirrus </a> <br/>
+                    </p>
+                </div><!-- col -->
+                
+                <div class="col-lg-4">
+                    <h3>Newsletter</h3>
+                    <p>Register to our newsletter and be updated with the latests information regarding our services, offers and much more.</p>
+                    <p>
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <label for="inputEmail1" class="col-lg-4 control-label"></label>
+                            <div class="col-lg-10">
+                              <input type="email" class="form-control" id="inputEmail1" placeholder="Email" />
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="text1" class="col-lg-4 control-label"></label>
+                            <div class="col-lg-10">
+                              <input type="text" class="form-control" id="text1" placeholder="Your Name" />
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-lg-10">
+                              <button type="submit" class="btn btn-success">Sign in</button>
+                            </div>
+                          </div>
+                       </form><!-- form -->
+                    </p>
+                </div><!-- col -->
+                
+                <div class="col-lg-4">
+                    <h3>The Cirrus Community</h3>
+                    <p>Come join us for a day of volunteering or request a tour of our facilities.  We would love to hear from you about ideas that can make us better!</p>
+                </div><!-- col -->
+
+            </div><!-- row -->
+        
+        </div><!-- container -->
+
+        <div id="footerwrap">
+            <div class="container">
+                <h4>Created by <a href="#">CIRRUS</a> - Copyright 2014</h4>
+            </div>
+        </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+        
+
+    <script type="text/javascript" src="{!URLFOR($Resource.assets, 'assets/js/bootstrap.min.js')}"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.assets, 'assets/js/retina.js')}"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.assets, 'assets/js/jquery.easing.1.3.js')}"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.assets, 'assets/js/jquery-func.js')}"></script>
+      
+          <script type="text/javascript" src="{!URLFOR($Resource.assets, 'assets/js/smoothscroll.js')}"></script>
+
+  </body>
+
+    
+    
+</apex:page>

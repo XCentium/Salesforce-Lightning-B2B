@@ -1,0 +1,36 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="ChangeTabLabelController" description="Updates the Console workspace tab label to match the related Contact or Account name">
+	<!-- ID of the current record who's page we're on -->
+    <aura:attribute name="recordId" type="Id" />
+    
+    <!-- A flag to determine if we should use the contact or account information first, or the value of the field that was set. Set in Page builder --> 
+    <aura:attribute name="useContact" type="Boolean" default="false" />
+    
+    <!-- The API name of the field who's value we want to get off the current record who's page we're on. Set in Page Builder -->
+    <aura:attribute name="objectField" type="String" />
+    
+    <!-- The value of the field that we wanted to get off the current record (i.e. the 'objectField' variable above) who's page we're on -->
+    <aura:attribute name="passThroughValue" type="String"/>
+    
+    <!-- What we are setting as the label -->
+    <aura:attribute name="tabLabel" type="String"/>
+    
+    <!-- LDS Attributes  -->
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/> 
+    
+	<!-- This calls the server to load information about the current record who's page we are on -->    
+    <force:recordData aura:id="recordLoader"
+                      recordId="{!v.recordId}"
+                      targetRecord="{!v.record}"
+                      targetFields="{!v.simpleRecord}"
+                      targetError="{!v.recordError}"
+                      recordUpdated="{!c.doInit}"
+                      layoutType="FULL"
+                      />
+    
+    
+    <!-- aura:handler name="init" value="this" action="{!c.doInit}"/ -->
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />  
+    <lightning:workspaceAPI aura:id="workspace" />
+</aura:component>

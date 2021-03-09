@@ -1,0 +1,80 @@
+<aura:component >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    <aura:attribute name="index" type="Integer"></aura:attribute>
+    <aura:attribute name="leadValues" type="Object"></aura:attribute>
+    <aura:attribute name="leadFields" type="Object[]"></aura:attribute>
+    <aura:attribute name="leadFieldsMap" type="Object"></aura:attribute>
+    
+    <aura:attribute name="modelFactor" type="Object"></aura:attribute>
+    <aura:attribute name="insight" type="Object"></aura:attribute>
+    
+    <!--Consolidate into one state object-->
+    <aura:attribute name="modelFactorTypes" type="Object[]"></aura:attribute>
+    <aura:attribute name="leadFieldsShown" type="Object[]"></aura:attribute>
+    <aura:attribute name="factor1" type="Object"></aura:attribute>
+    <aura:attribute name="factor2" type="Object"></aura:attribute>
+    <aura:attribute name="picklistValues" type="Object[]"></aura:attribute>
+    <aura:attribute name="Factor1Options" type="Object[]"></aura:attribute>
+    <aura:attribute name="Factor2Options" type="Object[]"></aura:attribute>
+    <aura:attribute name="fieldValue" type="String"></aura:attribute>
+    <aura:attribute name="fieldType" type="String"></aura:attribute>
+    
+    <aura:attribute name="hasFactor2" type="Boolean" default="false"></aura:attribute>
+    
+    <!--Not used as eval() was blacklisted placeholder for output-->
+    <!--
+       <aura:attribute name="preview" type="String"></aura:attribute>
+       <aura:handler name="change" value="{!v.insight}" action="{!c.updatePreview}"></aura:handler>
+    -->
+    
+    <aura:registerEvent name="deleteIndex" type="c:deleteIndex"/>
+    
+    <div class="reason-container slds-box slds-form slds-form_compound">
+        <lightning:buttonIcon class="close" variant="bare" iconName="utility:close" size="small" onclick="{!c.deleteIndex}"></lightning:buttonIcon>
+        <fieldset class="slds-form-element">
+            <div class="slds-form-element__group">
+                <div class="slds-form-element__row">
+                    
+                    <lightning:select class="slds-size_1-of-2" value="{!v.insight.IntensityLevel}" aura:id="confidence" label="Intensity" onchange="{!c.confidenceChangeHandler}">
+                        <option value="HIGH_POS">Positive</option>
+                        <option value="HIGH_NEG">Negative</option>
+                    </lightning:select>
+                    
+                    <lightning:select class="slds-size_1-of-2" value="{!v.modelFactor.Type}" aura:id="modelFactorType" label="Insight Type" onchange="{!c.modelFactorTypeChangeHandler}">
+                        <aura:iteration items="{!v.modelFactorTypes}" var="modelFactorType">
+                            <option value="{!modelFactorType.value}">{!modelFactorType.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                
+                <div class="slds-form-element__row">
+                    <lightning:select class="slds-size_1-of-2"  value="{!v.factor1}" aura:id="factor1" label="Field" onchange="{!c.factor1ChangeHandler}">
+                        <aura:iteration items="{!v.Factor1Options}" var="Factor1Option">
+                            <option value="{!Factor1Option.name}">{!Factor1Option.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                    
+                    <aura:if isTrue="{!v.fieldType == 'picklist' &amp;&amp; !v.hasFactor2}">
+                        <lightning:select class="slds-size_1-of-2" value="{!v.insight.Value}" label="Picklist Value">
+                            <aura:iteration items="{!v.picklistValues}" var="picklistValue">
+                                <option value="{!picklistValue.value}">{!picklistValue.label}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </aura:if>
+                    
+                    <aura:if isTrue="{!v.fieldType != 'picklist' &amp;&amp; !v.hasFactor2}">
+                        <lightning:input class="slds-size_1-of-2" label="Value" value="{!v.insight.Value}"></lightning:input>
+                    </aura:if>
+                    
+                    <aura:if isTrue="{!v.hasFactor2}">
+                        <lightning:select class="slds-size_1-of-2" value="{!v.factor2}" aura:id="factor2" label="Field"  onchange="{!c.factor2ChangeHandler}">
+                            <aura:iteration items="{!v.Factor2Options}" var="Factor2Option">
+                                <option value="{!Factor2Option.name}">{!Factor2Option.label}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </aura:if>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</aura:component>

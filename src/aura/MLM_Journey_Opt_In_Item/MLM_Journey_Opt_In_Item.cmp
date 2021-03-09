@@ -1,0 +1,70 @@
+<aura:component access="global" controller="MLMJourneyOptIn" implements="force:hasRecordId">
+    <aura:attribute name="journeyid" type="String"  />
+    <aura:attribute name="optCount" type="String" access="global" />
+    <aura:attribute name="ShowContactButton" type="Boolean" default="false" />
+    <aura:attribute name="cID" type="string" />
+    <aura:attribute name="addIcon" type="String" default="utility:add" />
+    <aura:attribute name="journeys" type="IDO_Customer_Journey__c[]"  />
+	<aura:attribute name="AvailableContacts" type="Contact[]"  />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>	
+    <aura:if isTrue="{!v.ShowContactButton == false}">
+         <label checked="true" class="slds-checkbox_toggle slds-grid paddingtopbottom">
+            <aura:if isTrue="{!v.optCount > 0}">
+                <input name="checkbox-toggle-1" checked="true" type="checkbox" aria-describedby="checkbox-toggle-1" id="{!v.journeyid}" aura:id="requiredtoggle" onchange="{!c.toggleChangeRemove}" value="{!v.journeyid}" />
+                <aura:set attribute="else">
+                    <input name="checkbox-toggle-1"  type="checkbox" aria-describedby="checkbox-toggle-1" id="{!v.journeyid}" aura:id="requiredtoggle" onchange="{!c.toggleChange}" value="{!v.journeyid}" />
+                </aura:set>
+            </aura:if>
+            <span id="checkbox-toggle-1" class="slds-checkbox_faux_container" aria-live="assertive">
+                <span class="slds-checkbox_faux"></span>
+            </span>
+        </label> 
+        <aura:set attribute="else">
+            <div class="topright5down">
+            	<lightning:button variant="brand" label="+ Add to Journey" onclick="{! c.OpenDialog }" />
+            </div>
+        </aura:set>
+    </aura:if>
+    
+    <div aura:id="overlay" class="slds-backdrop slds-backdrop_closed"></div>
+    <section role="dialog" aura:id="AddModal" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-closed">
+    	<div class="slds-modal__container">
+        	<header class="slds-modal__header">
+            	<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                	<span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add to Journey</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            	<div class="padding">
+                    <h2>Choose which contacts to add to this journey</h2>
+                    <hr/>
+                    <aura:iteration var="contact" items="{!v.AvailableContacts}">
+                        <div class="slds-form-element borderbottom">
+                            <div class="padding">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-checkbox">
+                                        <button class="slds-button slds-button_success center addbutton" id="{!contact.Id}" aura:id="{!contact.Id}" onclick="{!c.addContact}">
+                                            <lightning:icon iconName="{!v.addIcon}" size="x-small"/>
+                                        </button>
+                                        <span class="contactname">{!contact.Name}</span>
+                                        <div class="contactdetail">
+                                        	<strong>
+                                                <ui:outputCurrency aura:id="curr" value="{!contact.Total_Order_Amount__c}" format="¤#,##0.00;(¤#,##0.00)"/>
+                                            </strong>
+                                             - Lifetime Value
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+            	<button class="slds-button slds-button_brand" onclick="{!c.CloseDialog}">Close</button>
+            </footer>
+    	</div>
+	</section>
+</aura:component>

@@ -1,0 +1,53 @@
+.THIS .slds-modal__container,.THIS .slds-modal{
+    max-width: 90% !important;
+    width:90% !important;
+}
+.THIS .actionList{
+    position:absolute;
+    top:20px;
+    right:30px;
+}
+.THIS .relative{
+    position:relative;
+}
+.THIS .half{
+    width:50%;
+    float:left;
+}
+.THIS .clear{
+    clear:both;
+}
+.THIS .padding{
+    padding:20px;
+}
+.THIS .BrandingLogo{
+    width:30%;
+    margin-bottom:10px;
+}
+.THIS .templatebanner{
+    width:100%;
+    display:block;
+    margin-bottom:10px;
+}
+.THIS .output{
+    margin-top:10px;
+}
+.THIS h2,.THIS h3,.THIS p{
+    margin-bottom:10px;
+}
+.THIS p{
+    font-size:15px;
+}
+.THIS h3{
+    font-size:20px;
+}
+.THIS .center{
+    text-align:center;
+}
+.THIS .highlighted{
+    background-color:#eee;
+    padding:10px;
+}
+.THIS .slds-hidden{
+    height:0;
+}

@@ -1,0 +1,63 @@
+.THIS .padding{
+    padding:20px;
+}
+.THIS .fifth{
+    width:calc(100%/5);
+    width:20%;
+    float:left;
+}
+.THIS .profilepic{
+    width:70px;
+    text-align:center;
+    float:left;
+}
+.THIS .profilepic img{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+}
+.THIS .contactdetailsright{
+    width:calc(100% - 70px);
+    float:right;
+}
+.THIS  h3{
+    font-size:18px;
+    font-style:bold;
+}
+.THIS .floatleft img{
+    width:100%;
+    height:auto;
+}
+.THIS .dash{
+    width:100%;
+    height:auto;
+    display:block;
+}
+.THIS .clear{clear:both}
+.THIS .marginleft{
+    margin-left:10px;
+}
+.THIS .floatleft{
+    float:left;
+}
+@media (max-width: 1600px) {
+  .THIS .slds-icon_container {
+    width:20px;
+    height:20px;
+  }
+  .THIS .slds-icon{
+  	width:100%;
+    height:100%;
+  }
+}
+@media (max-width: 1600px) {
+  	.THIS .slds-icon_container {
+    	display:none;
+  	}
+	.THIS .fifth{
+        width:calc(70% / 4)
+    }
+  	.THIS .contact{
+        width:30%;
+  	}
+}

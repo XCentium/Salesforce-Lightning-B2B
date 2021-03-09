@@ -1,0 +1,5 @@
+<aura:component >
+	<aura:attribute name="PageShown" type="String"  />
+    
+    
+</aura:component>

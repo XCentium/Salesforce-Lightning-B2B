@@ -1,0 +1,34 @@
+<aura:component extends="c:EinsteinWrapperCard"  access="global" >
+    <aura:attribute name="Contact" type="Contact[]"/>
+    <aura:attribute name="appSettings" type="IDO_Clienteling__c[]"/>
+    <aura:attribute name="NeutralValue" type="String" default="85"/>
+    <aura:attribute name="PositiveValue" type="String" default="12"/>
+    <aura:attribute name="NegativeValue" type="String" default="3"/>
+    <aura:attribute name="ComponentLabel" type="String" default="Case Sentiment Analysis"/>
+    <ltng:require styles="/resource/SLDS0120/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <ltng:require scripts="/resource/jquery, /resource/ED_CaseJS" afterScriptsLoaded="{!c.doInit}"	/>
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    <div class="padding">
+   		<h3>Sentiment Analysis Probabilities</h3>
+        <div class="analysis slds-m-bottom_small" data-aura-rendered-by="1:2278;a">
+            <span class="slds-m-right_small block" data-aura-rendered-by="2:2278;a">
+                <span class="slds-icon-trend slds-is-animated runtime_sales_insightsInsightsTrendingIcon" data-slds-trend="neutral" data-aura-rendered-by="3:2278;a">
+                    <img src="{!$Resource.ClientelingIcons + '/assets/Images/neutral.png'}"/> 
+                </span>
+                <span class="bold capitalize"> {!v.NeutralValue}% Neutral</span>
+            </span>
+            <span class="slds-m-right_small block" data-aura-rendered-by="2:2278;a">
+                <span class="slds-icon-trend slds-is-animated runtime_sales_insightsInsightsTrendingIcon" data-slds-trend="neutral" data-aura-rendered-by="3:2278;a">
+                    <img src="{!$Resource.ClientelingIcons + '/assets/Images/negative.png'}"/> 
+                </span>
+                <span class="bold capitalize"> {!v.NegativeValue}% Negative</span>
+            </span>
+            <span class="slds-m-right_small block" data-aura-rendered-by="2:2278;a">
+                <span class="slds-icon-trend slds-is-animated runtime_sales_insightsInsightsTrendingIcon" data-slds-trend="neutral" data-aura-rendered-by="3:2278;a">
+                    <img src="{!$Resource.ClientelingIcons + '/assets/Images/positive.png'}"/> 
+                </span>
+                <span class="bold capitalize"> {!v.PositiveValue}% Positive</span>
+            </span>
+        </div>
+    </div>
+</aura:component>

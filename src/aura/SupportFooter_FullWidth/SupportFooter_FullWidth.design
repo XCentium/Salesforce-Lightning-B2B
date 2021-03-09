@@ -1,0 +1,6 @@
+<design:component label="Support Footer 3 Up">
+          <design:attribute name="Header" label="Header" description="Enter your headline here." />
+	      <design:attribute name="backgroundColor" label="Background Color" />
+    	<design:attribute name="iconbackgroundColor" label="Icon Background Color" />
+        	<design:attribute name="SupportNumber" label="Support Number" />
+</design:component>

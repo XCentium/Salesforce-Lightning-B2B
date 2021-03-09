@@ -1,0 +1,60 @@
+/** General **/
+.THIS .buttonwrapper{
+    margin-top:10px;
+}
+.THIS .borderbottomh3{font-size:18px;padding:10px 0;margin-bottom:10px;border-bottom:1px solid #ddd;font-weight:bold;}
+.THIS .center{text-align:center;}
+.THIS .clear{clear:both;}
+.THIS .hide{display:none;transition:ease 0.4s;}
+.THIS iframe{display:none;}
+.THIS .padding{padding:20px;}
+.THIS .show{display:block;transition:ease 0.4s;}
+.THIS .border{border:1px solid #ddd;}
+.THIS .paddingleftright{padding:0 10px;}
+.THIS .marginleftright{margin:0 10px;}
+/** Layout **/
+.THIS .alldone{width:150px;height:auto;margin: 0 auto 10px auto;}
+.THIS .config{border:1px solid #ddd;margin-bottom:10px;margin:10px;}
+.THIS .configwrapper{width:50%;float:left;}
+.THIS .configleft{width:19%;float:left;position:relative;}
+.THIS .configleft .icon{width:100%;padding-top:60px;}
+.THIS .badges{margin:10px 0 20px 0;}
+.THIS .configleft .iconsmall{width:40px;height:auto;}
+.THIS .configright{width:80%;padding:20px;float:right;height:150px;border-left:1px solid #ddd;overflow:auto;}
+.THIS .configrightheightauto{height:auto;}
+.THIS .confignofloat{float:none!important;clear:both!important;width:100%!important;}
+.THIS .configright h2{font-weight:bold;}
+.THIS .configright ul{margin-left:20px;}
+.THIS .configright ul li{list-style-type:disc;}
+.THIS .grid_75{width:75%;float:left;}
+.THIS .grid_25{width:25%;float:right;}
+.THIS .margintop10{margin-top:-10px;}
+.THIS .desc{margin-bottom:10px;}
+.THIS .slds-media__body{background-color:#eeeeee;border-bottom:1px solid #dddddd;}
+.THIS .slds-checkbox_faux_container{margin:0 auto;}
+.THIS .lightgrey{border-radius:3px;}
+.THIS .spacer{display:block;height:8px;}
+.THIS .filter{padding:10px;border:1px solid #ddd;margin:10px 0;}
+.THIS .filter label{margin-bottom:10px;text-transform:uppercase;display:block;}
+.THIS .filterh2{font-weight:bold;text-transform:uppercase;background:#00A1E0;padding:10px;color:#fff;border-top-right-radius:3px;border-top-left-radius:3px;}
+/** Fonts **/
+.THIS .largeh1{font-size:40px;display:block;color:#00A1E0;text-transform:uppercase;}
+.THIS .phoneerror{color:red;font-weight:bold;}
+/** Media Queries **/
+@media screen and (max-width: 960px) {
+  .THIS .configwrapper{width:100%;float:none;clear:both;} 
+}
+.THIS .checkmarkul ul li{
+    position: relative;
+    padding-left: 0px;
+    margin-left:10px;
+    list-style-type: disc;
+}
+.THIS h1{
+    margin-bottom:10px;
+    font-size:18px;
+}
+.THIS .checkmarkul ul li:before {
+  	list-style:disc;
+} 
+.THIS .checkmarkul ul{text-align:left;margin-left:0;}

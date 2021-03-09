@@ -1,0 +1,18 @@
+<aura:component controller="ClientellingController">
+    <aura:attribute name="ActiveUser" type="User[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.GetUser}"/>
+    <aura:iteration var="user" items="{!v.ActiveUser}" indexVar="index"> 
+        <div class="user_header">
+            <div class="padding">
+                <div class="userpicture">
+                    <img src="{!user.FullPhotoUrl }"/> 
+                </div>
+                <div class="userinfo">
+                    <span > Welcome, {!user.FirstName}!</span><br/>
+                    <em>{!user.Title}</em>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </aura:iteration>     
+</aura:component>

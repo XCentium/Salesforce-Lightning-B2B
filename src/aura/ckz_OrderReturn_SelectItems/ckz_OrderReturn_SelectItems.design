@@ -1,0 +1,8 @@
+<design:component label="B2B Order Return - Select Items">
+    <design:attribute name="selectedItemsString" label="Selected Items string" />
+    <design:attribute name="recordId" label="Record Id" />
+
+    <design:attribute name="orderItemRecords" label="Order Item records" />
+    <design:attribute name="orderRecords" label="Order records" description="Only the first one in the collection is used" />
+
+</design:component>

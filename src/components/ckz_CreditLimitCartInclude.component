@@ -1,0 +1,83 @@
+<apex:component id="ckz_CreditLimitCartInclude" controller="ckz_ctrl_CreditLimitCartInclude">
+
+    <script type="text/javascript">
+        jQuery(function($) {
+        	var creditLimEnabled = false;
+
+        	if (CCRZ.pagevars.pageConfig["ma.credlim"]) {
+        		if (CCRZ.pagevars.pageConfig["ma.credlim"] == "TRUE") {
+        			creditLimEnabled = true;
+        		}
+        	}
+
+        	if (creditLimEnabled === false) {
+        		return false;
+        	}
+
+        	CCRZ.subsc = _.extend(CCRZ.subsc || {});
+
+        	CCRZ.subsc.cartRemoteActions = _.extend({
+        		className: 'ckz_ctrl_CreditLimitCartInclude',
+        		createCreditCaseAction: function(callback) {
+        			this.className = 'ckz_ctrl_CreditLimitCartInclude',
+        				this.invokeCtx('createCaseCreditOverride',
+        					function(resp) {
+        						callback(resp);
+        					}, {
+        						buffer: false,
+        						nmsp: false
+        					});
+        		}
+        	}, CCRZ.RemoteInvocation);
+
+
+        	CCRZ.pubSub.on('view:CartDetailView:refresh', function(cartDetailView) {
+
+        		// dynamically add/change button here
+
+        		var cartAttrs = CCRZ.cartDetailView.model.attributes;
+        		var request = CCRZ.processPageLabelMap('Cart_CreditOverride_Request').string;
+        		var requested = CCRZ.processPageLabelMap('Cart_CreditOverride_Requested').string;
+        		var allowCheckout = cartAttrs.allowCheckout;
+        		console.log('allowCheckout: ' + allowCheckout);
+        		var creditOverrideRequested = cartAttrs.creditOverrideRequested ? cartAttrs.creditOverrideRequested : false;
+        		console.log('creditOverrideRequested: ' + creditOverrideRequested);
+
+        		var cartActionTotalsDiv = $('.cc_action_totals');
+
+        		var btn = '';
+        		if (allowCheckout === false && creditOverrideRequested) {
+        			btn = '<button class="btn btn-default btn-sm btn-block createCreditCase" type="button" disabled>' + request + '</button>';
+        		}
+
+        		if (allowCheckout === false && creditOverrideRequested == false) {
+        			btn = '<button class="btn btn-default btn-sm btn-block createCreditCase" type="button">' + request + '</button>';
+        		}
+
+        		cartActionTotalsDiv.append(btn);
+
+        		cartDetailView.createCreditCaseAction = function(event) {
+        			CCRZ.subsc.cartRemoteActions.createCreditCaseAction(function(resp) {
+        				if (resp && resp.success) {
+        					$('.createCreditCase').prop('disabled', true);
+
+        					CCRZ.pubSub.trigger('pageMessage', {
+        						messages: [{
+        							type: 'CUSTOM',
+        							severity: 'INFO',
+        							classToAppend: 'messagingSection-Info',
+        							labelId: 'Cart_CreditOverride_Requested'
+        						}]
+        					});
+        				}
+        			});
+        		};
+
+        		cartDetailView.events['click .createCreditCase'] = 'createCreditCaseAction';
+        		cartDetailView.delegateEvents();
+        	});
+        });
+    </script>
+
+
+</apex:component>

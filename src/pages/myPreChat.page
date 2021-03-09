@@ -1,0 +1,129 @@
+<apex:page showHeader="false" standardStylesheets="false" controller="myPreChat_CT">
+    <apex:slds ></apex:slds>
+
+    <title>LiveAgent PreChat</title>
+    <!-- This script takes the endpoint URL parameter passed from the deployment page and makes it the action for the form -->
+    
+    <script type="text/javascript">
+    (function() {
+       function handlePageLoad() {
+            var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+            if('{!TEXT($User.UserType)}' != 'Guest') {
+                document.getElementById("firstname").value = '{!$User.FirstName}';
+                document.getElementById("lastname").value = '{!$User.LastName}';
+                document.getElementById("email").value = '{!$User.Email}';
+            }
+         
+            document.getElementById('prechatForm').setAttribute('action',
+                decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+            } if (window.addEventListener) {
+                window.addEventListener('load', handlePageLoad, false);
+            } else { 
+                window.attachEvent('onload', handlePageLoad, false);
+            }})(); 
+      
+    </script>
+    <style>
+        #container{
+            margin-left: 20px;
+            width: 400px;
+            float:left;
+        }
+        #c1{
+            float:left;
+            width: 150px;
+            text-align: center;
+        }
+        #c2{
+            float:left;
+            width: 250px;
+        }
+        input{
+            width: 100%;
+            padding: 5px;
+        }
+        h1{
+            font-size:16px;
+            color:#333333;
+        }
+        h2{         
+            font-size:18px;
+            color: #1a3666;
+        }
+        .slds .slds-button--brand  {
+            background-color: rgb(38, 175, 58) !important;
+            border: rgb(38, 175, 58) !important;
+        }
+    </style>
+    
+    <br /><br />  
+        <div class="slds" id="container">
+            <p class="slds-text-heading--small" >Chat with Customer Support</p><br /><br />
+            <form method='post' id='prechatForm' onload='setUserFields()'>
+                <div id="c2">
+                    <input type='text' id="firstname" placeholder="First Name" value="" name="liveagent.prechat:contactFirstName"/><br/><br/>
+                    <input type='text' id="lastname" placeholder="Last Name" value="" name="liveagent.prechat:contactLastName"/><br/><br/>
+                    <input type='text' id="email" placeholder="Email Address" value="" name="liveagent.prechat:contactEmail"/><br/><br/>
+                    <input type='text' placeholder="What do you need help with?" value="" name="liveagent.prechat:caseSubject"/><br/>           
+                
+                    <input class="slds-button slds-button--brand" type='submit' value='Request Chat' id='prechat_submit' style="margin-top: 25px;"/>
+                </div>
+                
+                <!-- Map the detail inputs to the Contact fields --> 
+                <input type="hidden" name="liveagent.prechat.findorcreate.map:Contact" value="FirstName,contactFirstName;LastName,contactLastName;Email,contactEmail;" />
+                
+                <!-- Try to find the Contact by email (exact match) -->
+                <input type="hidden" name="liveagent.prechat.findorcreate.map.doFind:Contact" value="Email,true;" />
+                <input type="hidden" name="liveagent.prechat.findorcreate.map.isExactMatch:Contact" value="Email,true;" />
+                      
+                <!-- If the Contact is not found, then create one with the following fields set -->
+                <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:Contact" value="FirstName,true;LastName,true;Email,true;" />
+                
+                <!-- Save the Contact on the Live Chat Transcript's Contact Loookup -->
+                <input type="hidden" name="liveagent.prechat.findorcreate.saveToTranscript:Contact" value="Contact" />
+     
+                <!-- Show the Contact when it is found or created -->
+                <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:Contact" value="true" />
+                            
+                <!-- Create a Case every time -->
+                <input type="hidden" name="liveagent.prechat:caseOrigin" value="Chat" />
+                <input type="hidden" name="liveagent.prechat:caseRecordTypeId" value="{!chatCaseRecordId}" />
+                
+                <input type="hidden" name="liveagent.prechat.findorcreate.map:Case" value="Origin,caseOrigin;RecordTypeId,caseRecordTypeId;Subject,caseSubject;" />
+                <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:Case" value="Origin,true;RecordTypeId,true;Subject,true;" />
+                <input type="hidden" name="liveagent.prechat.findorcreate.saveToTranscript:Case" value="Case" />
+                <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:Case" value="true" />
+                 
+                <!-- Link the Contact to the Case -->
+                <input type= "hidden" name="liveagent.prechat.findorcreate.linkToEntity:Contact" value="Case,ContactId" />
+        
+                
+            </form>
+        </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+        function setUserFields() {   
+            if('{!TEXT($User.UserType)}' != 'Guest') {         
+                document.getElementById("firstname").value = '{!$User.FirstName}';
+                document.getElementById("lastname").value = '{!$User.LastName}';
+                document.getElementById("email").value = '{!$User.Email}';  
+            }        
+    }        
+    </script> 
+    
+    <script>
+      
+    
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-46606102-1', 'salesforce.com');
+      ga('send', 'pageview');
+    
+    
+     
+    </script>
+</apex:page>

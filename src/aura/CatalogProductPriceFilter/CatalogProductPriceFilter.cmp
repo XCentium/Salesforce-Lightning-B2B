@@ -1,0 +1,32 @@
+<aura:component controller="LightningCatalogController">
+   
+    
+    <aura:attribute name="minPrice" type="Integer" default="0"/>
+    <aura:attribute name="maxPrice" type="Integer" default="100"/>
+    <aura:attribute name="valSliderMin" type="Integer" default="0"/>
+    <aura:attribute name="valSliderMax" type="Integer" default="100"/>
+    <aura:attribute name="enablePriceFilter" type="Boolean" default="false"/>
+    <aura:attribute name="pricebookId" type="String" default=""/>
+    <aura:attribute name="activeProductsOnly" type="Boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+   <aura:registerEvent name="sendFilter" type="c:CatalogSendFilterEvent"/>
+    <aura:method name="calculateAndSendFilters" action="{!c.doChange}"/>
+
+    
+    
+    <div class="slds-form-element">
+      <label class="slds-checkbox_toggle slds-grid">
+        <span class="slds-form-element__label slds-m-bottom_none">{!$Label.c.Catalog_Filter_price}</span>
+          <input name="checkbox-toggle-49" type="checkbox" aria-describedby="checkbox-toggle-49" value="checkbox-toggle-49" onchange="{!c.toggleChange}"/>
+        <span id="checkbox-toggle-49" class="slds-checkbox_faux_container" aria-live="assertive">
+          <span class="slds-checkbox_faux"></span>
+          <span class="slds-checkbox_on">Enabled</span>
+          <span class="slds-checkbox_off">Disabled</span>
+        </span>
+      </label>
+	</div>
+    
+    <lightning:slider label="Min" disabled="{!!v.enablePriceFilter}" value="{!v.valSliderMin}" min="{!v.minPrice}" max="{!v.maxPrice}" onchange="{!c.doChange}"/>
+    <lightning:slider label="Max" disabled="{!!v.enablePriceFilter}" value="{!v.valSliderMax}" min="{!v.minPrice}" max="{!v.maxPrice}" onchange="{!c.doChange}"/>
+</aura:component>
